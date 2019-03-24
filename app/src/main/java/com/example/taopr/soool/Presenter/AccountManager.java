@@ -13,7 +13,6 @@ public interface AccountManager {
 
     boolean clickDuplicity(int separator,String emailOrNick);
 
-
    // boolean checkDuplicity(int separator,String emailOrNick);
 
     public interface View {

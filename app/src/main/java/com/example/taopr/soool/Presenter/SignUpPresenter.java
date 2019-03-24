@@ -5,12 +5,16 @@ import android.util.Log;
 
 import com.example.taopr.soool.Model.SignUpModel;
 
+import retrofit2.Retrofit;
+
 public class SignUpPresenter implements AccountManager {
     private Activity signUpActivity;
     private SignUpModel signUpModel;
+    private Retrofit retrofit;
     private AccountManager.View signUpView;
     private static boolean enable;
     private static String TAG ="SignUpPresenter";
+
 
     public SignUpPresenter(Activity activity){
         this.signUpActivity = activity;
@@ -43,4 +47,6 @@ public class SignUpPresenter implements AccountManager {
         boolean b = signUpModel.signUpReq(acconutEmail,accountPW,accountNick);
         return b;
     }
+
+
 }

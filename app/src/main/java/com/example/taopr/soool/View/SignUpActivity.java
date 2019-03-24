@@ -1,5 +1,6 @@
 package com.example.taopr.soool.View;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,10 +48,10 @@ public class SignUpActivity extends AppCompatActivity{
     private Boolean nickEnable=false;  // false = 닉네임값 사용 불가능 , true = 닉네임 값 사용 가능
     private Boolean pwEnable=false; // 비밀번호와 비밀번호 확인 칸에 입력한 값 false=불일치 true=일치
 
-    /*
-    private Boolean emailDupClickBool = false; // 이메일 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
-    private Boolean nickDupClickBool = false; // 닉네임 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
-    */
+
+    private Boolean clickEmailDupBool = false; // 이메일 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
+    private Boolean clickNickDupBool = false; // 닉네임 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
+
 
     private static String TAG = "SignUpActivity";
 
@@ -62,19 +63,39 @@ public class SignUpActivity extends AppCompatActivity{
         ButterKnife.bind(this);
         signUpPresenter = new SignUpPresenter(this);
 
-        // sns를 통해 가입하는 사람들의 경우
-        // 가져온 값을 Edittext의 값에 넣어주고
-        // 넣어준 Edittext에 관해서는 사용자에게 보이지 않게한다.
-        // 위와 같은 방법으로 한 이유는 회원가입을 할 때 예외처리를 편하게 하기 위함인데
-        // 이유는, 위와 같은 방법으로 할 경우는 회원가입을 할 때
-        // Edittext의 값을 입력을 했는지 안했는지만 확인하면 되지만
-        // 위와 같은 방법을 하지 않을 경우
-        // sns를 통해서 가입을 하는 것인지에 대한 구분도 해줘야 하며
-        // 추가로 sns api를 통해 이메일주소를 가져오지 못하는 경우 이 부분에 대해서도 처리를 해줘야 한다
+        if(getIntent() != null) {
+            signUpThroughSNS();
+        }
 
     }
 
+    // sns를 통해 가입하는 사람들의 경우
 
+    // intent에 Boolean throughSNS값을 입력하여
+    // true면 sns가입자, false이면 일반 가입자로 구분
+
+    // true일 경우 이메일 주소를 받아왔는지 확인
+    // 이유는, 사용자가 sns에서 이메일 공개여부를 거절했을 경우 이메일 주소를 받아올 수 없기 때문에
+    // 이메일 주소를 받아온 경우 회원가입 예외처리에 걸리지 않게 하기 위하여
+    // emailEnable , clickEmailDupBool의 값을 true로 변경
+
+    //// 회의해야 될 사항
+    //// sns 가입하는 경우 이메일 주소를 ui에 띄어주는 것이 날까??
+    private void signUpThroughSNS() {
+
+        Intent intent = getIntent();
+        Boolean throughSNS = intent.getBooleanExtra("throughSNS", false);
+
+        if(throughSNS) {
+            String snsAccountEmail = intent.getStringExtra("snsAccountEmail");
+            if(snsAccountEmail.length()>0){
+                accountEmail.setText(snsAccountEmail);
+                emailEnable = true;
+                clickEmailDupBool = true;
+            }
+        }
+
+    }
 
 
     // 이메일 중복 확인
@@ -87,9 +108,10 @@ public class SignUpActivity extends AppCompatActivity{
     // 중복하는 경우 이메일을 사용할 수 없다는 메세지를 유저에게 표시
     // 중복하지 않는 경우 이메일을 사용할 수 있다는 메세지를 표시
 
-    ////////////////////// 회의해야 될 사항
-    // 중복체크를 했을 때 사용한 가능하다는 메시지를 유저에게 다이얼로그를 띄워서 알려줄지
-    // 아니면 아이콘의 변화를 주거나 문구를 표시함으로써 지속적으로 나타내줄지
+
+    //// 회의해야 될 사항
+    //// 중복체크를 했을 때 사용한 가능하다는 메시지를 유저에게 다이얼로그를 띄워서 알려줄지
+    //// 아니면 아이콘의 변화를 주거나 문구를 표시함으로써 지속적으로 나타내줄지
 
     @OnClick(R.id.accountEmailDup)
     void emailDupClick(){
@@ -97,33 +119,28 @@ public class SignUpActivity extends AppCompatActivity{
         boolean ismail = isEmail(accountEmail.getText().toString());
 
         // 이메일 값을 아무것도 입력하지 않은 경우
-
         if(accountEmail.getText().length()==0){
-
             Log.i(TAG, "emailDupClick: 이메일 값 입력해주세요");
         }
 
         // 이메일 값을 정규식에 맞춰 작성하지 않은 경우
-
         else if(ismail == false){
-
             Log.i(TAG, "emailDupClick: 이메일 정규식 불일치");
-
         }
 
         // 이메일 값을 정규식에 맞춰 입력한 경우
-
         else {
 
             // 보내는 값일 이메일인 경우 separator=0, 닉네임인 경우 separator=1
+            Boolean b = signUpPresenter.clickDuplicity(0,accountEmail.getText().toString());
+            Log.i(TAG, "emailDupClick: email = " + accountEmail.getText().toString() + ", 사용 가능 여부 : " + b);
 
-            emailEnable = signUpPresenter.clickDuplicity(0,accountEmail.getText().toString());
+            // 중복 false, 중복x true
 
-            Log.i(TAG, "emailDupClick: email = " + accountEmail.getText().toString() + ", 사용 가능 여부 : " + emailEnable);
-
+            emailEnable = b;
+            clickEmailDupBool = true;
         }
     }
-
 
 
     // 이메일 정규식에 맞춰 입력했는지 확인
@@ -140,26 +157,44 @@ public class SignUpActivity extends AppCompatActivity{
 
 
     // 비밀번호와 비밀번호 확인 값 일치 확인
-    // confirmPW 값을 입력 시 accountPW와 일치하는지 확인
+    // confirmPW 값이나 accountPW값 입력 시 서로의 값이 일치하는지 확인
     // 일치하는 경우 pwEnable 값을 true로 불일치하는 경우 pwEnable 값을 false로 변경해줌을써
     // 회원가입시 pwEnable 값으로 비밀번호와 비밀번호 확인 값이 일치하는 경우에만 서버에 전달하는 예외처리
+    // 둘 중 한가지 값만 입력했을 때 일치하지 않는다고 표시해주는 것은 불필요하다 생각해서
+    // 두 값을 모두 입력했을 때만 표시하도록 예외처리
 
-    @OnTextChanged(R.id.confirmPW)
+    @OnTextChanged({R.id.confirmPW, R.id.accountPW})
     void editConfirmPW(){
 
         Log.i(TAG, "editConfirmPW: 입력");
-
-        if(accountPW.getText().toString().equals(confirmPW.getText().toString())){
-            Log.i(TAG, "editConfirmPW: 일치");
-            pwEnable = true;
-        }
-        else{
-            Log.i(TAG, "editConfirmPW: 불일치");
-            pwEnable = false;
+        if(accountPW.getText().length() >0 && confirmPW.getText().length()>0) {
+            if (accountPW.getText().toString().equals(confirmPW.getText().toString())) {
+                Log.i(TAG, "editConfirmPW: 일치");
+                pwEnable = true;
+            } else {
+                Log.i(TAG, "editConfirmPW: 불일치");
+                pwEnable = false;
+            }
         }
     }
 
+    // 닉네임이나 이메일을 중복 체크한 이후에 수정을 하게 될 경우
+    // 중복 체크를 검사했던 값이 아닌 수정된 값으로 회원가입이 진행되게 된다
+    // 위와 같은 현상을 방지하기 위해 닉네임이나 이메일 값을 수정하게 될 경우
+    // 그 값을 EmailEnable이나 PWEnable 값을 false로 설정해준다
+    // 그리고 위 두 값은 중복체크를 통해 사용가능한 경우에만 true로 설정해준다.
 
+    @OnTextChanged(R.id.accountEmail)
+    void editAccountEmail(){
+        emailEnable = false;
+        clickEmailDupBool = false;
+    }
+
+    @OnTextChanged(R.id.accountNick)
+    void editAccountNick(){
+        nickEnable = false;
+        clickNickDupBool = false;
+    }
 
     // 닉네임 중복 확인
     // 닉네임 중복 확인 버튼을 클릭 시 닉네임값을 입력했는지 확인 후
@@ -182,9 +217,13 @@ public class SignUpActivity extends AppCompatActivity{
         else {
 
             // 보내는 값일 이메일인 경우 separator=0, 닉네임인 경우 separator=1
-            nickEnable = signUpPresenter.clickDuplicity(1,accountNick.getText().toString());
-            Log.i(TAG, "nickDupClick: nick = " + accountNick.getText().toString() + ", 중복 여부 : " + nickEnable);
+            Boolean b = signUpPresenter.clickDuplicity(1,accountNick.getText().toString());
+            Log.i(TAG, "nickDupClick: nick = " + accountNick.getText().toString() + ", 중복 여부 : " + b);
 
+            // 중복 false, 중복x true
+
+            nickEnable = b;
+            clickNickDupBool = true;
         }
     }
 
@@ -193,59 +232,81 @@ public class SignUpActivity extends AppCompatActivity{
     // 회원가입 버튼 클릭 시
     // 1. 모든 Edittext의 값을 입력했는지 확인
     //    입력하지 않았을 경우 값을 입력해달라는 메세지를 유저에게 표시
-    // 2. 이메일 중복 체크 확인 후 사용가능한 아이디인지 확인
-    // 3. 비밀번호와 비밀번호확인칸에 입력한 두 값이 일치하는지 확인
+    // 2. 이메일 중복 체크 버튼을 눌렀는지 확인
+    // 3. 이메일 중복 체크를 했을 때 사용 가능한 값이었는지 확인
+    // 4. 비밀번호와 비밀번호확인칸에 입력한 두 값이 일치하는지 확인
     //    일치하지 않은 경우 비밀번호가 일치하지 않는다는 메세지를 유저에게 표시
-    // 4. 닉네임 값 사용가능한지 확인
-    // 5. 1,2,3,4의 예외처리를 통과한 경우 서버에 이메일주소와 비밀번호 닉네임 값을 전달
-    // 6. 서버에서 회원가입에 실패했을 경우 다시 시도해 달라는 메시지를 유저에게 전달
+    // 5. 닉네임 중복 체크 버튼을 눌렀는지 확인
+    // 6. 닉네임 중복 체크를 했을 때 사용 가능한 값이었는지 확인
+    // 7. 1,2,3,4의 예외처리를 통과한 경우 서버에 이메일주소와 비밀번호 닉네임 값을 전달
+    // 8. 서버에서 회원가입에 실패했을 경우 다시 시도해 달라는 메시지를 유저에게 전달
     //    성공 했을 경우
+    // 1. 로그인 페이지로 이동
 
 
-    //// 고려,회의 해야되는 사항
-    //// 이메일 값, 닉네임 값 예외처리에서 중복체크를 했는지, 중복체크를 했다면 가능한 값인지 불가능한 값인지
-    //// -> 일단은 중복체크 버튼을 누르지 않은 것도, 중복체크를 했지만 사용불가능 한 경우 둘다
-    ////    사용할 수 업다는 메세지를 띄우는 방식으로 통일
+    //// --> 회의사항
+    ////    가입한 이메일 값을 전달할지 말지
+    ////    전달하게 되면 사용자가 편하고,
+    ////    전달하지 않으면 시작페이지에서 intent 받을 때 구분을 해줘야하는 번거러움
+
 
     @OnClick(R.id.signUp)
-    void signUpClick(){
+    void clickSignUp(){
 
-        String acconutEmailSt = accountEmail.getText().toString();
+        String accountEmailSt = accountEmail.getText().toString();
         String accountPWSt = accountPW.getText().toString();
         String accountNickSt = accountNick.getText().toString();
 
         // 1번 , 모든 Edittext 값 입력했는지
-        if(acconutEmailSt.length()==0 || accountNickSt.length()==0 ||
+        if(accountEmailSt.length()==0 || accountNickSt.length()==0 ||
                 accountPWSt.length()==0 || confirmPW.getText().length()==0){
 
-            Log.i(TAG, "signUpClick: 1번 예외처리");
+            Log.i(TAG, "clickSignUp: 모든 텍스트를 입력해주세요");
 
         }
 
-        // 2번 , 이메일 값 사용가능한지 확인
+        // 2번 , 3번
         else if(emailEnable == false){
-            Log.i(TAG, "signUpClick: 2번 예외처리 ");
+            if(clickEmailDupBool){
+                Log.i(TAG, "clickSignUp: 사용불가능한 이메일입니다");
+            }
+            else{
+                Log.i(TAG, "clickSignUp: 중복 체크를 부탁드립니다");
+            }
         }
 
-        // 3번 , 비밀번호와 비밀번호확인카에 입력한 두 값이 일치하는지
+        // 4번 , 비밀번호와 비밀번호확인카에 입력한 두 값이 일치하는지
         else if(pwEnable == false){
-            Log.i(TAG, "signUpClick: 3번 예외처리 ");
+            Log.i(TAG, "clickSignUp: 비밀번호 불일치 ");
         }
 
-        // 4번 , 닉네임 값 사용가능한지 확인
+        // 4번 , 5번
         else if(nickEnable == false){
-            Log.i(TAG, "signUpClick: 4번 예외처리 ");
+            if (clickNickDupBool){
+                Log.i(TAG, "clickSignUp: 사용 불가능한 닉네임입니다");
+            }
+            else{
+                Log.i(TAG, "clickSignUp: 중복 체크를 부탁드립니다");
+            }
         }
 
         // 상위의 조건을 모두 만족한 경우 서버에 accountEmail, accountPW, accountNick 전달.
         else{
-            boolean signUpSuccess = signUpPresenter.signUpReq(accountNickSt,accountPWSt,accountNickSt);
+            boolean signUpSuccess = signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
             if( signUpSuccess == false){
-                Log.i(TAG, "signUpClick: 다시 시도해주세요 ");
+                Log.i(TAG, "clickSignUp: 다시 시도해주세요 ");
             }
             else{
-                Log.i(TAG, "signUpClick: 회원가입 성공 / 로그인 페이지로 이동");
+                Log.i(TAG, "clickSignUp: 회원가입 성공 ");
+                setLinkToLogin();
             }
         }
+    }
+
+    // 로그인 페이지 이동
+    // 이미 회원인 경우를 회원가입 페이지에서 로그인
+    @OnClick(R.id.linkToLogin)
+    public void setLinkToLogin(){
+        Log.i(TAG, "setLinkToLogin: 로그인 페이지 이동");
     }
 }
