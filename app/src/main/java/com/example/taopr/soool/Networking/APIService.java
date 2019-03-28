@@ -6,6 +6,7 @@ import com.example.taopr.soool.R;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -31,4 +32,8 @@ public interface APIService {
     @GET("/Signup.php")
     Call<JSONArray> signUpRes(@Query("accountEmail") String accountEmail, @Query("accountPW") String accountPW,
                               @Query("accountNick") String accountNick);
+
+    @FormUrlEncoded
+    @POST("/Login/Login.php")
+    Call<ResponseBody> getUserItem(@Field("accountEmail") String accountEmail, @Field("accountPW") String accountPW);
 }
