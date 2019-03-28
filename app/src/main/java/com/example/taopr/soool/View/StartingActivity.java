@@ -75,7 +75,7 @@ public class StartingActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
+//
     @Override
     protected void onDestroy() {
         super.onDestroy();
