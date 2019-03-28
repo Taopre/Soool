@@ -38,8 +38,8 @@ public class SignUpActivity extends AppCompatActivity{
     EditText accountPW;
     @BindView(R.id.confirmPW)
     EditText confirmPW;
-    @BindView(R.id.linkToLogin)
-    TextView linkToLogin;
+    @BindView(R.id.signUpToLogIn)
+    TextView signUpToLogIn;
     @BindView(R.id.signUp)
     Button signUp;
 
@@ -70,7 +70,6 @@ public class SignUpActivity extends AppCompatActivity{
     }
 
     // sns를 통해 가입하는 사람들의 경우
-
     // intent에 Boolean throughSNS값을 입력하여
     // true면 sns가입자, false이면 일반 가입자로 구분
 
@@ -79,24 +78,31 @@ public class SignUpActivity extends AppCompatActivity{
     // 이메일 주소를 받아온 경우 회원가입 예외처리에 걸리지 않게 하기 위하여
     // emailEnable , clickEmailDupBool의 값을 true로 변경
 
-    //// 회의해야 될 사항
-    //// sns 가입하는 경우 이메일 주소를 ui에 띄어주는 것이 날까??
     private void signUpThroughSNS() {
 
         Intent intent = getIntent();
         Boolean throughSNS = intent.getBooleanExtra("throughSNS", false);
 
+        Log.i(TAG, "signUpThroughSNS: " + intent.getBooleanExtra("throughSNS", false) +
+                intent.getStringExtra("snsAccountEmail") );
+
         if(throughSNS) {
-            String snsAccountEmail = intent.getStringExtra("snsAccountEmail");
-            if(snsAccountEmail.length()>0){
+            if(intent.getStringExtra("snsAccountEmail").length() > 0){
+                String snsAccountEmail = intent.getStringExtra("snsAccountEmail");
                 accountEmail.setText(snsAccountEmail);
+
                 emailEnable = true;
                 clickEmailDupBool = true;
+
+                accountPW.requestFocus();
+                // 이메일을 받아왔을 경우 디비에 중복한 값이 있는지 확인
+                // 중복한 값이 있다면 사용불가능한 이메일이란 메세지 유저에게 표시
+                // --> 이부분 예외처리 안해주기로함
+
             }
         }
 
     }
-
 
     // 이메일 중복 확인
 
@@ -139,6 +145,8 @@ public class SignUpActivity extends AppCompatActivity{
 
             emailEnable = b;
             clickEmailDupBool = true;
+
+            accountPW.requestFocus();
         }
     }
 
@@ -227,7 +235,6 @@ public class SignUpActivity extends AppCompatActivity{
         }
     }
 
-
     // 회원가입 요청
     // 회원가입 버튼 클릭 시
     // 1. 모든 Edittext의 값을 입력했는지 확인
@@ -240,14 +247,8 @@ public class SignUpActivity extends AppCompatActivity{
     // 6. 닉네임 중복 체크를 했을 때 사용 가능한 값이었는지 확인
     // 7. 1,2,3,4의 예외처리를 통과한 경우 서버에 이메일주소와 비밀번호 닉네임 값을 전달
     // 8. 서버에서 회원가입에 실패했을 경우 다시 시도해 달라는 메시지를 유저에게 전달
-    //    성공 했을 경우
-    // 1. 로그인 페이지로 이동
-
-
-    //// --> 회의사항
-    ////    가입한 이메일 값을 전달할지 말지
-    ////    전달하게 되면 사용자가 편하고,
-    ////    전달하지 않으면 시작페이지에서 intent 받을 때 구분을 해줘야하는 번거러움
+    // 9. 성공 했을 경우에는 가입한 유저의 회원번호를 전달 받는다.
+    // 10. 회원번호, 이메일값 그리고 자동로그인 값을 쉐어드에 저장 후 메인 페이지로 이동
 
 
     @OnClick(R.id.signUp)
@@ -280,7 +281,7 @@ public class SignUpActivity extends AppCompatActivity{
             Log.i(TAG, "clickSignUp: 비밀번호 불일치 ");
         }
 
-        // 4번 , 5번
+        // 5번 , 6번
         else if(nickEnable == false){
             if (clickNickDupBool){
                 Log.i(TAG, "clickSignUp: 사용 불가능한 닉네임입니다");
@@ -291,6 +292,7 @@ public class SignUpActivity extends AppCompatActivity{
         }
 
         // 상위의 조건을 모두 만족한 경우 서버에 accountEmail, accountPW, accountNick 전달.
+
         else{
             boolean signUpSuccess = signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
             if( signUpSuccess == false){
@@ -298,15 +300,19 @@ public class SignUpActivity extends AppCompatActivity{
             }
             else{
                 Log.i(TAG, "clickSignUp: 회원가입 성공 ");
-                setLinkToLogin();
+                linkToLogIn();
             }
         }
     }
 
-    // 로그인 페이지 이동
-    // 이미 회원인 경우를 회원가입 페이지에서 로그인
-    @OnClick(R.id.linkToLogin)
-    public void setLinkToLogin(){
+    // 회원 가입 완료 후
+    // 회원 이메일(accountEmail)과 계정번호(accountNo)의 값와 autoLogin변수에 true값 쉐어드에 저장
+    // 저장 후 메인 페이지로 이동
+
+    @OnClick(R.id.LinkToLogin)
+    public void linkToLogIn(){
+
         Log.i(TAG, "setLinkToLogin: 로그인 페이지 이동");
     }
+
 }

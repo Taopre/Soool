@@ -61,7 +61,7 @@ public class SignUpModel {
         // Callback 데이터 구조가 JsonArray 구조가 아니기 때문에 ResponseBody로 변경해놈
         // 다시 수정해줘야함
 
-        /*테스트 위해서 잠시 주석
+      //테스트 위해서 잠시 주석
        request.enqueue(new Callback<ResponseBody>() {
            @Override
            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -76,7 +76,7 @@ public class SignUpModel {
            public void onFailure(Call<ResponseBody> call, Throwable t) {
                Log.i(TAG, "onFailure: 에러 :" + t.toString());
            }
-        });*/
+        });
 
         return true;
     }
