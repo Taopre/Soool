@@ -124,9 +124,8 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         Log.d(TAG, "loginDataSend: " + item.getAccountBc());
         Log.d(TAG, "loginDataSend: " + item.getAccountCc());
 
-        SharedPreferences preferences = getSharedPreferences("LoginUser", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        
+
+
     }
 
     //버터나이프 테스트해봐야할듯
