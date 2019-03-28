@@ -32,6 +32,7 @@ public class SignUpModel {
         Log.i(TAG, "checkDuplicity: 구분자 값 : " + separator + " , 중복체크 값 : " + emailOrNick);
 
         APIService service = APIClient.getClient().create(APIService.class);
+
         Call<ResponseBody> request = null;
 
         if(separator == 0){

@@ -300,7 +300,7 @@ public class SignUpActivity extends AppCompatActivity{
             }
             else{
                 Log.i(TAG, "clickSignUp: 회원가입 성공 ");
-                linkToLogIn();
+                setSignUpToLogIn();
             }
         }
     }
@@ -309,8 +309,8 @@ public class SignUpActivity extends AppCompatActivity{
     // 회원 이메일(accountEmail)과 계정번호(accountNo)의 값와 autoLogin변수에 true값 쉐어드에 저장
     // 저장 후 메인 페이지로 이동
 
-    @OnClick(R.id.LinkToLogin)
-    public void linkToLogIn(){
+    @OnClick(R.id.signUpToLogIn)
+    public void setSignUpToLogIn(){
 
         Log.i(TAG, "setLinkToLogin: 로그인 페이지 이동");
     }

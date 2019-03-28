@@ -50,6 +50,7 @@ public class LoginModel {
 //            loginPresenter.loginResponse(false);
 //        }
         Log.d(TAG, "시작");
+
         Observable.just(userItem.getId(), userItem.getPwd())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(Schedulers.io())
