@@ -30,7 +30,7 @@ public class APIClient {
                 .readTimeout(100,TimeUnit.SECONDS).build();
 
        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://3.16.214.73")  //
+                .baseUrl("")  //
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit;
