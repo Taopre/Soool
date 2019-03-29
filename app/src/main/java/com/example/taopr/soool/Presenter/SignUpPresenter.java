@@ -1,6 +1,7 @@
 package com.example.taopr.soool.Presenter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.example.taopr.soool.Model.SignUpModel;
@@ -16,9 +17,9 @@ public class SignUpPresenter implements AccountManager {
     private static String TAG ="SignUpPresenter";
 
 
-    public SignUpPresenter(Activity activity){
+    public SignUpPresenter(Activity activity, Context context){
         this.signUpActivity = activity;
-        this.signUpModel = new SignUpModel();
+        this.signUpModel = new SignUpModel(this, context);
     }
     public void setView(AccountManager.View view) {
         this.signUpView = view;

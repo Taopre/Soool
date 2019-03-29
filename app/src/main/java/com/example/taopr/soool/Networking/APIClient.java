@@ -1,5 +1,6 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,7 +31,7 @@ public class APIClient {
                 .readTimeout(100,TimeUnit.SECONDS).build();
 
        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("")  //
+                .baseUrl(Whatisthis.serverIp)  //
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit;

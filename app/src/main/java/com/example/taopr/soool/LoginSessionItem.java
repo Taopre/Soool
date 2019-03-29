@@ -3,14 +3,17 @@ package com.example.taopr.soool;
 public class LoginSessionItem {
     String accountNick, accountImage;
     int accountNo, accountPoint, accountBc, accountCc;
+    boolean accountAutoLogin;
 
-    public LoginSessionItem(int _accountNo, String _accountNick, String _accountImage, int _accountPoint, int _accountBc, int _accountCc) {
-        this.accountNo = _accountNo;
-        this.accountNick = _accountNick;
-        this.accountImage = _accountImage;
-        this.accountPoint = _accountPoint;
+    public LoginSessionItem(int _accountNo, String _accountNick, String _accountImage,
+                            int _accountPoint, int _accountBc, int _accountCc, boolean _accountAutoLogin) {
+        this.accountNo = _accountNo; //회원 번호
+        this.accountNick = _accountNick; //회원 닉넴
+        this.accountImage = _accountImage; //회원 이미지
+        this.accountPoint = _accountPoint; //회원 포인트
         this.accountBc = _accountBc; //게시판 갯수
         this.accountCc = _accountCc; //댓글 갯수
+        this.accountAutoLogin = _accountAutoLogin; //회원 자동로그인 체크여부
     }
 
     public int getAccountBc() {
@@ -35,5 +38,9 @@ public class LoginSessionItem {
 
     public int getAccountPoint() {
         return accountPoint;
+    }
+
+    public boolean isAccountAutoLogin() {
+        return accountAutoLogin;
     }
 }

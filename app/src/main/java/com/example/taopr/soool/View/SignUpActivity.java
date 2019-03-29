@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taopr.soool.MainActivity;
 import com.example.taopr.soool.Presenter.SignUpPresenter;
 import com.example.taopr.soool.R;
 
@@ -61,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity{
         setContentView(R.layout.activity_sign_up);
 
         ButterKnife.bind(this);
-        signUpPresenter = new SignUpPresenter(this);
+        signUpPresenter = new SignUpPresenter(SignUpActivity.this, this);
 
         if(getIntent() != null) {
             signUpThroughSNS();
@@ -216,10 +217,10 @@ public class SignUpActivity extends AppCompatActivity{
     void nickDupClick(){
 
         Log.i(TAG, "nickDupClick: , 텍스트 길이 : " + accountNick.getText().length());
-        
+
         // 이메일 값을 아무것도 입력하지 않은 경우
         if(accountNick.getText().length()==0){
-            Log.i(TAG, "emailDupClick: 이메일 값 입력해주세요");
+            Log.i(TAG, "emailDupClick: nick 값 입력해주세요");
         }
 
         else {
@@ -300,7 +301,9 @@ public class SignUpActivity extends AppCompatActivity{
             }
             else{
                 Log.i(TAG, "clickSignUp: 회원가입 성공 ");
-                setSignUpToLogIn();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         }
     }
@@ -311,6 +314,9 @@ public class SignUpActivity extends AppCompatActivity{
 
     @OnClick(R.id.signUpToLogIn)
     public void setSignUpToLogIn(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
 
         Log.i(TAG, "setLinkToLogin: 로그인 페이지 이동");
     }

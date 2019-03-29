@@ -1,6 +1,7 @@
 package com.example.taopr.soool.Presenter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.example.taopr.soool.LoginItem;
@@ -13,9 +14,9 @@ public class LoginPresenter implements LoginInter {
     private LoginPresenter.View view;
     private LoginModel loginModel;
 
-    public LoginPresenter(Activity activity) {
+    public LoginPresenter(Activity activity, Context context) {
         this.activity = activity;
-        this.loginModel = new LoginModel(this);
+        this.loginModel = new LoginModel(this, context);
     }
     //view 공유? 사실 뭔지 잘 모름.
     @Override

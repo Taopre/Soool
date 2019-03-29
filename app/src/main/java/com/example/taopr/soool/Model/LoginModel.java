@@ -1,5 +1,6 @@
 package com.example.taopr.soool.Model;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -9,6 +10,9 @@ import com.example.taopr.soool.LoginSessionItem;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Presenter.LoginPresenter;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,8 +42,11 @@ public class LoginModel {
     private LoginPresenter loginPresenter;
     private LoginSessionItem item;
 
-    public LoginModel(LoginPresenter loginPresenter) {
+    Context context;
+
+    public LoginModel(LoginPresenter loginPresenter, Context context) {
         this.loginPresenter = loginPresenter;
+        this.context = context;
     }
 
     public void login(LoginItem userItem) {
@@ -62,11 +69,6 @@ public class LoginModel {
                         try
                         {
                             Log.d(TAG, "시작 바로 전");
-//                            Retrofit retrofit = new Retrofit.Builder()
-//                                    .baseUrl("http://")
-////                                    .baseUrl("http://")
-//                                    .addConverterFactory(GsonConverterFactory.create())
-//                                    .build();
                             //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
                             APIService service = APIClient.getClient().create(APIService.class);
 
@@ -103,8 +105,14 @@ public class LoginModel {
                                                 Log.d(TAG, "onResponse true : "+accountBc);
                                                 Log.d(TAG, "onResponse true : "+accountCc);
 
-                                                item = new LoginSessionItem(accountNo, accountNick, accountImage, accountPoint, accountBc, accountCc);
-                                                loginPresenter.loginDataSend(item);
+                                                item = new LoginSessionItem(accountNo, accountNick, accountImage, accountPoint, accountBc, accountCc, userItem.isAutologinStatus());
+                                                // Gson 인스턴스 생성
+                                                Gson gson = new GsonBuilder().create();
+                                                // JSON 으로 변환
+                                                String userClass = gson.toJson(item, LoginSessionItem.class);
+                                                //shared에 객체 저장
+                                                LoginSharedPreferences.LoginUserSave(context, "LoginAccount", userClass);
+                                                loginPresenter.loginResponse(true);
                                             }
                                         }
                                     }
@@ -138,20 +146,22 @@ public class LoginModel {
                     @Override
                     public void onSubscribe(Disposable d)
                     {
+                        Log.d(TAG, "onSubscribe : wfpowjefpwfepowfjwpfojwfepojfe");
                     }
                     @Override
                     public void onNext(Boolean s)
                     {
-
+                        Log.d(TAG, "onNext: wfpowjefpwfepowfjwpfojwfepojfe");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.d(TAG, "onError : wfpowjefpwfepowfjwpfojwfepojfe");
                     }
                     @Override
                     public void onComplete()
                     {
+                        Log.d(TAG, "onComplete : wfpowjefpwfepowfjwpfojwfepojfe");
                     }
                 });
     }

@@ -1,5 +1,6 @@
 package com.example.taopr.soool.View;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,12 @@ import android.widget.Toast;
 
 import com.example.taopr.soool.LoginItem;
 import com.example.taopr.soool.LoginSessionItem;
+import com.example.taopr.soool.MainActivity;
 import com.example.taopr.soool.Presenter.LoginPresenter;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +29,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     String TAG = "LoginActivity log : ";
 
     LoginPresenter loginPresenter;
+    LoginSessionItem loginSessionItem;
 
     @BindView(R.id.textView)
     TextView tv_loginStatus;
@@ -74,20 +80,12 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //자동 로그인 체크박스 부분.
-        if (cb_autologin.isChecked()) {
-            //자동 로그인 체크했을 경우
-
-        }else {
-            //자동 로그인 체크 안 할 경우
-
-        }
+    protected void onStop() {
+        super.onStop();
     }
 
     private void DoBinding() {
-        loginPresenter = new LoginPresenter(LoginActivity.this);
+        loginPresenter = new LoginPresenter(LoginActivity.this, this);
         loginPresenter.setView(this);
 
         tv_loginStatus = findViewById(R.id.textView);
@@ -106,16 +104,19 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
 
     @Override
     public void loginResponse(boolean response) {
-        if (response) {
-            setConfirmText("Login!");
+        if (response == true) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }else {
-            setConfirmText("Fail!");
+            setConfirmText("Login Fail!!");
         }
     }
 
     @Override
     public void loginDataSend(LoginSessionItem item) {
-        setConfirmText("From DB userdata :" + item.getAccountNo() + ", " + item.getAccountNick() + ", " + item.getAccountImage() + ", " + item.getAccountPoint() + ", " + item.getAccountBc() + ", " + item.getAccountCc());
+        setConfirmText("From DB userdata :" + item.getAccountNo() + ", " + item.getAccountNick() + ", " + item.getAccountImage() + ", " +
+                item.getAccountPoint() + ", " + item.getAccountBc() + ", " + item.getAccountCc());
 
         Log.d(TAG, "loginDataSend: " + item.getAccountNo());
         Log.d(TAG, "loginDataSend: " + item.getAccountNick());
@@ -124,33 +125,26 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         Log.d(TAG, "loginDataSend: " + item.getAccountBc());
         Log.d(TAG, "loginDataSend: " + item.getAccountCc());
 
-
-
-    }
-
-    //버터나이프 테스트해봐야할듯
-//    @OnClick({R.id.accountLoginBtn,R.id.accountFindPwd,R.id.accountSignup})
-//    public void onButtonClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.accountLoginBtn :
-//                //로그인 버튼 리스너
-//                //이메일 형식인지 아닌지 예외처리해서 맞다면 실행하게 처리해야함
-//                LoginItem loginItem = new LoginItem();
-//                Log.d("onClick", et_id.getText().toString() + "//" + et_pwd.getText().toString());
-//                loginItem.setId(et_id.getText().toString());
-//                loginItem.setPwd(et_pwd.getText().toString());
-//                loginPresenter.login(loginItem);
-//                break;
-//            case R.id.accountFindPwd :
-//                //비밀번호 찾기 텍뷰 리스너
-//                tv_loginStatus.setText("비밀번호 찾을래?");
-//                break;
-//            case R.id.accountSignup :
-//                //회원가입하기 텍뷰 리스터
-//                tv_loginStatus.setText("회원가입 할래?");
-//                break;
+//        if (cb_autologin.isChecked()) {
+//            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
+//                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
+//            // Gson 인스턴스 생성
+//            Gson gson = new GsonBuilder().create();
+//            // JSON 으로 변환
+//            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
+//            //shared에 객체 저장
+//            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
+//        }else {
+//            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
+//                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
+//            // Gson 인스턴스 생성
+//            Gson gson = new GsonBuilder().create();
+//            // JSON 으로 변환
+//            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
+//            //shared에 객체 저장
+//            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
 //        }
-//    }
+    }
 
     @Override
     public void onClick(View view) {
@@ -159,9 +153,10 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 //로그인 버튼 리스너
                 //이메일 형식인지 아닌지 예외처리해서 맞다면 실행하게 처리해야함
                 LoginItem loginItem = new LoginItem();
-                Log.d(TAG, "login btn click: " + et_id.getText().toString() + "//" + et_pwd.getText().toString());
+                Log.d(TAG, "login btn click: " + et_id.getText().toString() + "//" + et_pwd.getText().toString() + cb_autologin.isChecked());
                 loginItem.setId(et_id.getText().toString());
                 loginItem.setPwd(et_pwd.getText().toString());
+                loginItem.setAutologinStatus(cb_autologin.isChecked());
                 loginPresenter.login(loginItem);
                 break;
             case R.id.accountFindPwd :
