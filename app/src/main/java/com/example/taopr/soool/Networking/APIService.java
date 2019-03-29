@@ -16,7 +16,6 @@ import org.json.JSONArray;
 
 public interface APIService {
 
-   // public static final String API_URL="3.16.214.73/";
 
     // 이메일 중복 확인
     @GET("/Signup.php")

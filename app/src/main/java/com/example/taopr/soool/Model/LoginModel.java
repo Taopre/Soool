@@ -63,8 +63,8 @@ public class LoginModel {
                         {
                             Log.d(TAG, "시작 바로 전");
 //                            Retrofit retrofit = new Retrofit.Builder()
-//                                    .baseUrl("http://3.16.214.73")
-////                                    .baseUrl("http://115.71.232.235")
+//                                    .baseUrl("http://")
+////                                    .baseUrl("http://")
 //                                    .addConverterFactory(GsonConverterFactory.create())
 //                                    .build();
                             //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
