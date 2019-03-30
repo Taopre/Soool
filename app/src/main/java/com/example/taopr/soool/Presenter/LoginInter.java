@@ -9,14 +9,14 @@ public interface LoginInter {
 
     void login(LoginItem usetItem);
 
-    void loginResponse(boolean response);
+    void loginResponse(String response);
 
-    void loginDataSend(LoginSessionItem item);
+//    void loginDataSend(LoginSessionItem item);
 
     public interface View {
         void setConfirmText(String text);
-        void loginResponse(boolean response);
-        void loginDataSend(LoginSessionItem item);
+        void loginResponseGoToVIew(String response);
+//        void loginDataSend(LoginSessionItem item);
     }
 
 }

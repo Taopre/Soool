@@ -22,17 +22,17 @@
 
         </activity>
         <activity android:name=".View.SignUpActivity">
-
-        </activity>
-        <activity android:name=".View.StartingActivity">
-
-        </activity>
-        <activity android:name=".View.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".View.StartingActivity">
+
+        </activity>
+        <activity android:name=".View.LoginActivity">
+
         </activity>
 
     </application>

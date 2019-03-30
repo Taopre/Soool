@@ -103,48 +103,57 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     }
 
     @Override
-    public void loginResponse(boolean response) {
-        if (response == true) {
+    public void loginResponseGoToVIew(String response) {
+        if (response.equals("true")) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }else {
+        }else if (response.equals("false")) {
             setConfirmText("Login Fail!!");
+        }else if (response.equals("nee")) {
+            setConfirmText("Not Exist Email!!");
         }
-    }
-
-    @Override
-    public void loginDataSend(LoginSessionItem item) {
-        setConfirmText("From DB userdata :" + item.getAccountNo() + ", " + item.getAccountNick() + ", " + item.getAccountImage() + ", " +
-                item.getAccountPoint() + ", " + item.getAccountBc() + ", " + item.getAccountCc());
-
-        Log.d(TAG, "loginDataSend: " + item.getAccountNo());
-        Log.d(TAG, "loginDataSend: " + item.getAccountNick());
-        Log.d(TAG, "loginDataSend: " + item.getAccountImage());
-        Log.d(TAG, "loginDataSend: " + item.getAccountPoint());
-        Log.d(TAG, "loginDataSend: " + item.getAccountBc());
-        Log.d(TAG, "loginDataSend: " + item.getAccountCc());
-
-//        if (cb_autologin.isChecked()) {
-//            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
-//                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
-//            // Gson 인스턴스 생성
-//            Gson gson = new GsonBuilder().create();
-//            // JSON 으로 변환
-//            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
-//            //shared에 객체 저장
-//            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
+//        if (response == true) {
+//            Intent intent = new Intent(this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
 //        }else {
-//            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
-//                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
-//            // Gson 인스턴스 생성
-//            Gson gson = new GsonBuilder().create();
-//            // JSON 으로 변환
-//            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
-//            //shared에 객체 저장
-//            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
+//            setConfirmText("Login Fail!!");
 //        }
     }
+
+//    @Override
+//    public void loginDataSend(LoginSessionItem item) {
+//        setConfirmText("From DB userdata :" + item.getAccountNo() + ", " + item.getAccountNick() + ", " + item.getAccountImage() + ", " +
+//                item.getAccountPoint() + ", " + item.getAccountBc() + ", " + item.getAccountCc());
+//
+//        Log.d(TAG, "loginDataSend: " + item.getAccountNo());
+//        Log.d(TAG, "loginDataSend: " + item.getAccountNick());
+//        Log.d(TAG, "loginDataSend: " + item.getAccountImage());
+//        Log.d(TAG, "loginDataSend: " + item.getAccountPoint());
+//        Log.d(TAG, "loginDataSend: " + item.getAccountBc());
+//        Log.d(TAG, "loginDataSend: " + item.getAccountCc());
+//
+////        if (cb_autologin.isChecked()) {
+////            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
+////                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
+////            // Gson 인스턴스 생성
+////            Gson gson = new GsonBuilder().create();
+////            // JSON 으로 변환
+////            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
+////            //shared에 객체 저장
+////            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
+////        }else {
+////            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
+////                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
+////            // Gson 인스턴스 생성
+////            Gson gson = new GsonBuilder().create();
+////            // JSON 으로 변환
+////            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
+////            //shared에 객체 저장
+////            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
+////        }
+//    }
 
     @Override
     public void onClick(View view) {
@@ -168,6 +177,8 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 //회원가입하기 텍뷰 리스터
                 Log.d(TAG, "onClick: 회원가입하기 클릭");
                 Toast.makeText(LoginActivity.this, "회원가입 화면으로 가기.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, SignUpActivity.class);
+                startActivity(intent);
                 break;
             case R.id.accountAutoLoginCheck :
                 Log.d(TAG, "onClick: 체크박스 클릭");

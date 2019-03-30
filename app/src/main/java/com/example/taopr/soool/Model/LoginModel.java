@@ -87,8 +87,10 @@ public class LoginModel {
                                             //result는 이메일 존재여부를 받는 변수.
                                             if(result.equals("nee")) {
                                                 Log.d(TAG, "onResponse nee : not exist email");
+                                                loginPresenter.loginResponse("nee");
                                             } else if (result.equals("false")) {
                                                 Log.d(TAG, "onResponse false : false");
+                                                loginPresenter.loginResponse("false");
                                             } else if (result.equals("true")){
                                                 //이메일 비밀번호 맞았을 경우 응답 값들을 shared에 저장해야함.
                                                 accountNo  = returnData.getInt("accountNo");
@@ -112,7 +114,7 @@ public class LoginModel {
                                                 String userClass = gson.toJson(item, LoginSessionItem.class);
                                                 //shared에 객체 저장
                                                 LoginSharedPreferences.LoginUserSave(context, "LoginAccount", userClass);
-                                                loginPresenter.loginResponse(true);
+                                                loginPresenter.loginResponse("true");
                                             }
                                         }
                                     }

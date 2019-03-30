@@ -32,13 +32,13 @@ public class LoginPresenter implements LoginInter {
     }
     //model의 응답을 view에게 보내주는 메서드
     @Override
-    public void loginResponse(boolean response) {
-        view.loginResponse(response);
+    public void loginResponse(String response) {
+        view.loginResponseGoToVIew(response);
     }
 
-    @Override
-    public void loginDataSend(LoginSessionItem item) {
-        view.loginDataSend(item);
-    }
+//    @Override
+//    public void loginDataSend(LoginSessionItem item) {
+//        view.loginDataSend(item);
+//    }
 
 }
