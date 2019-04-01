@@ -3,4 +3,6 @@
     <string name="test">test</string>
     <string name="kakao_app_key">f845937bd9afbfbf10ed886935c19219</string>
     <string name="terms_of_service">이용약관</string>
+    <string name="facebook_app_id">309267686381329</string>
+    <string name="fb_login_protocol_scheme">fb309267686381329</string>
 </resources>

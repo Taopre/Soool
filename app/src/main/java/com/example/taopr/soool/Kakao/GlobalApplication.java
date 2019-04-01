@@ -7,7 +7,7 @@ import android.util.Log;
 import com.kakao.auth.KakaoSDK;
 
 public class GlobalApplication extends Application {
-    private static String TAG = "카카오톡 Global";
+    private static String TAG = "Kakao_API";
     private static volatile GlobalApplication obj = null;
     private static volatile Activity currentActivity = null;
 
