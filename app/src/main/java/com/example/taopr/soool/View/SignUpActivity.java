@@ -152,6 +152,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         }
     }
 
+    //이메일, 닉네임 중복 체크에 대한 응답을 View에서 처리하기 위해 만든 함수.
     public void clickDuplicityResponseGoToVIew(int separator, String emailorNick, boolean response) {
         // 중복 false, 중복x true
         if (separator == 0) {
@@ -257,6 +258,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         }
     }
 
+    //회원가입에 대한 서버로 부터의 응답을 View에서 처리하기 위해 만든 메서드.
     public void signUpReqResponseGoToVIew (boolean response) {
         if( response == false){
             Log.i(TAG, "clickSignUp: 다시 시도해주세요 ");
@@ -284,6 +286,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     // 9. 성공 했을 경우에는 가입한 유저의 회원번호를 전달 받는다.
     // 10. 회원번호, 이메일값 그리고 자동로그인 값을 쉐어드에 저장 후 메인 페이지로 이동
 
+    //회원가입 버튼 클릭 리스너 부분.
     @OnClick(R.id.signUp)
     void clickSignUp(){
 
@@ -328,6 +331,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
 
         else{
 //            boolean signUpSuccess = signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
+            //회원가입 가능한지 model로 요청 하는 부분.
             signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
         }
     }
@@ -336,6 +340,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     // 회원 이메일(accountEmail)과 계정번호(accountNo)의 값와 autoLogin변수에 true값 쉐어드에 저장
     // 저장 후 메인 페이지로 이동
 
+
+    //로그인 페이지로 이동의 클릭리스너 부분.
     @OnClick(R.id.signUpToLogIn)
     public void setSignUpToLogIn(){
         Intent intent = new Intent(this, LoginActivity.class);
