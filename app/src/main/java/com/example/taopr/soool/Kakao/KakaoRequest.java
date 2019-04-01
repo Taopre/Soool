@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.example.taopr.soool.View.SignUpActivity;
+import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KakaoRequest {
-    private static String TAG = "Kakao";
+    private static String TAG = "Kakao_API";
 
     public void requestMe(final Context startingContext) {
         List<String> keys = new ArrayList<>();
@@ -33,25 +34,24 @@ public class KakaoRequest {
 
             @Override
             public void onSessionClosed(ErrorResult errorResult) {
-                Log.i(TAG, "onSessionClosed: ");
                 // redirectLoginActivity();
             }
 
             @Override
             public void onSuccess(MeV2Response response) {
-                Log.i(TAG, "onSuccess: ");
+
                 if(response == null){
                     Log.i(TAG, "onSuccess:  null");
                 }
                 else {
-                    Log.i(TAG, "onSuccess: not null");
+
                     Log.i(TAG, "onSuccess: getId()" + response.getId() );
                     Log.i(TAG, "onSuccess: email" + response.getKakaoAccount().getEmail());
                     Log.i(TAG, "onSuccess: image" + response.getProfileImagePath());
 
                     Logger.d("user id : " + response.getId());
                     Logger.d("email: " + response.getKakaoAccount().getEmail());
-                    //Logger.d("profile image: " + response.getKakaoAccount().get);
+
 
                     // 나중에 보내는 데이터가 많아질 경우에는 객체로 전달 하는 것이 더 용이
                     String snsAcccountEmail = response.getKakaoAccount().getEmail();
@@ -65,7 +65,6 @@ public class KakaoRequest {
                     }
                 }
             }
-
 
            /* @Override
             public void onNotSignedUp() {
@@ -107,7 +106,7 @@ public class KakaoRequest {
 
             @Override
             public void onDidEnd() {
-//        Session.getCurrentSession().close();
+                Session.getCurrentSession().close();
                 onCompleteLogout();
             }
         });

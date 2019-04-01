@@ -91,11 +91,13 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         tv_signup = findViewById(R.id.accountSignup);
         cb_autologin = findViewById(R.id.accountAutoLoginCheck);
     }
+
     //이 함수는 데이터 결과 확인차 만들어놓은 함수. 나중에 없애도 되는 부분.
     @Override
     public void setConfirmText(String text) {
         tv_loginStatus.setText(text);
     }
+
 
     //loginResponseGoToView 이 함수는 LoginModel(model)에서 서버로부터 넘어온 응답을 LoginActivity(view)로 보낼 때 LoginPresenter(presenter)가 먼저 받고 LoginActivity(view)로 보낼 때 사용되는 함수입니다.
     //데이터 이동 경로 : model -> preseneter (loginResponse 함수 사용된다.) presenter -> view (loginResponseGoToVIew 함수 사용된다.)
@@ -178,7 +180,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 //회원가입하기 텍뷰 리스터
                 Log.d(TAG, "onClick: 회원가입하기 클릭");
                 Toast.makeText(LoginActivity.this, "회원가입 화면으로 가기.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, SignUpActivity.class);
+                Intent intent = new Intent(this, StartingActivity.class);
                 startActivity(intent);
                 break;
             case R.id.accountAutoLoginCheck :

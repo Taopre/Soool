@@ -7,12 +7,45 @@
     tools:context=".View.StartingActivity"
     android:orientation="vertical"
     >
-    <com.kakao.usermgmt.LoginButton
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:id="@+id/kakaoLogin">
 
-    </com.kakao.usermgmt.LoginButton>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.kakao.usermgmt.LoginButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/kakaoLogin"
+            android:visibility="gone"
+            >
+        </com.kakao.usermgmt.LoginButton>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="kakao"
+            android:id="@+id/customKakaoLogin"
+            />
+
+
+    </FrameLayout>
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+        <com.facebook.login.widget.LoginButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/faceLogin"
+            android:visibility="gone"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/customFaceLogin"
+            android:text="facebook"/>
+
+</FrameLayout>
 
     <Button
         android:layout_width="match_parent"
