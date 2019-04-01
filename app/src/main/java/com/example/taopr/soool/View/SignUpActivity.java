@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taopr.soool.MainActivity;
 import com.example.taopr.soool.Presenter.SignUpPresenter;
 import com.example.taopr.soool.R;
 
@@ -21,7 +22,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-public class SignUpActivity extends AppCompatActivity{
+public class SignUpActivity extends AppCompatActivity implements SignUpPresenter.View{
 
     // 변수명 규칙
     // 첫단어의 첫자는 소문자 그다음 단어들의 첫자는 대문자
@@ -52,7 +53,6 @@ public class SignUpActivity extends AppCompatActivity{
     private Boolean clickEmailDupBool = false; // 이메일 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
     private Boolean clickNickDupBool = false; // 닉네임 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
 
-
     private static String TAG = "SignUpActivity";
 
     @Override
@@ -61,7 +61,8 @@ public class SignUpActivity extends AppCompatActivity{
         setContentView(R.layout.activity_sign_up);
 
         ButterKnife.bind(this);
-        signUpPresenter = new SignUpPresenter(this);
+        signUpPresenter = new SignUpPresenter(SignUpActivity.this, this);
+        signUpPresenter.setView(this);
 
         if(getIntent() != null) {
             signUpThroughSNS();
@@ -138,15 +139,36 @@ public class SignUpActivity extends AppCompatActivity{
         else {
 
             // 보내는 값일 이메일인 경우 separator=0, 닉네임인 경우 separator=1
-            Boolean b = signUpPresenter.clickDuplicity(0,accountEmail.getText().toString());
-            Log.i(TAG, "emailDupClick: email = " + accountEmail.getText().toString() + ", 사용 가능 여부 : " + b);
+//            Boolean b = signUpPresenter.clickDuplicity(0,accountEmail.getText().toString());
+            signUpPresenter.clickDuplicity(0,accountEmail.getText().toString());
+//            Log.i(TAG, "emailDupClick: email = " + accountEmail.getText().toString() + ", 사용 가능 여부 : " + b);
+//
+//            // 중복 false, 중복x true
+//
+//            emailEnable = b;
+//            clickEmailDupBool = true;
+//
+//            accountPW.requestFocus();
+        }
+    }
 
-            // 중복 false, 중복x true
+    //이메일, 닉네임 중복 체크에 대한 응답을 View에서 처리하기 위해 만든 함수.
+    public void clickDuplicityResponseGoToVIew(int separator, String emailorNick, boolean response) {
+        // 중복 false, 중복x true
+        if (separator == 0) {
+            Log.i(TAG, "emailDupClick: email = " + emailorNick + ", 사용 가능 여부 : " + response);
 
-            emailEnable = b;
+            emailEnable = response;
             clickEmailDupBool = true;
 
             accountPW.requestFocus();
+        } else {
+            Log.i(TAG, "nickDupClick: nick = " + accountNick.getText().toString() + ", 중복 여부 : " + response);
+
+            // 중복 false, 중복x true
+
+            nickEnable = response;
+            clickNickDupBool = true;
         }
     }
 
@@ -216,22 +238,36 @@ public class SignUpActivity extends AppCompatActivity{
     void nickDupClick(){
 
         Log.i(TAG, "nickDupClick: , 텍스트 길이 : " + accountNick.getText().length());
-        
+
         // 이메일 값을 아무것도 입력하지 않은 경우
         if(accountNick.getText().length()==0){
-            Log.i(TAG, "emailDupClick: 이메일 값 입력해주세요");
+            Log.i(TAG, "emailDupClick: nick 값 입력해주세요");
         }
 
         else {
 
             // 보내는 값일 이메일인 경우 separator=0, 닉네임인 경우 separator=1
-            Boolean b = signUpPresenter.clickDuplicity(1,accountNick.getText().toString());
-            Log.i(TAG, "nickDupClick: nick = " + accountNick.getText().toString() + ", 중복 여부 : " + b);
+//            Boolean b = signUpPresenter.clickDuplicity(1,accountNick.getText().toString());
+            signUpPresenter.clickDuplicity(1,accountNick.getText().toString());
+//            Log.i(TAG, "nickDupClick: nick = " + accountNick.getText().toString() + ", 중복 여부 : " + b);
+//
+//            // 중복 false, 중복x true
+//
+//            nickEnable = b;
+//            clickNickDupBool = true;
+        }
+    }
 
-            // 중복 false, 중복x true
-
-            nickEnable = b;
-            clickNickDupBool = true;
+    //회원가입에 대한 서버로 부터의 응답을 View에서 처리하기 위해 만든 메서드.
+    public void signUpReqResponseGoToVIew (boolean response) {
+        if( response == false){
+            Log.i(TAG, "clickSignUp: 다시 시도해주세요 ");
+        }
+        else{
+            Log.i(TAG, "clickSignUp: 회원가입 성공 ");
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 
@@ -250,7 +286,7 @@ public class SignUpActivity extends AppCompatActivity{
     // 9. 성공 했을 경우에는 가입한 유저의 회원번호를 전달 받는다.
     // 10. 회원번호, 이메일값 그리고 자동로그인 값을 쉐어드에 저장 후 메인 페이지로 이동
 
-
+    //회원가입 버튼 클릭 리스너 부분.
     @OnClick(R.id.signUp)
     void clickSignUp(){
 
@@ -294,14 +330,9 @@ public class SignUpActivity extends AppCompatActivity{
         // 상위의 조건을 모두 만족한 경우 서버에 accountEmail, accountPW, accountNick 전달.
 
         else{
-            boolean signUpSuccess = signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
-            if( signUpSuccess == false){
-                Log.i(TAG, "clickSignUp: 다시 시도해주세요 ");
-            }
-            else{
-                Log.i(TAG, "clickSignUp: 회원가입 성공 ");
-                setSignUpToLogIn();
-            }
+//            boolean signUpSuccess = signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
+            //회원가입 가능한지 model로 요청 하는 부분.
+            signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
         }
     }
 
@@ -309,8 +340,13 @@ public class SignUpActivity extends AppCompatActivity{
     // 회원 이메일(accountEmail)과 계정번호(accountNo)의 값와 autoLogin변수에 true값 쉐어드에 저장
     // 저장 후 메인 페이지로 이동
 
+
+    //로그인 페이지로 이동의 클릭리스너 부분.
     @OnClick(R.id.signUpToLogIn)
     public void setSignUpToLogIn(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
 
         Log.i(TAG, "setLinkToLogin: 로그인 페이지 이동");
     }

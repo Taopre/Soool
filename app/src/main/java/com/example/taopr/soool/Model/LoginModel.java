@@ -1,5 +1,6 @@
 package com.example.taopr.soool.Model;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -9,6 +10,9 @@ import com.example.taopr.soool.LoginSessionItem;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Presenter.LoginPresenter;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,10 +42,15 @@ public class LoginModel {
     private LoginPresenter loginPresenter;
     private LoginSessionItem item;
 
-    public LoginModel(LoginPresenter loginPresenter) {
+    Context context;
+
+    //생성자 shared를 위해 context를 사용.
+    public LoginModel(LoginPresenter loginPresenter, Context context) {
         this.loginPresenter = loginPresenter;
+        this.context = context;
     }
 
+    //LoginActvity(view)로부터 입력받은 값을 model에서 로그인 처리를 위해 만든 메서드.
     public void login(LoginItem userItem) {
 //        Log.d("in model.login()", userItem.getId() + "//" + userItem.getPwd());
 //        if(userItem.getId().equals("goo428") && userItem.getPwd().equals("123")) {
@@ -51,6 +60,7 @@ public class LoginModel {
 //        }
         Log.d(TAG, "시작");
 
+        //RxJava 사용 아래 보이는 observable. 책으로 더 공부해봐야할 듯. 아직 설명을 못하겠음.
         Observable.just(userItem.getId(), userItem.getPwd())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(Schedulers.io())
@@ -62,15 +72,14 @@ public class LoginModel {
                         try
                         {
                             Log.d(TAG, "시작 바로 전");
-//                            Retrofit retrofit = new Retrofit.Builder()
-//                                    .baseUrl("http://")
-////                                    .baseUrl("http://")
-//                                    .addConverterFactory(GsonConverterFactory.create())
-//                                    .build();
                             //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
+                            //Retrofit 객체 불러와서 선언하는 부분.
                             APIService service = APIClient.getClient().create(APIService.class);
 
+                            //Call함수로 LoginActivity(view)로부터 받은 인자를 서버로 넘기는 부분.
                             Call<ResponseBody> callServer = service.getUserItem(userItem.getId().toString(), userItem.getPwd().toString());
+
+                            //서버로 부터 응답을 받는 부분.
                             callServer.enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -82,11 +91,15 @@ public class LoginModel {
                                             JSONObject returnData = jsonArray.getJSONObject(i);
 
                                             result = returnData.getString("result");
-                                            //result는 이메일 존재여부를 받는 변수.
+
                                             if(result.equals("nee")) {
                                                 Log.d(TAG, "onResponse nee : not exist email");
+                                                //LoginActivity(view)로 결과 전송
+                                                loginPresenter.loginResponse("nee");
                                             } else if (result.equals("false")) {
                                                 Log.d(TAG, "onResponse false : false");
+                                                //LoginActivity(view)로 결과 전송
+                                                loginPresenter.loginResponse("false");
                                             } else if (result.equals("true")){
                                                 //이메일 비밀번호 맞았을 경우 응답 값들을 shared에 저장해야함.
                                                 accountNo  = returnData.getInt("accountNo");
@@ -103,8 +116,15 @@ public class LoginModel {
                                                 Log.d(TAG, "onResponse true : "+accountBc);
                                                 Log.d(TAG, "onResponse true : "+accountCc);
 
-                                                item = new LoginSessionItem(accountNo, accountNick, accountImage, accountPoint, accountBc, accountCc);
-                                                loginPresenter.loginDataSend(item);
+                                                item = new LoginSessionItem(accountNo, accountNick, accountImage, accountPoint, accountBc, accountCc, userItem.isAutologinStatus());
+                                                // Gson 인스턴스 생성
+                                                Gson gson = new GsonBuilder().create();
+                                                // JSON 으로 변환
+                                                String userClass = gson.toJson(item, LoginSessionItem.class);
+                                                //shared에 객체 저장
+                                                LoginSharedPreferences.LoginUserSave(context, "LoginAccount", userClass);
+                                                //LoginActivity(view)로 결과 전송
+                                                loginPresenter.loginResponse("true");
                                             }
                                         }
                                     }
@@ -138,20 +158,22 @@ public class LoginModel {
                     @Override
                     public void onSubscribe(Disposable d)
                     {
+                        Log.d(TAG, "onSubscribe : wfpowjefpwfepowfjwpfojwfepojfe");
                     }
                     @Override
                     public void onNext(Boolean s)
                     {
-
+                        Log.d(TAG, "onNext: wfpowjefpwfepowfjwpfojwfepojfe");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.d(TAG, "onError : wfpowjefpwfepowfjwpfojwfepojfe");
                     }
                     @Override
                     public void onComplete()
                     {
+                        Log.d(TAG, "onComplete : wfpowjefpwfepowfjwpfojwfepojfe");
                     }
                 });
     }
