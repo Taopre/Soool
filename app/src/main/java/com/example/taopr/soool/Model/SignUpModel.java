@@ -345,12 +345,15 @@ public class SignUpModel {
 
                                             String result = returnData.getString("result");
                                             int accountNo = returnData.getInt("accountNo");
-                                            int accountPoint = returnData.getInt("accountPoint");
+                                          //  int accountPoint = returnData.getInt("accountPoint");
 
                                             if(result.equals("true")) {
                                                 Log.d(TAG, "onResponse true : true");
 
-                                                item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png", accountPoint, 0, 0, true);
+                                                //item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png", accountPoint, 0, 0, true);
+                                                item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png",
+                                                        50, 0, 0, true);
+
                                                 // Gson 인스턴스 생성
                                                 Gson gson = new GsonBuilder().create();
                                                 // JSON 으로 변환
