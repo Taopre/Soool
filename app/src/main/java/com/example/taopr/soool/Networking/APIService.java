@@ -31,7 +31,7 @@ public interface APIService {
     //  @GET("/answers?order=desc&sort=activity&site=stackoverflow")
     // Call<SOAnswersResponse> getAnswers(@Query("tagged") String tags);
     @FormUrlEncoded
-    @POST("Signup/Signup.php")
+    @POST("/Signup/Signup.php")
     Call<ResponseBody> signUpRes(@Field("accountEmail") String accountEmail, @Field("accountPW") String accountPW,
                                  @Field("accountNick") String accountNick);
 
