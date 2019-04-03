@@ -1,4 +1,4 @@
-package com.example.taopr.soool;
+package com.example.taopr.soool.Object;
 
 public class LoginItem {
     //로그인 시 mvp간에 인자 넘겨줄 객체입니다.

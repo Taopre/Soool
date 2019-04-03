@@ -3,14 +3,13 @@ package com.example.taopr.soool.Model;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.taopr.soool.LoginSessionItem;
+import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Presenter.SignUpPresenter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +27,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class SignUpModel {
 
@@ -345,15 +343,14 @@ public class SignUpModel {
 
                                             String result = returnData.getString("result");
                                             int accountNo = returnData.getInt("accountNo");
-                                          //  int accountPoint = returnData.getInt("accountPoint");
+                                            //종현이가 넘겨줘야 주석 풀어야함
+//                                            int accountPoint = returnData.getInt("accountPoint");
 
                                             if(result.equals("true")) {
                                                 Log.d(TAG, "onResponse true : true");
-
-                                                //item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png", accountPoint, 0, 0, true);
-                                                item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png",
-                                                        50, 0, 0, true);
-
+                                                //종현이가 넘겨줘야 주석 풀어야함
+//                                                item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png", accountPoint, 0, 0, true);
+                                                item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png", 50, 0, 0, true);
                                                 // Gson 인스턴스 생성
                                                 Gson gson = new GsonBuilder().create();
                                                 // JSON 으로 변환

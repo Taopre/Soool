@@ -4,17 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class LoginSharedPreferences {
-    public static void LoginUserSave(Context context, String Name, String Value){
+    public static void LoginUserSave(Context context, String key, String Value){
         SharedPreferences pref = context.getSharedPreferences("LoginUser", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(Name, Value);
+        editor.putString(key, Value);
         editor.commit();
     }
 
 
-    public static String LoginUserLoad(Context context, String Name){
+    public static String LoginUserLoad(Context context, String key){
         SharedPreferences pref = context.getSharedPreferences("LoginUser", Context.MODE_PRIVATE);
-        String data = pref.getString(Name, "");
+        String data = pref.getString(key, "");
         return data;
     }
 }
