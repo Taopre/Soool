@@ -1,10 +1,10 @@
 package com.example.taopr.soool.Object;
 
-import android.net.Uri;
-
-public class QnaDrawUpItem {
+public class QnaBoardItem {
 
     private String title, content, tag, image;
+
+
 
     public String getContent() {
         return content;
