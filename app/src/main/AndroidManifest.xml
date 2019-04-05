@@ -3,10 +3,6 @@
     package="com.example.taopr.soool">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- camera, gallery -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".Kakao.GlobalApplication"
@@ -16,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        >
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -24,26 +20,23 @@
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
 
-        <activity android:name=".View.MainActivity">
-
-        </activity>
-        <activity android:name=".View.SignUpActivity">
-
-        </activity>
+        <activity android:name="View.MainActivity"></activity>
+        <activity android:name=".View.SignUpActivity"></activity>
         <activity android:name=".View.StartingActivity">
-
-        </activity>
-        <activity android:name=".View.LoginActivity">
-
-        </activity>
-        <activity android:name=".View.QnaDrawUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".View.InfoActivity">
+        </activity>
+        <activity android:name=".View.QnaDrawUpActivity">
+        </activity>
+        <activity android:name=".View.LoginActivity">
+
         </activity>
 
     </application>
