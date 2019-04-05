@@ -1,16 +1,12 @@
 package com.example.taopr.soool.Model;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.LoginSessionItem;
-import com.example.taopr.soool.Object.QnaDrawUpItem;
+import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Presenter.QnaDrawUpPresenter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
@@ -22,9 +18,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -50,7 +43,7 @@ public class QnaDrawUpModel {
         this.context = context;
     }
     // QnaDrawUpActivity로 게시물 관련 데이터들을 객체로 받아서 서버로 저장하는 함수.
-    public void enrollmentReqFromView(QnaDrawUpItem item) {
+    public void enrollmentReqFromView(QnaBoardItem item) {
         String data = LoginSharedPreferences.LoginUserLoad(context, "LoginAccount");
         Gson gson = new GsonBuilder().create();
         // JSON 으로 변환
