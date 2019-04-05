@@ -33,7 +33,7 @@
         </activity>
         <activity android:name=".View.InfoActivity">
         </activity>
-        <activity android:name=".View.QnaDrawUpActivity">
+        <activity android:name=".View.QnaBoardActivity">
         </activity>
         <activity android:name=".View.LoginActivity">
 
