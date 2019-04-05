@@ -1,7 +1,6 @@
 package com.example.taopr.soool.View;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -33,7 +32,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
-import com.example.taopr.soool.Object.QnaDrawUpItem;
+import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Presenter.QnaDrawUpPresenter;
 import com.example.taopr.soool.R;
 
@@ -45,10 +44,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, QnaDrawUpPresenter.View {
@@ -73,7 +69,7 @@ public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClick
 
     DrawUpTagAdapter drawUpTagAdapter;
     QnaDrawUpPresenter qnaDrawUpPresenter;
-    QnaDrawUpItem qnaDrawUpItem = new QnaDrawUpItem();
+    QnaBoardItem qnaBoardItem = new QnaBoardItem();
 
     Uri image;
     String title = "", content = "", tag = "", imgPath, imgName;
@@ -270,7 +266,7 @@ public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClick
                 btn_drawupDeleteBtn.setVisibility(View.GONE);
 
                 UploadImgPath = null;
-                qnaDrawUpItem.setImage(UploadImgPath);
+                qnaBoardItem.setImage(UploadImgPath);
 
                 break;
             case R.id.drawupBack:
@@ -289,21 +285,21 @@ public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClick
                     Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
                             + et_drawupTitle.getText().toString() + " 내용 : " + et_drawupContent.getText().toString());
 
-                    qnaDrawUpItem.setTag(tag);
-                    qnaDrawUpItem.setTitle(et_drawupTitle.getText().toString());
-                    qnaDrawUpItem.setContent(et_drawupContent.getText().toString());
+                    qnaBoardItem.setTag(tag);
+                    qnaBoardItem.setTitle(et_drawupTitle.getText().toString());
+                    qnaBoardItem.setContent(et_drawupContent.getText().toString());
 
-                    qnaDrawUpPresenter.enrollmentReq(qnaDrawUpItem);
+                    qnaDrawUpPresenter.enrollmentReq(qnaBoardItem);
                 }else {
                     Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
                             + et_drawupTitle.getText().toString() + " 내용 : " + et_drawupContent.getText().toString() + " 이미지 : " + UploadImgPath);
 
-                    qnaDrawUpItem.setTag(tag);
-                    qnaDrawUpItem.setTitle(et_drawupTitle.getText().toString());
-                    qnaDrawUpItem.setContent(et_drawupContent.getText().toString());
-                    qnaDrawUpItem.setImage(UploadImgPath);
+                    qnaBoardItem.setTag(tag);
+                    qnaBoardItem.setTitle(et_drawupTitle.getText().toString());
+                    qnaBoardItem.setContent(et_drawupContent.getText().toString());
+                    qnaBoardItem.setImage(UploadImgPath);
 
-                    qnaDrawUpPresenter.enrollmentReq(qnaDrawUpItem);
+                    qnaDrawUpPresenter.enrollmentReq(qnaBoardItem);
                 }
                 break;
         }
