@@ -1,7 +1,6 @@
 package com.example.taopr.soool.View;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,14 +11,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.taopr.soool.LoginItem;
-import com.example.taopr.soool.LoginSessionItem;
-import com.example.taopr.soool.MainActivity;
+import com.example.taopr.soool.Object.LoginItem;
+import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Presenter.LoginPresenter;
 import com.example.taopr.soool.R;
-import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

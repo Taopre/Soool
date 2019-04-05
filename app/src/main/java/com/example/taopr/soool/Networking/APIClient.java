@@ -16,7 +16,6 @@ public class APIClient {
 
     public static Retrofit getClient() {
 
-
      // 이 부분은 http상에서 나오는 에러를 로그를 찍어보기 위해서
      //   나중에 추가하면 좋을듯
      //   HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -30,11 +29,10 @@ public class APIClient {
                 .connectTimeout(100, TimeUnit.SECONDS)
                 .readTimeout(100,TimeUnit.SECONDS).build();
 
-       Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Whatisthis.serverIp)  //
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit;
-
     }
 }
