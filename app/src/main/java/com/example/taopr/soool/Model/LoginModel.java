@@ -1,12 +1,11 @@
 package com.example.taopr.soool.Model;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 
-import com.example.taopr.soool.LoginItem;
-import com.example.taopr.soool.LoginSessionItem;
+import com.example.taopr.soool.Object.LoginItem;
+import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Presenter.LoginPresenter;
@@ -26,12 +25,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginModel {
 

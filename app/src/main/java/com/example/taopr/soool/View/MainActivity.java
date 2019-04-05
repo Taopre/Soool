@@ -1,8 +1,9 @@
-package com.example.taopr.soool;
+package com.example.taopr.soool.View;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.taopr.soool.R;
 
 
 public class MainActivity extends AppCompatActivity {

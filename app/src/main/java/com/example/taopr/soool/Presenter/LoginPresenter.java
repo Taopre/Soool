@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.taopr.soool.LoginItem;
-import com.example.taopr.soool.LoginSessionItem;
+import com.example.taopr.soool.Object.LoginItem;
 import com.example.taopr.soool.Model.LoginModel;
 
 public class LoginPresenter implements LoginInter {

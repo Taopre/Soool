@@ -1,9 +1,9 @@
-package com.example.taopr.soool;
+package com.example.taopr.soool.Object;
 
 public class LoginSessionItem {
-    String accountNick, accountImage;
-    int accountNo, accountPoint, accountBc, accountCc;
-    boolean accountAutoLogin;
+    private String accountNick, accountImage;
+    private int accountNo, accountPoint, accountBc, accountCc;
+    private boolean accountAutoLogin;
 
     public LoginSessionItem(int _accountNo, String _accountNick, String _accountImage,
                             int _accountPoint, int _accountBc, int _accountCc, boolean _accountAutoLogin) {
