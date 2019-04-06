@@ -7,7 +7,7 @@ import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
-import com.example.taopr.soool.Presenter.QnaDrawUpPresenter;
+import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,15 +34,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QnaDrawUpModel {
+public class QnaBoardModel {
 
-    String TAG = "QnaDrawUpModel", accountNick, result;
+    String TAG = "QnaBoardModel", accountNick, result;
 
-    private QnaDrawUpPresenter qnaDrawUpPresenter;
+    private QnaBoardPresenter qnaDrawUpPresenter;
 
     Context context;
 
-    public QnaDrawUpModel(QnaDrawUpPresenter qnaDrawUpPresenter, Context context) {
+    public QnaBoardModel(QnaBoardPresenter qnaDrawUpPresenter, Context context) {
         this.qnaDrawUpPresenter = qnaDrawUpPresenter;
         this.context = context;
     }

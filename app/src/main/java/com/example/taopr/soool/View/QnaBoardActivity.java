@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
 import com.example.taopr.soool.Object.QnaBoardItem;
-import com.example.taopr.soool.Presenter.QnaDrawUpPresenter;
+import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.R;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -47,9 +47,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, QnaDrawUpPresenter.View {
+public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, QnaBoardPresenter.View {
 
-    private static final String TAG = "QnaDrawUpActivity";
+    private static final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
@@ -68,7 +68,7 @@ public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClick
     String absoultePath;
 
     DrawUpTagAdapter drawUpTagAdapter;
-    QnaDrawUpPresenter qnaDrawUpPresenter;
+    QnaBoardPresenter qnaDrawUpPresenter;
     QnaBoardItem qnaBoardItem = new QnaBoardItem();
 
     Uri image;
@@ -112,7 +112,7 @@ public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void DoBinding() {
-        qnaDrawUpPresenter = new QnaDrawUpPresenter(this, this);
+        qnaDrawUpPresenter = new QnaBoardPresenter(this, this);
         qnaDrawUpPresenter.setView(this);
 
         // 뷰들 선언하는 부분입니다.
@@ -173,7 +173,7 @@ public class QnaDrawUpActivity extends AppCompatActivity implements View.OnClick
                 for (int i = 0; i < grantResults.length; i++) {
                     // grantResults[] : 허용된 권한은 0, 거부한 권한은 -1
                     if (grantResults[i] < 0) {
-                        Toast.makeText(QnaDrawUpActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QnaBoardActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
