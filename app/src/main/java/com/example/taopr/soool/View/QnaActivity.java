@@ -1,22 +1,21 @@
 package com.example.taopr.soool.View;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.taopr.soool.R;
 
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class QnaActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btn_tabMain, btn_tabInfo, btn_tabQna, btn_tabMypage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_qna);
 
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
 
@@ -45,28 +44,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tabMain:
-                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                startActivity(new Intent(QnaActivity.this, MainActivity.class));
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 finish();
                 break;
 
             case R.id.tabInfo:
-                startActivity(new Intent(MainActivity.this,  InfoActivity.class));
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                startActivity(new Intent(QnaActivity.this,  InfoActivity.class));
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 finish();
                 break;
 
             case R.id.tabQna:
-                startActivity(new Intent(MainActivity.this, QnaActivity.class));
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                startActivity(new Intent(QnaActivity.this, QnaActivity.class));
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 finish();
                 break;
 
             case R.id.tabMypage:
-                startActivity(new Intent(MainActivity.this,  MyPageActivity.class));
+                startActivity(new Intent(QnaActivity.this,  MyPageActivity.class));
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
                 finish();
                 break;
         }
     }
 }
+
