@@ -1,7 +1,6 @@
 package com.example.taopr.soool.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class DrawUpTagAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView==null) {
-            convertView = inflater.from(context).inflate(R.layout.drawup_tag_spinner, parent, false);
+            convertView = inflater.from(context).inflate(R.layout.qnaboard_tag_spinner, parent, false);
         }
 
         TextView drawupTagItem = convertView.findViewById(R.id.drawupTagItem);
@@ -56,7 +55,7 @@ public class DrawUpTagAdapter extends BaseAdapter {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         if(convertView==null){
-            convertView = inflater.from(context).inflate(R.layout.drawup_tag_spinner, parent, false);
+            convertView = inflater.from(context).inflate(R.layout.qnaboard_tag_spinner, parent, false);
         }
 
         TextView drawupTagItem = convertView.findViewById(R.id.drawupTagItem);

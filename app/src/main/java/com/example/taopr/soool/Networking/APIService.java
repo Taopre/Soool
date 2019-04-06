@@ -51,10 +51,7 @@ public interface APIService {
 
     @FormUrlEncoded
     @POST("/qnapost/postWrite.php")
-    Call<ResponseBody> enrollQnaNoImage(@Field("accountNick") String accountNick, @Field("qnaTag") String qnaTag,
-                                        @Field("qnaTitle") String qnaTitle, @Field("qnaContent") String qnaContent);
+    Call<ResponseBody> enrollQnaNoImage(@Field("accountNick") String accountNick, @Field("qnaBoardTag") String qnaTag,
+                                        @Field("qnaBoardTitle") String qnaTitle, @Field("qnaBoardContent") String qnaContent);
 
-    @Multipart
-    @POST("Signup/ttest.php")
-    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file, @Part("name") RequestBody requestBody);
 }

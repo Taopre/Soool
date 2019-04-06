@@ -38,22 +38,34 @@ public class QnaBoardModel {
 
     String TAG = "QnaBoardModel", accountNick, result;
 
-    private QnaBoardPresenter qnaDrawUpPresenter;
+    private QnaBoardPresenter qnaBoardPresenter;
 
     Context context;
 
-    public QnaBoardModel(QnaBoardPresenter qnaDrawUpPresenter, Context context) {
-        this.qnaDrawUpPresenter = qnaDrawUpPresenter;
+    public QnaBoardModel(QnaBoardPresenter qnaBoardPresenter, Context context) {
+        this.qnaBoardPresenter = qnaBoardPresenter;
         this.context = context;
     }
+
     // QnaDrawUpActivity로 게시물 관련 데이터들을 객체로 받아서 서버로 저장하는 함수.
-    public void enrollmentReqFromView(QnaBoardItem item) {
+
+    public void enrollmentBoardReqFromView(QnaBoardItem item) {
+
+        // 쉐어드로부터 로그인한 사람의 닉네임 값을 불러내는 부분
+
         String data = LoginSharedPreferences.LoginUserLoad(context, "LoginAccount");
         Gson gson = new GsonBuilder().create();
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNick = loginSessionItem.getAccountNick();
         Log.d(TAG, "enrollmentReqFromView: 닉네임"+accountNick);
+
+
+        // 이미지의 유무로 조건을 걸어놓고
+        // 이미지가 없을 땐 retrofit2으로 값을 넘겼고
+        // 이미지가 있을 땐 okhttp3으로 값을 넘겨주었습니다.
+        // 넘어감의 응답을 view로 뿌려주게 마무리하였습니다.
+
 
         if(item.getImage() == null) {
             Log.d(TAG, "enrollmentReqFromView: "+accountNick+"//"+item.getTag()+"//"+item.getTitle()+"//"+item.getContent());
@@ -90,8 +102,10 @@ public class QnaBoardModel {
                                                 result = returnData.getString("result");
                                                 if(result.equals("true")){
                                                     Log.d(TAG, "onResponse: 인서트 성공");
+                                                    qnaBoardPresenter.enrollmentBoardResp(true);
                                                 }else {
                                                     Log.d(TAG, "onResponse: 인서트 실패");
+                                                    qnaBoardPresenter.enrollmentBoardResp(false);
                                                 }
                                             }
                                         }catch (IOException e) {
@@ -161,10 +175,10 @@ public class QnaBoardModel {
                                 RequestBody requestBody = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
                                         .addFormDataPart("accountNick", accountNick)
-                                        .addFormDataPart("qnaTag", item.getTag())
-                                        .addFormDataPart("qnaTitle", item.getTitle())
-                                        .addFormDataPart("qnaContent", item.getContent())
-                                        .addFormDataPart("qnaImage",file.getName(), RequestBody.create(MultipartBody.FORM, file))
+                                        .addFormDataPart("qnaBoardTag", item.getTag())
+                                        .addFormDataPart("qnaBoardTitle", item.getTitle())
+                                        .addFormDataPart("qnaBoardContent", item.getContent())
+                                        .addFormDataPart("qnaBoardImage",file.getName(), RequestBody.create(MultipartBody.FORM, file))
                                         .build();
 
                                 Request request = new Request.Builder()
@@ -193,8 +207,10 @@ public class QnaBoardModel {
 
                                                 if(result.equals("true")){
                                                     Log.d(TAG, "onResponse: 인서트 성공");
+                                                    qnaBoardPresenter.enrollmentBoardResp(true);
                                                 }else {
                                                     Log.d(TAG, "onResponse: 인서트 실패");
+                                                    qnaBoardPresenter.enrollmentBoardResp(false);
                                                 }
                                             }
                                         }catch (IOException e) {

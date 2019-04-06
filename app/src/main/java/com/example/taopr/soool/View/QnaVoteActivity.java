@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,120 +25,67 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
-import com.example.taopr.soool.Object.QnaBoardItem;
-import com.example.taopr.soool.Presenter.QnaBoardPresenter;
+import com.bumptech.glide.Glide;
+import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Presenter.QnaVotePresenter;
 import com.example.taopr.soool.R;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
+public class QnaVoteActivity extends AppCompatActivity implements View.OnClickListener, QnaVotePresenter.View {
 
-public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, QnaBoardPresenter.View {
-
-    private static final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
-    private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_iMAGE = 2;
 
-    Spinner sp_drawupTag;
-    EditText et_drawupTitle, et_drawupContent;
-    ImageButton ib_drawupImagebtn;
-    ImageView iv_drawupImage;
-    Button btn_drawupDeleteBtn;
+    ImageView iv_choice1stImage, iv_choice2ndImage;
+    EditText et_choiceTitle, et_choiceContent;
 
-    ArrayList<String> tagArray = new ArrayList<>();
-
-    private Uri mImageCaptureUri;
-    private int id_view;
-    String absoultePath;
-
-    DrawUpTagAdapter drawUpTagAdapter;
-    QnaBoardPresenter qnaBoardPresenter;
-    QnaBoardItem qnaBoardItem = new QnaBoardItem();
-
-    Uri image;
-    String title = "", content = "", tag = "", imgPath, imgName;
+    String imgPath, imgName, TAG = "QnaVoteActivity";
     static String UploadImgPath;
+    private Uri mImageCaptureUri;
+    String image1st, image2nd;
+    boolean ivNumber = false;
+
+    QnaVotePresenter qnaVotePresenter;
+    QnaVoteItem qnaVoteItem = new QnaVoteItem();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qnaboard);
+        setContentView(R.layout.activity_qnavote);
 
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
         checkPermission();
-
-        // 아래의 try / catch 문은 res/xml에 있는 스피너 메뉴값을 파싱하기 위해 가져다 쓴 부분입니다.
-        try{
-            // custom_list.xml 을 가져와 XmlPullParser 에 넣는다.
-            XmlPullParser customList = getResources().getXml(R.xml.drawup_tag);
-
-            // 파싱한 xml 이 END_DOCUMENT(종료 태그)가 나올때 까지 반복한다.
-            while(customList.getEventType()!=XmlPullParser.END_DOCUMENT){
-                // 태그의 첫번째 속성일 때,
-                if(customList.getEventType()==XmlPullParser.START_TAG){
-                    // 이름이 "custom" 일때, 첫번째 속성값을 ArrayList에 저장
-                    if(customList.getName().equals("custom")){
-                        tagArray.add(customList.getAttributeValue(0));
-                    }
-
-                }
-                // 다음 태그로 이동
-                customList.next();
-            }
-        }catch(XmlPullParserException e){
-            e.printStackTrace();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-
-        drawUpTagAdapter = new DrawUpTagAdapter(this, tagArray);
-        sp_drawupTag.setAdapter(drawUpTagAdapter);
     }
 
     private void DoBinding() {
-        qnaBoardPresenter = new QnaBoardPresenter(this, this);
-        qnaBoardPresenter.setView(this);
+        qnaVotePresenter = new QnaVotePresenter(this, this);
+        qnaVotePresenter.setView(this);
 
         // 뷰들 선언하는 부분입니다.
-        sp_drawupTag = findViewById(R.id.drawupTag);
-        et_drawupTitle =findViewById(R.id.drawupTitle);
-        et_drawupContent =findViewById(R.id.drawupContent);
-        ib_drawupImagebtn =findViewById(R.id.drawupImageBtn);
-        iv_drawupImage =findViewById(R.id.drawupImage);
-        btn_drawupDeleteBtn =findViewById(R.id.drawupDeleteBtn);
-
-        iv_drawupImage.setVisibility(View.GONE);
-        btn_drawupDeleteBtn.setVisibility(View.GONE);
-
+        iv_choice1stImage = findViewById(R.id.choice1stImage);
+        iv_choice2ndImage = findViewById(R.id.choice2ndImage);
+        et_choiceTitle = findViewById(R.id.choiceTitle);
+        et_choiceContent = findViewById(R.id.choiceContent);
         // 뷰의 리스너 선언 부분입니다.
-        sp_drawupTag.setOnItemSelectedListener(this);
-        ib_drawupImagebtn.setOnClickListener(this);
-        btn_drawupDeleteBtn.setOnClickListener(this);
+        iv_choice1stImage.setOnClickListener(this);
+        iv_choice2ndImage.setOnClickListener(this);
     }
 
     // 권한 묻는 부분.
     private void checkPermission(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // 다시 보지 않기 버튼을 만드려면 이 부분에 바로 요청을 하도록 하면 됨 (아래 else{..} 부분 제거)
-            // ActivityCompat.requestPermissions((Activity)mContext, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_CAMERA);
+//             ActivityCompat.requestPermissions((Activity)mContext, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_CAMERA);
 
             // 처음 호출시엔 if()안의 부분은 false로 리턴 됨 -> else{..}의 요청으로 넘어감
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -173,11 +122,12 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 for (int i = 0; i < grantResults.length; i++) {
                     // grantResults[] : 허용된 권한은 0, 거부한 권한은 -1
                     if (grantResults[i] < 0) {
-                        Toast.makeText(QnaBoardActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QnaVoteActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
                 // 허용했다면 이 부분에서..
+
                 break;
         }
     }
@@ -212,115 +162,91 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         return true;
     }
 
-    //스피너 리스너 부분
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "선택한 태그 : "+tagArray.get(position), Toast.LENGTH_SHORT).show();
-        tag = tagArray.get(position).toString();
-        Log.d(TAG, "onItemSelected: "+tag);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.drawupImageBtn:
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.choice1stImage:
                 //앨범 연동.
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(intent, 1);
-//                DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        doTakePhotoAction();
-//                    }
-//                };
+                ivNumber = true;
+
                 DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //앨범
-                        doTakeAlbumAction();
+                        doTakeAlbumAction("first");
                     }
                 };
                 DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //취소
                         dialog.dismiss();
                     }
                 };
                 new AlertDialog.Builder(this)
                         .setTitle("업로드할 이미지 선택")
-//                        .setPositiveButton("사진촬영", cameraListener)
                         .setNeutralButton("취소", cancelListener)
                         .setNegativeButton("앨범선택", albumListener)
                         .show();
                 break;
-            case R.id.drawupDeleteBtn:
-                Toast.makeText(this, "이미지가 삭제됩니다.", Toast.LENGTH_SHORT).show();
-                iv_drawupImage.setImageBitmap(null);
-                iv_drawupImage.setVisibility(View.GONE);
-                btn_drawupDeleteBtn.setVisibility(View.GONE);
+            case R.id.choice2ndImage:
+                ivNumber = false;
 
-                UploadImgPath = null;
-                qnaBoardItem.setImage(UploadImgPath);
-
+                DialogInterface.OnClickListener album2ndListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        doTakeAlbumAction("second");
+                    }
+                };
+                DialogInterface.OnClickListener cancel2ndListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                };
+                new AlertDialog.Builder(this)
+                        .setTitle("업로드할 이미지 선택")
+                        .setNeutralButton("취소", cancel2ndListener)
+                        .setNegativeButton("앨범선택", album2ndListener)
+                        .show();
                 break;
             case R.id.drawupBack:
                 Toast.makeText(this, "뒤로가기 클릭", Toast.LENGTH_SHORT).show();
                 //이전 액티비티로 인탠트 사용해줘야할 부분.
                 break;
             case R.id.drawupEnroll:
+
+                // 제목 / 내용 / 이미지 1, 2 예외 처리해주는 부분
+                // 위의 값들이 다 있어야만 객체를 통해 모델로 값을 넘겨주어 서버로 저장할 수 있도록 하였습니다.
+
                 Toast.makeText(this, "등록 클릭", Toast.LENGTH_SHORT).show();
-
-
-
-                // 태그 값 / 제목 / 내용 / 이미지 순으로의 예외 처리부분.
-                // 이미지의 경우 선택할 수 있도록 예외 처리를 해주었습니다.
-                // 예외 처리 이후에 모델로 넘어가 서버에 저장할 수 있도록 처리하였습니다.
-
-
-
-                if(tag.equals(null)) {
-                    Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
-                }else if(et_drawupTitle.getText().length() == 0) {
+                if(et_choiceTitle.getText().length() == 0) {
                     Log.d(TAG, "onClick: 제목을 입력해주세요.");
-                }else if(et_drawupContent.getText().length() == 0) {
+                }else if(ivNumber == true && image1st == null) {
+                    Log.d(TAG, "onClick: 첫번째 이미지를 골라주세요.");
+                }else if(ivNumber == false && image2nd == null) {
+                    Log.d(TAG, "onClick: 두번째 이미지를 골라주세요.");
+                }else if(et_choiceContent.getText().length() == 0) {
                     Log.d(TAG, "onClick: 내용을 입력해주세요.");
-                }else if(UploadImgPath == null) {
-                    Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                            + et_drawupTitle.getText().toString() + " 내용 : " + et_drawupContent.getText().toString());
-
-                    qnaBoardItem.setTag(tag);
-                    qnaBoardItem.setTitle(et_drawupTitle.getText().toString());
-                    qnaBoardItem.setContent(et_drawupContent.getText().toString());
-
-                    qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                 }else {
-                    Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                            + et_drawupTitle.getText().toString() + " 내용 : " + et_drawupContent.getText().toString() + " 이미지 : " + UploadImgPath);
+                    Log.d(TAG, "onClick: " + "제목 : " + et_choiceTitle.getText().toString() + " 내용 : "
+                            + et_choiceContent.getText().toString() + " 1번째 이미지 : " + image1st + " 2번째 이미지 : " + image2nd);
 
-                    qnaBoardItem.setTag(tag);
-                    qnaBoardItem.setTitle(et_drawupTitle.getText().toString());
-                    qnaBoardItem.setContent(et_drawupContent.getText().toString());
-                    qnaBoardItem.setImage(UploadImgPath);
+                    qnaVoteItem.setTitle(et_choiceTitle.getText().toString());
+                    qnaVoteItem.setContent(et_choiceContent.getText().toString());
+                    qnaVoteItem.setFirst_image(image1st);
+                    qnaVoteItem.setSecond_image(image2nd);
 
-                    qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
+                    qnaVotePresenter.enrollmentVoteReq(qnaVoteItem);
                 }
                 break;
         }
     }
+
     /**
 
      * 앨범에서 이미지 가져오기
 
      */
-    public void doTakeAlbumAction() // 앨범에서 이미지 가져오기
+    public void doTakeAlbumAction(String i) // 앨범에서 이미지 가져오기
     {
         // 앨범 호출
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -344,13 +270,13 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 // 실제 코드에서는 좀더 합리적인 방법을 선택하시기 바랍니다.
                 String name_Str = getImageNameToUri(data.getData());
                 mImageCaptureUri = data.getData();
-                image = mImageCaptureUri;
+                Log.d(TAG, "onActivityResult: "+mImageCaptureUri);
 
                 //절대경로 획득**
                 Cursor c = getContentResolver().query(Uri.parse(mImageCaptureUri.toString()), null, null, null, null);
                 c.moveToNext();
                 String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
-
+                Log.d(TAG, "onActivityResult: " + absolutePath);
                 //이미지 데이터를 비트맵으로 받아옴
                 Bitmap image_bitmap = null;
                 try {
@@ -364,25 +290,111 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 int width = image_bitmap.getWidth();
 
                 Bitmap src = BitmapFactory.decodeFile(absolutePath);
-                Bitmap resized = Bitmap.createScaledBitmap( src, width/4, height/4, true );
+                Bitmap resized = Bitmap.createScaledBitmap(src, width/4, height/4, true);
 
-                saveBitmaptoJpeg(resized, "soool", name_Str);
-                ////리사이징
+                saveBitmaptoJpeg(resized, "soool-test", name_Str);
+                //리사이징
 
-                iv_drawupImage.setVisibility(View.VISIBLE);
-                btn_drawupDeleteBtn.setVisibility(View.VISIBLE);
-//                iv_drawupImage.setImageURI(mImageCaptureUri);
+                int degree = getExifOrientation(UploadImgPath);
+                Log.d(TAG, "onActivityResult: 각도 상태는? " + degree);
+                Bitmap bitmap = BitmapFactory.decodeFile(UploadImgPath);
+                bitmap = getRotatedBitmap(bitmap, degree);
+
+                saveBitmaptoJpeg(bitmap, "soool-test", name_Str);
+
+                // 현재 몇몇의 이미지들은 회전이 되어 이미지뷰에 보여지는 현상이 있음.
+                // 오리엔테이션으로 값을 확인해봤지만 다들 상태가 0이어서 어떻게 처리해야할지 현재 몰라 방치해둔 상황.
 
                 if(!UploadImgPath.equals(null)) {
-                    File file = new File(UploadImgPath);
-                    Uri test = Uri.fromFile(file);
-                    iv_drawupImage.setImageURI(test);
+
+                    // ivNumber를 flag값으로 임의의로 지정하여
+                    // 이미지뷰를 구별하였습니다.
+                    // true = 첫번째 이미지뷰
+                    // false = 두번째 이미지뷰
+                    // 이미지 뷰의 가로 세로 값을 정확히 정해서 glide 처리해야할 것 같습니다.
+
+                    if (ivNumber == true) {
+                        image1st = UploadImgPath;
+                        UploadImgPath = null;
+
+                        File file1 = new File(image1st);
+                        Uri test1 = Uri.fromFile(file1);
+
+                        Glide.with(this)
+                                .load(test1)
+                                .override(100,100)
+                                .centerCrop()
+                                .into(iv_choice1stImage);
+                    } else {
+                        image2nd = UploadImgPath;
+                        UploadImgPath = null;
+
+                        File file2 = new File(image2nd);
+                        Uri test2 = Uri.fromFile(file2);
+
+                        Glide.with(this)
+                                .load(test2)
+                                .override(100,100)
+                                .centerCrop()
+                                .into(iv_choice2ndImage);
+                    }
                 }
 
                 Log.d("SmartWheel",mImageCaptureUri.getPath().toString());
             }
         }
     }
+
+    private int getExifOrientation(String filePath) {
+        ExifInterface exif = null;
+
+        try {
+            exif = new ExifInterface(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (exif != null) {
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+
+            if (orientation != -1) {
+                switch (orientation) {
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        return 90;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        return 180;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        return 270;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private Bitmap getRotatedBitmap(Bitmap bitmap, int degree) {
+        if (degree != 0 && bitmap != null) {
+            Matrix matrix = new Matrix();
+            matrix.setRotate(degree, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+
+            try {
+                Bitmap tmpBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+                if (bitmap != tmpBitmap) {
+                    bitmap.recycle();
+                    bitmap = tmpBitmap;
+                }
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bitmap;
+    }
+
 
     /////   Uri 에서 파일명을 추출하는 로직
     public String getImageNameToUri(Uri data)
@@ -425,16 +437,17 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
             Log.e("IOException", exception.getMessage());
         }
     }
-    // Model에서 서버로 부터 받은 응답 값을 받아서 어떻게 처리할 지 결정하는 메서드.
+
+    // 모델에서 서버로 부터의 응답을 받아와 처리하기 위해 만든 메서드.
+
     @Override
-    public void enrollmentBoardRespGoToView(boolean response) {
+    public void enrollmentVoteRespGoToView(boolean response) {
         if (response == true) {
 //            Intent intent = new Intent(this, QnaActivity.class);
 //            intent.addFlags();
 //            startActivity(intent);
         }else {
-            Toast.makeText(this, "Board 게시물 작성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vote 게시물 작성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 }
-

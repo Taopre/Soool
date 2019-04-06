@@ -41,4 +41,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'com.facebook.android:facebook-android-sdk:4.+'
     implementation 'com.android.support:recyclerview-v7:27.0.0'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 }
