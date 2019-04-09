@@ -1,9 +1,10 @@
 package com.example.taopr.soool.Object;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class QnaVoteItem {
-    private String title, content, first_image, second_image;
+public class QnaVoteItem implements Serializable {
+    private String title, content, first_image, second_image, tag;
     private String writer, date;
     private int comments, views;
     private List<QnaVoteItem> qnaVoteItems;
@@ -12,10 +13,11 @@ public class QnaVoteItem {
 
     }
 
-    public QnaVoteItem(String title, String content, String first_image,
+    public QnaVoteItem(String title, String content, String tag, String first_image,
                         String second_image, String writer, String date, int comments, int views, List<QnaVoteItem> qnaVoteItems) {
         this.title = title;
         this.content = content;
+        this.tag = tag;
         this.first_image = first_image;
         this.second_image = second_image;
         this.writer = writer;
@@ -23,6 +25,14 @@ public class QnaVoteItem {
         this.comments = comments;
         this.views = views;
         this.qnaVoteItems = qnaVoteItems;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getWriter() {

@@ -31,6 +31,7 @@ import okhttp3.RequestBody;
 public class QnaVoteModel {
 
     String TAG = "QnaVoteModel", accountNick, result;
+    int accountNo;
 
     private QnaVotePresenter qnaVotePresenter;
 
@@ -44,7 +45,7 @@ public class QnaVoteModel {
     // 뷰로부터 객체를 받아와 서버에 저장하기 위해 만든 메서드.
 
     public void enrollmentVoteReqFromView(QnaVoteItem item) {
-        Log.d(TAG, "enrollmentVoteReqFromView: "+item.getTitle()+item.getContent()+item.getFirst_image()+item.getSecond_image());
+        Log.d(TAG, "enrollmentVoteReqFromView: "+item.getTitle()+item.getContent()+item.getTag()+item.getFirst_image()+item.getSecond_image());
 
         // 쉐어드에서 로그인 유저 닉네임을 얻어내는 부분.
 
@@ -53,6 +54,7 @@ public class QnaVoteModel {
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNick = loginSessionItem.getAccountNick();
+        accountNo = loginSessionItem.getAccountNo();
 
         // 이미지 값을 파일로 저장하여 서버로 전달.
         // 이 부분은 4/6일 상황에서 디버깅을 아직 해보지 못한 부분이다.
@@ -74,7 +76,9 @@ public class QnaVoteModel {
 
                             RequestBody requestBody = new MultipartBody.Builder()
                                     .setType(MultipartBody.FORM)
+                                    .addFormDataPart("accountNo", accountNo+"")
                                     .addFormDataPart("accountNick", accountNick)
+                                    .addFormDataPart("qnaVoteTag", item.getTag())
                                     .addFormDataPart("qnaVoteTitle", item.getTitle())
                                     .addFormDataPart("qnaVoteContent", item.getContent())
                                     .addFormDataPart("qnaVote1stImg", firstImage.getName(), RequestBody.create(MultipartBody.FORM, firstImage))
@@ -82,7 +86,7 @@ public class QnaVoteModel {
                                     .build();
 
                             Request request = new Request.Builder()
-                                    .url("http://54.180.90.184/qnapost/postWrite.php") // php경로 바꿔줘야함.
+                                    .url("http://54.180.90.184/test/vote.php") // php경로 바꿔줘야함.
                                     .post(requestBody)
                                     .build();
 

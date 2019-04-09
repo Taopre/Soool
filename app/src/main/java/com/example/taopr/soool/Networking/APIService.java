@@ -45,12 +45,12 @@ public interface APIService {
     Call<ResponseBody> getUserItem(@Field("accountEmail") String accountEmail, @Field("accountPW") String accountPW);
 
     @FormUrlEncoded
-    @POST("/qnapost/postWrite.php")
+    @POST("/test/postWrite.php")
     Call<ResponseBody> enrollQna(@Field("accountNick") String accountNick,@Field("qnaTag") String qnaTag, @Field("qnaTitle") String qnaTitle,
                                  @Field("qnaContent") String qnaContent);
 
     @FormUrlEncoded
-    @POST("/qnapost/postWrite.php")
+    @POST("/test/postWrite.php")
     Call<ResponseBody> enrollQnaNoImage(@Field("accountNick") String accountNick, @Field("qnaBoardTag") String qnaTag,
                                         @Field("qnaBoardTitle") String qnaTitle, @Field("qnaBoardContent") String qnaContent);
 

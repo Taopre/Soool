@@ -37,6 +37,7 @@ import retrofit2.Response;
 public class QnaBoardModel {
 
     String TAG = "QnaBoardModel", accountNick, result;
+    int accountNo;
 
     private QnaBoardPresenter qnaBoardPresenter;
 
@@ -58,6 +59,7 @@ public class QnaBoardModel {
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNick = loginSessionItem.getAccountNick();
+        accountNo = loginSessionItem.getAccountNo();
         Log.d(TAG, "enrollmentReqFromView: 닉네임"+accountNick);
 
 
@@ -174,6 +176,7 @@ public class QnaBoardModel {
 
                                 RequestBody requestBody = new MultipartBody.Builder()
                                         .setType(MultipartBody.FORM)
+                                        .addFormDataPart("accountNo", accountNo+"")
                                         .addFormDataPart("accountNick", accountNick)
                                         .addFormDataPart("qnaBoardTag", item.getTag())
                                         .addFormDataPart("qnaBoardTitle", item.getTitle())
@@ -182,7 +185,7 @@ public class QnaBoardModel {
                                         .build();
 
                                 Request request = new Request.Builder()
-                                        .url("http://54.180.90.184/qnapost/postWrite.php")
+                                        .url("http://54.180.90.184/test/postWrite.php")
                                         .post(requestBody)
                                         .build();
 

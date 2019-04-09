@@ -25,31 +25,43 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Presenter.QnaVoteInter;
 import com.example.taopr.soool.Presenter.QnaVotePresenter;
 import com.example.taopr.soool.R;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class QnaVoteActivity extends AppCompatActivity implements View.OnClickListener, QnaVotePresenter.View {
+public class QnaVoteActivity extends AppCompatActivity implements View.OnClickListener, QnaVotePresenter.View, AdapterView.OnItemSelectedListener {
 
     private static final int MY_PERMISSION_STORAGE = 1111;
     private static final int PICK_FROM_ALBUM = 1;
 
-    ImageView iv_choice1stImage, iv_choice2ndImage;
-    EditText et_choiceTitle, et_choiceContent;
+    ImageView iv_qnavote1stImage, iv_qnavote2ndImage;
+    EditText et_qnavoteTitle, et_qnavoteContent;
+    Spinner sp_qnavoteTag;
 
-    String imgPath, imgName, TAG = "QnaVoteActivity";
+    ArrayList<String> tagArray = new ArrayList<>();
+    DrawUpTagAdapter drawUpTagAdapter;
+
+    String imgPath, imgName, TAG = "QnaVoteActivity", tag = "";
     static String UploadImgPath;
     private Uri mImageCaptureUri;
     String image1st, image2nd;
@@ -65,6 +77,33 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
 
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
         checkPermission();
+
+        // 아래의 try / catch 문은 res/xml에 있는 스피너 메뉴값을 파싱하기 위해 가져다 쓴 부분입니다.
+        try{
+            // custom_list.xml 을 가져와 XmlPullParser 에 넣는다.
+            XmlPullParser customList = getResources().getXml(R.xml.drawup_tag);
+
+            // 파싱한 xml 이 END_DOCUMENT(종료 태그)가 나올때 까지 반복한다.
+            while(customList.getEventType()!=XmlPullParser.END_DOCUMENT){
+                // 태그의 첫번째 속성일 때,
+                if(customList.getEventType()==XmlPullParser.START_TAG){
+                    // 이름이 "custom" 일때, 첫번째 속성값을 ArrayList에 저장
+                    if(customList.getName().equals("custom")){
+                        tagArray.add(customList.getAttributeValue(0));
+                    }
+
+                }
+                // 다음 태그로 이동
+                customList.next();
+            }
+        }catch(XmlPullParserException e){
+            e.printStackTrace();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+        drawUpTagAdapter = new DrawUpTagAdapter(this, tagArray);
+        sp_qnavoteTag.setAdapter(drawUpTagAdapter);
     }
 
     private void DoBinding() {
@@ -72,13 +111,15 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
         qnaVotePresenter.setView(this);
 
         // 뷰들 선언하는 부분입니다.
-        iv_choice1stImage = findViewById(R.id.choice1stImage);
-        iv_choice2ndImage = findViewById(R.id.choice2ndImage);
-        et_choiceTitle = findViewById(R.id.choiceTitle);
-        et_choiceContent = findViewById(R.id.choiceContent);
+        iv_qnavote1stImage = findViewById(R.id.qnavote1stImage);
+        iv_qnavote2ndImage = findViewById(R.id.qnavote2ndImage);
+        et_qnavoteTitle = findViewById(R.id.qnavoteTitle);
+        et_qnavoteContent = findViewById(R.id.qnavoteContent);
+        sp_qnavoteTag = findViewById(R.id.qnavoteTag);
         // 뷰의 리스너 선언 부분입니다.
-        iv_choice1stImage.setOnClickListener(this);
-        iv_choice2ndImage.setOnClickListener(this);
+        iv_qnavote1stImage.setOnClickListener(this);
+        iv_qnavote2ndImage.setOnClickListener(this);
+        sp_qnavoteTag.setOnItemSelectedListener(this);
     }
 
     // 권한 묻는 부분.
@@ -165,7 +206,7 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.choice1stImage:
+            case R.id.qnavote1stImage:
                 //앨범 연동.
                 ivNumber = true;
 
@@ -187,7 +228,7 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                         .setNegativeButton("앨범선택", albumListener)
                         .show();
                 break;
-            case R.id.choice2ndImage:
+            case R.id.qnavote2ndImage:
                 ivNumber = false;
 
                 DialogInterface.OnClickListener album2ndListener = new DialogInterface.OnClickListener() {
@@ -218,20 +259,23 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                 // 위의 값들이 다 있어야만 객체를 통해 모델로 값을 넘겨주어 서버로 저장할 수 있도록 하였습니다.
 
                 Toast.makeText(this, "등록 클릭", Toast.LENGTH_SHORT).show();
-                if(et_choiceTitle.getText().length() == 0) {
+                if(tag.equals(null)) {
+                    Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
+                }else if(et_qnavoteTitle.getText().length() == 0) {
                     Log.d(TAG, "onClick: 제목을 입력해주세요.");
                 }else if(ivNumber == true && image1st == null) {
                     Log.d(TAG, "onClick: 첫번째 이미지를 골라주세요.");
                 }else if(ivNumber == false && image2nd == null) {
                     Log.d(TAG, "onClick: 두번째 이미지를 골라주세요.");
-                }else if(et_choiceContent.getText().length() == 0) {
+                }else if(et_qnavoteContent.getText().length() == 0) {
                     Log.d(TAG, "onClick: 내용을 입력해주세요.");
                 }else {
-                    Log.d(TAG, "onClick: " + "제목 : " + et_choiceTitle.getText().toString() + " 내용 : "
-                            + et_choiceContent.getText().toString() + " 1번째 이미지 : " + image1st + " 2번째 이미지 : " + image2nd);
+                    Log.d(TAG, "onClick: " + "제목 : " + et_qnavoteTitle.getText().toString() + " 내용 : "
+                            +et_qnavoteContent.getText().toString() + " 태그 : "+ tag +  " 1번째 이미지 : " + image1st + " 2번째 이미지 : " + image2nd);
 
-                    qnaVoteItem.setTitle(et_choiceTitle.getText().toString());
-                    qnaVoteItem.setContent(et_choiceContent.getText().toString());
+                    qnaVoteItem.setTitle(et_qnavoteTitle.getText().toString());
+                    qnaVoteItem.setContent(et_qnavoteContent.getText().toString());
+                    qnaVoteItem.setTag(tag);
                     qnaVoteItem.setFirst_image(image1st);
                     qnaVoteItem.setSecond_image(image2nd);
 
@@ -240,7 +284,6 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
     }
-
     /**
 
      * 앨범에서 이미지 가져오기
@@ -266,6 +309,19 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
         {
             case PICK_FROM_ALBUM:
             {
+                // 스택오버 플로우에서 얻은 이미지 얻는 소스 부분이므로
+                // 다시 한번 도전해보자.
+
+//                try {
+//                    final Uri imageUri = data.getData();
+//                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+//                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+//                    image_view.setImageBitmap(selectedImage);
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(PostImage.this, "Something went wrong", Toast.LENGTH_LONG).show();
+//                }
+
                 // 이후의 처리가 카메라와 같으므로 일단  break없이 진행합니다.
                 // 실제 코드에서는 좀더 합리적인 방법을 선택하시기 바랍니다.
                 String name_Str = getImageNameToUri(data.getData());
@@ -288,6 +344,7 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                 ///리사이징
                 int height = image_bitmap.getHeight();
                 int width = image_bitmap.getWidth();
+                Log.d(TAG, "onActivityResult: width : "+width+" height : "+height);
 
                 Bitmap src = BitmapFactory.decodeFile(absolutePath);
                 Bitmap resized = Bitmap.createScaledBitmap(src, width/4, height/4, true);
@@ -324,7 +381,7 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                                 .load(test1)
                                 .override(100,100)
                                 .centerCrop()
-                                .into(iv_choice1stImage);
+                                .into(iv_qnavote1stImage);
                     } else {
                         image2nd = UploadImgPath;
                         UploadImgPath = null;
@@ -336,7 +393,7 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                                 .load(test2)
                                 .override(100,100)
                                 .centerCrop()
-                                .into(iv_choice2ndImage);
+                                .into(iv_qnavote2ndImage);
                     }
                 }
 
@@ -443,11 +500,25 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void enrollmentVoteRespGoToView(boolean response) {
         if (response == true) {
-//            Intent intent = new Intent(this, QnaActivity.class);
-//            intent.addFlags();
-//            startActivity(intent);
+            Intent intent = new Intent(this, QnaVoteDetailActivity.class);
+            intent.putExtra("QnaVoteItem", qnaVoteItem);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }else {
             Toast.makeText(this, "Vote 게시물 작성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //스피너 리스너 부분
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, "선택한 태그 : "+tagArray.get(position), Toast.LENGTH_SHORT).show();
+        tag = tagArray.get(position).toString();
+        Log.d(TAG, "onItemSelected: "+tag);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

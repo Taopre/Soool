@@ -1,10 +1,11 @@
 package com.example.taopr.soool.Object;
 
+import java.io.Serializable;
 import java.util.List;
 
 import retrofit2.http.QueryMap;
 
-public class QnaBoardItem {
+public class QnaBoardItem implements Serializable {
 
     private String title, content, tag, image;
     private String writer, date;

@@ -55,11 +55,11 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_iMAGE = 2;
 
-    Spinner sp_drawupTag;
-    EditText et_drawupTitle, et_drawupContent;
-    ImageButton ib_drawupImagebtn;
-    ImageView iv_drawupImage;
-    Button btn_drawupDeleteBtn;
+    Spinner sp_qnaboardTag;
+    EditText et_qnaboardTitle, et_qnaboardContent;
+    ImageButton ib_qnaboardImagebtn;
+    ImageView iv_qnaboardImage;
+    Button btn_qnaboardDeleteBtn;
 
     ArrayList<String> tagArray = new ArrayList<>();
 
@@ -108,7 +108,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         }
 
         drawUpTagAdapter = new DrawUpTagAdapter(this, tagArray);
-        sp_drawupTag.setAdapter(drawUpTagAdapter);
+        sp_qnaboardTag.setAdapter(drawUpTagAdapter);
     }
 
     private void DoBinding() {
@@ -116,20 +116,20 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         qnaBoardPresenter.setView(this);
 
         // 뷰들 선언하는 부분입니다.
-        sp_drawupTag = findViewById(R.id.drawupTag);
-        et_drawupTitle =findViewById(R.id.drawupTitle);
-        et_drawupContent =findViewById(R.id.drawupContent);
-        ib_drawupImagebtn =findViewById(R.id.drawupImageBtn);
-        iv_drawupImage =findViewById(R.id.drawupImage);
-        btn_drawupDeleteBtn =findViewById(R.id.drawupDeleteBtn);
+        sp_qnaboardTag = findViewById(R.id.qnaboardTag);
+        et_qnaboardTitle =findViewById(R.id.qnaboardTitle);
+        et_qnaboardContent =findViewById(R.id.qnaboardContent);
+        ib_qnaboardImagebtn =findViewById(R.id.qnaboardImageBtn);
+        iv_qnaboardImage =findViewById(R.id.qnaboardImage);
+        btn_qnaboardDeleteBtn =findViewById(R.id.qnaboardDeleteBtn);
 
-        iv_drawupImage.setVisibility(View.GONE);
-        btn_drawupDeleteBtn.setVisibility(View.GONE);
+        iv_qnaboardImage.setVisibility(View.GONE);
+        btn_qnaboardDeleteBtn.setVisibility(View.GONE);
 
         // 뷰의 리스너 선언 부분입니다.
-        sp_drawupTag.setOnItemSelectedListener(this);
-        ib_drawupImagebtn.setOnClickListener(this);
-        btn_drawupDeleteBtn.setOnClickListener(this);
+        sp_qnaboardTag.setOnItemSelectedListener(this);
+        ib_qnaboardImagebtn.setOnClickListener(this);
+        btn_qnaboardDeleteBtn.setOnClickListener(this);
     }
 
     // 권한 묻는 부분.
@@ -228,7 +228,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.drawupImageBtn:
+            case R.id.qnaboardImageBtn:
                 //앨범 연동.
 //                Intent intent = new Intent();
 //                intent.setType("image/*");
@@ -261,11 +261,11 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         .setNegativeButton("앨범선택", albumListener)
                         .show();
                 break;
-            case R.id.drawupDeleteBtn:
+            case R.id.qnaboardDeleteBtn:
                 Toast.makeText(this, "이미지가 삭제됩니다.", Toast.LENGTH_SHORT).show();
-                iv_drawupImage.setImageBitmap(null);
-                iv_drawupImage.setVisibility(View.GONE);
-                btn_drawupDeleteBtn.setVisibility(View.GONE);
+                iv_qnaboardImage.setImageBitmap(null);
+                iv_qnaboardImage.setVisibility(View.GONE);
+                btn_qnaboardDeleteBtn.setVisibility(View.GONE);
 
                 UploadImgPath = null;
                 qnaBoardItem.setImage(UploadImgPath);
@@ -288,26 +288,26 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
                 if(tag.equals(null)) {
                     Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
-                }else if(et_drawupTitle.getText().length() == 0) {
+                }else if(et_qnaboardTitle.getText().length() == 0) {
                     Log.d(TAG, "onClick: 제목을 입력해주세요.");
-                }else if(et_drawupContent.getText().length() == 0) {
+                }else if(et_qnaboardContent.getText().length() == 0) {
                     Log.d(TAG, "onClick: 내용을 입력해주세요.");
                 }else if(UploadImgPath == null) {
                     Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                            + et_drawupTitle.getText().toString() + " 내용 : " + et_drawupContent.getText().toString());
+                            + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
 
                     qnaBoardItem.setTag(tag);
-                    qnaBoardItem.setTitle(et_drawupTitle.getText().toString());
-                    qnaBoardItem.setContent(et_drawupContent.getText().toString());
+                    qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                    qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
 
                     qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                 }else {
                     Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                            + et_drawupTitle.getText().toString() + " 내용 : " + et_drawupContent.getText().toString() + " 이미지 : " + UploadImgPath);
+                            + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + UploadImgPath);
 
                     qnaBoardItem.setTag(tag);
-                    qnaBoardItem.setTitle(et_drawupTitle.getText().toString());
-                    qnaBoardItem.setContent(et_drawupContent.getText().toString());
+                    qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                    qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
                     qnaBoardItem.setImage(UploadImgPath);
 
                     qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
@@ -369,14 +369,14 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 saveBitmaptoJpeg(resized, "soool", name_Str);
                 ////리사이징
 
-                iv_drawupImage.setVisibility(View.VISIBLE);
-                btn_drawupDeleteBtn.setVisibility(View.VISIBLE);
+                iv_qnaboardImage.setVisibility(View.VISIBLE);
+                btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
 //                iv_drawupImage.setImageURI(mImageCaptureUri);
 
                 if(!UploadImgPath.equals(null)) {
                     File file = new File(UploadImgPath);
                     Uri test = Uri.fromFile(file);
-                    iv_drawupImage.setImageURI(test);
+                    iv_qnaboardImage.setImageURI(test);
                 }
 
                 Log.d("SmartWheel",mImageCaptureUri.getPath().toString());
@@ -429,9 +429,10 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void enrollmentBoardRespGoToView(boolean response) {
         if (response == true) {
-//            Intent intent = new Intent(this, QnaActivity.class);
-//            intent.addFlags();
-//            startActivity(intent);
+            Intent intent = new Intent(this, QnaBoardDetailActivity.class);
+            intent.putExtra("QnaBoardItem", qnaBoardItem);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }else {
             Toast.makeText(this, "Board 게시물 작성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
         }
