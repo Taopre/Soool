@@ -24,14 +24,16 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <activity android:name="View.MainActivity"></activity>
-        <activity android:name=".View.SignUpActivity"></activity>
-        <activity android:name=".View.StartingActivity">
+        <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".View.SignUpActivity"></activity>
+        <activity android:name=".View.StartingActivity">
+
         </activity>
         <activity android:name=".View.InfoActivity">
         </activity>
@@ -40,6 +42,20 @@
         <activity android:name=".View.LoginActivity">
 
         </activity>
+        <activity android:name=".View.QnaVoteActivity">
+
+        </activity>
+        <activity android:name=".View.QnaActivity">
+
+        </activity>
+        <activity android:name=".View.MyPageActivity">
+
+        </activity>
+        <activity android:name=".View.FloatingActivity"
+            android:theme="@style/Transparent">
+        </activity>
+        <activity android:name=".View.QnaBoardDetailActivity"/>
+        <activity android:name=".View.QnaVoteDetailActivity"/>
 
     </application>
 

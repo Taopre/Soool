@@ -21,9 +21,16 @@ public class QnaBoardPresenter implements QnaBoardInter {
     public void setView(QnaBoardPresenter.View view) {
         this.view = view;
     }
+
     // QnaActivity로부터 게시물 관련 데이터들을 객체로 받아서 서버로 저장하는 함수.
     @Override
-    public void enrollmentReq(QnaBoardItem item) {
-        qnaBoardModel.enrollmentReqFromView(item);
+    public void enrollmentBoardReq(QnaBoardItem item) {
+        qnaBoardModel.enrollmentBoardReqFromView(item);
+    }
+
+    // 모델의 응답을 넘겨주는 메서드
+    @Override
+    public void enrollmentBoardResp(boolean response) {
+        view.enrollmentBoardRespGoToView(response);
     }
 }
