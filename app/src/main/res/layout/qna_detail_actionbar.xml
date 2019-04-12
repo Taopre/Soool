@@ -13,18 +13,17 @@
         android:background="@drawable/gotobackbtn"/>
 
     <TextView
-        android:text="이전 게시판"
-        android:id="@+id/title"
+        android:text="Board"
+        android:id="@+id/drawupTitle"
         android:textSize="20sp"
         android:textColor="@color/black"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="17dp"
+        android:layout_marginEnd="30dp"
         android:layout_toRightOf="@id/drawupBack"
         android:layout_width="match_parent"
         android:layout_height="56dp" />
 
     <Button
-        android:id="@+id/drawupEnroll"
+        android:id="@+id/drawupReport"
         android:layout_alignParentRight="true"
         android:text="신고"
         android:layout_width="56dp"
