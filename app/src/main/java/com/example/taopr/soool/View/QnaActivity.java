@@ -1,6 +1,7 @@
 package com.example.taopr.soool.View;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
@@ -20,10 +21,13 @@ import com.example.taopr.soool.R;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
 //public class QnaActivity extends AppCompatActivity implements View.OnClickListener, QnaPresenter.View{
 public class QnaActivity extends BaseActivity implements QnaPresenter.View{
 
-    private FloatingActionButton fab_default, fab_qnaBoard, fab_qnaVote;
+   private FloatingActionButton fab_default;
 
     private RecyclerView qnaRecycler;
     private LinearLayoutManager linearLayoutManager;
@@ -36,8 +40,6 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qna,2);
-
-
 
         // 리사이클러뷰 기본 설정
         qnaRecycler = findViewById(R.id.qnaRecycler);
@@ -74,20 +76,16 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
 
     private void DoBinding() {
 
-        // 탭 부분은 BaseActivity로 이동
-
         // 뷰들 선언하는 부분입니다.
         fab_default = (FloatingActionButton) findViewById(R.id.fab_default);
-        fab_qnaBoard = (FloatingActionButton) findViewById(R.id.fab_qnaBoard);
-        fab_qnaVote = (FloatingActionButton) findViewById(R.id.fab_qnaVote);
+        fab_default.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(QnaActivity.this, QnaBoardActivity.class));
+            }
+        });
 
-        // 뷰의 리스너 선언 부분입니다.
-        fab_default.setOnClickListener(this);
-        fab_qnaBoard.setOnClickListener(this);
-        fab_qnaVote.setOnClickListener(this);
     }
-
-
 
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems) {
