@@ -14,6 +14,7 @@ public class InfoPresenter implements InfoInter {
 
     // 생성장에서 context 전달 받기
     // 그 후 성공, 실패 시 info 액티비티의 successdata() 함수와 fail 함수 가져오기
+
     private Context context;
     private InfoPresenter.View view;
     private Activity activity;
@@ -22,7 +23,6 @@ public class InfoPresenter implements InfoInter {
 
     public InfoPresenter(Context context){
         this.context = context;
-
     }
 
     // 서버에서 데이터를 가져온 후 객체로 만들어서 전송

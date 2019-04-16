@@ -94,20 +94,19 @@ public class InfoActivity extends AppCompatActivity implements InfoPresenter.Vie
 package com.example.taopr.soool.View;
 
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
+
 import android.widget.Toast;
 
 import com.example.taopr.soool.Adapter.InfoAdapter;
 import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
 import com.example.taopr.soool.Object.InfoOfSoool;
-//import com.example.taopr.soool.Presenter.InfoInter;
+
 import com.example.taopr.soool.Presenter.InfoPresenter;
 import com.example.taopr.soool.R;
 
@@ -115,15 +114,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class InfoActivity extends AppCompatActivity implements InfoPresenter.View, View.OnClickListener {
+public class InfoActivity extends BaseActivity implements InfoPresenter.View {
 
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private InfoAdapter infoAdapter;
     private List<InfoOfSoool> infoOfSoools = new ArrayList<>();
     private InfoPresenter infoPresenter;
-
-    Button btn_tabMain, btn_tabInfo, btn_tabQna, btn_tabMypage;
 
 
     // presenter의 loadData() 함수를 불러와 리스트 데이터를 가져온다
@@ -135,29 +132,17 @@ public class InfoActivity extends AppCompatActivity implements InfoPresenter.Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info);
+        setContentView(R.layout.activity_info,1);
 
         recyclerView = findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(this);
-
-        // 뷰들 선언하는 부분입니다.
-        btn_tabMain = findViewById(R.id.tabMain);
-        btn_tabInfo = findViewById(R.id.tabInfo);
-        btn_tabQna = findViewById(R.id.tabQna);
-        btn_tabMypage = findViewById(R.id.tabMypage);
-
-        // 뷰의 리스너 선언 부분입니다.
-        btn_tabMain.setOnClickListener(this);
-        btn_tabInfo.setOnClickListener(this);
-        btn_tabQna.setOnClickListener(this);
-        btn_tabMypage.setOnClickListener(this);
-
 
         // 리사이클러뷰 기본 설정
         recyclerView.addItemDecoration(              // divider 구분선
                 new DividerItemDecoration(this,linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addOnItemTouchListener(selectItemOnRecyclerView());
+
         // 디비에서 정보 관련 데이터 가져오기
         infoPresenter = new InfoPresenter(this);
         infoPresenter.setView(this);
@@ -204,33 +189,6 @@ public class InfoActivity extends AppCompatActivity implements InfoPresenter.Vie
 
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tabMain:
-                startActivity(new Intent(InfoActivity.this, MainActivity.class));
-                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
-                finish();
-                break;
 
-            case R.id.tabInfo:
-                startActivity(new Intent(InfoActivity.this,  InfoActivity.class));
-                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
-                finish();
-                break;
-
-            case R.id.tabQna:
-                startActivity(new Intent(InfoActivity.this, QnaActivity.class));
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-                finish();
-                break;
-
-            case R.id.tabMypage:
-                startActivity(new Intent(InfoActivity.this,  MyPageActivity.class));
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-                finish();
-                break;
-        }
-    }
 }
 

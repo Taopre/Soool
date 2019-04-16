@@ -1,8 +1,10 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.R;
 
 
+import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -54,4 +56,7 @@ public interface APIService {
     Call<ResponseBody> enrollQnaNoImage(@Field("accountNick") String accountNick, @Field("qnaBoardTag") String qnaTag,
                                         @Field("qnaBoardTitle") String qnaTitle, @Field("qnaBoardContent") String qnaContent);
 
+    // QnaBoardList 객체로 받는 형식
+    @POST("/qnapost/QnaList.php")
+    Observable<QnaBoardList> getQnaItem();
 }
