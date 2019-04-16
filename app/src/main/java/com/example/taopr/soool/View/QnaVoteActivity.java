@@ -341,7 +341,7 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                     e.printStackTrace();
                 }
 
-                ///리사이징
+                // 리사이징
                 int height = image_bitmap.getHeight();
                 int width = image_bitmap.getWidth();
                 Log.d(TAG, "onActivityResult: width : "+width+" height : "+height);
@@ -350,6 +350,7 @@ public class QnaVoteActivity extends AppCompatActivity implements View.OnClickLi
                 Bitmap resized = Bitmap.createScaledBitmap(src, width/4, height/4, true);
 
                 saveBitmaptoJpeg(resized, "soool-test", name_Str);
+
                 //리사이징
 
                 int degree = getExifOrientation(UploadImgPath);
