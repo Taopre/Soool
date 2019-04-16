@@ -2,6 +2,7 @@ package com.example.taopr.soool.Presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +11,7 @@ import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
+import com.example.taopr.soool.View.QnaBoardDetailActivity;
 
 import java.util.ArrayList;
 
@@ -82,6 +84,11 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
     public void getItem(QnaBoardItem qnaBoardItem, Activity activity) {
         this.activity = activity;
         Toast.makeText(activity, qnaBoardItem.getTitle(), Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
+        intent.putExtra("QnaBoardItem",qnaBoardItem);
+
+        activity.startActivity(intent);
     }
 
 
