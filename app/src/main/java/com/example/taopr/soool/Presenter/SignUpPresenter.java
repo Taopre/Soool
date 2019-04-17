@@ -5,8 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.taopr.soool.Model.SignUpModel;
-
-import retrofit2.Retrofit;
+import com.example.taopr.soool.Presenter.Interface.AccountManager;
 
 public class SignUpPresenter implements AccountManager {
     private Activity signUpActivity;

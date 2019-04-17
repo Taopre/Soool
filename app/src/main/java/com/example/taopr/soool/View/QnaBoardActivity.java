@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -41,7 +40,6 @@ import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
 import com.example.taopr.soool.Adapter.CustomAdapter;
 import com.example.taopr.soool.Object.ListItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
-import com.example.taopr.soool.Presenter.QnaBoardInter;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.R;
 
@@ -53,7 +51,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener {

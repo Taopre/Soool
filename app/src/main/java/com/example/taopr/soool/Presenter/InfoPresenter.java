@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.taopr.soool.Object.InfoOfSoool;
+import com.example.taopr.soool.Presenter.Interface.InfoInter;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +17,9 @@ public class InfoPresenter implements InfoInter {
     // 생성장에서 context 전달 받기
     // 그 후 성공, 실패 시 info 액티비티의 successdata() 함수와 fail 함수 가져오기
 
-    private Context context;
-    private InfoPresenter.View view;
-    private Activity activity;
+    public Context context;
+    public InfoPresenter.View view;
+    public Activity activity;
     private List<InfoOfSoool> infoOfSoools = new ArrayList<>();
     private static String TAG = "정보_presenter";
 
@@ -39,6 +41,7 @@ public class InfoPresenter implements InfoInter {
 
         // 성공시
         if(response) view.getDataSuccess(infoOfSoools);
+
         // 실패시
         else view.getDataFail("fail");
 
@@ -55,4 +58,5 @@ public class InfoPresenter implements InfoInter {
     public void setView(InfoPresenter.View view) {
         this.view = view;
     }
+
 }

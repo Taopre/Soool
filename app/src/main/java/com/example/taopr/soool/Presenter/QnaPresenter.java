@@ -11,6 +11,7 @@ import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
+import com.example.taopr.soool.Presenter.Interface.QnaInter;
 import com.example.taopr.soool.View.QnaBoardDetailActivity;
 
 import java.util.ArrayList;
