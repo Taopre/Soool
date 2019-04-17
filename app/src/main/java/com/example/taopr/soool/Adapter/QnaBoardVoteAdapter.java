@@ -10,25 +10,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.taopr.soool.Object.ListItem;
+import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.R;
 
 import java.util.ArrayList;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
+public class QnaBoardVoteAdapter extends RecyclerView.Adapter<QnaBoardVoteAdapter.MyViewHolder> {
 
     private LayoutInflater inflater;
-    public static ArrayList<ListItem> editModelArrayList;
+    public static ArrayList<QnaBoardVoteItem> editModelArrayList;
 
 
-    public CustomAdapter(Context ctx, ArrayList<ListItem> editModelArrayList){
+    public QnaBoardVoteAdapter(Context ctx, ArrayList<QnaBoardVoteItem> editModelArrayList){
 
         inflater = LayoutInflater.from(ctx);
         this.editModelArrayList = editModelArrayList;
     }
 
     @Override
-    public CustomAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public QnaBoardVoteAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = inflater.inflate(R.layout.rv_item, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
@@ -37,7 +37,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(final CustomAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final QnaBoardVoteAdapter.MyViewHolder holder, final int position) {
 
 
         holder.editText.setText(editModelArrayList.get(position).getEditTextValue());

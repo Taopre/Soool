@@ -31,19 +31,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
-import com.example.taopr.soool.Adapter.CustomAdapter;
-import com.example.taopr.soool.Object.ListItem;
+import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
+import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
-import com.example.taopr.soool.Presenter.QnaBoardInter;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.R;
+import com.sangcomz.fishbun.FishBun;
+import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter;
+import com.sangcomz.fishbun.define.Define;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -53,7 +54,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener {
@@ -74,10 +74,11 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     RadioGroup rg_qnaboardVoteSelect;
     RadioButton rb_qnaboardVoteText, rb_qnaboardVoteImage;
 
-    public ArrayList<ListItem> editModelArrayList;
-    CustomAdapter customAdapter;
+    public ArrayList<QnaBoardVoteItem> editModelArrayList;
+    QnaBoardVoteAdapter qnaBoardVoteAdapter;
 
     ArrayList<String> tagArray = new ArrayList<>();
+    ArrayList<Uri> path = new ArrayList<>();
 
     private Uri mImageCaptureUri;
     private int id_view;
@@ -128,17 +129,17 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         sp_qnaboardTag.setAdapter(drawUpTagAdapter);
 
         editModelArrayList = populateList();
-        customAdapter = new CustomAdapter(this,editModelArrayList);
-        recyclerView.setAdapter(customAdapter);
+        qnaBoardVoteAdapter = new QnaBoardVoteAdapter(this,editModelArrayList);
+        recyclerView.setAdapter(qnaBoardVoteAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    private ArrayList<ListItem> populateList(){
+    private ArrayList<QnaBoardVoteItem> populateList(){
 
-        ArrayList<ListItem> list = new ArrayList<>();
+        ArrayList<QnaBoardVoteItem> list = new ArrayList<>();
 
         for(int i = 0; i < 2; i++){
-            ListItem editModel = new ListItem();
+            QnaBoardVoteItem editModel = new QnaBoardVoteItem();
             editModel.setEditTextValue("");
             list.add(editModel);
         }
@@ -272,6 +273,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    // 투표 기능 고르는 부분
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         if(i == R.id.qnaboardVoteText) {
@@ -292,6 +294,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
             // 이미지 셀렉하면 셀렉된 이미지 리싸이클러뷰로 보여지도록 처리해야함.
             // 여기까지 완료된다면 예외처리부분 처리해준다.
             // 다 된다면 mvp로 서버로 보내주는 처리를 해준다면 작성하는 곳은 완료.
+            FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(5).setMinCount(3).startAlbum();
         }
     }
 
@@ -351,6 +354,8 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 // 태그 값 / 제목 / 내용 / 이미지 순으로의 예외 처리부분.
                 // 이미지의 경우 선택할 수 있도록 예외 처리를 해주었습니다.
                 // 예외 처리 이후에 모델로 넘어가 서버에 저장할 수 있도록 처리하였습니다.
+                // 투표기능 이 화면에 추가되었으므로 텍스트 / 이미지 인지 구별자를 만들어놔야할것 같다.
+                // 투표가 구별이 되었다면 그 값들 또한 예외처리 이후에 객체에 저장을 해주어야한다.
 
 
                 if(tag.equals(null)) {
@@ -361,11 +366,11 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     Log.d(TAG, "onClick: 내용을 입력해주세요.");
                 }else if(voteSelect.equals("text")) {
                     // 텍스트 투표
-                    Toast.makeText(this, CustomAdapter.editModelArrayList.size()+"", Toast.LENGTH_SHORT).show();
-                    for (int i = 1; i < CustomAdapter.editModelArrayList.size()+1; i++){
-                        Log.d(TAG, "onClick: "+CustomAdapter.editModelArrayList.get(i).getEditTextValue());
+                    Toast.makeText(this, QnaBoardVoteAdapter.editModelArrayList.size()+"", Toast.LENGTH_SHORT).show();
+                    for (int i = 1; i < QnaBoardVoteAdapter.editModelArrayList.size()+1; i++){
+                        Log.d(TAG, "onClick: "+ QnaBoardVoteAdapter.editModelArrayList.get(i).getEditTextValue());
 
-                        if(CustomAdapter.editModelArrayList.get(i).getEditTextValue().length() == 0){
+                        if(QnaBoardVoteAdapter.editModelArrayList.get(i).getEditTextValue().length() == 0){
                             Log.d(TAG, "onClick: "+ i +"번째 내용을 입력해주세요.");
                         }
                     }
@@ -379,6 +384,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     qnaBoardItem.setTag(tag);
                     qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                     qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                    //
 
                     qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                 }else {
@@ -402,14 +408,14 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 if(count > 5) {
                     Toast.makeText(this, "더 이상 항목추가는 되지 않습니다.", Toast.LENGTH_SHORT).show();
                 }else {
-                    ListItem editModel = new ListItem();
+                    QnaBoardVoteItem editModel = new QnaBoardVoteItem();
                     editModel.setEditTextValue("");
                     editModelArrayList.add(editModel);
 
-                    customAdapter.notifyItemInserted(count);
+                    qnaBoardVoteAdapter.notifyItemInserted(count);
                 }
 
-                customAdapter.notifyDataSetChanged();
+                qnaBoardVoteAdapter.notifyDataSetChanged();
                 break;
         }
     }
@@ -433,6 +439,8 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
         if(resultCode != RESULT_OK)
             return;
+
+
 
         switch(requestCode)
         {
@@ -479,6 +487,18 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
                 Log.d("SmartWheel",mImageCaptureUri.getPath().toString());
             }
+            case Define.ALBUM_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    // path = imageData.getStringArrayListExtra(Define.INTENT_PATH);
+                    // you can get an image path(ArrayList<String>) on <0.6.2
+
+                    path = data.getParcelableArrayListExtra(Define.INTENT_PATH);
+                    // 여기서 받아온 이미지 gridview 사용해서 이미지 뿌려주는 것을 적용하자.
+                    // gridview item은 텍스트뷰 (항목 숫자식별용) 이미지뷰로 구성해서 만들자.
+//                    gridViewAdapter = new GridViewAdapter(this, path);
+//                    gridView.setAdapter(gridViewAdapter);
+                    break;
+                }
         }
     }
 
