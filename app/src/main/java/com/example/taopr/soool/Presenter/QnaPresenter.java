@@ -54,7 +54,8 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
 
                            ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
                            view.getDataSuccess(qnaBoardItems);
-                            view.getDataSuccess(qnaBoardList.getQnaBoardItems());
+                           view.getDataSuccess(qnaBoardList.getQnaBoardItems());
+                           // 위에 두개 뭐가 다른건지??
                         }
                         else{
                             Log.i(TAG, "onSuccess: list = null");

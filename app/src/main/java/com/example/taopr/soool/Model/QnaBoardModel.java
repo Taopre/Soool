@@ -68,6 +68,11 @@ public class QnaBoardModel {
         // 이미지가 있을 땐 okhttp3으로 값을 넘겨주었습니다.
         // 넘어감의 응답을 view로 뿌려주게 마무리하였습니다.
 
+        // 4/18 업데이트 해야할 것 정리
+        // 1. 투표가 있는지 없는지 체크해야함
+        // 2. 투표가 이미지 or 텍스트인지 체크해야함
+        // 3. 이미지가 있는지 없는지 체크해야함
+
 
         if(item.getImage() == null) {
             Log.d(TAG, "enrollmentReqFromView: "+accountNick+"//"+item.getTag()+"//"+item.getTitle()+"//"+item.getContent());
