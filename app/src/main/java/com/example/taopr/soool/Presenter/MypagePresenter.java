@@ -6,10 +6,9 @@ import android.util.Log;
 import com.example.taopr.soool.Networking.APICallback;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
-import com.example.taopr.soool.Object.MypageBookmarkItem;
-import com.example.taopr.soool.Object.MypageList;
-import com.example.taopr.soool.Object.MypageMyboardItem;
+import com.example.taopr.soool.Object.InfoOfSoool;
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Object.QnaBoardList;
 
 import java.util.ArrayList;
 
@@ -20,8 +19,7 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     private MypagePresenter.View view;
     private String TAG = "MypagePresenter";
 
-    ArrayList<MypageBookmarkItem> mypageBookmarkItems;
-    ArrayList<MypageMyboardItem> myboardItems;
+    ArrayList<InfoOfSoool> infoOfSoools;
     ArrayList<QnaBoardItem> qnaBoardItems;
 
     // 아래 apiservice는 진태 정리대로 해볼려고 일단 받아뒀는데 mypage에 맞게 정리해야할듯??
@@ -36,7 +34,6 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     public void setView(View view) {
         this.view = view;
     }
-
 
     // 달력 데이터 업로드하게되면 작성하면 될곳.
 
@@ -53,22 +50,26 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     // i = 1일때 왜 두개로 구분해뒀냐면 객체를 어떻게 정의해야될지 고민중이라서 qnaboard로 가게되면 위에꺼 지우면 될듯.
     // 현제 mypagebookmarkitem mypagemyboarditem 객체는 아무것도 없는 상태입니다.
 
+    // getDataFail 함수로 데이터 유무 나눌려고 만들었습니다.
+    // qnaBoardList이 Null값일때와 onFailure일때 두 부분에 적용을 해두었습니다. boolean값은 임의로 true로 해두었습니다.
+    // 그 이유는
+    // 1. 통신은 문제 없었지만 오류나 다른 이유로 리스트를 못받은 경우
+    // 2. 통신 문제로 onFail 된 경우
+    // 만약에 나눠서 메시지 처리를 다르게한다면을 고려해봤는데 이 부분은 불필요하다면 그냥 통일해서 진행해도 무방합니다.
+
     public void loadMypageData(int i){
         addSubscription(
                 apiService.getMypageItem(),
-                new APICallback<MypageList>() {
+                new APICallback<QnaBoardList>() {
 
                     @Override
-                    public void onSuccess(MypageList mypageList) {
-                        if (mypageList != null) {
+                    public void onSuccess(QnaBoardList qnaBoardList) {
+                        if (qnaBoardList != null) {
                             if (i == 0) {
-                                mypageBookmarkItems = new ArrayList(mypageList.getMypageBookmarkItems());
-                                view.getBookmarkResponse(mypageBookmarkItems);
-                            }else if (i == 1){
-                                myboardItems = new ArrayList(mypageList.getMypageMyboardItems());
-                                view.getMyboardResponse(myboardItems);
-
-                                qnaBoardItems = new ArrayList(mypageList.getQnaBoardItems());
+                                infoOfSoools = new ArrayList(qnaBoardList.getInfoOfSoools());
+                                view.getInfoBookmarkResponse(infoOfSoools);
+                            }else if (i == 1) {
+                                qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
                                 view.getQnaMyboardResponse(qnaBoardItems);
                             }else {
                                 // 달력 대비해서 만들어뒀음
@@ -77,18 +78,19 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
                         }
                         else{
                             Log.i(TAG, "onSuccess: list = null");
+                            view.getDataFail(true);
                         }
                     }
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: qna" + msg);
-
+                        Log.i(TAG, "onFailure: mypage" + msg);
+                        view.getDataFail(true);
                     }
 
                     @Override
                     public void onFinish() {
-                        Log.i(TAG, "onFinish: qna");
+                        Log.i(TAG, "onFinish: mypage");
                         //dismissProgressDialog();
                     }
                 });
