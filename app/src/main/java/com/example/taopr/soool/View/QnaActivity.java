@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 //public class QnaActivity extends AppCompatActivity implements View.OnClickListener, QnaPresenter.View{
-public class QnaActivity extends BaseActivity implements QnaPresenter.View{
+public class QnaActivity extends BaseActivity implements QnaPresenter.View, View.OnClickListener{
 
    private FloatingActionButton fab_default;
 
@@ -54,7 +54,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
         qnaPresenter.setView(this);
         qnaPresenter.loadData();
 
-         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
+        DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
     }
 
     // 리사이클러뷰 클릭 이벤트
@@ -107,6 +107,16 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
         qnaPresenter.onUnSubscribe();
         super.onDestroy();
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_default :
+                Intent intent = new Intent(this, QnaBoardActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }
 

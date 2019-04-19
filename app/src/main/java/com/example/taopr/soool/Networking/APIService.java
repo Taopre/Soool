@@ -1,28 +1,14 @@
 package com.example.taopr.soool.Networking;
 
 import com.example.taopr.soool.Object.QnaBoardList;
-import com.example.taopr.soool.R;
 
 
 import io.reactivex.Observable;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
-import retrofit2.http.Query;
-import com.google.gson.JsonArray;
-
-import org.json.JSONArray;
-
-import java.io.File;
-import java.util.Map;
 
 public interface APIService {
     // 이메일 중복 확인
@@ -59,4 +45,12 @@ public interface APIService {
     // QnaRecyclerview 리스트 아이템 받아오기
     @POST("/qnapost/QnaList.php")
     Observable<QnaBoardList> getQnaItem();
+
+    // MypageList 객체로 받는 형식
+    // 수정해야함 php 경로
+    @POST("")
+    Observable<QnaBoardList> getMypageBookmarkItem();
+
+    @POST("")
+    Observable<QnaBoardList> getMypageBoardItem();
 }
