@@ -37,9 +37,9 @@ public class QnaBoardItem implements Serializable{
     @SerializedName("views")
     public int views;
     @SerializedName("voteImage")
-    ArrayList<String> voteImage;
+    public ArrayList<String> voteImage;
     @SerializedName("voteText")
-    ArrayList<String> voteText;
+    public ArrayList<String> voteText;
 
 
     public QnaBoardItem(){}
