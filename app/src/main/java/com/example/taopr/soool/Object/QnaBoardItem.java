@@ -3,6 +3,7 @@ package com.example.taopr.soool.Object;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class QnaBoardItem implements Serializable{
 
@@ -35,6 +36,10 @@ public class QnaBoardItem implements Serializable{
     public int comments;
     @SerializedName("views")
     public int views;
+    @SerializedName("voteImage")
+    ArrayList<String> voteImage;
+    @SerializedName("voteText")
+    ArrayList<String> voteText;
 
 
     public QnaBoardItem(){}
@@ -158,5 +163,21 @@ public class QnaBoardItem implements Serializable{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public ArrayList<String> getVoteImage() {
+        return voteImage;
+    }
+
+    public void setVoteImage(ArrayList<String> voteImage) {
+        this.voteImage = voteImage;
+    }
+
+    public ArrayList<String> getVoteText() {
+        return voteText;
+    }
+
+    public void setVoteText(ArrayList<String> voteText) {
+        this.voteText = voteText;
     }
 }

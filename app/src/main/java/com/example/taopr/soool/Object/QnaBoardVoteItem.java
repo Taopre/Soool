@@ -1,6 +1,6 @@
 package com.example.taopr.soool.Object;
 
-public class ListItem {
+public class QnaBoardVoteItem {
 
     private String editTextValue;
 
