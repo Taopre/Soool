@@ -49,5 +49,8 @@ public interface APIService {
     // MypageList 객체로 받는 형식
     // 수정해야함 php 경로
     @POST("")
-    Observable<QnaBoardList> getMypageItem();
+    Observable<QnaBoardList> getMypageBookmarkItem();
+
+    @POST("")
+    Observable<QnaBoardList> getMypageBoardItem();
 }

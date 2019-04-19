@@ -7,15 +7,6 @@ import java.util.ArrayList;
 
 public class QnaBoardList {
     private ArrayList<QnaBoardItem> qnaBoardItem;
-    private ArrayList<InfoOfSoool> infoOfSoools;
-
-    public ArrayList<InfoOfSoool> getInfoOfSoools() {
-        return infoOfSoools;
-    }
-
-    public void setInfoOfSoools(ArrayList<InfoOfSoool> infoOfSoools) {
-        this.infoOfSoools = infoOfSoools;
-    }
 
     public ArrayList<QnaBoardItem> getQnaBoardItems() {
         return qnaBoardItem;

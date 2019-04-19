@@ -7,6 +7,7 @@ import com.example.taopr.soool.Networking.APICallback;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.InfoOfSoool;
+import com.example.taopr.soool.Object.InfoOfSooolList;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 
@@ -57,42 +58,74 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     // 2. 통신 문제로 onFail 된 경우
     // 만약에 나눠서 메시지 처리를 다르게한다면을 고려해봤는데 이 부분은 불필요하다면 그냥 통일해서 진행해도 무방합니다.
 
+    // 현재 switch 문 2개로 받도록 조치했는데 ApiCallback generic으로 한번에 처리된다면 바꿔보는거 해볼까 고민해봅시다.
+
     public void loadMypageData(int i){
-        addSubscription(
-                apiService.getMypageItem(),
-                new APICallback<QnaBoardList>() {
+        switch (i) {
+            case 0:
+                addSubscription(
+                        apiService.getMypageBookmarkItem(),
+                        new APICallback<InfoOfSooolList>() {
 
-                    @Override
-                    public void onSuccess(QnaBoardList qnaBoardList) {
-                        if (qnaBoardList != null) {
-                            if (i == 0) {
-                                infoOfSoools = new ArrayList(qnaBoardList.getInfoOfSoools());
-                                view.getInfoBookmarkResponse(infoOfSoools);
-                            }else if (i == 1) {
-                                qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
-                                view.getQnaMyboardResponse(qnaBoardItems);
-                            }else {
-                                // 달력 대비해서 만들어뒀음
-                                // 나중에 결정되면 처리.
+                            @Override
+                            public void onSuccess(InfoOfSooolList infoOfSooolList) {
+                                if (infoOfSooolList != null) {
+                                    infoOfSoools = new ArrayList(infoOfSooolList.getInfoOfSoools());
+                                    view.getInfoBookmarkResponse(infoOfSoools);
+                                }
+                                else{
+                                    Log.i(TAG, "onSuccess: list = null");
+                                    view.getDataFail(true);
+                                }
                             }
-                        }
-                        else{
-                            Log.i(TAG, "onSuccess: list = null");
-                            view.getDataFail(true);
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: mypage" + msg);
-                        view.getDataFail(true);
-                    }
+                            @Override
+                            public void onFailure(String msg) {
+                                Log.i(TAG, "onFailure: mypage" + msg);
+                                view.getDataFail(true);
+                            }
 
-                    @Override
-                    public void onFinish() {
-                        Log.i(TAG, "onFinish: mypage");
-                        //dismissProgressDialog();
-                    }
-                });
+                            @Override
+                            public void onFinish() {
+                                Log.i(TAG, "onFinish: mypage");
+                                //dismissProgressDialog();
+                            }
+                        });
+                break;
+            case 1:
+                addSubscription(
+                        apiService.getMypageBoardItem(),
+                        new APICallback<QnaBoardList>() {
+
+                            @Override
+                            public void onSuccess(QnaBoardList qnaBoardList) {
+                                if (qnaBoardList != null) {
+                                    qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
+                                    view.getQnaMyboardResponse(qnaBoardItems);
+                                }
+                                else{
+                                    Log.i(TAG, "onSuccess: list = null");
+                                    view.getDataFail(true);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(String msg) {
+                                Log.i(TAG, "onFailure: mypage" + msg);
+                                view.getDataFail(true);
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                Log.i(TAG, "onFinish: mypage");
+                                //dismissProgressDialog();
+                            }
+                        });
+                break;
+            case 2:
+                // 달력 대비해서 만들어뒀음
+                // 나중에 결정되면 처리.
+                break;
+        }
     }
 }
