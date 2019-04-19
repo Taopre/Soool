@@ -1,5 +1,6 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.MypageList;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.R;
 
@@ -59,4 +60,9 @@ public interface APIService {
     // QnaBoardList 객체로 받는 형식
     @POST("/qnapost/QnaList.php")
     Observable<QnaBoardList> getQnaItem();
+
+    // MypageList 객체로 받는 형식
+    // 수정해야함 php 경로
+    @POST("/qnapost/QnaList.php")
+    Observable<MypageList> getMypageItem();
 }
