@@ -409,6 +409,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     // 3. 투표가 없다면
                     // 이 세가지를 구별해야 할듯?
                     if (voteFlag == true) {
+                        qnaBoardItem.setQnaVoteExistence(voteFlag);
                         if (voteSelect.equals("text")) {
                             qnaBoardItem.setTag(tag);
                             qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
@@ -418,6 +419,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                                 voteText.add(editModelArrayList.get(i).getEditTextValue());
 
                             qnaBoardItem.setVoteText(voteText);
+                            qnaBoardItem.setQnaVoteStatus(voteSelect);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                         }else if (voteSelect.equals("image")){
@@ -425,6 +427,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                             qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                             qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
                             qnaBoardItem.setVoteImage(voteImage);
+                            qnaBoardItem.setQnaVoteStatus(voteSelect);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                         }
@@ -435,6 +438,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         qnaBoardItem.setTag(tag);
                         qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                         qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                        qnaBoardItem.setQnaVoteExistence(voteFlag);
                         //
 
                         qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
@@ -445,6 +449,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     // 3. 투표가 없다면
                     // 이 세가지를 구별해야 할듯?
                     if (voteFlag == true) {
+                        qnaBoardItem.setQnaVoteExistence(voteFlag);
                         if (voteSelect.equals("text")) {
                             qnaBoardItem.setTag(tag);
                             qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
@@ -455,6 +460,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                                 voteText.add(editModelArrayList.get(i).getEditTextValue());
 
                             qnaBoardItem.setVoteText(voteText);
+                            qnaBoardItem.setQnaVoteStatus(voteSelect);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                         }else if (voteSelect.equals("image")){
@@ -463,6 +469,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                             qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
                             qnaBoardItem.setImage(boardImagePath);
                             qnaBoardItem.setVoteImage(voteImage);
+                            qnaBoardItem.setQnaVoteStatus(voteSelect);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                         }
@@ -474,6 +481,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                         qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
                         qnaBoardItem.setImage(boardImagePath);
+                        qnaBoardItem.setQnaVoteExistence(voteFlag);
 
                         qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem);
                     }

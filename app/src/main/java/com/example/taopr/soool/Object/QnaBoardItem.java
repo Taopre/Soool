@@ -16,6 +16,10 @@ public class QnaBoardItem implements Serializable{
     public String tag;
     @SerializedName("qnaCate") // 게시글이 투표인지 아닌지
     public String qnaCate;
+    @SerializedName("qnaVoteExistence") // 투표가 존재하는지 아닌지 구별을 위해
+    public boolean qnaVoteExistence;
+    @SerializedName("qnaVoteStatus") // 투표가 이미지인지 텍스트인지 구별을 위해
+    public String qnaVoteStatus;
     @SerializedName("accountNo")
     public int accountNo;
     @SerializedName("writer")
@@ -179,5 +183,21 @@ public class QnaBoardItem implements Serializable{
 
     public void setVoteText(ArrayList<String> voteText) {
         this.voteText = voteText;
+    }
+
+    public boolean isQnaVoteExistence() {
+        return qnaVoteExistence;
+    }
+
+    public void setQnaVoteExistence(boolean qnaVoteExistence) {
+        this.qnaVoteExistence = qnaVoteExistence;
+    }
+
+    public String getQnaVoteStatus() {
+        return qnaVoteStatus;
+    }
+
+    public void setQnaVoteStatus(String qnaVoteStatus) {
+        this.qnaVoteStatus = qnaVoteStatus;
     }
 }
