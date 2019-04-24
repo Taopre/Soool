@@ -1,10 +1,12 @@
-package com.example.taopr.soool.Presenter;
+package com.example.taopr.soool.Presenter.Interface;
 
 import com.example.taopr.soool.Object.InfoOfSoool;
+import com.example.taopr.soool.Presenter.InfoPresenter;
+
 
 import java.util.List;
 
-interface InfoInter {
+public interface InfoInter {
 
     void setView(InfoPresenter.View view);
 

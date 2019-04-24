@@ -29,6 +29,12 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
         this.qnaBoardItems = qnaBoardItems;
     }
 
+    public QnaAdapter(List<QnaBoardItem> qnaBoardItems, Context context){
+        this.context = context;
+        this.qnaBoardItems = qnaBoardItems;
+    }
+
+
     @Override
     public int getItemCount() {
         return qnaBoardItems.size();

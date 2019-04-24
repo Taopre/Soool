@@ -1,6 +1,7 @@
-package com.example.taopr.soool.Presenter;
+package com.example.taopr.soool.Presenter.Interface;
 
 import com.example.taopr.soool.Object.LoginItem;
+import com.example.taopr.soool.Presenter.LoginPresenter;
 
 public interface LoginInter {
     //아래 주석으로 그어놓은 줄 위 아래로 부분을 나눌 수 있다.

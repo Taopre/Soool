@@ -6,12 +6,6 @@ import io.reactivex.observers.DisposableObserver;
 import retrofit2.HttpException;
 
 
-/**
- * Created by WuXiaolong on 2016/9/22.
- * github:https://github.com/WuXiaolong/
- * 微信公众号：吴小龙同学
- * 个人博客：http://wuxiaolong.me/
- */
 public abstract class APICallback<M> extends DisposableObserver<M> {
 
     public abstract void onSuccess(M loginItem);

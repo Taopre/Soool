@@ -16,5 +16,4 @@ public class QnaBoardList {
         this.qnaBoardItem = qnaBoardItems;
     }
 
-
 }

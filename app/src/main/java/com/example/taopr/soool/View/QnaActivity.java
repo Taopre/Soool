@@ -21,10 +21,13 @@ import com.example.taopr.soool.R;
 
 import java.util.ArrayList;
 
-//public class QnaActivity extends AppCompatActivity implements View.OnClickListener, QnaPresenter.View{
-public class QnaActivity extends BaseActivity implements QnaPresenter.View, View.OnClickListener{
+import butterknife.BindView;
+import butterknife.OnClick;
 
-    private FloatingActionButton fab_default, fab_qnaBoard, fab_qnaVote;
+//public class QnaActivity extends AppCompatActivity implements View.OnClickListener, QnaPresenter.View{
+public class QnaActivity extends BaseActivity implements QnaPresenter.View{
+
+   private FloatingActionButton fab_default;
 
     private RecyclerView qnaRecycler;
     private LinearLayoutManager linearLayoutManager;
@@ -73,20 +76,16 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View, View
 
     private void DoBinding() {
 
-        // 탭 부분은 BaseActivity로 이동
-
         // 뷰들 선언하는 부분입니다.
         fab_default = (FloatingActionButton) findViewById(R.id.fab_default);
-        fab_qnaBoard = (FloatingActionButton) findViewById(R.id.fab_qnaBoard);
-        fab_qnaVote = (FloatingActionButton) findViewById(R.id.fab_qnaVote);
+        fab_default.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(QnaActivity.this, QnaBoardActivity.class));
+            }
+        });
 
-        // 뷰의 리스너 선언 부분입니다.
-        fab_default.setOnClickListener(this);
-        fab_qnaBoard.setOnClickListener(this);
-        fab_qnaVote.setOnClickListener(this);
     }
-
-
 
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems) {
@@ -105,12 +104,17 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View, View
 
     @Override
     protected void onDestroy() {
-        qnaPresenter.onUnSubscribe();
+        qnaPresenter.onUnSubscribe();  ///
         super.onDestroy();
-
     }
 
     @Override
+    protected void onStop() {
+        qnaPresenter.clearSubscribe();
+        super.onStop();
+    }
+
+/*    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_default :
@@ -118,6 +122,6 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View, View
                 startActivity(intent);
                 break;
         }
-    }
+    }*/
 }
 

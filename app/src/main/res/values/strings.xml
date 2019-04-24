@@ -5,4 +5,28 @@
     <string name="terms_of_service">이용약관</string>
     <string name="facebook_app_id">309267686381329</string>
     <string name="fb_login_protocol_scheme">fb309267686381329</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="custom_months">
+        <item>JAN</item>
+        <item>Feb</item>
+        <item>MARCH</item>
+        <item>April</item>
+        <item>5월</item>
+        <item>June</item>
+        <item>JULY</item>
+        <item>Aug</item>
+        <item>SEPT</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>DEC</item>
+    </string-array>
+
+    <string name="my_board_tab_title">내 게시물</string>
+    <string name="bookmark_tab_title">북마크</string>
+    <string name="calendar_tab_title">캘린더</string>
+    <string name="my_page_profile_my_qna_title">내 작성글</string>
+    <string name="my_page_profile_my_point_title">내 포인트</string>
 </resources>
