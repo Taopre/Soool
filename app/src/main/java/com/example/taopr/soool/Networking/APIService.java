@@ -51,6 +51,6 @@ public interface APIService {
     @POST("")
     Observable<QnaBoardList> getMypageBookmarkItem();
 
-    @POST("")
+    @POST("/qnapost/QnaList.php")  // 테스트를 위해 임의로 작성
     Observable<QnaBoardList> getMypageBoardItem();
 }

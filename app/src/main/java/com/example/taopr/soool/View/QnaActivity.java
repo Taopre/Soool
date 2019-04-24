@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 //public class QnaActivity extends AppCompatActivity implements View.OnClickListener, QnaPresenter.View{
-public class QnaActivity extends BaseActivity implements QnaPresenter.View, View.OnClickListener{
+public class QnaActivity extends BaseActivity implements QnaPresenter.View{
 
    private FloatingActionButton fab_default;
 
@@ -104,12 +104,17 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View, View
 
     @Override
     protected void onDestroy() {
-        qnaPresenter.onUnSubscribe();
+        qnaPresenter.onUnSubscribe();  ///
         super.onDestroy();
-
     }
 
     @Override
+    protected void onStop() {
+        qnaPresenter.clearSubscribe();
+        super.onStop();
+    }
+
+/*    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_default :
@@ -117,6 +122,6 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View, View
                 startActivity(intent);
                 break;
         }
-    }
+    }*/
 }
 
