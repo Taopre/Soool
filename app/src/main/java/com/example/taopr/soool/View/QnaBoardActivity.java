@@ -414,7 +414,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     // 투표가 존재한다면 투표객체도 넘겨주어야한다.
 
                     if (voteFlag == 0) {
-                        qnaVoteItem.setQnaVoteExistence(voteFlag);
+                        qnaBoardItem.setQnaCate("yes vote");
                         if (voteSelect.equals("text")) {
                             qnaBoardItem.setTag(tag);
                             qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
@@ -447,7 +447,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                         qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
 
-                        qnaVoteItem.setQnaVoteExistence(voteFlag);
+                        qnaBoardItem.setQnaCate("no vote");
 
                         qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
 
@@ -459,7 +459,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     // 이 세가지를 구별해야 할듯?
 
                     if (voteFlag == 0) {
-                        qnaVoteItem.setQnaVoteExistence(voteFlag);
+                        qnaBoardItem.setQnaCate("yes vote");
                         if (voteSelect.equals("text")) {
                             qnaBoardItem.setTag(tag);
                             qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
@@ -495,7 +495,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
                         qnaBoardItem.setImage(boardImagePath);
 
-                        qnaVoteItem.setQnaVoteExistence(voteFlag);
+                        qnaBoardItem.setQnaCate("no vote");
 
                         qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
 
@@ -701,13 +701,20 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     }
     // Model에서 서버로 부터 받은 응답 값을 받아서 어떻게 처리할 지 결정하는 메서드.
     @Override
-    public void enrollmentBoardRespGoToView(boolean response) {
+    public void enrollmentBoardRespGoToView(boolean response, String vote) {
         if (response == true) {
-            Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-            intent.putExtra("QnaBoardItem", qnaBoardItem);
-            intent.putExtra("QnaVoteItem", qnaVoteItem);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            if (vote.equals("yes vote")) {
+                Intent intent = new Intent(this, QnaBoardDetailActivity.class);
+                intent.putExtra("QnaBoardItem", qnaBoardItem);
+                intent.putExtra("QnaVoteItem", qnaVoteItem);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            } else if (vote.equals("no vote")) {
+                Intent intent = new Intent(this, QnaBoardDetailActivity.class);
+                intent.putExtra("QnaBoardItem", qnaBoardItem);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
         }else {
             Toast.makeText(this, "Board 게시물 작성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
         }
