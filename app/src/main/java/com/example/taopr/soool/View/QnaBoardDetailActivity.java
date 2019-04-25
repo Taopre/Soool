@@ -1,5 +1,6 @@
 package com.example.taopr.soool.View;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -24,6 +25,7 @@ import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
+import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
@@ -37,6 +39,7 @@ import java.util.Date;
 public class QnaBoardDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     String TAG = "QnaBoardDetailActivity", accountNick;
+    int vote;
 
     TextView tv_qnaboardTag, tv_qnaboardTitle, tv_qnaboardWriter, tv_qnaboardContent, tv_qnaboardDate, tv_qnaboardCommentCount, tv_qnaboardViewCount;
     ImageView iv_qnaboardImage;
@@ -46,6 +49,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     GridView gv_gridview;
 
     QnaBoardItem qnaBoardItem;
+    QnaVoteItem qnaVoteItem;
     QnaBoardVoteAdapter qnaBoardVoteAdapter;
     VoteImageAdapter voteImageAdapter;
 
@@ -72,6 +76,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         String getTime = sdf.format(date);
 
         qnaBoardItem = (QnaBoardItem) getIntent().getSerializableExtra("QnaBoardItem");
+        qnaVoteItem = (QnaVoteItem) getIntent().getSerializableExtra("QnaVoteItem");
+
         Log.d(TAG, "onCreate: "+qnaBoardItem.getTitle()+qnaBoardItem.getContent()+qnaBoardItem.getTag() +qnaBoardItem.getImage());
         // 값이 넘어왔으므로 이제 뷰들 만들어서 넣어주는 작업하면 될거같다.
         tv_qnaboardTag.setText(qnaBoardItem.getTag());
@@ -101,11 +107,11 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         // 4. 이 주석 위에 것들을 아래 조건문에 잘 맞게 넣어줘서 보여질수 있게 하면 끝날 것 같다.
 
         if (!qnaBoardItem.getImage().equals(null)) {
-            if (qnaBoardItem.qnaVoteExistence == true) {
+            if (qnaVoteItem.qnaVoteExistence == 0) {
                 // 투표 레이아웃 보이도록
                 ll_voteLayout.setVisibility(View.VISIBLE);
 
-                if (qnaBoardItem.qnaVoteStatus.equals("text")) {
+                if (qnaVoteItem.qnaVoteStatus.equals("text")) {
                     // 투표 텍스트이므로 리싸이클러뷰 보이도록
                     rc_recycler.setVisibility(View.VISIBLE);
 
@@ -122,7 +128,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
                     */
 
-                }else if (qnaBoardItem.qnaVoteStatus.equals("image")) {
+                }else if (qnaVoteItem.qnaVoteStatus.equals("image")) {
                     // 투표 이미지이므로 그리드뷰 보이도록
                     gv_gridview.setVisibility(View.VISIBLE);
 
@@ -140,15 +146,15 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     gv_gridview.setAdapter(voteImageAdapter);
                     */
                 }
-            }else {
+            }else if(qnaVoteItem.qnaVoteExistence == 1) {
 
             }
         }else {
-            if (qnaBoardItem.qnaVoteExistence == true) {
+            if (qnaVoteItem.qnaVoteExistence == 0) {
                 // 투표 레이아웃 보이도록
                 ll_voteLayout.setVisibility(View.VISIBLE);
 
-                if (qnaBoardItem.qnaVoteStatus.equals("text")) {
+                if (qnaVoteItem.qnaVoteStatus.equals("text")) {
                     // 투표 텍스트이므로 리싸이클러뷰 보이도록
                     rc_recycler.setVisibility(View.VISIBLE);
 
@@ -165,7 +171,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
                     */
 
-                }else if (qnaBoardItem.qnaVoteStatus.equals("image")) {
+                }else if (qnaVoteItem.qnaVoteStatus.equals("image")) {
                     // 투표 이미지이므로 그리드뷰 보이도록
                     gv_gridview.setVisibility(View.VISIBLE);
 
@@ -183,7 +189,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     gv_gridview.setAdapter(voteImageAdapter);
                     */
                 }
-            }else {
+            }else if(qnaVoteItem.qnaVoteExistence == 1) {
 
             }
         }

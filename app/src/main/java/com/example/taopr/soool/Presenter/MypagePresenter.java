@@ -49,7 +49,7 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     // 혹시 몰라서 2일때 대비로 해둔다. (켈린더 정보)
 
     // i = 1일때 왜 두개로 구분해뒀냐면 객체를 어떻게 정의해야될지 고민중이라서 qnaboard로 가게되면 위에꺼 지우면 될듯.
-    // 현제 mypagebookmarkitem mypagemyboarditem 객체는 아무것도 없는 상태입니다.
+    // 현재 mypagebookmarkitem mypagemyboarditem 객체는 아무것도 없는 상태입니다.
 
     // getDataFail 함수로 데이터 유무 나눌려고 만들었습니다.
     // qnaBoardList이 Null값일때와 onFailure일때 두 부분에 적용을 해두었습니다. boolean값은 임의로 true로 해두었습니다.
