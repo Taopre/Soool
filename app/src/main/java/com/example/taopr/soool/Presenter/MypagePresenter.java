@@ -64,14 +64,14 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
         switch (i) {
             case 0:
                 addSubscription(
-                        apiService.getMypageBookmarkItem(),
-                        new APICallback<InfoOfSooolList>() {
+                        apiService.getMypageBoardItem(),
+                        new APICallback<QnaBoardList>() {
 
                             @Override
-                            public void onSuccess(InfoOfSooolList infoOfSooolList) {
-                                if (infoOfSooolList != null) {
-                                    infoOfSoools = new ArrayList(infoOfSooolList.getInfoOfSoools());
-                                    view.getInfoBookmarkResponse(infoOfSoools);
+                            public void onSuccess(QnaBoardList qnaBoardList) {
+                                if (qnaBoardList != null) {
+                                    qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
+                                    view.getQnaMyboardResponse(qnaBoardItems);
                                 }
                                 else{
                                     Log.i(TAG, "onSuccess: list = null");
@@ -94,14 +94,14 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
                 break;
             case 1:
                 addSubscription(
-                        apiService.getMypageBoardItem(),
-                        new APICallback<QnaBoardList>() {
+                        apiService.getMypageBookmarkItem(),
+                        new APICallback<InfoOfSooolList>() {
 
                             @Override
-                            public void onSuccess(QnaBoardList qnaBoardList) {
-                                if (qnaBoardList != null) {
-                                    qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
-                                    view.getQnaMyboardResponse(qnaBoardItems);
+                            public void onSuccess(InfoOfSooolList infoOfSooolList) {
+                                if (infoOfSooolList != null) {
+                                    infoOfSoools = new ArrayList(infoOfSooolList.getInfoOfSoools());
+                                    view.getInfoBookmarkResponse(infoOfSoools);
                                 }
                                 else{
                                     Log.i(TAG, "onSuccess: list = null");

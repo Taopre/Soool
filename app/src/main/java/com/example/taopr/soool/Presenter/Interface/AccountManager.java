@@ -1,7 +1,9 @@
-package com.example.taopr.soool.Presenter;
+package com.example.taopr.soool.Presenter.Interface;
 
 // accountManager는 회원정보 관련 페이지 presenter에서
 // 공통적으로 사용할 메서드를 상속하게 하려는 용도
+
+import com.example.taopr.soool.Presenter.SignUpPresenter;
 
 public interface AccountManager {
 

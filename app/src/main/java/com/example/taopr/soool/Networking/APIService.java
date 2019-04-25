@@ -42,7 +42,7 @@ public interface APIService {
     Call<ResponseBody> enrollQnaNoImage(@Field("accountNick") String accountNick, @Field("qnaBoardTag") String qnaTag,
                                         @Field("qnaBoardTitle") String qnaTitle, @Field("qnaBoardContent") String qnaContent);
 
-    // QnaBoardList 객체로 받는 형식
+    // QnaRecyclerview 리스트 아이템 받아오기
     @POST("/qnapost/QnaList.php")
     Observable<QnaBoardList> getQnaItem();
 
@@ -51,6 +51,6 @@ public interface APIService {
     @POST("")
     Observable<QnaBoardList> getMypageBookmarkItem();
 
-    @POST("")
+    @POST("/qnapost/QnaList.php")  // 테스트를 위해 임의로 작성
     Observable<QnaBoardList> getMypageBoardItem();
 }

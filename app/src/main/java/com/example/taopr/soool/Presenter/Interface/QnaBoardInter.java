@@ -1,6 +1,7 @@
-package com.example.taopr.soool.Presenter;
+package com.example.taopr.soool.Presenter.Interface;
 
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 
 public interface QnaBoardInter {
     // Presenter 부분쪽에 있는 함수.

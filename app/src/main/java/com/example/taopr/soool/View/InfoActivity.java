@@ -114,13 +114,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class InfoActivity extends BaseActivity implements InfoPresenter.View {
+public class InfoActivity extends BaseActivity implements InfoPresenter.View{
 
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private InfoAdapter infoAdapter;
     private List<InfoOfSoool> infoOfSoools = new ArrayList<>();
-    private InfoPresenter infoPresenter;
+    public InfoPresenter infoPresenter;
 
 
     // presenter의 loadData() 함수를 불러와 리스트 데이터를 가져온다

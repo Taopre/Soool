@@ -1,14 +1,16 @@
 package com.example.taopr.soool.Object;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class QnaBoardItem implements Serializable{
+public class QnaBoardItem implements Parcelable{
 
     // 테스트를 위해 tag ,date, content를 주석 처리해논 상황
-
 
     @SerializedName("qnaNo")  // @SerializedName 직렬화, 역직렬화 하기 위해 사용
     public int qnaNo;
@@ -64,6 +66,56 @@ public class QnaBoardItem implements Serializable{
         this.comments = comments;
         this.views = views;
     }
+    protected QnaBoardItem(Parcel in) {
+        qnaNo = in.readInt();
+        tag = in.readString();
+        qnaCate = in.readString();
+        accountNo = in.readInt();
+        writer = in.readString();
+        date = in.readString();
+        title = in.readString();
+        content = in.readString();
+        image = in.readString();
+        goods = in.readInt();
+        bads = in.readInt();
+        comments = in.readInt();
+        views = in.readInt();
+    }
+
+    public static final Creator<QnaBoardItem> CREATOR = new Creator<QnaBoardItem>() {
+        @Override
+        public QnaBoardItem createFromParcel(Parcel in) {
+            return new QnaBoardItem(in);
+        }
+
+        @Override
+        public QnaBoardItem[] newArray(int size) {
+            return new QnaBoardItem[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(qnaNo);
+        dest.writeString(tag);
+        dest.writeString(qnaCate);
+        dest.writeInt(accountNo);
+        dest.writeString(writer);
+        dest.writeString(date);
+        dest.writeString(title);
+        dest.writeString(content);
+        dest.writeString(image);
+        dest.writeInt(goods);
+        dest.writeInt(bads);
+        dest.writeInt(comments);
+        dest.writeInt(views);
+    }
+
 
     public int getQnaNo() {
         return qnaNo;

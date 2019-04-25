@@ -42,20 +42,13 @@
         <activity android:name=".View.LoginActivity">
 
         </activity>
-        <activity android:name=".View.QnaVoteActivity">
-
-        </activity>
         <activity android:name=".View.QnaActivity">
 
         </activity>
         <activity android:name=".View.MyPageActivity">
 
         </activity>
-        <activity android:name=".View.FloatingActivity"
-            android:theme="@style/Transparent">
-        </activity>
         <activity android:name=".View.QnaBoardDetailActivity"/>
-        <activity android:name=".View.QnaVoteDetailActivity"/>
 
     </application>
 

@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.example.taopr.soool.Model.QnaBoardModel;
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Presenter.Interface.QnaBoardInter;
 
 public class QnaBoardPresenter implements QnaBoardInter {
 

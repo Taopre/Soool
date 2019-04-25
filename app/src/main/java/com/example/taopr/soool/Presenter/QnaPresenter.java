@@ -2,6 +2,7 @@ package com.example.taopr.soool.Presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +11,8 @@ import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
+import com.example.taopr.soool.Presenter.Interface.QnaInter;
+import com.example.taopr.soool.View.QnaBoardDetailActivity;
 
 import java.util.ArrayList;
 
@@ -54,8 +57,7 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
 
                            ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
                            view.getDataSuccess(qnaBoardItems);
-//                           view.getDataSuccess(qnaBoardList.getQnaBoardItems());
-                           // 위에 두개 뭐가 다른건지??
+                          //  view.getDataSuccess(qnaBoardList.getQnaBoardItems());
                         }
                         else{
                             Log.i(TAG, "onSuccess: list = null");
@@ -65,7 +67,7 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
                     @Override
                     public void onFailure(String msg) {
                         Log.i(TAG, "onFailure: qna" + msg);
-
+                        view.getDataFail(msg);
                     }
 
                     @Override
@@ -83,6 +85,11 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
     public void getItem(QnaBoardItem qnaBoardItem, Activity activity) {
         this.activity = activity;
         Toast.makeText(activity, qnaBoardItem.getTitle(), Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
+        intent.putExtra("QnaBoardItem",qnaBoardItem);
+
+        activity.startActivity(intent);
     }
 
 

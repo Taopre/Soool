@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.taopr.soool.Object.LoginItem;
 import com.example.taopr.soool.Model.LoginModel;
+import com.example.taopr.soool.Presenter.Interface.LoginInter;
 
 public class LoginPresenter implements LoginInter {
 
