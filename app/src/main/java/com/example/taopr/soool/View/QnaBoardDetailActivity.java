@@ -107,7 +107,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         // 4. 이 주석 위에 것들을 아래 조건문에 잘 맞게 넣어줘서 보여질수 있게 하면 끝날 것 같다.
 
         if (!qnaBoardItem.getImage().equals(null)) {
-            if (qnaVoteItem.qnaVoteExistence == 0) {
+            if (qnaBoardItem.getQnaCate().equals("yes vote")) {
                 // 투표 레이아웃 보이도록
                 ll_voteLayout.setVisibility(View.VISIBLE);
 
@@ -146,11 +146,11 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     gv_gridview.setAdapter(voteImageAdapter);
                     */
                 }
-            }else if(qnaVoteItem.qnaVoteExistence == 1) {
+            }else if(qnaBoardItem.getQnaCate().equals("no vote")) {
 
             }
         }else {
-            if (qnaVoteItem.qnaVoteExistence == 0) {
+            if (qnaBoardItem.getQnaCate().equals("yes vote")) {
                 // 투표 레이아웃 보이도록
                 ll_voteLayout.setVisibility(View.VISIBLE);
 
@@ -189,7 +189,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     gv_gridview.setAdapter(voteImageAdapter);
                     */
                 }
-            }else if(qnaVoteItem.qnaVoteExistence == 1) {
+            }else if(qnaBoardItem.getQnaCate().equals("no vote")) {
 
             }
         }
@@ -260,8 +260,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.drawupEnroll:
                 break;
-            case R.id.qnaboardCommentShow:
-                break;
+//            case R.id.qnaboardCommentShow:
+//                break;
         }
     }
 }
