@@ -396,6 +396,16 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 // 투표기능 이 화면에 추가되었으므로 텍스트 / 이미지 인지 구별자를 만들어놔야할것 같다.
                 // 투표가 구별이 되었다면 그 값들 또한 예외처리 이후에 객체에 저장을 해주어야한다.
 
+                // 2019/4/26 태그 ui부분 변경해줬으므로 예외처리 부분도 변경해야합니다.
+                /*
+                if (tagArray.size() == 0) {
+                    Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
+                }
+                 */
+                // 위 방식으로 변경해야합니다.
+                // 아직 적용하지 않은 이유는 객체의 데이터가 변경되야하므로 팀원들과 상의후에 변경하기 위해 아직 주석에가 남겨둡니다.
+                // 객체 tag 변수를 ArrayList<String>으로 변경해야함을 회의해야한다.
+
 
                 if(tag.equals(null)) {
                     Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
@@ -552,7 +562,9 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                             Log.d("main!!!!!!!!!!!", "onPositiveClicked: "+arrayLists.get(i));
                         }
 
-                        qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayLists);
+                        tagArray = new ArrayList<>(arrayLists);
+
+                        qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), tagArray);
                         rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                         rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                     }
