@@ -38,11 +38,6 @@ public class QnaBoardItem implements Parcelable{
     public int comments;
     @SerializedName("views")
     public int views;
-    @SerializedName("voteImage")
-    public ArrayList<String> voteImage;
-    @SerializedName("voteText")
-    public ArrayList<String> voteText;
-
 
     public QnaBoardItem(){}
 
@@ -215,21 +210,5 @@ public class QnaBoardItem implements Parcelable{
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public ArrayList<String> getVoteImage() {
-        return voteImage;
-    }
-
-    public void setVoteImage(ArrayList<String> voteImage) {
-        this.voteImage = voteImage;
-    }
-
-    public ArrayList<String> getVoteText() {
-        return voteText;
-    }
-
-    public void setVoteText(ArrayList<String> voteText) {
-        this.voteText = voteText;
     }
 }

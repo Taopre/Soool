@@ -7,6 +7,7 @@ import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 public class QnaBoardModel {
 
     String TAG = "QnaBoardModel", accountNick, result;
-    int accountNo;
+    int accountNo, voteExistence;
 
     private QnaBoardPresenter qnaBoardPresenter;
 
@@ -50,7 +51,7 @@ public class QnaBoardModel {
 
     // QnaDrawUpActivity로 게시물 관련 데이터들을 객체로 받아서 서버로 저장하는 함수.
 
-    public void enrollmentBoardReqFromView(QnaBoardItem item) {
+    public void enrollmentBoardReqFromView(QnaBoardItem item, QnaVoteItem qnaVoteItem) {
 
         // 쉐어드로부터 로그인한 사람의 닉네임 값을 불러내는 부분
 
@@ -69,13 +70,23 @@ public class QnaBoardModel {
         // 넘어감의 응답을 view로 뿌려주게 마무리하였습니다.
 
         // 4/18 업데이트 해야할 것 정리
-        // 1. 투표가 있는지 없는지 체크해야함
-        // 2. 투표가 이미지 or 텍스트인지 체크해야함
-        // 3. 이미지가 있는지 없는지 체크해야함
-
+        // 1. 이미지가 있는지 없는지 체크해야함
+        // 2. 투표가 있는지 없는지 체크해야함 (투표가 있다면 voteExistence = 0; 없다면 voteExistence = 1;)
+        // 3. 투표가 이미지 or 텍스트인지 체크해야함
+        // 4. 투표 객체도 서버에 저장되도록 디버깅해야함
+        // 5. 투표가 있는 경우, view쪽에 보내줄 메서드에 투표 존재유무를 보내줘야함
 
         if(item.getImage() == null) {
-            Log.d(TAG, "enrollmentReqFromView: "+accountNick+"//"+item.getTag()+"//"+item.getTitle()+"//"+item.getContent());
+            if (qnaVoteItem.qnaVoteExistence == 0) {
+                voteExistence = 0;
+                if (qnaVoteItem.qnaVoteStatus.equals("text")) {
+
+                } else if (qnaVoteItem.qnaVoteStatus.equals("image")) {
+
+                }
+            } else if (qnaVoteItem.qnaVoteExistence == 1) {
+                voteExistence = 1;
+            }
 
             Observable.just("")
                     .subscribeOn(AndroidSchedulers.mainThread())
@@ -163,7 +174,16 @@ public class QnaBoardModel {
                         }
                     });
         }else {
-            Log.d(TAG, "enrollmentReqFromView: "+item.getTag()+"//"+item.getTitle()+"//"+item.getContent()+"//"+item.getImage());
+            if (qnaVoteItem.qnaVoteExistence == 0) {
+                voteExistence = 0;
+                if (qnaVoteItem.qnaVoteStatus.equals("text")) {
+
+                } else if (qnaVoteItem.qnaVoteStatus.equals("image")) {
+
+                }
+            } else if (qnaVoteItem.qnaVoteExistence == 1) {
+                voteExistence = 1;
+            }
 
             File file = new File(item.getImage());
 

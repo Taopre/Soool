@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -246,9 +247,22 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
 
     // TODO:fragment를 null 값으로 변경해야 하기 때문에, presenter에서 fragmentNo값도 같이 전달해줘야한다.
 
-    @Override
-    public void getDataFail(boolean response) {
+    // i=0 -> qnaBoardList가 null일때
+    // i=1 -> infoOfSooolList가 null일때
+    // i=2 -> qnaBoardList의 통신 fail일때
+    // i=3 -> infoOfSooolList의 통신 fail일떄
 
+    @Override
+    public void getDataFail(boolean response, int i) {
+        if (i == 0) {
+            Toast.makeText(this, "내 게시물들을 가져오는데 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
+        } else if (i == 1) {
+            Toast.makeText(this, "북마크들을 가져오는데 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
+        } else if (i == 2) {
+            Toast.makeText(this, "내 게시물들을 가져오는것을 실패하였습니다.", Toast.LENGTH_SHORT).show();
+        } else if (i == 3) {
+            Toast.makeText(this, "북마크들을 가져오는것을 실패하였습니다..", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
