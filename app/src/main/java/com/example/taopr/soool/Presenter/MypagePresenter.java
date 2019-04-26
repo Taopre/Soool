@@ -44,12 +44,12 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     }
 
     // 이 함수 int 변수값에 따라 구별하자 그럼 일단..
-    // i = 0 -> 북마크 리스트 객체
-    // i = 1 -> 내 게시물 리스트 객체
+    // i = 0 -> 내 게시물 리스트 객체
+    // i = 1 -> 북마크 리스트 객체
     // 혹시 몰라서 2일때 대비로 해둔다. (켈린더 정보)
 
     // i = 1일때 왜 두개로 구분해뒀냐면 객체를 어떻게 정의해야될지 고민중이라서 qnaboard로 가게되면 위에꺼 지우면 될듯.
-    // 현제 mypagebookmarkitem mypagemyboarditem 객체는 아무것도 없는 상태입니다.
+    // 현재 mypagebookmarkitem mypagemyboarditem 객체는 아무것도 없는 상태입니다.
 
     // getDataFail 함수로 데이터 유무 나눌려고 만들었습니다.
     // qnaBoardList이 Null값일때와 onFailure일때 두 부분에 적용을 해두었습니다. boolean값은 임의로 true로 해두었습니다.
@@ -59,6 +59,12 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     // 만약에 나눠서 메시지 처리를 다르게한다면을 고려해봤는데 이 부분은 불필요하다면 그냥 통일해서 진행해도 무방합니다.
 
     // 현재 switch 문 2개로 받도록 조치했는데 ApiCallback generic으로 한번에 처리된다면 바꿔보는거 해볼까 고민해봅시다.
+
+    // getDataFail 함수에서 두번째 인자 int 값에 따른 변화
+    // 0 -> qnaBoardList가 null일때
+    // 1 -> infoOfSooolList가 null일때
+    // 2 -> qnaBoardList의 통신 fail일때
+    // 3 -> infoOfSooolList의 통신 fail일떄
 
     public void loadMypageData(int i){
         switch (i) {
@@ -75,14 +81,14 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
                                 }
                                 else{
                                     Log.i(TAG, "onSuccess: list = null");
-                                    view.getDataFail(true);
+                                    view.getDataFail(true, 0);
                                 }
                             }
 
                             @Override
                             public void onFailure(String msg) {
                                 Log.i(TAG, "onFailure: mypage" + msg);
-                                view.getDataFail(true);
+                                view.getDataFail(true, 2);
                             }
 
                             @Override
@@ -105,14 +111,14 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
                                 }
                                 else{
                                     Log.i(TAG, "onSuccess: list = null");
-                                    view.getDataFail(true);
+                                    view.getDataFail(true, 1);
                                 }
                             }
 
                             @Override
                             public void onFailure(String msg) {
                                 Log.i(TAG, "onFailure: mypage" + msg);
-                                view.getDataFail(true);
+                                view.getDataFail(true, 3);
                             }
 
                             @Override

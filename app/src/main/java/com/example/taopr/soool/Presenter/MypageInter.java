@@ -14,6 +14,6 @@ public interface MypageInter {
     public interface View{
         void getInfoBookmarkResponse(ArrayList<InfoOfSoool> infoOfSoools);
         void getQnaMyboardResponse(ArrayList<QnaBoardItem> qnaBoardItems);
-        void getDataFail(boolean response);
+        void getDataFail(boolean respons, int i);
     }
 }
