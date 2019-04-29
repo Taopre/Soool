@@ -8,7 +8,9 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -58,6 +60,8 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
     TextView mypageProfileMyQnaCount;
     @BindView(R.id.mypageProfileNickname)
     TextView mypageProfileNickname;
+    @BindView(R.id.mainActionBarTitle)
+    TextView mainActionBarTitle;
 
     public static MyBoardFragment myBoardFragment;
     static String TAG = "프래그먼트 main";
@@ -73,8 +77,14 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage,3);
 
+
+        //액션바 숨기기
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         ButterKnife.bind(this);
 
+        mainActionBarTitle.setText("마이 페이지");
         mypagePresenter = new MypagePresenter(this);
         mypagePresenter.setView(this);
 
@@ -143,7 +153,7 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
     // 프래그먼트가 null인 경우에는 서버로부터 리스트 데이터를 받아오지 못했기 때문에
     // 서버에 데이터를 요청 후 받아온다
 
-    @OnClick({R.id.tabMyBoard,R.id.tabBookmark,R.id.tabCalendar})
+    @OnClick({R.id.tabMyBoard,R.id.tabBookmark,R.id.tabCalendar,R.id.myPageDrawerButton})
     void tabChange(View view){
         switch (view.getId()) {
             case R.id.tabMyBoard:
@@ -164,9 +174,16 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
                 break;
 
             case R.id.tabCalendar:
-                callFragment(calendar);
+               callFragment(calendar);
+
                 break;
 
+            case R.id.myPageDrawerButton:
+                DrawerLayout mypageDrawerLayout = (DrawerLayout) findViewById(R.id.myPageDrawerLayout) ;
+                if (!mypageDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                    mypageDrawerLayout.openDrawer(Gravity.RIGHT) ;
+                }
+                break;
         }
     }
 
