@@ -22,24 +22,30 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
+import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
+import com.example.taopr.soool.Dialog.TagDialog;
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
@@ -59,7 +65,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener {
+public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener {
 
     private static final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
@@ -67,19 +73,22 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_iMAGE = 2;
 
-    Spinner sp_qnaboardTag;
+//    Spinner sp_qnaboardTag;
+    TextView tv_qnaboardBeforeTag;
     EditText et_qnaboardTitle, et_qnaboardContent;
     ImageButton ib_qnaboardImagebtn;
     ImageView iv_qnaboardImage;
-    Button btn_qnaboardDeleteBtn, btn_qnaboardVoteBtn, btn_qnaboardAddBtn;
+    Button btn_qnaboardDeleteBtn, btn_qnaboardVoteBtn, btn_qnaboardAddBtn, btn_qnaboardAddTag;
+    HorizontalScrollView h_scrollView;
     LinearLayout lay_qnaboardVoteLayout;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView, rc_qnaboardTag;
     RadioGroup rg_qnaboardVoteSelect;
     RadioButton rb_qnaboardVoteText, rb_qnaboardVoteImage;
     GridView gridView;
 
     public ArrayList<QnaBoardVoteItem> editModelArrayList;
     QnaBoardVoteAdapter qnaBoardVoteAdapter;
+    QnaBoardTagAdapter qnaBoardTagAdapter;
 
     ArrayList<String> tagArray = new ArrayList<>();
     ArrayList<Uri> path = new ArrayList<>();
@@ -137,8 +146,8 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
 
-        drawUpTagAdapter = new DrawUpTagAdapter(this, tagArray);
-        sp_qnaboardTag.setAdapter(drawUpTagAdapter);
+//        drawUpTagAdapter = new DrawUpTagAdapter(this, tagArray);
+//        sp_qnaboardTag.setAdapter(drawUpTagAdapter);
 
         editModelArrayList = populateList();
         qnaBoardVoteAdapter = new QnaBoardVoteAdapter(this,editModelArrayList);
@@ -164,7 +173,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         qnaBoardPresenter.setView(this);
 
         // 뷰들 선언하는 부분입니다.
-        sp_qnaboardTag = findViewById(R.id.qnaboardTag);
+//        sp_qnaboardTag = findViewById(R.id.qnaboardTag);
         et_qnaboardTitle = findViewById(R.id.qnaboardTitle);
         et_qnaboardContent = findViewById(R.id.qnaboardContent);
         ib_qnaboardImagebtn = findViewById(R.id.qnaboardImageBtn);
@@ -178,6 +187,10 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         rb_qnaboardVoteText = findViewById(R.id.qnaboardVoteText);
         rb_qnaboardVoteImage = findViewById(R.id.qnaboardVoteImage);
         gridView = findViewById(R.id.gridview);
+        tv_qnaboardBeforeTag = findViewById(R.id.qnaboardBeforeTag);
+        btn_qnaboardAddTag = findViewById(R.id.qnaboardAddTag);
+        rc_qnaboardTag = findViewById(R.id.qnaboardTag);
+        h_scrollView = findViewById(R.id.h_scrollView);
 
         iv_qnaboardImage.setVisibility(View.GONE);
         btn_qnaboardDeleteBtn.setVisibility(View.GONE);
@@ -185,12 +198,13 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         btn_qnaboardAddBtn.setVisibility(View.GONE);
 
         // 뷰의 리스너 선언 부분입니다.
-        sp_qnaboardTag.setOnItemSelectedListener(this);
+//        sp_qnaboardTag.setOnItemSelectedListener(this);
         ib_qnaboardImagebtn.setOnClickListener(this);
         btn_qnaboardDeleteBtn.setOnClickListener(this);
         btn_qnaboardVoteBtn.setOnClickListener(this);
         btn_qnaboardAddBtn.setOnClickListener(this);
         rg_qnaboardVoteSelect.setOnCheckedChangeListener(this);
+        btn_qnaboardAddTag.setOnClickListener(this);
     }
 
     // 권한 묻는 부분.
@@ -273,18 +287,18 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         return true;
     }
 
-    //스피너 리스너 부분
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "선택한 태그 : "+tagArray.get(position), Toast.LENGTH_SHORT).show();
-        tag = tagArray.get(position).toString();
-        Log.d(TAG, "onItemSelected: "+tag);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+//    //스피너 리스너 부분
+//    @Override
+//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        Toast.makeText(this, "선택한 태그 : "+tagArray.get(position), Toast.LENGTH_SHORT).show();
+//        tag = tagArray.get(position).toString();
+//        Log.d(TAG, "onItemSelected: "+tag);
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> parent) {
+//
+//    }
 
     // 투표 기능 고르는 부분
     @Override
@@ -381,6 +395,16 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 // 예외 처리 이후에 모델로 넘어가 서버에 저장할 수 있도록 처리하였습니다.
                 // 투표기능 이 화면에 추가되었으므로 텍스트 / 이미지 인지 구별자를 만들어놔야할것 같다.
                 // 투표가 구별이 되었다면 그 값들 또한 예외처리 이후에 객체에 저장을 해주어야한다.
+
+                // 2019/4/26 태그 ui부분 변경해줬으므로 예외처리 부분도 변경해야합니다.
+                /*
+                if (tagArray.size() == 0) {
+                    Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
+                }
+                 */
+                // 위 방식으로 변경해야합니다.
+                // 아직 적용하지 않은 이유는 객체의 데이터가 변경되야하므로 팀원들과 상의후에 변경하기 위해 아직 주석에가 남겨둡니다.
+                // 객체 tag 변수를 ArrayList<String>으로 변경해야함을 회의해야한다.
 
 
                 if(tag.equals(null)) {
@@ -521,6 +545,48 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
                 qnaBoardVoteAdapter.notifyDataSetChanged();
                 break;
+            case R.id.qnaboardAddTag:
+                Intent intent1 = new Intent(this, TagActivity.class);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent1);
+
+                // 다이얼로그 방식
+                /*
+                TagDialog tagDialog = new TagDialog(this);
+                tagDialog.setDialogListener(new TagDialog.TagDialogListener() {
+                    @Override
+                    public void onPositiveClicked(ArrayList<String> arrayLists) {
+                        if (arrayLists.size() > 0) {
+                            tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                            h_scrollView.setVisibility(View.VISIBLE);
+                        } else if (arrayLists.size() == 0) {
+                            tv_qnaboardBeforeTag.setVisibility(View.VISIBLE);
+                            h_scrollView.setVisibility(View.GONE);
+                        }
+
+                        for (int i=0; i<arrayLists.size(); i++) {
+                            Log.d("main!!!!!!!!!!!", "onPositiveClicked: "+arrayLists.get(i));
+                        }
+
+                        tagArray = new ArrayList<>(arrayLists);
+
+                        qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), tagArray);
+                        rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
+                        rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
+                tagDialog.getWindow().setGravity(Gravity.BOTTOM);
+                tagDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+
+                tagDialog.show();
+                */
+                break;
         }
     }
     /**
@@ -542,8 +608,6 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
         if(resultCode != RESULT_OK)
             return;
-
-
 
         switch(requestCode)
         {

@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        >
+        android:usesCleartextTraffic="true">
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="@string/facebook_app_id" />
 
         <activity android:name=".View.MainActivity">
             <intent-filter>
@@ -35,10 +35,8 @@
         <activity android:name=".View.StartingActivity">
 
         </activity>
-        <activity android:name=".View.InfoActivity">
-        </activity>
-        <activity android:name=".View.QnaBoardActivity">
-        </activity>
+        <activity android:name=".View.InfoActivity"></activity>
+        <activity android:name=".View.QnaBoardActivity"></activity>
         <activity android:name=".View.LoginActivity">
 
         </activity>
@@ -48,7 +46,7 @@
         <activity android:name=".View.MyPageActivity">
 
         </activity>
-        <activity android:name=".View.QnaBoardDetailActivity"/>
+        <activity android:name=".View.QnaBoardDetailActivity" />
 
     </application>
 

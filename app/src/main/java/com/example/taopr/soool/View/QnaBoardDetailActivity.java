@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Object.LoginSessionItem;
@@ -45,12 +46,13 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     ImageView iv_qnaboardImage;
     Button btn_qnaboardLike, btn_qnaboardUnLike;
     LinearLayout ll_voteLayout;
-    RecyclerView rc_recycler;
+    RecyclerView rc_recycler, rc_qnaboardTag;
     GridView gv_gridview;
 
     QnaBoardItem qnaBoardItem;
     QnaVoteItem qnaVoteItem;
     QnaBoardVoteAdapter qnaBoardVoteAdapter;
+    QnaBoardTagAdapter qnaBoardTagAdapter;
     VoteImageAdapter voteImageAdapter;
 
     ArrayList<QnaBoardVoteItem> editModelArrayList;
@@ -81,6 +83,17 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         Log.d(TAG, "onCreate: "+qnaBoardItem.getTitle()+qnaBoardItem.getContent()+qnaBoardItem.getTag() +qnaBoardItem.getImage());
         // 값이 넘어왔으므로 이제 뷰들 만들어서 넣어주는 작업하면 될거같다.
         tv_qnaboardTag.setText(qnaBoardItem.getTag());
+
+        /*
+        만약 객체에서 tag값을 어레이리스트로 변경한다면
+        어댑터 생성시 객체의 tag 어레이값을 넣어줘서 보여지게 작업하면됩니다.
+        그 후 이 주석위의 tv_qnaboardTag는 삭제해주면 됩니다.
+
+        qnaBoardTagAdapter = new QnaBoardTagAdapter(this, );
+        rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
+        rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+         */
+
         tv_qnaboardTitle.setText(qnaBoardItem.getTitle());
 //        tv_qnaboardWriter.setText(qnaBoardItem.getWriter());
         tv_qnaboardWriter.setText(accountNick);
@@ -107,7 +120,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         // 4. 이 주석 위에 것들을 아래 조건문에 잘 맞게 넣어줘서 보여질수 있게 하면 끝날 것 같다.
 
         if (!qnaBoardItem.getImage().equals(null)) {
-            if (qnaVoteItem.qnaVoteExistence == 0) {
+            if (qnaBoardItem.getQnaCate().equals("yes vote")) {
                 // 투표 레이아웃 보이도록
                 ll_voteLayout.setVisibility(View.VISIBLE);
 
@@ -146,11 +159,11 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     gv_gridview.setAdapter(voteImageAdapter);
                     */
                 }
-            }else if(qnaVoteItem.qnaVoteExistence == 1) {
+            }else if(qnaBoardItem.getQnaCate().equals("no vote")) {
 
             }
         }else {
-            if (qnaVoteItem.qnaVoteExistence == 0) {
+            if (qnaBoardItem.getQnaCate().equals("yes vote")) {
                 // 투표 레이아웃 보이도록
                 ll_voteLayout.setVisibility(View.VISIBLE);
 
@@ -189,7 +202,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     gv_gridview.setAdapter(voteImageAdapter);
                     */
                 }
-            }else if(qnaVoteItem.qnaVoteExistence == 1) {
+            }else if(qnaBoardItem.getQnaCate().equals("no vote")) {
 
             }
         }
@@ -200,7 +213,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 //        qnaBoardPresenter.setView(this);
 
         // 뷰들 선언하는 부분입니다.
-        tv_qnaboardTag = findViewById(R.id.qnaboardTag);
+        tv_qnaboardTag = findViewById(R.id.qnaboardTags);
         tv_qnaboardTitle = findViewById(R.id.qnaboardTitle);
         tv_qnaboardWriter = findViewById(R.id.qnaboardWriter);
         tv_qnaboardContent = findViewById(R.id.qnaboardContent);
@@ -213,6 +226,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         ll_voteLayout = findViewById(R.id.voteLayout);
         rc_recycler = findViewById(R.id.recycler);
         gv_gridview = findViewById(R.id.gridview);
+        rc_qnaboardTag = findViewById(R.id.qnaboardTag);
 
         ll_voteLayout.setVisibility(View.GONE);
 
@@ -260,8 +274,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.drawupEnroll:
                 break;
-            case R.id.qnaboardCommentShow:
-                break;
+//            case R.id.qnaboardCommentShow:
+//                break;
         }
     }
 }

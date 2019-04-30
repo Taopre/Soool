@@ -61,10 +61,8 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     // 현재 switch 문 2개로 받도록 조치했는데 ApiCallback generic으로 한번에 처리된다면 바꿔보는거 해볼까 고민해봅시다.
 
     // getDataFail 함수에서 두번째 인자 int 값에 따른 변화
-    // 0 -> qnaBoardList가 null일때
-    // 1 -> infoOfSooolList가 null일때
-    // 2 -> qnaBoardList의 통신 fail일때
-    // 3 -> infoOfSooolList의 통신 fail일떄
+    // 0 -> qnaBoardList가 통신 실패일 때
+    // 1 -> infoOfSooolList가 통신 실패일 때
 
     public void loadMypageData(int i){
         switch (i) {
@@ -81,14 +79,13 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
                                 }
                                 else{
                                     Log.i(TAG, "onSuccess: list = null");
-                                    view.getDataFail(true, 0);
                                 }
                             }
 
                             @Override
                             public void onFailure(String msg) {
                                 Log.i(TAG, "onFailure: mypage" + msg);
-                                view.getDataFail(true, 2);
+                                view.getDataFail(true, 0);
                             }
 
                             @Override
@@ -111,14 +108,13 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
                                 }
                                 else{
                                     Log.i(TAG, "onSuccess: list = null");
-                                    view.getDataFail(true, 1);
                                 }
                             }
 
                             @Override
                             public void onFailure(String msg) {
                                 Log.i(TAG, "onFailure: mypage" + msg);
-                                view.getDataFail(true, 3);
+                                view.getDataFail(true, 1);
                             }
 
                             @Override
