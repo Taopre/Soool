@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class QnaVoteItem implements Parcelable {
 
     @SerializedName("qnaVoteStatus") // 투표가 이미지인지 텍스트인지 구별을 위해
-    public String qnaVoteStatus;
+    public String qnaVoteStatus; // int로 바꾸고 0이면 텍스트 1이면 이미지
     @SerializedName("voteImage")
     public ArrayList<String> voteImage;
     @SerializedName("voteText")

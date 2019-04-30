@@ -546,6 +546,12 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 qnaBoardVoteAdapter.notifyDataSetChanged();
                 break;
             case R.id.qnaboardAddTag:
+                Intent intent1 = new Intent(this, TagActivity.class);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent1);
+
+                // 다이얼로그 방식
+                /*
                 TagDialog tagDialog = new TagDialog(this);
                 tagDialog.setDialogListener(new TagDialog.TagDialogListener() {
                     @Override
@@ -579,6 +585,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
 
                 tagDialog.show();
+                */
                 break;
         }
     }
@@ -601,8 +608,6 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
         if(resultCode != RESULT_OK)
             return;
-
-
 
         switch(requestCode)
         {
