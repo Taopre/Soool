@@ -33,7 +33,7 @@ public class APIClient {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Whatisthis.serverIp)  //
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         return retrofit;
     }

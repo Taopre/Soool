@@ -1,9 +1,11 @@
 package com.example.taopr.soool.View;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,11 +48,18 @@ import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Dialog.TagDialog;
+import com.example.taopr.soool.Object.GridVoteItem;
+import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Presenter.Interface.QnaBoardInter;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sangcomz.fishbun.FishBun;
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter;
 import com.sangcomz.fishbun.define.Define;
@@ -65,7 +74,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener {
+public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener, VoteImageAdapter.GridviewItemClickListner {
 
     private static final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
@@ -87,6 +96,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     GridView gridView;
 
     public ArrayList<QnaBoardVoteItem> editModelArrayList;
+    public ArrayList<GridVoteItem> gridVoteItemArrayList = new ArrayList<>();
     QnaBoardVoteAdapter qnaBoardVoteAdapter;
     QnaBoardTagAdapter qnaBoardTagAdapter;
 
@@ -96,23 +106,27 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     ArrayList<Integer> number = new ArrayList<>();
     ArrayList<String> voteImage = new ArrayList<>();
     ArrayList<String> voteText = new ArrayList<>();
+    ArrayList<String> arrayList = new ArrayList<>();
 
     private Uri mImageCaptureUri;
     private int id_view;
-    String absoultePath, voteSelect;
-    int count = 2;
+    String absoultePath, voteSelect, accountNick;
+    int count = 2, accountNo;
 
     VoteImageAdapter voteImageAdapter;
     DrawUpTagAdapter drawUpTagAdapter;
     QnaBoardPresenter qnaBoardPresenter;
     QnaBoardItem qnaBoardItem = new QnaBoardItem();
     QnaVoteItem qnaVoteItem = new QnaVoteItem();
+    QnaItem qnaItem;
+    GridVoteItem gridVoteItem;
 
     Uri image;
     String title = "", content = "", tag = "", imgPath, imgName;
     static String UploadImgPath;
     String boardImagePath;
     int voteFlag = 1;
+    boolean boardImageSelect = false, reSelectVoteImage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,8 +136,15 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
         checkPermission();
 
+        String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
+        Gson gson = new GsonBuilder().create();
+        // JSON 으로 변환
+        LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
+        accountNick = loginSessionItem.getAccountNick();
+        accountNo = loginSessionItem.getAccountNo();
+
         // 아래의 try / catch 문은 res/xml에 있는 스피너 메뉴값을 파싱하기 위해 가져다 쓴 부분입니다.
-        try{
+        /*try{
             // custom_list.xml 을 가져와 XmlPullParser 에 넣는다.
             XmlPullParser customList = getResources().getXml(R.xml.drawup_tag);
 
@@ -144,10 +165,33 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }catch(IOException e){
             e.printStackTrace();
-        }
+        }*/
 
 //        drawUpTagAdapter = new DrawUpTagAdapter(this, tagArray);
 //        sp_qnaboardTag.setAdapter(drawUpTagAdapter);
+
+        // 태그값들 인텐트 받는 부분
+        Intent intent = getIntent();
+
+        if (intent != null) {
+            if (intent.getStringArrayListExtra("tagList") != null) {
+                tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                h_scrollView.setVisibility(View.VISIBLE);
+
+                arrayList = intent.getStringArrayListExtra("tagList");
+
+                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, arrayList);
+                rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
+                rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                for (int i=0; i<arrayList.size(); i++) {
+                    if (i == arrayList.size()-1)
+                        tag += arrayList.get(i);
+                    else if (i < arrayList.size())
+                        tag += arrayList.get(i) + "@##@";
+                }
+            }
+        }
 
         editModelArrayList = populateList();
         qnaBoardVoteAdapter = new QnaBoardVoteAdapter(this,editModelArrayList);
@@ -205,6 +249,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         btn_qnaboardAddBtn.setOnClickListener(this);
         rg_qnaboardVoteSelect.setOnCheckedChangeListener(this);
         btn_qnaboardAddTag.setOnClickListener(this);
+        gridView.setOnItemClickListener(this);
     }
 
     // 권한 묻는 부분.
@@ -309,6 +354,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
             rg_qnaboardVoteSelect.setVisibility(View.GONE);
             lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
             btn_qnaboardAddBtn.setVisibility(View.VISIBLE);
         }else if(i == R.id.qnaboardVoteImage) {
             voteSelect = "image";
@@ -324,15 +370,19 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
             // 이미지 셀렉하면 셀렉된 이미지 리싸이클러뷰로 보여지도록 처리해야함.
             // 여기까지 완료된다면 예외처리부분 처리해준다.
             // 다 된다면 mvp로 서버로 보내주는 처리를 해준다면 작성하는 곳은 완료.
-            FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6).setMinCount(3).startAlbum();
+
+            FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6).setMinCount(2).startAlbum();
         }
     }
+
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         voteSelect = "";
         voteFlag = 1;
+        boardImageSelect = false;
     }
 
     @Override
@@ -354,7 +404,8 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //앨범
-                        doTakeAlbumAction();
+                        boardImageSelect = true;
+                        FishBun.with(QnaBoardActivity.this).setImageAdapter(new GlideAdapter()).setMaxCount(1).setMinCount(1).startAlbum();
                     }
                 };
                 DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
@@ -416,11 +467,120 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 }else if(voteSelect.equals("text")) {
                     // 텍스트 투표
 //                    Toast.makeText(this, editModelArrayList.size()+"", Toast.LENGTH_SHORT).show();
-                    for (int i = 1; i < editModelArrayList.size()+1; i++){
-                        Log.d(TAG, "onClick: "+ editModelArrayList.get(i).getEditTextValue());
+                    for (int i = 0; i < editModelArrayList.size(); i++){
+                        if(editModelArrayList.get(i).getEditTextValue().length() == 0){
+                            Log.d(TAG, "onClick: "+ i+1 +"번째 내용을 입력해주세요.");
+                        }
+                    }
 
-                        if(QnaBoardVoteAdapter.editModelArrayList.get(i).getEditTextValue().length() == 0){
-                            Log.d(TAG, "onClick: "+ i +"번째 내용을 입력해주세요.");
+                    if(boardImagePath == null) {
+                        // 1. 투표가 표함되는지 안되는지 선 체크
+                        // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+                        // 3. 투표가 없다면
+                        // 이 세가지를 구별해야 할듯
+
+                        // 투표가 존재한다면 투표객체도 넘겨주어야한다.
+
+                        if (voteFlag == 0) {
+                            qnaBoardItem.setQnaCate("yes vote");
+                            if (voteSelect.equals("text")) {
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+
+                                for (int i=0; i<editModelArrayList.size(); i++)
+                                    voteText.add(editModelArrayList.get(i).getEditTextValue());
+
+                                qnaVoteItem.setVoteText(voteText);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), voteText, voteSelect);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }else if (voteSelect.equals("image")){
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+
+                                qnaVoteItem.setVoteImage(voteImage);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), voteSelect, voteImage);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }
+                        }else if (voteFlag == 1) {
+                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
+
+                            qnaBoardItem.setTag(tag);
+                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+
+                            qnaBoardItem.setQnaCate("no vote");
+
+                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                        }
+                    }else {
+                        // 1. 투표가 표함되는지 안되는지 선 체크
+                        // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+                        // 3. 투표가 없다면
+                        // 이 세가지를 구별해야 할듯?
+
+                        Log.d(TAG, "onClick: 찍혀라!!!!!!!!!!!!!!1 "+voteFlag+voteSelect);
+
+                        if (voteFlag == 0) {
+                            qnaBoardItem.setQnaCate("yes vote");
+                            if (voteSelect.equals("text")) {
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                                qnaBoardItem.setImage(boardImagePath);
+
+                                for (int i=0; i<editModelArrayList.size(); i++)
+                                    voteText.add(editModelArrayList.get(i).getEditTextValue());
+
+                                qnaVoteItem.setVoteText(voteText);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), boardImagePath, voteText, voteSelect);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }else if (voteSelect.equals("image")){
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                                qnaBoardItem.setImage(boardImagePath);
+
+                                qnaVoteItem.setVoteImage(voteImage);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), boardImagePath, voteSelect, voteImage);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }
+                        }else if (voteFlag == 1) {
+                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + boardImagePath);
+
+                            qnaBoardItem.setTag(tag);
+                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                            qnaBoardItem.setImage(boardImagePath);
+
+                            qnaBoardItem.setQnaCate("no vote");
+
+                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
                         }
                     }
                 }else if(voteSelect.equals("image")) {
@@ -429,102 +589,216 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                     if (voteImage.size() == 0) {
                         Log.d(TAG, "onClick: 이미지를 선택해주세요");
                     }
-                }else if(boardImagePath == null) {
-                    // 1. 투표가 표함되는지 안되는지 선 체크
-                    // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
-                    // 3. 투표가 없다면
-                    // 이 세가지를 구별해야 할듯
 
-                    // 투표가 존재한다면 투표객체도 넘겨주어야한다.
+                    if(boardImagePath == null) {
+                        // 1. 투표가 표함되는지 안되는지 선 체크
+                        // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+                        // 3. 투표가 없다면
+                        // 이 세가지를 구별해야 할듯
 
-                    if (voteFlag == 0) {
-                        qnaBoardItem.setQnaCate("yes vote");
-                        if (voteSelect.equals("text")) {
+                        // 투표가 존재한다면 투표객체도 넘겨주어야한다.
+
+                        if (voteFlag == 0) {
+                            qnaBoardItem.setQnaCate("yes vote");
+                            if (voteSelect.equals("text")) {
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+
+                                for (int i=0; i<editModelArrayList.size(); i++)
+                                    voteText.add(editModelArrayList.get(i).getEditTextValue());
+
+                                qnaVoteItem.setVoteText(voteText);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), voteText, voteSelect);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }else if (voteSelect.equals("image")){
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+
+                                qnaVoteItem.setVoteImage(voteImage);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), voteSelect, voteImage);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }
+                        }else if (voteFlag == 1) {
+                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
+
                             qnaBoardItem.setTag(tag);
                             qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                             qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
 
-                            for (int i=0; i<editModelArrayList.size(); i++)
-                                voteText.add(editModelArrayList.get(i).getEditTextValue());
+                            qnaBoardItem.setQnaCate("no vote");
 
-                            qnaVoteItem.setVoteText(voteText);
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
-
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
-
-                        }else if (voteSelect.equals("image")){
-                            qnaBoardItem.setTag(tag);
-                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
-
-                            qnaVoteItem.setVoteImage(voteImage);
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
-
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
 
                         }
-                    }else if (voteFlag == 1) {
-                        Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                                + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
+                    }else {
+                        // 1. 투표가 표함되는지 안되는지 선 체크
+                        // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+                        // 3. 투표가 없다면
+                        // 이 세가지를 구별해야 할듯?
 
-                        qnaBoardItem.setTag(tag);
-                        qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                        qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                        Log.d(TAG, "onClick: 찍혀라!!!!!!!!!!!!!!1 "+voteFlag+voteSelect);
 
-                        qnaBoardItem.setQnaCate("no vote");
+                        if (voteFlag == 0) {
+                            qnaBoardItem.setQnaCate("yes vote");
+                            if (voteSelect.equals("text")) {
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                                qnaBoardItem.setImage(boardImagePath);
 
-                        qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+                                for (int i=0; i<editModelArrayList.size(); i++)
+                                    voteText.add(editModelArrayList.get(i).getEditTextValue());
 
-                    }
-                }else {
-                    // 1. 투표가 표함되는지 안되는지 선 체크
-                    // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
-                    // 3. 투표가 없다면
-                    // 이 세가지를 구별해야 할듯?
+                                qnaVoteItem.setVoteText(voteText);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
 
-                    if (voteFlag == 0) {
-                        qnaBoardItem.setQnaCate("yes vote");
-                        if (voteSelect.equals("text")) {
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), boardImagePath, voteText, voteSelect);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }else if (voteSelect.equals("image")){
+                                qnaBoardItem.setTag(tag);
+                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                                qnaBoardItem.setImage(boardImagePath);
+
+                                qnaVoteItem.setVoteImage(voteImage);
+                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, accountNick, "yes vote", tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), boardImagePath, voteSelect, voteImage);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+
+                            }
+                        }else if (voteFlag == 1) {
+                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + boardImagePath);
+
                             qnaBoardItem.setTag(tag);
                             qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                             qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
                             qnaBoardItem.setImage(boardImagePath);
 
-                            for (int i=0; i<editModelArrayList.size(); i++)
-                                voteText.add(editModelArrayList.get(i).getEditTextValue());
+                            qnaBoardItem.setQnaCate("no vote");
 
-                            qnaVoteItem.setVoteText(voteText);
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
-
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
-
-                        }else if (voteSelect.equals("image")){
-                            qnaBoardItem.setTag(tag);
-                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
-                            qnaBoardItem.setImage(boardImagePath);
-
-                            qnaVoteItem.setVoteImage(voteImage);
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
-
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
 
                         }
-                    }else if (voteFlag == 1) {
-                        Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                                + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + boardImagePath);
-
-                        qnaBoardItem.setTag(tag);
-                        qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                        qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
-                        qnaBoardItem.setImage(boardImagePath);
-
-                        qnaBoardItem.setQnaCate("no vote");
-
-                        qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
-
                     }
                 }
+//                else if(boardImagePath == null) {
+//                    // 1. 투표가 표함되는지 안되는지 선 체크
+//                    // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+//                    // 3. 투표가 없다면
+//                    // 이 세가지를 구별해야 할듯
+//
+//                    // 투표가 존재한다면 투표객체도 넘겨주어야한다.
+//
+//                    if (voteFlag == 0) {
+//                        qnaBoardItem.setQnaCate("yes vote");
+//                        if (voteSelect.equals("text")) {
+//                            qnaBoardItem.setTag(tag);
+//                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//
+//                            for (int i=0; i<editModelArrayList.size(); i++)
+//                                voteText.add(editModelArrayList.get(i).getEditTextValue());
+//
+//                            qnaVoteItem.setVoteText(voteText);
+//                            qnaVoteItem.setQnaVoteStatus(voteSelect);
+//
+//                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+//
+//                        }else if (voteSelect.equals("image")){
+//                            qnaBoardItem.setTag(tag);
+//                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//
+//                            qnaVoteItem.setVoteImage(voteImage);
+//                            qnaVoteItem.setQnaVoteStatus(voteSelect);
+//
+//                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+//
+//                        }
+//                    }else if (voteFlag == 1) {
+//                        Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+//                                + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
+//
+//                        qnaBoardItem.setTag(tag);
+//                        qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                        qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//
+//                        qnaBoardItem.setQnaCate("no vote");
+//
+//                        qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+//
+//                    }
+//                }else {
+//                    // 1. 투표가 표함되는지 안되는지 선 체크
+//                    // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+//                    // 3. 투표가 없다면
+//                    // 이 세가지를 구별해야 할듯?
+//
+//                    Log.d(TAG, "onClick: 찍혀라!!!!!!!!!!!!!!1 "+voteFlag+voteSelect);
+//
+//                    if (voteFlag == 0) {
+//                        qnaBoardItem.setQnaCate("yes vote");
+//                        if (voteSelect.equals("text")) {
+//                            qnaBoardItem.setTag(tag);
+//                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//                            qnaBoardItem.setImage(boardImagePath);
+//
+//                            for (int i=0; i<editModelArrayList.size(); i++)
+//                                voteText.add(editModelArrayList.get(i).getEditTextValue());
+//
+//                            qnaVoteItem.setVoteText(voteText);
+//                            qnaVoteItem.setQnaVoteStatus(voteSelect);
+//
+//                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+//
+//                        }else if (voteSelect.equals("image")){
+//                            qnaBoardItem.setTag(tag);
+//                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//                            qnaBoardItem.setImage(boardImagePath);
+//
+//                            qnaVoteItem.setVoteImage(voteImage);
+//                            qnaVoteItem.setQnaVoteStatus(voteSelect);
+//
+//                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+//
+//                        }
+//                    }else if (voteFlag == 1) {
+//                        Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+//                                + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + boardImagePath);
+//
+//                        qnaBoardItem.setTag(tag);
+//                        qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                        qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//                        qnaBoardItem.setImage(boardImagePath);
+//
+//                        qnaBoardItem.setQnaCate("no vote");
+//
+//                        qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem);
+//
+//                    }
+//                }
                 break;
             case R.id.qnaboardVoteBtn:
                 btn_qnaboardVoteBtn.setVisibility(View.GONE);
@@ -547,7 +821,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.qnaboardAddTag:
                 Intent intent1 = new Intent(this, TagActivity.class);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent1);
 
                 // 다이얼로그 방식
@@ -675,19 +949,133 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
                     path = data.getParcelableArrayListExtra(Define.INTENT_PATH);
 
-                    for (int i=1; i<path.size()+1; i++) {
-                        // path안의 값들을 이름 절대경로 뽑아서 저장하자
+                    if (boardImageSelect == false) {
+                        if (reSelectVoteImage == false) {
 
-                        String nameStr = getImageNameToUri(path.get(i-1));
+                            for (int i=1; i<path.size()+1; i++) {
+                                // path안의 값들을 이름 절대경로 뽑아서 저장하자
+
+                                String nameStr = getImageNameToUri(path.get(i-1));
+                                //절대경로 획득**
+                                Cursor c = getContentResolver().query(Uri.parse(path.get(i-1).toString()), null, null, null, null);
+                                c.moveToNext();
+                                String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
+
+                                //이미지 데이터를 비트맵으로 받아옴
+                                Bitmap image_bitmap = null;
+                                try {
+                                    image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path.get(i-1));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                ///리사이징
+                                int height = image_bitmap.getHeight();
+                                int width = image_bitmap.getWidth();
+
+                                Bitmap src = BitmapFactory.decodeFile(absolutePath);
+                                Bitmap resized = Bitmap.createScaledBitmap( src, width/4, height/4, true );
+
+                                saveBitmaptoJpeg(resized, "soool", nameStr);
+
+
+                                if(!UploadImgPath.equals(null)) {
+                                    voteImage.add(UploadImgPath);
+                                    UploadImgPath = "";
+                                    File file = new File(voteImage.get(i-1));
+                                    Uri test = Uri.fromFile(file);
+
+                                    realPath.add(test);
+                                    number.add(i);
+
+                                    gridVoteItem = new GridVoteItem("", test);
+                                    gridVoteItemArrayList.add(gridVoteItem);
+                                }
+                            }
+
+                            if (path.size() < 6) {
+                                number.add(path.size()+1);
+                                Uri uriTest = Uri.parse("aaaa");
+                                realPath.add(uriTest);
+
+                                gridVoteItem = new GridVoteItem("항목추가", uriTest);
+                                gridVoteItemArrayList.add(gridVoteItem);
+                            }
+
+                            voteImageAdapter = new VoteImageAdapter(this, gridVoteItemArrayList, this);
+                            gridView.setAdapter(voteImageAdapter);
+                        } else {
+                            for (int i = 0; i < path.size(); i++) {
+                                String nameStr = getImageNameToUri(path.get(i));
+                                //절대경로 획득**
+                                Cursor c = getContentResolver().query(Uri.parse(path.get(i).toString()), null, null, null, null);
+                                c.moveToNext();
+                                String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
+
+                                //이미지 데이터를 비트맵으로 받아옴
+                                Bitmap image_bitmap = null;
+                                try {
+                                    image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path.get(i));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                ///리사이징
+                                int height = image_bitmap.getHeight();
+                                int width = image_bitmap.getWidth();
+
+                                Bitmap src = BitmapFactory.decodeFile(absolutePath);
+                                Bitmap resized = Bitmap.createScaledBitmap(src, width / 4, height / 4, true);
+
+                                saveBitmaptoJpeg(resized, "soool", nameStr);
+
+
+                                if (!UploadImgPath.equals(null)) {
+                                    voteImage.add(UploadImgPath);
+                                    UploadImgPath = "";
+
+                                    File file = new File(voteImage.get(voteImage.size() - 1));
+                                    Uri test = Uri.fromFile(file);
+
+                                    realPath.add(test);
+                                    number.add(voteImage.size());
+
+                                    gridVoteItem = new GridVoteItem("", test);
+                                    gridVoteItemArrayList.add(gridVoteItem);
+                                }
+                            }
+
+                            if (voteImage.size() < 6) {
+                                number.add(voteImage.size()+1);
+                                Uri uriTest = Uri.parse("");
+                                realPath.add(uriTest);
+                                gridVoteItem = new GridVoteItem("항목추가", uriTest);
+                                gridVoteItemArrayList.add(gridVoteItem);
+                            }
+
+                            voteImageAdapter.notifyDataSetChanged();
+                            gridView.setAdapter(voteImageAdapter);
+
+                            reSelectVoteImage = false;
+                        }
+
+                        // 여기서 받아온 이미지 gridview 사용해서 이미지 뿌려주는 것을 적용하자.
+                        // gridview item은 텍스트뷰 (항목 숫자식별용) 이미지뷰로 구성해서 만들자.
+//                        voteImageAdapter = new VoteImageAdapter(this, realPath, number);
+//                        gridView.setAdapter(voteImageAdapter);
+
+                    } else {
+                        String name_Str = getImageNameToUri(path.get(0));
+
                         //절대경로 획득**
-                        Cursor c = getContentResolver().query(Uri.parse(path.get(i-1).toString()), null, null, null, null);
+                        Cursor c = getContentResolver().query(Uri.parse(path.get(0).toString()), null, null, null, null);
                         c.moveToNext();
                         String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
 
                         //이미지 데이터를 비트맵으로 받아옴
                         Bitmap image_bitmap = null;
                         try {
-                            image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path.get(i-1));
+                            image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path.get(0));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -699,24 +1087,21 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         Bitmap src = BitmapFactory.decodeFile(absolutePath);
                         Bitmap resized = Bitmap.createScaledBitmap( src, width/4, height/4, true );
 
-                        saveBitmaptoJpeg(resized, "soool", nameStr);
+                        saveBitmaptoJpeg(resized, "soool", name_Str);
+                        ////리사이징
 
+                        iv_qnaboardImage.setVisibility(View.VISIBLE);
+                        btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
+//                iv_drawupImage.setImageURI(mImageCaptureUri);
 
                         if(!UploadImgPath.equals(null)) {
-                            voteImage.add(UploadImgPath);
-                            UploadImgPath = "";
-                            File file = new File(voteImage.get(i-1));
+                            boardImagePath = UploadImgPath;
+                            File file = new File(boardImagePath);
                             Uri test = Uri.fromFile(file);
-
-                            realPath.add(test);
-                            number.add(i);
+                            iv_qnaboardImage.setImageURI(test);
                         }
+                        boardImageSelect = false;
                     }
-                    // 여기서 받아온 이미지 gridview 사용해서 이미지 뿌려주는 것을 적용하자.
-                    // gridview item은 텍스트뷰 (항목 숫자식별용) 이미지뷰로 구성해서 만들자.
-                    voteImageAdapter = new VoteImageAdapter(this, realPath, number);
-                    gridView.setAdapter(voteImageAdapter);
-
                     break;
                 }
         }
@@ -782,6 +1167,29 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         }else {
             Toast.makeText(this, "Board 게시물 작성에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        TextView gridText = view.findViewById(R.id.grid_text);
+//        Toast.makeText(this, position + " "+ gridText.getText() + "aaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+        if (voteImage.size() > 0 && voteImage.size() < 6) {
+            if (position == voteImage.size()) {
+                Toast.makeText(this, position+1 + "번째 클릭", Toast.LENGTH_SHORT).show();
+                reSelectVoteImage = true;
+                realPath.remove(voteImage.size());
+                FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
+            }else {
+
+            }
+        }
+    }
+
+    @Override
+    public void onListTextClick(int position) {
+        Toast.makeText(this, position + "번째", Toast.LENGTH_SHORT).show();
+        // 그리드 뷰 버튼 클릭 리스너
+        // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
     }
 }
 

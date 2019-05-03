@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.example.taopr.soool.Model.QnaBoardModel;
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Presenter.Interface.QnaBoardInter;
 
@@ -26,8 +27,8 @@ public class QnaBoardPresenter implements QnaBoardInter {
 
     // QnaActivity로부터 게시물 관련 데이터들을 객체로 받아서 서버로 저장하는 함수.
     @Override
-    public void enrollmentBoardReq(QnaBoardItem item, QnaVoteItem qnaVoteItem) {
-        qnaBoardModel.enrollmentBoardReqFromView(item, qnaVoteItem);
+    public void enrollmentBoardReq(QnaBoardItem item, QnaVoteItem qnaVoteItem, QnaItem qnaItem) {
+        qnaBoardModel.enrollmentBoardReqFromView(item, qnaVoteItem, qnaItem);
     }
 
     // 모델의 응답을 넘겨주는 메서드

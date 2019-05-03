@@ -3,11 +3,15 @@ package com.example.taopr.soool.Model;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.taopr.soool.Networking.APICallback;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Object.QnaBoardList;
+import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Object.QnaVoteItemResponse;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
@@ -19,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -26,6 +31,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,8 +43,12 @@ import retrofit2.Response;
 
 public class QnaBoardModel {
 
+    private APIService apiService;
+
     String TAG = "QnaBoardModel", accountNick, result;
     int accountNo, voteExistence;
+
+    ArrayList<MultipartBody.Part> imageParts = new ArrayList<>();
 
     private QnaBoardPresenter qnaBoardPresenter;
 
@@ -51,7 +61,7 @@ public class QnaBoardModel {
 
     // QnaDrawUpActivity로 게시물 관련 데이터들을 객체로 받아서 서버로 저장하는 함수.
 
-    public void enrollmentBoardReqFromView(QnaBoardItem item, QnaVoteItem qnaVoteItem) {
+    public void enrollmentBoardReqFromView(QnaBoardItem item, QnaVoteItem qnaVoteItem, QnaItem qnaItem) {
 
         // 쉐어드로부터 로그인한 사람의 닉네임 값을 불러내는 부분
 
@@ -96,110 +106,278 @@ public class QnaBoardModel {
         if(item.getImage() == null) {
             if (item.getQnaCate().equals("yes vote")) {
                 if (qnaVoteItem.qnaVoteStatus.equals("text")) {
+                    if (qnaVoteItem != null) {
 
-                } else if (qnaVoteItem.qnaVoteStatus.equals("image")) {
-
-                }
-            } else if (item.getQnaCate().equals("no vote")) {
-
-            }
-
-            Observable.just("")
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .observeOn(Schedulers.io())
-                    .map(new Function<String, Boolean>()
-                    {
-                        @Override
-                        public Boolean apply(String s) throws Exception
-                        {
-                            try
-                            {
-                                Log.d(TAG, "시작 바로 전");
-                                //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
-                                //Retrofit 객체 불러와서 선언하는 부분.
-                                APIService service = APIClient.getClient().create(APIService.class);
-
-                                //Call함수로 LoginActivity(view)로부터 받은 인자를 서버로 넘기는 부분.
-                                Call<ResponseBody> callServer = service.enrollQnaNoImage(accountNick, item.getTag(), item.getTitle(), item.getContent());
-
-                                //서버로 부터 응답을 받는 부분.
-                                callServer.enqueue(new Callback<ResponseBody>() {
+                        Log.d(TAG, "enrollmentBoardReqFromView: 하이하이하이하이하이하이하이하이하이");
+                        
+                        Observable.just("")
+                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .observeOn(Schedulers.io())
+                                .map(new Function<String, Boolean>()
+                                {
                                     @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        try {
-                                            String msg = response.body().string();
-                                            Log.d(TAG, "onResponse 이미지 없을때 : " + msg);
-                                            JSONArray jsonArray = new JSONArray(msg);
-                                            for (int i = 0; i < jsonArray.length(); i++) {
-                                                JSONObject returnData = jsonArray.getJSONObject(i);
+                                    public Boolean apply(String s) throws Exception
+                                    {
+                                        try
+                                        {
+                                            Log.d(TAG, "시작 바로 전");
+                                            //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
+                                            //Retrofit 객체 불러와서 선언하는 부분.
+                                            APIService service = APIClient.getClient1().create(APIService.class);
+                                            Call<ResponseBody> callServer = service.sendQnaItem(qnaItem);
 
-                                                result = returnData.getString("result");
-                                                if(result.equals("true")){
-                                                    Log.d(TAG, "onResponse: 인서트 성공");
-                                                    qnaBoardPresenter.enrollmentBoardResp(true, item.getQnaCate());
-                                                }else {
-                                                    Log.d(TAG, "onResponse: 인서트 실패");
-                                                    qnaBoardPresenter.enrollmentBoardResp(false, item.getQnaCate());
+                                            callServer.enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                    try {
+                                                        String msg = response.body().string();
+                                                        JSONArray jsonArray = new JSONArray(msg);
+                                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                                            JSONObject returnData = jsonArray.getJSONObject(i);
+
+                                                            result = returnData.getString("result");
+
+                                                            if(result.equals("true")){
+                                                                Log.d(TAG, "onResponse: 인서트 성공");
+                                                            }else {
+                                                                Log.d(TAG, "onResponse: 인서트 실패");
+                                                            }
+                                                        }
+                                                    }catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
-                                            }
-                                        }catch (IOException e) {
-                                            e.printStackTrace();
+
+                                                @Override
+                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    Log.d(TAG, "onFailure: 실패");
+                                                    Log.e(TAG, "onFailure: ", t);
+                                                }
+                                            });
                                         }
-                                        catch (JSONException e) {
-                                            e.printStackTrace();
+                                        catch(Exception e) {
+                                            Log.d(TAG, "onFailure: 실패2");
+                                            Log.e(TAG, "apply: ", e);
                                         }
+
+                                        return true;
+                                    }
+                                }).observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<Boolean>()
+                                {
+                                    @Override
+                                    public void onSubscribe(Disposable d)
+                                    {
+                                        Log.d(TAG, "onSubscribe : 구독!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                    }
+                                    @Override
+                                    public void onNext(Boolean s)
+                                    {
+                                        Log.d(TAG, "onNext: 다음!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                                     }
 
                                     @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                                        Log.d(TAG, "onFailure: 실패");
-                                        Log.e(TAG, "onFailure: ", t);
+                                    public void onError(Throwable e) {
+                                        Log.e(TAG, "onError : 에러발생!!!!!!!!!!!!!!!!!!",e);
+                                    }
+                                    @Override
+                                    public void onComplete()
+                                    {
+                                        Log.d(TAG, "onComplete : 완료!!!!!!!!!!!!!!!!!!!!!!");
                                     }
                                 });
-                            }
-                            catch(Exception e) {
-                                Log.d(TAG, "onFailure: 실패2");
-                                Log.e(TAG, "apply: ", e);
-                            }
-
-                            return true;
-                        }
-                    }).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<Boolean>()
-                    {
-                        @Override
-                        public void onSubscribe(Disposable d)
-                        {
-                            Log.d(TAG, "onSubscribe : 구독!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                        }
-                        @Override
-                        public void onNext(Boolean s)
-                        {
-                            Log.d(TAG, "onNext: 다음!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.e(TAG, "onError : 에러발생!!!!!!!!!!!!!!!!!!",e);
-                        }
-                        @Override
-                        public void onComplete()
-                        {
-                            Log.d(TAG, "onComplete : 완료!!!!!!!!!!!!!!!!!!!!!!");
-                        }
-                    });
-        }else {
-            if (item.getQnaCate().equals("yes vote")) {
-                if (qnaVoteItem.qnaVoteStatus.equals("text")) {
-
+                    }
                 } else if (qnaVoteItem.qnaVoteStatus.equals("image")) {
+                    if (qnaVoteItem != null) {
+                        Observable.just("")
+                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .observeOn(Schedulers.io())
+                                .map(new Function<String, Boolean>()
+                                {
+                                    @Override
+                                    public Boolean apply(String s) throws Exception
+                                    {
+                                        try
+                                        {
+                                            Log.d(TAG, "시작 바로 전");
 
+                                            Log.d(TAG, "apply: "+qnaItem.voteImage.size());
+
+                                            for (int i=0; i<qnaItem.voteImage.size(); i++) {
+                                                File image = new File(qnaItem.voteImage.get(i));
+                                                Log.d(TAG, "apply: "+qnaItem.voteImage.get(i));
+                                                RequestBody surveyBody = RequestBody.create(MediaType.parse("image/*"), image);
+                                                imageParts.add(MultipartBody.Part.createFormData("voteImages[]", image.getName(), surveyBody));
+                                                Log.d(TAG, "apply: "+imageParts.get(i));
+                                            }
+                                            RequestBody nick = RequestBody.create(MediaType.parse("text/plain"), accountNick);
+                                            RequestBody cate = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getQnaCate());
+                                            RequestBody tag = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTag());
+                                            RequestBody title = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTitle());
+                                            RequestBody content = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getContent());
+                                            RequestBody votestatus = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getQnaVoteStatus());
+
+                                            APIService service = APIClient.getClient1().create(APIService.class);
+                                            Call<ResponseBody> callServer = service.sendTest(accountNo, nick, cate, tag, title,
+                                                    content, votestatus, imageParts);
+
+                                            callServer.enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                    try {
+                                                        String msg = response.body().string();
+                                                        JSONArray jsonArray = new JSONArray(msg);
+                                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                                            JSONObject returnData = jsonArray.getJSONObject(i);
+
+                                                            result = returnData.getString("result");
+
+                                                            if(result.equals("true")){
+                                                                Log.d(TAG, "onResponse: 인서트 성공");
+                                                            }else {
+                                                                Log.d(TAG, "onResponse: 인서트 실패");
+                                                            }
+                                                        }
+                                                    }catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                    Log.d(TAG, "onFailure: 실패");
+                                                    Log.e(TAG, "onFailure: ", t);
+                                                }
+                                            });
+
+                                        }
+                                        catch(Exception e) {
+                                            Log.d(TAG, "onFailure : 실패2");
+                                            Log.e(TAG, "apply : ", e);
+                                        }
+
+                                        return true;
+                                    }
+                                }).observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<Boolean>()
+                                {
+                                    @Override
+                                    public void onSubscribe(Disposable d)
+                                    {
+                                        Log.d(TAG, "onSubscribe : 구독!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                    }
+                                    @Override
+                                    public void onNext(Boolean s)
+                                    {
+                                        Log.d(TAG, "onNext: 다음!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.e(TAG, "onError : 에러발생!!!!!!!!!!!!!!!!!!",e);
+                                    }
+                                    @Override
+                                    public void onComplete()
+                                    {
+                                        Log.d(TAG, "onComplete : 완료!!!!!!!!!!!!!!!!!!!!!!");
+                                    }
+                                });
+                    }
                 }
             } else if (item.getQnaCate().equals("no vote")) {
+                Observable.just("")
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .observeOn(Schedulers.io())
+                        .map(new Function<String, Boolean>()
+                        {
+                            @Override
+                            public Boolean apply(String s) throws Exception
+                            {
+                                try
+                                {
+                                    Log.d(TAG, "시작 바로 전");
+                                    //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
+                                    //Retrofit 객체 불러와서 선언하는 부분.
+                                    APIService service = APIClient.getClient1().create(APIService.class);
+                                    Call<ResponseBody> callServer = service.sendQnaBoardItem(item);
 
+                                    callServer.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                            try {
+                                                String msg = response.body().string();
+                                                Log.d(TAG, "onResponse okhttp: " + msg);
+                                                JSONArray jsonArray = new JSONArray(msg);
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    JSONObject returnData = jsonArray.getJSONObject(i);
+
+                                                    result = returnData.getString("result");
+
+                                                    if(result.equals("true")){
+                                                        Log.d(TAG, "onResponse: 인서트 성공");
+                                                    }else {
+                                                        Log.d(TAG, "onResponse: 인서트 실패");
+                                                    }
+                                                }
+                                            }catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                            Log.d(TAG, "onFailure: 실패");
+                                            Log.e(TAG, "onFailure: ", t);
+                                        }
+                                    });
+                                }
+                                catch(Exception e) {
+                                    Log.d(TAG, "onFailure: 실패2");
+                                    Log.e(TAG, "apply: ", e);
+                                }
+
+                                return true;
+                            }
+                        }).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Boolean>()
+                        {
+                            @Override
+                            public void onSubscribe(Disposable d)
+                            {
+                                Log.d(TAG, "onSubscribe : 구독!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+                            @Override
+                            public void onNext(Boolean s)
+                            {
+                                Log.d(TAG, "onNext: 다음!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e(TAG, "onError : 에러발생!!!!!!!!!!!!!!!!!!",e);
+                            }
+                            @Override
+                            public void onComplete()
+                            {
+                                Log.d(TAG, "onComplete : 완료!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+                        });
             }
 
+
+        }else {
             File file = new File(item.getImage());
 
             Observable.just("")
@@ -221,11 +399,12 @@ public class QnaBoardModel {
                                         .addFormDataPart("qnaBoardTag", item.getTag())
                                         .addFormDataPart("qnaBoardTitle", item.getTitle())
                                         .addFormDataPart("qnaBoardContent", item.getContent())
+                                        .addFormDataPart("qnaCate", item.getQnaCate())
                                         .addFormDataPart("qnaBoardImage",file.getName(), RequestBody.create(MultipartBody.FORM, file))
                                         .build();
 
                                 Request request = new Request.Builder()
-                                        .url("http://54.180.90.184/test/postWrite.php")
+                                        .url("http://54.180.90.184/qnapost/QnaWrite.php")
                                         .post(requestBody)
                                         .build();
 
@@ -296,6 +475,50 @@ public class QnaBoardModel {
                             Log.d(TAG, "onComplete 이미지 있을때 이미지뺴고 보내는 부분: 완료!!!!!!!!!!!!!!!!!!!!!!");
                         }
                     });
+
+            if (item.getQnaCate().equals("yes vote")) {
+                if (qnaVoteItem.qnaVoteStatus.equals("text")) {
+                    if (qnaVoteItem != null) {
+                        APIService service = APIClient.getClient1().create(APIService.class);
+                        Call<ResponseBody> callServer = service.sendQnaItem(qnaItem);
+
+                        callServer.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                Log.d(TAG, "onResponse: " + response.body().toString());
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                Log.d(TAG, "onFailure: 실패");
+                                Log.e(TAG, "onFailure: ", t);
+                            }
+                        });
+                    }
+                } else if (qnaVoteItem.qnaVoteStatus.equals("image")) {
+                    if (qnaVoteItem != null) {
+                        APIService service = APIClient.getClient1().create(APIService.class);
+                        Call<ResponseBody> callServer = service.sendQnaItem(qnaItem);
+
+                        callServer.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                Log.d(TAG, "onResponse: " + response.body().toString());
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                Log.d(TAG, "onFailure: 실패");
+                                Log.e(TAG, "onFailure: ", t);
+                            }
+                        });
+                    }
+                }
+            } else if (item.getQnaCate().equals("no vote")) {
+
+            }
         }
     }
 }
