@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class QnaVoteItem implements Parcelable {
 
     @SerializedName("qnaVoteStatus") // 투표가 이미지인지 텍스트인지 구별을 위해
-    public String qnaVoteStatus; // int로 바꾸고 0이면 텍스트 1이면 이미지
+    public int qnaVoteStatus; // int로 바꾸고 0이면 텍스트 1이면 이미지
     @SerializedName("voteImage")
     public ArrayList<String> voteImage;
     @SerializedName("voteText")
@@ -19,7 +19,7 @@ public class QnaVoteItem implements Parcelable {
     public QnaVoteItem() {}
 
     protected QnaVoteItem(Parcel in) {
-        qnaVoteStatus = in.readString();
+        qnaVoteStatus = in.readInt();
         voteImage = in.createStringArrayList();
         voteText = in.createStringArrayList();
     }
@@ -43,7 +43,7 @@ public class QnaVoteItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(qnaVoteStatus);
+        dest.writeInt(qnaVoteStatus);
         dest.writeStringList(voteImage);
         dest.writeStringList(voteText);
     }
@@ -64,11 +64,11 @@ public class QnaVoteItem implements Parcelable {
         this.voteText = voteText;
     }
 
-    public String getQnaVoteStatus() {
+    public int getQnaVoteStatus() {
         return qnaVoteStatus;
     }
 
-    public void setQnaVoteStatus(String qnaVoteStatus) {
+    public void setQnaVoteStatus(int qnaVoteStatus) {
         this.qnaVoteStatus = qnaVoteStatus;
     }
 }

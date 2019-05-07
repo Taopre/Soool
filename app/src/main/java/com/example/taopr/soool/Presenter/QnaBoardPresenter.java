@@ -33,7 +33,7 @@ public class QnaBoardPresenter implements QnaBoardInter {
 
     // 모델의 응답을 넘겨주는 메서드
     @Override
-    public void enrollmentBoardResp(boolean response, String vote) {
-        view.enrollmentBoardRespGoToView(response, vote);
+    public void enrollmentBoardResp(int response, int vote, int voteStatus) {
+        view.enrollmentBoardRespGoToView(response, vote, voteStatus);
     }
 }

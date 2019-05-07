@@ -13,8 +13,8 @@ public class QnaItem implements Parcelable {
     public int qnaNo;
     @SerializedName("tag")
     public String tag;
-    @SerializedName("qnaCate") // 게시글이 투표인지 아닌지
-    public String qnaCate;
+    @SerializedName("qnaCate") // 0 : 투표있음 1 : 투표없음
+    public int qnaCate;
     @SerializedName("accountNo")
     public int accountNo;
     @SerializedName("accountNick")
@@ -38,7 +38,7 @@ public class QnaItem implements Parcelable {
     @SerializedName("views")
     public int views;
     @SerializedName("qnaVoteStatus") // 투표가 이미지인지 텍스트인지 구별을 위해
-    public String qnaVoteStatus; // int로 바꾸고 0이면 텍스트 1이면 이미지
+    public int qnaVoteStatus; // int로 바꾸고 0이면 텍스트 1이면 이미지
     @SerializedName("voteImage")
     public ArrayList<String> voteImage;
     @SerializedName("voteText")
@@ -49,8 +49,8 @@ public class QnaItem implements Parcelable {
     }
 
     // 게시물 이미지 없이 텍스트 투표인 경우
-    public QnaItem (int accountNo, String accountNick, String qnaCate, String tag,
-                    String title, String content, ArrayList<String> voteText, String qnaVoteStatus) {
+    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+                    String title, String content, ArrayList<String> voteText, int qnaVoteStatus) {
         this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
@@ -62,8 +62,8 @@ public class QnaItem implements Parcelable {
     }
 
     // 게시물 이미지 없이 이미지 투표인 경우
-    public QnaItem (int accountNo, String accountNick, String qnaCate, String tag,
-                    String title, String content, String qnaVoteStatus, ArrayList<String> voteImage) {
+    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+                    String title, String content, int qnaVoteStatus, ArrayList<String> voteImage) {
         this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
@@ -75,8 +75,8 @@ public class QnaItem implements Parcelable {
     }
 
     // 게시물 이미지 있고 텍스트 투표인 경우
-    public QnaItem (int accountNo, String accountNick, String qnaCate, String tag,
-                    String title, String content, String image, ArrayList<String> voteText, String qnaVoteStatus) {
+    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+                    String title, String content, String image, ArrayList<String> voteText, int qnaVoteStatus) {
         this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
@@ -89,8 +89,8 @@ public class QnaItem implements Parcelable {
     }
 
     // 게시물 이미지 있고 이미지 투표인 경우
-    public QnaItem (int accountNo, String accountNick, String qnaCate, String tag,
-                    String title, String content, String image, String qnaVoteStatus, ArrayList<String> voteImage) {
+    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+                    String title, String content, String image, int qnaVoteStatus, ArrayList<String> voteImage) {
         this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
@@ -118,11 +118,11 @@ public class QnaItem implements Parcelable {
         this.tag = tag;
     }
 
-    public String getQnaCate() {
+    public int getQnaCate() {
         return qnaCate;
     }
 
-    public void setQnaCate(String qnaCate) {
+    public void setQnaCate(int qnaCate) {
         this.qnaCate = qnaCate;
     }
 
@@ -206,11 +206,11 @@ public class QnaItem implements Parcelable {
         this.views = views;
     }
 
-    public String getQnaVoteStatus() {
+    public int getQnaVoteStatus() {
         return qnaVoteStatus;
     }
 
-    public void setQnaVoteStatus(String qnaVoteStatus) {
+    public void setQnaVoteStatus(int qnaVoteStatus) {
         this.qnaVoteStatus = qnaVoteStatus;
     }
 
@@ -237,7 +237,7 @@ public class QnaItem implements Parcelable {
     protected QnaItem(Parcel in) {
         qnaNo = in.readInt();
         tag = in.readString();
-        qnaCate = in.readString();
+        qnaCate = in.readInt();
         accountNo = in.readInt();
         writer = in.readString();
         date = in.readString();
@@ -248,7 +248,7 @@ public class QnaItem implements Parcelable {
         bads = in.readInt();
         comments = in.readInt();
         views = in.readInt();
-        qnaVoteStatus = in.readString();
+        qnaVoteStatus = in.readInt();
         voteImage = in.createStringArrayList();
         voteText = in.createStringArrayList();
 
@@ -273,12 +273,12 @@ public class QnaItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(qnaVoteStatus);
+        dest.writeInt(qnaVoteStatus);
         dest.writeStringList(voteImage);
         dest.writeStringList(voteText);
         dest.writeInt(qnaNo);
         dest.writeString(tag);
-        dest.writeString(qnaCate);
+        dest.writeInt(qnaCate);
         dest.writeInt(accountNo);
         dest.writeString(writer);
         dest.writeString(date);

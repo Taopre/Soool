@@ -36,22 +36,30 @@ public interface APIService {
     // Call<SOAnswersResponse> getAnswers(@Query("tagged") String tags);
     @FormUrlEncoded
     @POST("/Signup/Signup.php")
-    Call<ResponseBody> signUpRes(@Field("accountEmail") String accountEmail, @Field("accountPW") String accountPW,
+    Call<ResponseBody> signUpRes(@Field("accountEmail") String accountEmail,
+                                 @Field("accountPW") String accountPW,
                                  @Field("accountNick") String accountNick);
 
     @FormUrlEncoded
     @POST("/Login/Login.php")
-    Call<ResponseBody> getUserItem(@Field("accountEmail") String accountEmail, @Field("accountPW") String accountPW);
+    Call<ResponseBody> getUserItem(@Field("accountEmail") String accountEmail,
+                                   @Field("accountPW") String accountPW);
 
     @FormUrlEncoded
     @POST("/test/postWrite.php")
-    Call<ResponseBody> enrollQna(@Field("accountNick") String accountNick,@Field("qnaTag") String qnaTag, @Field("qnaTitle") String qnaTitle,
+    Call<ResponseBody> enrollQna(@Field("accountNick") String accountNick,
+                                 @Field("qnaTag") String qnaTag,
+                                 @Field("qnaTitle") String qnaTitle,
                                  @Field("qnaContent") String qnaContent);
 
     @FormUrlEncoded
     @POST("/qnapost/QnaWrite.php")
-    Call<ResponseBody> enrollQnaNoImage(@Field("accountNo") int accountNo, @Field("accountNick") String accountNick, @Field("tag") String tag,
-                                        @Field("qnaBoardTitle") String qnaTitle, @Field("qnaBoardContent") String qnaContent, @Field("qnaCate") String qnaCate);
+    Call<ResponseBody> enrollQnaNoImage(@Field("accountNo") int accountNo,
+                                        @Field("accountNick") String accountNick,
+                                        @Field("tag") String tag,
+                                        @Field("qnaBoardTitle") String qnaTitle,
+                                        @Field("qnaBoardContent") String qnaContent,
+                                        @Field("qnaCate") String qnaCate);
 
     // QnaRecyclerview 리스트 아이템 받아오기
     @POST("/qnapost/QnaList.php")
@@ -67,14 +75,54 @@ public interface APIService {
 
 //    @FormUrlEncoded
     @POST("/qnapost/QnaWrite.php")
-    Call<ResponseBody> sendQnaItem(@Body QnaItem qnaItem);
+    Call<ResponseBody> sendNoImageYesVoteText(@Body QnaItem qnaItem);
 
     @POST("/qnapost/QnaWrite.php")
-    Call<ResponseBody> sendQnaBoardItem(@Body QnaBoardItem qnaBoardItem);
+    Call<ResponseBody> sendNoImageNoVote(@Body QnaBoardItem qnaBoardItem);
 
     @Multipart
     @POST("qnapost/QnaWrite.php")
-    Call<ResponseBody> sendTest(@Part("accountNo") int accountNo, @Part("accountNick") RequestBody accountNick, @Part("qnaCate") RequestBody qnaCate, @Part("tag") RequestBody tag,
-                                @Part("title") RequestBody qnaTitle, @Part("content") RequestBody qnaContent, @Part("qnaVoteStatus") RequestBody qnaVoteStatus,
-                                @Part ArrayList<MultipartBody.Part> file);
+    Call<ResponseBody> sendNoImageYesVoteImage(@Part("accountNo") int accountNo,
+                                               @Part("accountNick") RequestBody accountNick,
+                                               @Part("qnaCate") int qnaCate,
+                                               @Part("tag") RequestBody tag,
+                                               @Part("title") RequestBody qnaTitle,
+                                               @Part("content") RequestBody qnaContent,
+                                               @Part("qnaVoteStatus") int qnaVoteStatus,
+                                               @Part ArrayList<MultipartBody.Part> file);
+
+    @Multipart
+    @POST("qnapost/QnaWrite.php")
+    Call<ResponseBody> sendYesImageYesVoteText(@Part("accountNo") int accountNo,
+                                               @Part("accountNick") RequestBody accountNick,
+                                               @Part("qnaCate") int qnaCate,
+                                               @Part("tag") RequestBody tag,
+                                               @Part("title") RequestBody qnaTitle,
+                                               @Part("content") RequestBody qnaContent,
+                                               @Part("image") MultipartBody.Part image,
+                                               @Part("qnaVoteStatus") int qnaVoteStatus,
+                                               @Part("voteText[]") ArrayList<String> voteText);
+
+    @Multipart
+    @POST("qnapost/QnaWrite.php")
+    Call<ResponseBody> sendYesImageYesVoteImage(@Part("accountNo") int accountNo,
+                                                @Part("accountNick") RequestBody accountNick,
+                                                @Part("qnaCate") int qnaCate,
+                                                @Part("tag") RequestBody tag,
+                                                @Part("title") RequestBody qnaTitle,
+                                                @Part("content") RequestBody qnaContent,
+                                                @Part("image") MultipartBody.Part image,
+                                                @Part("qnaVoteStatus") int qnaVoteStatus,
+                                                @Part ArrayList<MultipartBody.Part> file);
+
+    @Multipart
+    @POST("qnapost/QnaWrite.php")
+    Call<ResponseBody> sendYesImageNoVote(@Part("accountNo") int accountNo,
+                                          @Part("accountNick") RequestBody accountNick,
+                                          @Part("qnaCate") int qnaCate,
+                                          @Part("tag") RequestBody tag,
+                                          @Part("title") RequestBody qnaTitle,
+                                          @Part("content") RequestBody qnaContent,
+                                          @Part("image") MultipartBody.Part image,
+                                          @Part("qnaVoteStatus") int qnaVoteStatus);
 }
