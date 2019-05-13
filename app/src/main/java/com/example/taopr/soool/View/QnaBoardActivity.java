@@ -74,7 +74,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class QnaBoardActivity extends AppCompatActivity implements View.OnClickListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener, VoteImageAdapter.GridviewItemClickListner {
+public class QnaBoardActivity extends AppCompatActivity implements
+        View.OnClickListener, QnaBoardPresenter.View, RadioGroup.OnCheckedChangeListener, AdapterView.OnItemClickListener, VoteImageAdapter.GridviewItemClickListner {
 
     private static final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
@@ -110,7 +111,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
     private Uri mImageCaptureUri;
     private int id_view;
-    String absoultePath, accountNick;
+    String absoultePath;
     int count = 2, accountNo, voteSelect = 2;
 
     VoteImageAdapter voteImageAdapter;
@@ -140,7 +141,6 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
         Gson gson = new GsonBuilder().create();
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
-        accountNick = loginSessionItem.getAccountNick();
         accountNo = loginSessionItem.getAccountNo();
 
         // 아래의 try / catch 문은 res/xml에 있는 스피너 메뉴값을 파싱하기 위해 가져다 쓴 부분입니다.
@@ -350,7 +350,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         if(i == R.id.qnaboardVoteText) {
             voteSelect = 0;
-            Toast.makeText(this, voteSelect, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, voteSelect, Toast.LENGTH_SHORT).show();
 
             rg_qnaboardVoteSelect.setVisibility(View.GONE);
             lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
@@ -505,7 +505,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
                             qnaVoteItem.setQnaVoteStatus(voteSelect);
 
-                            qnaItem = new QnaItem(accountNo, accountNick, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                            qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
                                     et_qnaboardContent.getText().toString(), voteText, voteSelect);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
@@ -527,7 +527,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                             }
                             qnaVoteItem.setQnaVoteStatus(voteSelect);
 
-                            qnaItem = new QnaItem(accountNo, accountNick, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                            qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
                                     et_qnaboardContent.getText().toString(), voteSelect, voteImage);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
@@ -547,6 +547,9 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         qnaBoardItem.setQnaCate(1);
 
                         qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                        qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                                et_qnaboardContent.getText().toString());
 
                         qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
 
@@ -583,7 +586,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
                             qnaVoteItem.setQnaVoteStatus(voteSelect);
 
-                            qnaItem = new QnaItem(accountNo, accountNick, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                            qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
                                     et_qnaboardContent.getText().toString(), boardImagePath, voteText, voteSelect);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
@@ -604,7 +607,7 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
 
                             qnaVoteItem.setQnaVoteStatus(voteSelect);
 
-                            qnaItem = new QnaItem(accountNo, accountNick, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                            qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
                                     et_qnaboardContent.getText().toString(), boardImagePath, voteSelect, voteImage);
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
@@ -622,6 +625,9 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                         qnaBoardItem.setQnaCate(1);
 
                         qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                        qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                                et_qnaboardContent.getText().toString(), boardImagePath);
 
                         qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
 
@@ -979,7 +985,8 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
     }
     // Model에서 서버로 부터 받은 응답 값을 받아서 어떻게 처리할 지 결정하는 메서드.
     @Override
-    public void enrollmentBoardRespGoToView(int response, int vote, int voteStatus) {
+    public void enrollmentBoardRespGoToView(int response, int vote, int voteStatus, QnaItem qnaItemResponse) {
+        Log.d(TAG, "상세보기 전 : "+qnaItemResponse.getTag());
         switch (response) {
 
             /*
@@ -1001,24 +1008,28 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
                 if (vote == 0) {
                     if (voteStatus == 0) {
                         Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-                        intent.putExtra("QnaBoardItem", qnaBoardItem);
-                        intent.putExtra("QnaVoteItem", qnaVoteItem);
+                        intent.putExtra("QnaItem", qnaItemResponse);
+                        intent.putExtra("fromActivity", 1);
                         intent.putExtra("voteStatus", 0);
+                        intent.putExtra("vote", 0);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     }
                     else if (voteStatus == 1) {
                         Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-                        intent.putExtra("QnaBoardItem", qnaBoardItem);
-                        intent.putExtra("QnaVoteItem", qnaVoteItem);
+                        intent.putExtra("QnaItem", qnaItemResponse);
+                        intent.putExtra("fromActivity", 1);
                         intent.putExtra("voteStatus", 1);
+                        intent.putExtra("vote", 0);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     }
                 }
                 else if (vote == 1) {
                     Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-                    intent.putExtra("QnaBoardItem", qnaBoardItem);
+                    intent.putExtra("QnaItem", qnaItemResponse);
+                    intent.putExtra("fromActivity", 1);
+                    intent.putExtra("vote", 1);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
@@ -1029,20 +1040,19 @@ public class QnaBoardActivity extends AppCompatActivity implements View.OnClickL
             case 3:
                 Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
                 // 다시 전송되도록 작성하자.
-                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
                 break;
             case 4:
                 Toast.makeText(this, "전송 실패 와이파이가 안 좋은가??", Toast.LENGTH_SHORT).show();
                 // 다시 전송되도록 작성하자.
-                qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
                 break;
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        TextView gridText = view.findViewById(R.id.grid_text);
-//        Toast.makeText(this, position + " "+ gridText.getText() + "aaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+        reSelectVoteImage = true;
+        gridVoteItemArrayList.remove(position);
+        voteImageAdapter.notifyDataSetChanged();
         FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
 //        if (voteImage.size() > 0 && voteImage.size() < 6) {
 //            if (position == voteImage.size()) {

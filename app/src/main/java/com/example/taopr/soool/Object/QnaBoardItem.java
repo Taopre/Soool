@@ -107,7 +107,6 @@ public class QnaBoardItem implements Parcelable{
         dest.writeInt(views);
     }
 
-
     public int getQnaNo() {
         return qnaNo;
     }

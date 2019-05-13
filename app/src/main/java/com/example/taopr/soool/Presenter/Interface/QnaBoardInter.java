@@ -12,12 +12,12 @@ public interface QnaBoardInter {
     // QnaDrawUpActivity로 부터 객체를 QnaDrawUpModel로 보내주는 중간다리 함수.
     void enrollmentBoardReq(QnaBoardItem item, QnaVoteItem qnaVoteItem, QnaItem qnaItem);
 
-    void enrollmentBoardResp(int response, int vote, int voteStatus);
+    void enrollmentBoardResp(int response, int vote, int voteStatus, QnaItem qnaItem);
 
     //-----------------------------------------------------------------------------------
 
     // View쪽에 있는 함수.
     public interface View {
-        void enrollmentBoardRespGoToView(int response, int vote, int voteStatus);
+        void enrollmentBoardRespGoToView(int response, int vote, int voteStatus, QnaItem qnaItem);
     }
 }

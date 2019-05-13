@@ -5,9 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 
-public class QnaItem implements Parcelable {
+public class QnaItem implements Serializable {
 
     @SerializedName("qnaNo")  // @SerializedName 직렬화, 역직렬화 하기 위해 사용
     public int qnaNo;
@@ -17,8 +19,6 @@ public class QnaItem implements Parcelable {
     public int qnaCate;
     @SerializedName("accountNo")
     public int accountNo;
-    @SerializedName("accountNick")
-    public String accountNick;
     @SerializedName("writer")
     public String writer;
     @SerializedName("date")
@@ -44,14 +44,87 @@ public class QnaItem implements Parcelable {
     @SerializedName("voteText")
     public ArrayList<String> voteText;
 
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeInt(qnaVoteStatus);
+//        dest.writeStringList(voteImage);
+//        dest.writeStringList(voteText);
+//        dest.writeInt(qnaNo);
+//        dest.writeString(tag);
+//        dest.writeInt(qnaCate);
+//        dest.writeInt(accountNo);
+//        dest.writeString(writer);
+//        dest.writeString(date);
+//        dest.writeString(title);
+//        dest.writeString(content);
+//        dest.writeString(image);
+//        dest.writeInt(goods);
+//        dest.writeInt(bads);
+//        dest.writeInt(comments);
+//        dest.writeInt(views);
+//    }
+
+//    public static final Creator<QnaItem> CREATOR = new Creator<QnaItem>() {
+//        @Override
+//        public QnaItem createFromParcel(Parcel in) {
+//            return new QnaItem(in);
+//        }
+//
+//        @Override
+//        public QnaItem[] newArray(int size) {
+//            return new QnaItem[size];
+//        }
+//    };
+
+    protected QnaItem(Parcel in) {
+        qnaNo = in.readInt();
+        tag = in.readString();
+        qnaCate = in.readInt();
+        accountNo = in.readInt();
+        writer = in.readString();
+        date = in.readString();
+        title = in.readString();
+        content = in.readString();
+        image = in.readString();
+        goods = in.readInt();
+        bads = in.readInt();
+        comments = in.readInt();
+        views = in.readInt();
+        qnaVoteStatus = in.readInt();
+        voteImage = in.createStringArrayList();
+        voteText = in.createStringArrayList();
+
+    }
+
     public QnaItem(){
 
     }
 
+    public QnaItem(int accountNo, int qnaCate, String tag, String title, String content){
+        this.tag = tag;
+        this.qnaCate = qnaCate;
+        this.accountNo = accountNo;
+        this.title = title;
+        this.content = content;
+    }
+
+    public QnaItem(int accountNo, int qnaCate, String tag, String title, String content, String image){
+        this.tag = tag;
+        this.qnaCate = qnaCate;
+        this.accountNo = accountNo;
+        this.title = title;
+        this.content = content;
+        this.image = image;
+    }
+
     // 게시물 이미지 없이 텍스트 투표인 경우
-    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+    public QnaItem (int accountNo, int qnaCate, String tag,
                     String title, String content, ArrayList<String> voteText, int qnaVoteStatus) {
-        this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
         this.accountNo = accountNo;
@@ -62,9 +135,8 @@ public class QnaItem implements Parcelable {
     }
 
     // 게시물 이미지 없이 이미지 투표인 경우
-    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+    public QnaItem (int accountNo, int qnaCate, String tag,
                     String title, String content, int qnaVoteStatus, ArrayList<String> voteImage) {
-        this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
         this.accountNo = accountNo;
@@ -75,9 +147,8 @@ public class QnaItem implements Parcelable {
     }
 
     // 게시물 이미지 있고 텍스트 투표인 경우
-    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+    public QnaItem (int accountNo, int qnaCate, String tag,
                     String title, String content, String image, ArrayList<String> voteText, int qnaVoteStatus) {
-        this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
         this.accountNo = accountNo;
@@ -89,9 +160,8 @@ public class QnaItem implements Parcelable {
     }
 
     // 게시물 이미지 있고 이미지 투표인 경우
-    public QnaItem (int accountNo, String accountNick, int qnaCate, String tag,
+    public QnaItem (int accountNo, int qnaCate, String tag,
                     String title, String content, String image, int qnaVoteStatus, ArrayList<String> voteImage) {
-        this.accountNick = accountNick;
         this.tag = tag;
         this.qnaCate = qnaCate;
         this.accountNo = accountNo;
@@ -228,66 +298,5 @@ public class QnaItem implements Parcelable {
 
     public void setVoteText(ArrayList<String> voteText) {
         this.voteText = voteText;
-    }
-
-    public static Creator<QnaItem> getCREATOR() {
-        return CREATOR;
-    }
-
-    protected QnaItem(Parcel in) {
-        qnaNo = in.readInt();
-        tag = in.readString();
-        qnaCate = in.readInt();
-        accountNo = in.readInt();
-        writer = in.readString();
-        date = in.readString();
-        title = in.readString();
-        content = in.readString();
-        image = in.readString();
-        goods = in.readInt();
-        bads = in.readInt();
-        comments = in.readInt();
-        views = in.readInt();
-        qnaVoteStatus = in.readInt();
-        voteImage = in.createStringArrayList();
-        voteText = in.createStringArrayList();
-
-    }
-
-    public static final Creator<QnaItem> CREATOR = new Creator<QnaItem>() {
-        @Override
-        public QnaItem createFromParcel(Parcel in) {
-            return new QnaItem(in);
-        }
-
-        @Override
-        public QnaItem[] newArray(int size) {
-            return new QnaItem[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(qnaVoteStatus);
-        dest.writeStringList(voteImage);
-        dest.writeStringList(voteText);
-        dest.writeInt(qnaNo);
-        dest.writeString(tag);
-        dest.writeInt(qnaCate);
-        dest.writeInt(accountNo);
-        dest.writeString(writer);
-        dest.writeString(date);
-        dest.writeString(title);
-        dest.writeString(content);
-        dest.writeString(image);
-        dest.writeInt(goods);
-        dest.writeInt(bads);
-        dest.writeInt(comments);
-        dest.writeInt(views);
     }
 }

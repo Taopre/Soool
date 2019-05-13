@@ -1,10 +1,7 @@
 package com.example.taopr.soool.Networking;
 
-import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
-import com.example.taopr.soool.Object.QnaVoteItem;
-import com.example.taopr.soool.Object.QnaVoteItemResponse;
 
 
 import java.util.ArrayList;
@@ -74,16 +71,18 @@ public interface APIService {
     Observable<QnaBoardList> getMypageBoardItem();
 
 //    @FormUrlEncoded
-    @POST("/qnapost/QnaWrite.php")
+//    @POST("/qnapost/QnaWrite.php")
+    @POST("/test/testopj.php")
     Call<ResponseBody> sendNoImageYesVoteText(@Body QnaItem qnaItem);
 
-    @POST("/qnapost/QnaWrite.php")
-    Call<ResponseBody> sendNoImageNoVote(@Body QnaBoardItem qnaBoardItem);
+//    @POST("/qnapost/QnaWrite.php")
+    @POST("/test/testopj.php")
+    Call<ResponseBody> sendNoImageNoVote(@Body QnaItem qnaItem);
 
     @Multipart
-    @POST("qnapost/QnaWrite.php")
+//    @POST("qnapost/QnaWrite.php")
+    @POST("/test/testopj.php")
     Call<ResponseBody> sendNoImageYesVoteImage(@Part("accountNo") int accountNo,
-                                               @Part("accountNick") RequestBody accountNick,
                                                @Part("qnaCate") int qnaCate,
                                                @Part("tag") RequestBody tag,
                                                @Part("title") RequestBody qnaTitle,
@@ -92,37 +91,37 @@ public interface APIService {
                                                @Part ArrayList<MultipartBody.Part> file);
 
     @Multipart
-    @POST("qnapost/QnaWrite.php")
+//    @POST("qnapost/QnaWrite.php")
+    @POST("/test/testopj.php")
     Call<ResponseBody> sendYesImageYesVoteText(@Part("accountNo") int accountNo,
-                                               @Part("accountNick") RequestBody accountNick,
                                                @Part("qnaCate") int qnaCate,
                                                @Part("tag") RequestBody tag,
                                                @Part("title") RequestBody qnaTitle,
                                                @Part("content") RequestBody qnaContent,
-                                               @Part("image") MultipartBody.Part image,
+                                               @Part MultipartBody.Part image,
                                                @Part("qnaVoteStatus") int qnaVoteStatus,
                                                @Part("voteText[]") ArrayList<String> voteText);
 
     @Multipart
-    @POST("qnapost/QnaWrite.php")
+//    @POST("qnapost/QnaWrite.php")
+    @POST("/test/testopj.php")
     Call<ResponseBody> sendYesImageYesVoteImage(@Part("accountNo") int accountNo,
-                                                @Part("accountNick") RequestBody accountNick,
                                                 @Part("qnaCate") int qnaCate,
                                                 @Part("tag") RequestBody tag,
                                                 @Part("title") RequestBody qnaTitle,
                                                 @Part("content") RequestBody qnaContent,
-                                                @Part("image") MultipartBody.Part image,
+                                                @Part MultipartBody.Part image,
                                                 @Part("qnaVoteStatus") int qnaVoteStatus,
                                                 @Part ArrayList<MultipartBody.Part> file);
 
     @Multipart
-    @POST("qnapost/QnaWrite.php")
+//    @POST("qnapost/QnaWrite.php")
+    @POST("/test/testopj.php")
     Call<ResponseBody> sendYesImageNoVote(@Part("accountNo") int accountNo,
-                                          @Part("accountNick") RequestBody accountNick,
                                           @Part("qnaCate") int qnaCate,
                                           @Part("tag") RequestBody tag,
                                           @Part("title") RequestBody qnaTitle,
                                           @Part("content") RequestBody qnaContent,
-                                          @Part("image") MultipartBody.Part image,
+                                          @Part MultipartBody.Part image,
                                           @Part("qnaVoteStatus") int qnaVoteStatus);
 }

@@ -3,19 +3,18 @@ package com.example.taopr.soool.Model;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.taopr.soool.Networking.APICallback;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
-import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
-import com.example.taopr.soool.Object.QnaVoteItemResponse;
+import com.example.taopr.soool.Object.ResponseTest;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,8 +32,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -44,8 +41,9 @@ import retrofit2.Response;
 public class QnaBoardModel {
 
     private APIService apiService;
+    File file;
 
-    String TAG = "QnaBoardModel", accountNick, result;
+    String TAG = "QnaBoardModel", result;
     int accountNo, voteExistence;
 
     ArrayList<MultipartBody.Part> imageParts = new ArrayList<>();
@@ -69,9 +67,8 @@ public class QnaBoardModel {
         Gson gson = new GsonBuilder().create();
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
-        accountNick = loginSessionItem.getAccountNick();
         accountNo = loginSessionItem.getAccountNo();
-        Log.d(TAG, "enrollmentReqFromView: 닉네임"+accountNick);
+        Log.d(TAG, "enrollmentReqFromView: 닉네임"+accountNo);
 
 
         // 이미지의 유무로 조건을 걸어놓고
@@ -116,10 +113,10 @@ public class QnaBoardModel {
 
          */
 
-        if(qnaBoardItem.getImage() == null) {
-            if (qnaBoardItem.getQnaCate() == 0) {
-                if (qnaVoteItem.qnaVoteStatus == 0) {
-                    if (qnaVoteItem != null) {
+        if(qnaItem.getImage() == null) {
+            if (qnaItem.getQnaCate() == 0) {
+                if (qnaItem.qnaVoteStatus == 0) {
+                    if (qnaItem != null) {
                         
                         Observable.just("")
                                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -151,11 +148,11 @@ public class QnaBoardModel {
                                                             if(result.equals("true")){
                                                                 Log.d(TAG, "onResponse: 인서트 성공");
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        1, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        1, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                             }else {
                                                                 Log.d(TAG, "onResponse: 인서트 실패");
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        2, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        2, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                             }
                                                         }
                                                     }catch (IOException e) {
@@ -169,7 +166,7 @@ public class QnaBoardModel {
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                     qnaBoardPresenter.enrollmentBoardResp(
-                                                            3, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                            3, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                     Log.d(TAG, "onFailure: 실패");
                                                     Log.e(TAG, "onFailure: ", t);
                                                 }
@@ -177,7 +174,7 @@ public class QnaBoardModel {
                                         }
                                         catch(Exception e) {
                                             qnaBoardPresenter.enrollmentBoardResp(
-                                                    4, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                    4, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                             Log.d(TAG, "onFailure: 실패2");
                                             Log.e(TAG, "apply: ", e);
                                         }
@@ -209,8 +206,8 @@ public class QnaBoardModel {
                                     }
                                 });
                     }
-                } else if (qnaVoteItem.qnaVoteStatus == 1) {
-                    if (qnaVoteItem != null) {
+                } else if (qnaItem.qnaVoteStatus == 1) {
+                    if (qnaItem != null) {
                         Observable.just("")
                                 .subscribeOn(AndroidSchedulers.mainThread())
                                 .observeOn(Schedulers.io())
@@ -232,14 +229,13 @@ public class QnaBoardModel {
                                                 imageParts.add(MultipartBody.Part.createFormData("voteImages[]", image.getName(), surveyBody));
                                                 Log.d(TAG, "apply: "+imageParts.get(i));
                                             }
-                                            RequestBody nick = RequestBody.create(MediaType.parse("text/plain"), accountNick);
                                             RequestBody tag = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTag());
                                             RequestBody title = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTitle());
                                             RequestBody content = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getContent());
 
                                             APIService service = APIClient.getClient1().create(APIService.class);
                                             Call<ResponseBody> callServer = service.sendNoImageYesVoteImage(
-                                                    accountNo, nick, qnaItem.getQnaCate(), tag, title,
+                                                    accountNo, qnaItem.getQnaCate(), tag, title,
                                                     content, qnaItem.getQnaVoteStatus(), imageParts);
 
                                             callServer.enqueue(new Callback<ResponseBody>() {
@@ -256,10 +252,10 @@ public class QnaBoardModel {
                                                             if(result.equals("true")){
                                                                 Log.d(TAG, "onResponse: 인서트 성공");
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        1, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        1, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                             }else {
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        2, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        2, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                                 Log.d(TAG, "onResponse: 인서트 실패");
                                                             }
                                                         }
@@ -274,7 +270,7 @@ public class QnaBoardModel {
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                     qnaBoardPresenter.enrollmentBoardResp(
-                                                            3, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                            3, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                     Log.d(TAG, "onFailure: 실패");
                                                     Log.e(TAG, "onFailure: ", t);
                                                 }
@@ -283,7 +279,7 @@ public class QnaBoardModel {
                                         }
                                         catch(Exception e) {
                                             qnaBoardPresenter.enrollmentBoardResp(
-                                                    4, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                    4, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                             Log.d(TAG, "onFailure : 실패2");
                                             Log.e(TAG, "apply : ", e);
                                         }
@@ -316,7 +312,7 @@ public class QnaBoardModel {
                                 });
                     }
                 }
-            } else if (qnaBoardItem.getQnaCate() == 1) {
+            } else if (qnaItem.getQnaCate() == 1) {
                 Observable.just("")
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .observeOn(Schedulers.io())
@@ -331,7 +327,7 @@ public class QnaBoardModel {
                                     //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
                                     //Retrofit 객체 불러와서 선언하는 부분.
                                     APIService service = APIClient.getClient1().create(APIService.class);
-                                    Call<ResponseBody> callServer = service.sendNoImageNoVote(qnaBoardItem);
+                                    Call<ResponseBody> callServer = service.sendNoImageNoVote(qnaItem);
 
                                     callServer.enqueue(new Callback<ResponseBody>() {
                                         @Override
@@ -347,11 +343,11 @@ public class QnaBoardModel {
 
                                                     if(result.equals("true")){
                                                         qnaBoardPresenter.enrollmentBoardResp(
-                                                                1, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                1, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                         Log.d(TAG, "onResponse: 인서트 성공");
                                                     }else {
                                                         qnaBoardPresenter.enrollmentBoardResp(
-                                                                2, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                2, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                         Log.d(TAG, "onResponse: 인서트 실패");
                                                     }
                                                 }
@@ -367,7 +363,7 @@ public class QnaBoardModel {
                                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                                             // 콜백 실패
                                             qnaBoardPresenter.enrollmentBoardResp(
-                                                    3, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                    3, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                             Log.d(TAG, "onFailure: 실패");
                                             Log.e(TAG, "onFailure: ", t);
                                         }
@@ -376,7 +372,7 @@ public class QnaBoardModel {
                                 catch(Exception e) {
                                     // 통신 실패
                                     qnaBoardPresenter.enrollmentBoardResp(
-                                            4, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                            4, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                     Log.d(TAG, "onFailure: 실패2");
                                     Log.e(TAG, "apply: ", e);
                                 }
@@ -412,11 +408,11 @@ public class QnaBoardModel {
 
         }else {
             // 게시물 이미지 있을때
-            File file = new File(qnaBoardItem.getImage());
+            file = new File(qnaItem.getImage());
 
-            if (qnaBoardItem.getQnaCate() == 0) {
-                if (qnaVoteItem.qnaVoteStatus == 0) {
-                    if (qnaVoteItem != null) {
+            if (qnaItem.getQnaCate() == 0) {
+                if (qnaItem.qnaVoteStatus == 0) {
+                    if (qnaItem != null) {
                         Observable.just("")
                                 .subscribeOn(AndroidSchedulers.mainThread())
                                 .observeOn(Schedulers.io())
@@ -431,7 +427,6 @@ public class QnaBoardModel {
                                             //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
                                             //Retrofit 객체 불러와서 선언하는 부분.
 
-                                            RequestBody nick = RequestBody.create(MediaType.parse("text/plain"), accountNick);
                                             RequestBody tag = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTag());
                                             RequestBody title = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTitle());
                                             RequestBody content = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getContent());
@@ -440,7 +435,7 @@ public class QnaBoardModel {
 
                                             APIService service = APIClient.getClient1().create(APIService.class);
                                             Call<ResponseBody> callServer = service.sendYesImageYesVoteText(
-                                                    accountNo, nick, qnaItem.getQnaCate(), tag, title, content, part, qnaItem.getQnaVoteStatus(), qnaItem.voteText);
+                                                    accountNo, qnaItem.getQnaCate(), tag, title, content, part, qnaItem.getQnaVoteStatus(), qnaItem.voteText);
 
                                             callServer.enqueue(new Callback<ResponseBody>() {
                                                 @Override
@@ -456,11 +451,11 @@ public class QnaBoardModel {
 
                                                             if(result.equals("true")){
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        1, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        1, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
                                                                 Log.d(TAG, "onResponse: 인서트 성공");
                                                             }else {
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        2, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        2, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
                                                                 Log.d(TAG, "onResponse: 인서트 실패");
                                                             }
                                                         }
@@ -475,7 +470,7 @@ public class QnaBoardModel {
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                     qnaBoardPresenter.enrollmentBoardResp(
-                                                            3, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                            3, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
                                                     Log.d(TAG, "onFailure: 실패");
                                                     Log.e(TAG, "onFailure: ", t);
                                                 }
@@ -483,7 +478,7 @@ public class QnaBoardModel {
                                         }
                                         catch(Exception e) {
                                             qnaBoardPresenter.enrollmentBoardResp(
-                                                    4, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                    4, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
                                             Log.d(TAG, "onFailure: 실패2");
                                             Log.e(TAG, "apply: ", e);
                                         }
@@ -515,8 +510,8 @@ public class QnaBoardModel {
                                     }
                                 });
                     }
-                } else if (qnaVoteItem.qnaVoteStatus == 1) {
-                    if (qnaVoteItem != null) {
+                } else if (qnaItem.qnaVoteStatus == 1) {
+                    if (qnaItem != null) {
                         Observable.just("")
                                 .subscribeOn(AndroidSchedulers.mainThread())
                                 .observeOn(Schedulers.io())
@@ -531,7 +526,6 @@ public class QnaBoardModel {
                                             //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
                                             //Retrofit 객체 불러와서 선언하는 부분.
 
-                                            RequestBody nick = RequestBody.create(MediaType.parse("text/plain"), accountNick);
                                             RequestBody tag = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTag());
                                             RequestBody title = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTitle());
                                             RequestBody content = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getContent());
@@ -548,7 +542,7 @@ public class QnaBoardModel {
 
                                             APIService service = APIClient.getClient1().create(APIService.class);
                                             Call<ResponseBody> callServer = service.sendYesImageYesVoteImage(
-                                                    accountNo, nick, qnaItem.getQnaCate(), tag, title, content, part, qnaItem.getQnaVoteStatus(), imageParts);
+                                                    accountNo, qnaItem.getQnaCate(), tag, title, content, part, qnaItem.getQnaVoteStatus(), imageParts);
 
                                             callServer.enqueue(new Callback<ResponseBody>() {
                                                 @Override
@@ -564,11 +558,11 @@ public class QnaBoardModel {
 
                                                             if(result.equals("true")){
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        1, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        1, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                                 Log.d(TAG, "onResponse: 인서트 성공");
                                                             }else {
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        2, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                                        2, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                                 Log.d(TAG, "onResponse: 인서트 실패");
                                                             }
                                                         }
@@ -583,7 +577,7 @@ public class QnaBoardModel {
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                     qnaBoardPresenter.enrollmentBoardResp(
-                                                            3, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                            3, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                     Log.d(TAG, "onFailure: 실패");
                                                     Log.e(TAG, "onFailure: ", t);
                                                 }
@@ -591,7 +585,7 @@ public class QnaBoardModel {
                                         }
                                         catch(Exception e) {
                                             qnaBoardPresenter.enrollmentBoardResp(
-                                                    4, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                    4, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                             Log.d(TAG, "onFailure: 실패2");
                                             Log.e(TAG, "apply: ", e);
                                         }
@@ -624,7 +618,7 @@ public class QnaBoardModel {
                                 });
                     }
                 }
-            } else if (qnaBoardItem.getQnaCate() == 1) {
+            } else if (qnaItem.getQnaCate() == 1) {
                 Observable.just("")
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .observeOn(Schedulers.io())
@@ -636,46 +630,46 @@ public class QnaBoardModel {
                                 try
                                 {
                                     Log.d(TAG, "시작 바로 전");
+                                    Log.d(TAG, "apply: asdfasdfasdf"+qnaItem.getTag()+qnaItem.getQnaCate()+qnaItem.title+qnaItem.getContent()+file.getName()+file);
                                     //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
                                     //Retrofit 객체 불러와서 선언하는 부분.
 
-                                    RequestBody nick = RequestBody.create(MediaType.parse("text/plain"), accountNick);
                                     RequestBody tag = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTag());
                                     RequestBody title = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getTitle());
                                     RequestBody content = RequestBody.create(MediaType.parse("text/plain"), qnaItem.getContent());
-                                    RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), file );
-                                    MultipartBody.Part part = MultipartBody.Part.createFormData("image",file.getName(), imageBody);
+                                    RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file );
+                                    MultipartBody.Part part = MultipartBody.Part.createFormData("image", file.getName(), imageBody);
 
                                     APIService service = APIClient.getClient1().create(APIService.class);
                                     Call<ResponseBody> callServer = service.sendYesImageNoVote(
-                                            accountNo, nick, qnaItem.getQnaCate(), tag, title, content, part, qnaItem.getQnaVoteStatus());
+                                            accountNo, qnaItem.getQnaCate(), tag, title, content, part, qnaItem.getQnaVoteStatus());
 
                                     callServer.enqueue(new Callback<ResponseBody>() {
                                         @Override
                                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                             try {
                                                 String msg = response.body().string();
+                                                msg = msg.replace("[","");
+                                                msg = msg.replace("]","");
+
                                                 Log.d(TAG, "onResponse okhttp: " + msg);
-                                                JSONArray jsonArray = new JSONArray(msg);
-                                                for (int i = 0; i < jsonArray.length(); i++) {
-                                                    JSONObject returnData = jsonArray.getJSONObject(i);
 
-                                                    result = returnData.getString("result");
-
-                                                    if(result.equals("true")){
-                                                        qnaBoardPresenter.enrollmentBoardResp(
-                                                                1, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                Gson gsonObject = new Gson();
+                                                ResponseTest responseTest = gsonObject.fromJson(msg, ResponseTest.class);
+//                                                ArrayList<ResponseTest> arrayList =
+//                                                        gsonObject.fromJson(msg, new TypeToken<ArrayList<ResponseTest>>(){}.getType());
+                                                Log.d(TAG, "onResponse: "+responseTest.result);
+                                                if (responseTest.result.equals("true")) {
+                                                    qnaBoardPresenter.enrollmentBoardResp(
+                                                                1, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                         Log.d(TAG, "onResponse: 인서트 성공");
-                                                    }else {
-                                                        qnaBoardPresenter.enrollmentBoardResp(
-                                                                2, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                } else {
+                                                    qnaBoardPresenter.enrollmentBoardResp(
+                                                                2, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                                         Log.d(TAG, "onResponse: 인서트 실패");
-                                                    }
                                                 }
+
                                             }catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                            catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
                                         }
@@ -683,7 +677,7 @@ public class QnaBoardModel {
                                         @Override
                                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                                             qnaBoardPresenter.enrollmentBoardResp(
-                                                    3, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                                    3, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                             Log.d(TAG, "onFailure: 실패");
                                             Log.e(TAG, "onFailure: ", t);
                                         }
@@ -691,7 +685,7 @@ public class QnaBoardModel {
                                 }
                                 catch(Exception e) {
                                     qnaBoardPresenter.enrollmentBoardResp(
-                                            4, qnaBoardItem.getQnaCate(), qnaVoteItem.qnaVoteStatus);
+                                            4, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
                                     Log.d(TAG, "onFailure : 실패2");
                                     Log.e(TAG, "apply : ", e);
                                 }

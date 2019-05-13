@@ -88,6 +88,7 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
 
         Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
         intent.putExtra("QnaBoardItem",qnaBoardItem);
+        intent.putExtra("fromActivity", 0);
 
         activity.startActivity(intent);
     }
