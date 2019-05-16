@@ -451,11 +451,11 @@ public class QnaBoardModel {
 
                                                             if(result.equals("true")){
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        1, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
+                                                                        1, qnaItem.getQnaCate(), qnaItem.getQnaVoteStatus(), qnaItem);
                                                                 Log.d(TAG, "onResponse: 인서트 성공");
                                                             }else {
                                                                 qnaBoardPresenter.enrollmentBoardResp(
-                                                                        2, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
+                                                                        2, qnaItem.getQnaCate(), qnaItem.getQnaVoteStatus(), qnaItem);
                                                                 Log.d(TAG, "onResponse: 인서트 실패");
                                                             }
                                                         }
@@ -470,7 +470,7 @@ public class QnaBoardModel {
                                                 @Override
                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                     qnaBoardPresenter.enrollmentBoardResp(
-                                                            3, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
+                                                            3, qnaItem.getQnaCate(), qnaItem.getQnaVoteStatus(), qnaItem);
                                                     Log.d(TAG, "onFailure: 실패");
                                                     Log.e(TAG, "onFailure: ", t);
                                                 }
@@ -478,7 +478,7 @@ public class QnaBoardModel {
                                         }
                                         catch(Exception e) {
                                             qnaBoardPresenter.enrollmentBoardResp(
-                                                    4, qnaItem.getQnaCate(), qnaVoteItem.qnaVoteStatus, qnaItem);
+                                                    4, qnaItem.getQnaCate(), qnaItem.getQnaVoteStatus(), qnaItem);
                                             Log.d(TAG, "onFailure: 실패2");
                                             Log.e(TAG, "apply: ", e);
                                         }

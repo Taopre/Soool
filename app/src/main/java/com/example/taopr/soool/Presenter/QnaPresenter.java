@@ -57,6 +57,7 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
 
                            ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
                            view.getDataSuccess(qnaBoardItems);
+                            Log.d(TAG, "onSuccess: "+qnaBoardItems.get(0).getPostNo());
                           //  view.getDataSuccess(qnaBoardList.getQnaBoardItems());
                         }
                         else{

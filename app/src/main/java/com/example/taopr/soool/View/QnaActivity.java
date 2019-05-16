@@ -99,6 +99,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
 
     @Override
     public void getDataFail(String message) {
+        Log.d(TAG, "getDataFail: "+message);
         Toast.makeText(this, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
     }
 

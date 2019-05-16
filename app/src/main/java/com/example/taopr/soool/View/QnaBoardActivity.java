@@ -43,10 +43,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
+import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.TagDialog;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.Object.LoginSessionItem;
@@ -174,23 +176,23 @@ public class QnaBoardActivity extends AppCompatActivity implements
         Intent intent = getIntent();
 
         if (intent != null) {
-            if (intent.getStringArrayListExtra("tagList") != null) {
-                tv_qnaboardBeforeTag.setVisibility(View.GONE);
-                h_scrollView.setVisibility(View.VISIBLE);
-
-                arrayList = intent.getStringArrayListExtra("tagList");
-
-                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, arrayList);
-                rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
-                rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-
-                for (int i=0; i<arrayList.size(); i++) {
-                    if (i == arrayList.size()-1)
-                        tag += arrayList.get(i);
-                    else if (i < arrayList.size())
-                        tag += arrayList.get(i) + "@##@";
-                }
-            }
+//            if (intent.getStringArrayListExtra("tagList") != null) {
+//                tv_qnaboardBeforeTag.setVisibility(View.GONE);
+//                h_scrollView.setVisibility(View.VISIBLE);
+//
+//                arrayList = intent.getStringArrayListExtra("tagList");
+//
+//                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, arrayList);
+//                rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
+//                rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+//
+//                for (int i=0; i<arrayList.size(); i++) {
+//                    if (i == arrayList.size()-1)
+//                        tag += arrayList.get(i);
+//                    else if (i < arrayList.size())
+//                        tag += arrayList.get(i) + "@##@";
+//                }
+//            }
         }
 
         editModelArrayList = populateList();
@@ -325,9 +327,11 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
         ImageButton ib_drawupBack = findViewById(R.id.drawupBack);
         Button btn_drawupEnroll = findViewById(R.id.drawupEnroll);
+        Button btn_drawupDelete = findViewById(R.id.drawupDelete);
 
         ib_drawupBack.setOnClickListener(this);
         btn_drawupEnroll.setOnClickListener(this);
+        btn_drawupDelete.setOnClickListener(this);
 
         return true;
     }
@@ -655,33 +659,27 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 qnaBoardVoteAdapter.notifyDataSetChanged();
                 break;
             case R.id.qnaboardAddTag:
-                Intent intent1 = new Intent(this, TagActivity.class);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent1);
-
-                // 다이얼로그 방식
-                /*
-                TagDialog tagDialog = new TagDialog(this);
-                tagDialog.setDialogListener(new TagDialog.TagDialogListener() {
+                BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
+                bottomSheetDialog.setDialogListener(new BottomSheetDialog.BottomSheetDialoggListener() {
                     @Override
-                    public void onPositiveClicked(ArrayList<String> arrayLists) {
-                        if (arrayLists.size() > 0) {
-                            tv_qnaboardBeforeTag.setVisibility(View.GONE);
-                            h_scrollView.setVisibility(View.VISIBLE);
-                        } else if (arrayLists.size() == 0) {
-                            tv_qnaboardBeforeTag.setVisibility(View.VISIBLE);
-                            h_scrollView.setVisibility(View.GONE);
+                    public void onPositiveClicked(ArrayList<String> arrayList) {
+                        for (int i=0; i<arrayList.size(); i++) {
+                            Log.d("main!!!!!!!!!!!", "onPositiveClicked: "+arrayList.get(i));
                         }
 
-                        for (int i=0; i<arrayLists.size(); i++) {
-                            Log.d("main!!!!!!!!!!!", "onPositiveClicked: "+arrayLists.get(i));
-                        }
+                        tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                        h_scrollView.setVisibility(View.VISIBLE);
 
-                        tagArray = new ArrayList<>(arrayLists);
-
-                        qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), tagArray);
+                        qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList);
                         rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                         rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                        for (int i=0; i<arrayList.size(); i++) {
+                            if (i == arrayList.size()-1)
+                                tag += arrayList.get(i);
+                            else if (i < arrayList.size())
+                                tag += arrayList.get(i) + "@##@";
+                        }
                     }
 
                     @Override
@@ -689,26 +687,13 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                     }
                 });
-                tagDialog.getWindow().setGravity(Gravity.BOTTOM);
-                tagDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
 
+                break;
+            case R.id.drawupDelete:
 
-                tagDialog.show();
-                */
                 break;
         }
-    }
-    /**
-
-     * 앨범에서 이미지 가져오기
-
-     */
-    public void doTakeAlbumAction() // 앨범에서 이미지 가져오기
-    {
-        // 앨범 호출
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        startActivityForResult(intent, PICK_FROM_ALBUM);
     }
 
     @Override
@@ -933,8 +918,13 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             boardImagePath = UploadImgPath;
                             File file = new File(boardImagePath);
                             Uri test = Uri.fromFile(file);
-                            iv_qnaboardImage.setImageURI(test);
+                            Glide.with(this)
+                                    .load(test)
+                                    .override(100, 100)
+                                    .centerCrop()
+                                    .into(iv_qnaboardImage);
                         }
+
                         boardImageSelect = false;
                     }
                     break;

@@ -2,6 +2,7 @@ package com.example.taopr.soool.Networking;
 
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
+import com.example.taopr.soool.Object.QnaVoteItem;
 
 
 import java.util.ArrayList;
@@ -78,6 +79,17 @@ public interface APIService {
 //    @POST("/qnapost/QnaWrite.php")
     @POST("/test/testopj.php")
     Call<ResponseBody> sendNoImageNoVote(@Body QnaItem qnaItem);
+
+    @FormUrlEncoded
+    @POST("/qnapost/QnaDetail.php")
+    Call<ResponseBody> receiveVoteItem(@Field("accountNo") int accountNo,
+                                       @Field("postNo") int postNo);
+
+    @FormUrlEncoded
+    @POST("/qnapost/voteResult.php")
+    Call<ResponseBody> updateVoteResult(@Field("accountNo") int accountNo,
+                                        @Field("postNo") int postNo,
+                                        @Field("voteChoice") int voteChoice);
 
     @Multipart
 //    @POST("qnapost/QnaWrite.php")

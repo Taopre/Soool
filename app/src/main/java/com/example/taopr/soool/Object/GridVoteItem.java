@@ -26,6 +26,13 @@ public class GridVoteItem {
         this.isSelected = isSelected;
     }
 
+    public GridVoteItem (String status, Uri image, boolean isSelected, int vote) {
+        this.status = status;
+        this.image = image;
+        this.isSelected = isSelected;
+        this.vote = vote;
+    }
+
     public boolean isSelected() {
         return isSelected;
     }

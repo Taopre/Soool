@@ -1,7 +1,8 @@
-package com.example.taopr.soool.Presenter;
+package com.example.taopr.soool.Presenter.Interface;
 
 import com.example.taopr.soool.Object.InfoOfSoool;
 import com.example.taopr.soool.Object.QnaBoardItem;
+import com.example.taopr.soool.Presenter.MypagePresenter;
 
 import java.util.ArrayList;
 

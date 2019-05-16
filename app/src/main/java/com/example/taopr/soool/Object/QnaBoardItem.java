@@ -12,8 +12,8 @@ public class QnaBoardItem implements Parcelable{
 
     // 테스트를 위해 tag ,date, content를 주석 처리해논 상황
 
-    @SerializedName("qnaNo")  // @SerializedName 직렬화, 역직렬화 하기 위해 사용
-    public int qnaNo;
+    @SerializedName("postNo")  // @SerializedName 직렬화, 역직렬화 하기 위해 사용
+    public int postNo;
     @SerializedName("tag")
     public String tag;
     @SerializedName("qnaCate") // 0 : 투표있음 1 : 투표없음
@@ -41,9 +41,9 @@ public class QnaBoardItem implements Parcelable{
 
     public QnaBoardItem(){}
 
-    public QnaBoardItem(int qnaNo, String tag, int qnaCate, int accountNo, String writer, String date,
+    public QnaBoardItem(int postNo, String tag, int qnaCate, int accountNo, String writer, String date,
                         String title, String content, String image, int goods, int bads, int comments, int views) {
-        this.qnaNo = qnaNo;
+        this.postNo = postNo;
         this.tag = tag;
         this.qnaCate = qnaCate;
         this.accountNo = accountNo;
@@ -58,7 +58,7 @@ public class QnaBoardItem implements Parcelable{
         this.views = views;
     }
     protected QnaBoardItem(Parcel in) {
-        qnaNo = in.readInt();
+        postNo = in.readInt();
         tag = in.readString();
         qnaCate = in.readInt();
         accountNo = in.readInt();
@@ -92,7 +92,7 @@ public class QnaBoardItem implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(qnaNo);
+        dest.writeInt(postNo);
         dest.writeString(tag);
         dest.writeInt(qnaCate);
         dest.writeInt(accountNo);
@@ -107,12 +107,12 @@ public class QnaBoardItem implements Parcelable{
         dest.writeInt(views);
     }
 
-    public int getQnaNo() {
-        return qnaNo;
+    public int getPostNo() {
+        return postNo;
     }
 
-    public void setQnaNo(int qnaNo) {
-        this.qnaNo = qnaNo;
+    public void setPostNo(int postNo) {
+        this.postNo = postNo;
     }
 
     public int getQnaCate() {

@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class QnaItem implements Serializable {
 
-    @SerializedName("qnaNo")  // @SerializedName 직렬화, 역직렬화 하기 위해 사용
-    public int qnaNo;
+    @SerializedName("postNo")  // @SerializedName 직렬화, 역직렬화 하기 위해 사용
+    public int postNo;
     @SerializedName("tag")
     public String tag;
     @SerializedName("qnaCate") // 0 : 투표있음 1 : 투표없음
@@ -82,7 +82,7 @@ public class QnaItem implements Serializable {
 //    };
 
     protected QnaItem(Parcel in) {
-        qnaNo = in.readInt();
+        postNo = in.readInt();
         tag = in.readString();
         qnaCate = in.readInt();
         accountNo = in.readInt();
@@ -172,12 +172,12 @@ public class QnaItem implements Serializable {
         this.voteImage = voteImage;
     }
 
-    public int getQnaNo() {
-        return qnaNo;
+    public int getPostNo() {
+        return postNo;
     }
 
-    public void setQnaNo(int qnaNo) {
-        this.qnaNo = qnaNo;
+    public void setPostNo(int postNo) {
+        this.postNo = postNo;
     }
 
     public String getTag() {

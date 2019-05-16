@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.R;
 

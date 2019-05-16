@@ -23,6 +23,14 @@
         android:layout_height="56dp" />
 
     <Button
+        android:id="@+id/drawupModify"
+        android:layout_alignParentRight="true"
+        android:text="수정"
+        android:visibility="gone"
+        android:layout_width="56dp"
+        android:layout_height="56dp" />
+
+    <Button
         android:id="@+id/drawupReport"
         android:layout_alignParentRight="true"
         android:text="신고"
