@@ -1,10 +1,11 @@
-package com.example.taopr.soool.Presenter;
+package com.example.taopr.soool.Presenter.Interface;
 
 import com.example.taopr.soool.Object.CalendarItem;
 import com.example.taopr.soool.Object.CalendarItemMap;
 import com.example.taopr.soool.Object.InfoOfSoool;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.UserProfile;
+import com.example.taopr.soool.Presenter.MypagePresenter;
 
 import java.util.ArrayList;
 

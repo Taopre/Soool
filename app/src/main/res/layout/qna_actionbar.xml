@@ -24,6 +24,15 @@
         android:layout_height="56dp" />
 
     <Button
+        android:id="@+id/drawupDelete"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:visibility="gone"
+        android:layout_alignTop="@+id/drawupBack"
+        android:layout_toStartOf="@+id/drawupEnroll"
+        android:text="삭제" />
+
+    <Button
         android:id="@+id/drawupEnroll"
         android:layout_alignParentRight="true"
         android:text="등록"

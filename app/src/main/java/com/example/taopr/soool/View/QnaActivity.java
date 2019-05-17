@@ -3,6 +3,7 @@ package com.example.taopr.soool.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v7.widget.DividerItemDecoration;
@@ -35,6 +36,8 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
     private ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList<>();
     private QnaPresenter qnaPresenter;
     private String TAG = "큐앤에이_activity";
+    private final int QNA_MOVE_TO_WRITE = 2200;
+    private final int QNA_MOVE_TO_DETAIL = 2100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,9 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
         fab_default.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(QnaActivity.this, QnaBoardActivity.class));
+                Intent intent = new Intent(QnaActivity.this, QnaBoardActivity.class);
+                intent.putExtra("actionKind", 0);
+                startActivityForResult(intent, QNA_MOVE_TO_WRITE);
             }
         });
 
@@ -99,6 +104,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
 
     @Override
     public void getDataFail(String message) {
+        Log.d(TAG, "getDataFail: "+message);
         Toast.makeText(this, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
     }
 
@@ -114,7 +120,21 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
         super.onStop();
     }
 
-/*    @Override
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case QNA_MOVE_TO_DETAIL:
+                    break;
+                case QNA_MOVE_TO_WRITE:
+                    break;
+            }
+        }
+    }
+
+    /*    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_default :

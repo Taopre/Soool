@@ -24,29 +24,39 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".View.MainActivity">
+        <activity android:name=".View.MainActivity"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name=".View.SignUpActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".View.StartingActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".View.SignUpActivity"></activity>
-        <activity android:name=".View.StartingActivity">
 
         </activity>
-        <activity android:name=".View.InfoActivity"></activity>
-        <activity android:name=".View.QnaBoardActivity"></activity>
-        <activity android:name=".View.LoginActivity">
+        <activity android:name=".View.InfoActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".View.QnaBoardActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".View.LoginActivity" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".View.QnaActivity">
+        <activity android:name=".View.QnaActivity" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".View.MyPageActivity">
+        <activity android:name=".View.MyPageActivity" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".View.QnaBoardDetailActivity" />
+        <activity android:name=".View.QnaBoardDetailActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".View.TagActivity"
+            android:theme="@style/Transparent" android:screenOrientation="portrait" />
+
         <activity android:name=".View.CalendarSchActivity"></activity>
         <activity android:name=".View.CalendarAddSchActivity"/>
 

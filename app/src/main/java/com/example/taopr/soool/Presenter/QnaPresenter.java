@@ -26,6 +26,8 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
     private Activity activity;
   //  private List<QnaBoardItem> qnaBoardItems = new ArrayList<>();
     private static String TAG = "큐앤에이_presenter";
+    private final int QNA_MOVE_TO_DETAIL= 2100;
+    private final int QNA_MOVE_TO_WRITE = 2200;
 
  //<
     private APIService apiService;
@@ -57,6 +59,7 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
 
                            ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
                            view.getDataSuccess(qnaBoardItems);
+                            Log.d(TAG, "onSuccess: "+qnaBoardItems.get(0).getPostNo());
                           //  view.getDataSuccess(qnaBoardList.getQnaBoardItems());
                         }
                         else{
@@ -88,8 +91,10 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
 
         Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
         intent.putExtra("QnaBoardItem",qnaBoardItem);
+        intent.putExtra("fromActivity", 0);
+        intent.putExtra("actionKind", 1);
 
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, QNA_MOVE_TO_DETAIL);
     }
 
 

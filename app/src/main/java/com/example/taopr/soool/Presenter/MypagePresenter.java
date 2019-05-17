@@ -58,6 +58,7 @@ public class MypagePresenter extends BasePresenter implements MypageInter {
     // 만약에 나눠서 메시지 처리를 다르게한다면을 고려해봤는데 이 부분은 불필요하다면 그냥 통일해서 진행해도 무방합니다.
     // 3
 
+    // 현재 switch 문 2개로 받도록 조치했는데 ApiCallback generic으로 한번에 처리된다면 바꿔보는거 해볼까 고민해봅시다.
 
     // getDataFail 함수에서 두번째 인자 int 값에 따른 변화
     // 0 -> qnaBoardList가 통신 실패일 때
