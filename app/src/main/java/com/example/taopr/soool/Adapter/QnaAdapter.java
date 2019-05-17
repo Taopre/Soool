@@ -13,23 +13,24 @@ import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.View.QnaActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
     private Activity activity;
-    private List<QnaBoardItem> qnaBoardItems;
+    private ArrayList<QnaBoardItem> qnaBoardItems;
     private QnaActivity ac;
     private Context context;
     private static String TAG ="큐앤에이_adapter";
 
-    public QnaAdapter(Activity activity, List<QnaBoardItem> qnaBoardItems, Context context) {
+    public QnaAdapter(Activity activity, ArrayList<QnaBoardItem> qnaBoardItems, Context context) {
         this.activity = activity;
         this.context = context;
         this.qnaBoardItems = qnaBoardItems;
     }
 
-    public QnaAdapter(List<QnaBoardItem> qnaBoardItems, Context context){
+    public QnaAdapter(ArrayList<QnaBoardItem> qnaBoardItems, Context context){
         this.context = context;
         this.qnaBoardItems = qnaBoardItems;
     }
@@ -68,6 +69,24 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
             qnaBoardTag = v.findViewById(R.id.qnaBoardTag);
 
         }
+    }
+    public ArrayList<QnaBoardItem> deleteItem(int position){
+        qnaBoardItems.remove(position);
+        notifyItemRemoved(position);
+        return qnaBoardItems;
+    }
+
+    public ArrayList<QnaBoardItem> modifyItem(QnaBoardItem qnaBoardItem, int position){
+        qnaBoardItems.set(position,qnaBoardItem);
+        notifyItemChanged(position,qnaBoardItem);
+        return qnaBoardItems;
+    }
+
+    public ArrayList<QnaBoardItem> addItem(QnaBoardItem qnaBoardItem){
+        qnaBoardItems.add(qnaBoardItem);
+
+        notifyItemInserted(0);
+        return qnaBoardItems;
     }
 
     @Override

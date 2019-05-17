@@ -25,9 +25,9 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
     private QnaPresenter.View view;
     private Activity activity;
   //  private List<QnaBoardItem> qnaBoardItems = new ArrayList<>();
-    private static String TAG = "큐앤에이_presenter";
-    private final int QNA_MOVE_TO_DETAIL= 2100;
-    private final int QNA_MOVE_TO_WRITE = 2200;
+    private String TAG = "큐앤에이_presenter";
+    private final int QNA_MOVE_TO_DETAIL= 3100;
+    private final int QNA_MOVE_TO_WRITE = 3200;
 
  //<
     private APIService apiService;
@@ -81,11 +81,13 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
                 });
 
     }
-    //>
 
-    /// 아이템 선택 시 선택한 아이템 상세 보기로 이동
+    // 아이템 선택 시 선택한 아이템 상세 보기로 이동
+    // 선택한 아이템 객체와 아이템의 position 값을 보낸다
+    // 보내는 이유는 position 값을 QnaBoard , QnaDetail 액티비티로 이동해서 수정이나 삭제를 수행하고
+    // Qna 액티비티로 이동했을 때 리스트의 아이템을 업데이트 할 때 position 값이 있어야 하기 때문에
 
-    public void getItem(QnaBoardItem qnaBoardItem, Activity activity) {
+    public void getItem(QnaBoardItem qnaBoardItem, Activity activity,int qnaListPosition) {
         this.activity = activity;
         Toast.makeText(activity, qnaBoardItem.getTitle(), Toast.LENGTH_SHORT).show();
 
@@ -93,8 +95,11 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
         intent.putExtra("QnaBoardItem",qnaBoardItem);
         intent.putExtra("fromActivity", 0);
         intent.putExtra("actionKind", 1);
+        intent.putExtra("qnaListPosition",qnaListPosition);
 
-        activity.startActivityForResult(intent, QNA_MOVE_TO_DETAIL);
+        //activity.startActivityForResult(intent, QNA_MOVE_TO_DETAIL);
+        view.moveToPage(intent,QNA_MOVE_TO_DETAIL);
+
     }
 
 

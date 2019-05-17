@@ -11,7 +11,10 @@ import android.widget.Toast;
 
 import com.example.taopr.soool.R;
 
+import butterknife.ButterKnife;
+
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+import static android.content.Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED;
 
 
 // 탭 부분을 BaseActivity에서 선언(바인딩, 클릭리스너)을 하고, 상속을 받게 하기 위해서
@@ -35,6 +38,8 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         this.tabMenu = tabMenu;
         viewBinding();
         tabSetting();
+        ButterKnife.bind(this);
+
     }
 
     // 같은 페이지 이동 막기 위해서 버튼 비활성화
@@ -77,7 +82,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
-                finish();
                 break;
 
             case R.id.tabInfo:
@@ -85,7 +89,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
-                finish();
                 break;
 
             case R.id.tabQna:
@@ -93,15 +96,14 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
-                finish();
                 break;
 
             case R.id.tabMypage:
                 intent = new Intent(mActivity, MyPageActivity.class);
+
                 intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-                finish();
                 break;
 
         }

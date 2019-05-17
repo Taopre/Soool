@@ -36,8 +36,9 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
     private ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList<>();
     private QnaPresenter qnaPresenter;
     private String TAG = "큐앤에이_activity";
-    private final int QNA_MOVE_TO_WRITE = 2200;
-    private final int QNA_MOVE_TO_DETAIL = 2100;
+    private final int QNA_MOVE_TO_WRITE = 3200;
+    private final int QNA_MOVE_TO_DETAIL = 3100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
         qnaPresenter.setView(this);
         qnaPresenter.loadData();
 
-        DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
+        //DoBinding(); // ui 선언
     }
 
     // 리사이클러뷰 클릭 이벤트
@@ -66,39 +67,41 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
         return new RecyclerItemClickListener(this, qnaRecycler, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                qnaPresenter.getItem(qnaBoardItems.get(position), QnaActivity.this);
+                qnaPresenter.getItem(qnaBoardItems.get(position), QnaActivity.this,position);
             }
 
             @Override
             public void onLongItemClick(View view, int position) {
-                qnaPresenter.getItem(qnaBoardItems.get(position), QnaActivity.this);
+                qnaPresenter.getItem(qnaBoardItems.get(position), QnaActivity.this,position);
             }
         });
     }
 
 
-    private void DoBinding() {
-
-        // 뷰들 선언하는 부분입니다.
-        fab_default = (FloatingActionButton) findViewById(R.id.fab_default);
-        fab_default.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @OnClick({R.id.fab_default})
+    void OnClickButton(View view){
+        switch (view.getId()){
+            case R.id.fab_default:
                 Intent intent = new Intent(QnaActivity.this, QnaBoardActivity.class);
                 intent.putExtra("actionKind", 0);
                 startActivityForResult(intent, QNA_MOVE_TO_WRITE);
-            }
-        });
-
+               // qnaBoardItems = qnaAdapter.deleteItem(0);
+                //qnaBoardItems = qnaAdapter.addItem(qnaBoardItems.get());
+                break;
+        }
     }
+
+
 
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems) {
         this.qnaBoardItems = qnaBoardItems;
-        qnaRecycler.setAdapter(new QnaAdapter(QnaActivity.this, this.qnaBoardItems, this));
+        qnaAdapter = new QnaAdapter(QnaActivity.this,this.qnaBoardItems,this);
+        qnaRecycler.setAdapter(qnaAdapter);
         Log.i(TAG, "getDataSuccess: 리스트 수 :" + qnaBoardItems.size());
         for(int a=0; a<this.qnaBoardItems.size(); a++){
-            Log.i(TAG, "getDataSuccess: 리스트 값 " +a+ this.qnaBoardItems.get(a).getTitle() +"  " + this.qnaBoardItems.get(a).getAccountNo());
+            Log.i(TAG, "getDataSuccess: 리스트 값 " +a+ this.qnaBoardItems.get(a).getTitle() +"  "
+                    + this.qnaBoardItems.get(a).getAccountNo());
         }
     }
 
@@ -106,6 +109,12 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
     public void getDataFail(String message) {
         Log.d(TAG, "getDataFail: "+message);
         Toast.makeText(this, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
+    }
+
+    // 페이지 이동
+    @Override
+    public void moveToPage(Intent intent,int requestCode) {
+        startActivityForResult(intent,requestCode);
     }
 
     @Override
@@ -125,23 +134,36 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case QNA_MOVE_TO_DETAIL:
+
+            // 리스트 수정, 삭제
+            // 리스트 수정, 삭제의 경우에는 리스트에 있는 아이템을 수정,삭제를 하는 것이기 때문에
+            // 아이템의 리스트 포지션 값을 받고 , actionKind 로 수정인지 삭제인지 구별
+            // 추가 --> actionKind = 0
+            // 수정 --> actionKind = 1
+            // 삭제 --> actionKind = 2
+
+            QnaBoardItem qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
+            int qnaListPosition = data.getIntExtra("qnaListPosition",0);
+            int actionKind = data.getIntExtra("actionKind",99);
+
+            switch (actionKind){
+                case 0:
+                    qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
+                case 1:
+                    //qnaAdapter.notifyItemChanged(qnaListPosition,qnaBoardItem);
+                    //qnaBoardItems.set(qnaListPosition,qnaBoardItem);
+                    qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
                     break;
-                case QNA_MOVE_TO_WRITE:
+                case 2:
+                    //qnaAdapter.notifyItemRemoved(qnaListPosition);
+                    qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
                     break;
+
             }
+
+
         }
     }
 
-    /*    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_default :
-                Intent intent = new Intent(this, QnaBoardActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }*/
 }
 
