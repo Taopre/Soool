@@ -3,6 +3,7 @@ package com.example.taopr.soool.Networking;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Object.UserProfile;
 
 
 import java.util.ArrayList;
@@ -125,6 +126,17 @@ public interface APIService {
                                                 @Part MultipartBody.Part image,
                                                 @Part("qnaVoteStatus") int qnaVoteStatus,
                                                 @Part ArrayList<MultipartBody.Part> file);
+
+    // 마이페이지 내 게시물
+    @FormUrlEncoded
+    @POST("/accountManage/mypost.php")
+    Observable<QnaBoardList> getMypageBoardItem(@Field("accountNo") int accountNo);
+
+    // 마이페이지 유저 프로필
+    @FormUrlEncoded
+    @POST("/accountManage/myinfo.php")
+    Observable<UserProfile> getUserProfile(@Field("accountNo") int accountNo);
+}
 
     @Multipart
 //    @POST("qnapost/QnaWrite.php")

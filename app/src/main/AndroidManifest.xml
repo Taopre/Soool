@@ -33,11 +33,6 @@
         </activity>
         <activity android:name=".View.SignUpActivity"></activity>
         <activity android:name=".View.StartingActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
 
         </activity>
         <activity android:name=".View.InfoActivity"></activity>
@@ -52,9 +47,8 @@
 
         </activity>
         <activity android:name=".View.QnaBoardDetailActivity" />
-        <activity
-            android:name=".View.TagActivity"
-            android:theme="@style/Transparent" />
+        <activity android:name=".View.CalendarSchActivity"></activity>
+        <activity android:name=".View.CalendarAddSchActivity"/>
 
     </application>
 

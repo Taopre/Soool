@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.taopr.soool.R;
 
+import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+
 
 // 탭 부분을 BaseActivity에서 선언(바인딩, 클릭리스너)을 하고, 상속을 받게 하기 위해서
 
@@ -68,31 +70,36 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.tabMain:
-
-                startActivity(new Intent(mActivity, MainActivity.class));
+                intent = new Intent(mActivity, MainActivity.class);
+                intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 finish();
                 break;
 
             case R.id.tabInfo:
-
-                startActivity(new Intent(mActivity, InfoActivity.class));
+                intent = new Intent(mActivity, InfoActivity.class);
+                intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 finish();
                 break;
 
             case R.id.tabQna:
-
-                startActivity(new Intent(mActivity, QnaActivity.class));
+                intent = new Intent(mActivity, QnaActivity.class);
+                intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 finish();
                 break;
 
             case R.id.tabMypage:
-
-                startActivity(new Intent(mActivity, MyPageActivity.class));
+                intent = new Intent(mActivity, MyPageActivity.class);
+                intent.addFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
                 finish();
                 break;
