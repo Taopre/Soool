@@ -5,14 +5,30 @@
     android:layout_height="match_parent"
     tools:context=".View.MyPageFragment.CalendarFragment">
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/mcCalendarView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:mcv_showOtherDates="none"
-        app:mcv_selectionColor="#00F"
+        android:layout_height="match_parent"
+        >
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mcCalendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mcv_tileHeight="@dimen/calendar_tile_height"
+            app:mcv_showOtherDates="none"
+            app:mcv_selectionColor="#00F"
+            app:mcv_leftArrowMask="@drawable/cal_month_prev"
+            app:mcv_rightArrowMask="@drawable/cal_month_next"
+            />
+        <include layout="@layout/button_add_calendar_sch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/myPageAddEvent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            />
 
-        />
+
+    </RelativeLayout>
 
 </FrameLayout>

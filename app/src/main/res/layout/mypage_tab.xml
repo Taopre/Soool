@@ -10,25 +10,28 @@
             android:id="@+id/tabMyBoard"
             android:gravity="center"
             android:padding="10dp"
+            android:textSize="@dimen/text_size_15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_board_tab_title"/>
+            android:text="@string/my_page_tab_label_my_qna_board"/>
 
         <TextView
             android:layout_weight="1"
             android:id="@+id/tabBookmark"
             android:gravity="center"
+            android:textSize="@dimen/text_size_15dp"
             android:padding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bookmark_tab_title"/>
+            android:text="@string/my_page_tab_label_bookmark"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="@dimen/text_size_15dp"
             android:padding="10dp"
             android:gravity="center"
             android:id="@+id/tabCalendar"
-            android:text="@string/calendar_tab_title"/>
+            android:text="@string/my_page_tab_label_calendar"/>
 
 </LinearLayout>

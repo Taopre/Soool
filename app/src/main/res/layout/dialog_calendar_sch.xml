@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:context=".View.CalendarSchBaseActivity">
+
+  <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+      android:id="@+id/schDialogCalendar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:mcv_leftArrowMask="@drawable/cal_month_prev"
+      app:mcv_rightArrowMask="@drawable/cal_month_next"
+      />
+
+  <TextView
+      android:layout_below="@id/schDialogCalendar"
+      android:id="@+id/schDialogSelectButton"
+      android:layout_margin="16dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:textColor="@color/grayMid"
+      android:text="@string/all_button_choice"
+      android:clickable="false"
+      />
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/schDialogCancelButton"
+      android:layout_alignTop="@id/schDialogSelectButton"
+      android:layout_marginLeft="16dp"
+      android:textColor="@color/grayMid"
+      android:text="@string/all_button_cancel"/>
+
+</RelativeLayout>

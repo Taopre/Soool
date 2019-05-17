@@ -3,7 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="black">#000000</color>
+    <color name="black">#272727</color>
     <color name="transparent">#1A000000</color>
     <color name="background_white">#FFFFFF</color>
+    <color name="greenMain">#0ba14a</color>
+    <color name="greenDark">#08883e</color>
+    <color name="grayMain">#9d9d97</color>
+    <color name="grayLight">#d2d2ca</color>
+    <color name="grayMid">#7f7f79</color>
+    <color name="sunflower_yellow">#ffd400</color>
+    <color name="grayLight_a50">#80d2d2ca</color>
 </resources>
