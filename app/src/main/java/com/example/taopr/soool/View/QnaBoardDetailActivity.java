@@ -226,7 +226,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         ll_voteLayout = findViewById(R.id.voteLayout);
         rc_recycler = findViewById(R.id.recycler);
         gv_gridview = findViewById(R.id.gridview);
-        rc_qnaboardTag = findViewById(R.id.qnaboardTag);
 
         ll_voteLayout.setVisibility(View.GONE);
 

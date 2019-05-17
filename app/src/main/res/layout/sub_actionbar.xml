@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="18dp"
+    android:background="#ffffff"
+    android:paddingRight="13dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="menu"
+        android:textSize="@dimen/sub_actionbar_title_text_size"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:id="@+id/subActionBarLeft"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/gotobackbtn"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:id="@+id/subActionBarLeftImage"
+        android:visibility="gone"
+        android:layout_centerVertical="true"/>
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:textSize="@dimen/sub_actionbar_title_text_size"
+    android:gravity="center"
+    android:text="@string/all_button_modify"
+    android:layout_toLeftOf="@id/subActionBarRight"
+    android:layout_marginRight="5dp"
+    android:visibility="gone"
+    android:id="@+id/subActionBarRight2"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/sub_actionbar_title_text_size"
+        android:text="저장하기"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/subActionBarRight"/>
+
+</RelativeLayout>

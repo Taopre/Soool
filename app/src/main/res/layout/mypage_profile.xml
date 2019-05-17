@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:paddingLeft="26dp">
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/profile_image_height_width"
+        android:layout_height="@dimen/profile_image_height_width"
         android:cropToPadding="true"
-        android:padding="10dp"
+        android:layout_gravity="center"
         android:id="@+id/mypageProfileImage"
         android:src="@drawable/photo"/>
     <RelativeLayout
@@ -20,6 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="닉네임입니다"
+            android:textSize="@dimen/text_size_15dp"
             android:layout_alignParentLeft="true"
             android:textColor="@color/black"
             android:id="@+id/mypageProfileNickname"
@@ -27,35 +29,43 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_page_profile_my_qna_title"
+            android:text="@string/my_page_my_qna"
+            android:textSize="@dimen/text_size_12dp"
+            android:textColor="@color/grayMain"
             android:layout_below="@id/mypageProfileNickname"
             android:id="@+id/mypageProfileMyQnaTitle"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/grayMain"
             android:layout_toRightOf="@id/mypageProfileMyQnaTitle"
             android:layout_alignTop="@id/mypageProfileMyQnaTitle"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="3dp"
+            android:textSize="@dimen/text_size_12dp"
             android:text="333"
             android:id="@+id/mypageProfileMyQnaCount"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/grayMain"
             android:layout_alignTop="@id/mypageProfileMyQnaTitle"
             android:layout_toRightOf="@id/mypageProfileMyQnaCount"
-            android:text="@string/my_page_profile_my_point_title"
+            android:text="@string/my_page_my_point"
+            android:textSize="@dimen/text_size_12dp"
             android:id="@+id/mypageProfileMyPointTitle"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="28dp"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/grayMain"
             android:layout_alignTop="@id/mypageProfileMyQnaTitle"
             android:layout_toRightOf="@id/mypageProfileMyPointTitle"
             android:text="5550"
-            android:layout_marginLeft="10dp"
+            android:textSize="@dimen/text_size_12dp"
+            android:layout_marginLeft="3dp"
             android:id="@+id/mypageProfileMyPointCount"/>
 
 

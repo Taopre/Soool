@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="April 2019"
+        android:textSize="@dimen/calendar_title_text_size"
+        android:id="@+id/calendarSelectedMonthYear"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13"
+        android:id="@+id/calendarSelectedDay"
+        android:layout_below="@id/calendarSelectedMonthYear"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/calendar_selected_day_size"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12"
+        android:textSize="@dimen/calendar_previous_next_day_size"
+        android:layout_marginRight="40dp"
+        android:id="@+id/calendarPreviousDay"
+        android:layout_toLeftOf="@id/calendarSelectedDay"
+        android:layout_alignTop="@id/calendarSelectedDay"
+        android:layout_alignBottom="@id/calendarSelectedDay"
+        android:gravity="center"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14"
+        android:textSize="@dimen/calendar_previous_next_day_size"
+        android:layout_marginLeft="40dp"
+        android:id="@+id/calendarNextDay"
+        android:layout_alignTop="@id/calendarSelectedDay"
+        android:layout_alignBottom="@id/calendarSelectedDay"
+        android:gravity="center"
+        android:layout_toRightOf="@id/calendarSelectedDay"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thursday"
+        android:id="@+id/calendarSelectedDayOfWeek"
+        android:textSize="@dimen/calendar_selected_day_text_size"
+        android:layout_below="@id/calendarSelectedDay"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

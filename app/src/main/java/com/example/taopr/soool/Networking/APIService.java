@@ -1,6 +1,7 @@
 package com.example.taopr.soool.Networking;
 
 import com.example.taopr.soool.Object.QnaBoardList;
+import com.example.taopr.soool.Object.UserProfile;
 
 
 import io.reactivex.Observable;
@@ -51,6 +52,14 @@ public interface APIService {
     @POST("")
     Observable<QnaBoardList> getMypageBookmarkItem();
 
-    @POST("/qnapost/QnaList.php")  // 테스트를 위해 임의로 작성
-    Observable<QnaBoardList> getMypageBoardItem();
+
+    // 마이페이지 내 게시물
+    @FormUrlEncoded
+    @POST("/accountManage/mypost.php")
+    Observable<QnaBoardList> getMypageBoardItem(@Field("accountNo") int accountNo);
+
+    // 마이페이지 유저 프로필
+    @FormUrlEncoded
+    @POST("/accountManage/myinfo.php")
+    Observable<UserProfile> getUserProfile(@Field("accountNo") int accountNo);
 }

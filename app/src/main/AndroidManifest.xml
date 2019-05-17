@@ -47,6 +47,8 @@
 
         </activity>
         <activity android:name=".View.QnaBoardDetailActivity" />
+        <activity android:name=".View.CalendarSchActivity"></activity>
+        <activity android:name=".View.CalendarAddSchActivity"/>
 
     </application>
 

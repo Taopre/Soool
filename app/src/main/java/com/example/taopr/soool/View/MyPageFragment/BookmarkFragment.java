@@ -13,12 +13,10 @@ import com.example.taopr.soool.R;
 
 
 public class BookmarkFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "book";
     private static final String ARG_PARAM2 = "mark";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     String TAG = "북마크 프래그먼트";
@@ -57,7 +55,7 @@ public class BookmarkFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_bookmark, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             Log.i(TAG, "onButtonPressed: 리스너 notnull");
