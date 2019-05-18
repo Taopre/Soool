@@ -54,7 +54,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     String TAG = "QnaBoardDetailActivity", accountNick;
     String[] tagData = new String[0];
-    int vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0, actionKind;
+    int vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0, actionKind, qnaListPosition;
     boolean isMyBoard = false;
 
     TextView tv_qnaboardTitle, tv_qnaboardWriter, tv_qnaboardContent, tv_qnaboardDate, tv_qnaboardCommentCount, tv_qnaboardViewCount, tv_qnaboardTagOne, tv_voteResultShow;
@@ -102,6 +102,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         vote = getIntent().getIntExtra("vote", 2);
         fromActivity = getIntent().getIntExtra("fromActivity", 9999);
         actionKind = getIntent().getIntExtra("actionKind", 9999);
+        qnaListPosition = getIntent().getIntExtra("qnaListPosition", 9999);
         voteStatus = getIntent().getIntExtra("voteStatus", 3);
         qnaItem = (QnaItem) getIntent().getSerializableExtra("QnaItem");
         qnaBoardItem = (QnaBoardItem) getIntent().getParcelableExtra("QnaBoardItem");
@@ -576,6 +577,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 Intent intent = new Intent(this, QnaBoardActivity.class);
                 intent.putExtra("QnaBoardItem", qnaBoardItem);
                 intent.putExtra("actionKind", actionKind);
+                intent.putExtra("qnaListPosition", qnaListPosition);
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 startActivity(intent);
                 finish();
