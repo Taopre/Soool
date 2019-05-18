@@ -24,7 +24,7 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     private static ClickListeners clickListeners;
     private int whatActivity = 9998;
 
-    public QnaBoardTagAdapter() {};
+    public QnaBoardTagAdapter() {}
 
     public QnaBoardTagAdapter(Context ctx, ArrayList<String> data, int whatActivity){
         inflater = LayoutInflater.from(ctx);
@@ -47,7 +47,6 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
 
     @Override
     public void onBindViewHolder(final QnaBoardTagAdapter.MyViewHolder holder, final int position) {
-
 
         holder.textView.setText(data.get(position));
         holder.deleteTag.setText(data.get(position));

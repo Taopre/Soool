@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,20 +112,21 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         QnaBoardItem qnaBoardItem = qnaBoardItems.get(position);
 
-        if (qnaBoardItem.getTag().contains("@##@")) {
-            holder.qnaBoardTag.setVisibility(View.GONE);
-            holder.h_scrollView.setVisibility(View.VISIBLE);
+//        if (qnaBoardItem.getTag().contains("@##@")) {
+//            holder.qnaBoardTag.setVisibility(View.GONE);
+//            holder.h_scrollView.setVisibility(View.VISIBLE);
+//
+//            tagData = qnaBoardItem.getTag().split("@##@");
+//            for (int i = 0; i < tagData.length; i++) {
+//                tagArray.add(tagData[i]);
+//            }
+//            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray);
+//            holder.qnaboardTagView.setAdapter(qnaBoardTagAdapter);
+//            holder.qnaboardTagView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+//        } else
+//            holder.qnaBoardTag.setText(qnaBoardItem.getTag());
 
-            tagData = qnaBoardItem.getTag().split("@##@");
-            for (int i = 0; i < tagData.length; i++) {
-                tagArray.add(tagData[i]);
-            }
-            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray);
-            holder.qnaboardTagView.setAdapter(qnaBoardTagAdapter);
-            holder.qnaboardTagView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        } else
-            holder.qnaBoardTag.setText(qnaBoardItem.getTag());
-
+        holder.qnaBoardTag.setText(qnaBoardItem.getTag());
         holder.qnaBoardTitle.setText(qnaBoardItem.getTitle());
         holder.qnaBoardComments.setText(String.valueOf(qnaBoardItem.getComments()));
         holder.qnaBoardWriter.setText(qnaBoardItem.getWriter());
