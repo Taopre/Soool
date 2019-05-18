@@ -880,7 +880,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 Intent intent = new Intent();
                 intent.putExtra("QnaBoardItem", qnaBoardItemResponse);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                setResult(RESULT_OK);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             case 2:
@@ -967,7 +967,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 intent.putExtra("qnaListPosition", qnaListPosition);
                 intent.putExtra("QnaBoardItem", qnaBoardItem);
                 intent.putExtra("actionKind", actionKind);
-                setResult(RESULT_OK);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             case 1:
@@ -987,7 +987,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 intent = getIntent();
                 intent.putExtra("qnaListPosition", qnaListPosition);
                 intent.putExtra("actionKind", 2);
-                setResult(RESULT_OK);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             case 1:
