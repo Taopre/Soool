@@ -13,7 +13,7 @@
         android:text="main"/>
 
 
-    <LinearLayout
+ <!--   <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -28,5 +28,15 @@
         app:layout_constraintVertical_bias="1.0">
 
         <include layout="@layout/include_tab"/>
-    </LinearLayout>
+    </LinearLayout>-->
+
+    <include
+        layout="@layout/view_main_tab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
 </android.support.constraint.ConstraintLayout>
