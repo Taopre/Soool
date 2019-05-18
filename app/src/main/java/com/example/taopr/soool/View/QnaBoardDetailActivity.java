@@ -54,7 +54,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     String TAG = "QnaBoardDetailActivity", accountNick;
     String[] tagData = new String[0];
-    int vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0;
+    int vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0, actionKind;
     boolean isMyBoard = false;
 
     TextView tv_qnaboardTitle, tv_qnaboardWriter, tv_qnaboardContent, tv_qnaboardDate, tv_qnaboardCommentCount, tv_qnaboardViewCount, tv_qnaboardTagOne, tv_voteResultShow;
@@ -101,6 +101,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
         vote = getIntent().getIntExtra("vote", 2);
         fromActivity = getIntent().getIntExtra("fromActivity", 9999);
+        actionKind = getIntent().getIntExtra("actionKind", 9999);
         voteStatus = getIntent().getIntExtra("voteStatus", 3);
         qnaItem = (QnaItem) getIntent().getSerializableExtra("QnaItem");
         qnaBoardItem = (QnaBoardItem) getIntent().getParcelableExtra("QnaBoardItem");
@@ -176,7 +177,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         ll_voteLayout.setVisibility(View.VISIBLE);
                         tv_voteResultShow.setVisibility(View.VISIBLE);
                         // 투표 항목 뿌려줘야함.
-                        qnaDetailPresenter.downloadVoteData(qnaBoardItem.getAccountNo(), qnaBoardItem.getPostNo());
+                        qnaDetailPresenter.downloadVoteData(accountNo, qnaBoardItem.getPostNo());
 
                         if (tagData.length == 0) {
                             tagView.setVisibility(View.GONE);
@@ -252,7 +253,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         isMyBoard = true;
                     else
                         isMyBoard = false;
-
 
                     if (vote == 0) {
                         // 투표 O.
@@ -516,6 +516,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.drawupBack:
+                finish();
                 break;
             case R.id.drawupEnroll:
                 break;
@@ -537,7 +538,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 qnaBoardDetailVoteAdapter.voteTotalNums = voteTotalResult;
                 tv_voteResultShow.setText(voteTotalResult+"");
                 qnaBoardDetailVoteAdapter.notifyDataSetChanged();
-                qnaDetailPresenter.updateVoteResult(accountNo, postNo, mySelectVoteNum);
+
+                if (fromActivity == 0) {
+                    qnaDetailPresenter.updateVoteResult(accountNo, qnaBoardItem.getPostNo(), mySelectVoteNum);
+                } else if (fromActivity == 1) {
+                    qnaDetailPresenter.updateVoteResult(accountNo, qnaItem.getPostNo(), mySelectVoteNum);
+                }
 
                 btn_voteTextFinishBtn.setVisibility(View.GONE);
                 break;
@@ -557,21 +563,33 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
                 tv_voteResultShow.setText(voteTotalResult+"");
                 qnaBoardDetailImageAdapter.notifyDataSetChanged();
-                qnaDetailPresenter.updateVoteResult(accountNo, postNo, mySelectVoteNum);
+
+                if (fromActivity == 0) {
+                    qnaDetailPresenter.updateVoteResult(accountNo, qnaBoardItem.getPostNo(), mySelectVoteNum);
+                } else if (fromActivity == 1) {
+                    qnaDetailPresenter.updateVoteResult(accountNo, qnaItem.getPostNo(), mySelectVoteNum);
+                }
 
                 btn_voteImageFinishBtn.setVisibility(View.GONE);
                 break;
             case R.id.drawupModify:
-                Intent intent;
-                if (fromActivity == 0) {
-                    intent = new Intent(this, QnaBoardActivity.class);
-                    intent.putExtra("QnaBoardItem", qnaBoardItem);
-                    startActivity(intent);
-                } else if (fromActivity == 1) {
-                    intent = new Intent(this, QnaBoardActivity.class);
-                    intent.putExtra("QnaItem", qnaItem);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(this, QnaBoardActivity.class);
+                intent.putExtra("QnaBoardItem", qnaBoardItem);
+                intent.putExtra("actionKind", actionKind);
+                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                startActivity(intent);
+                finish();
+//                if (fromActivity == 0) {
+//                    intent = new Intent(this, QnaBoardActivity.class);
+//                    intent.putExtra("QnaBoardItem", qnaBoardItem);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+//                    startActivity(intent);
+//                } else if (fromActivity == 1) {
+//                    intent = new Intent(this, QnaBoardActivity.class);
+//                    intent.putExtra("QnaItem", qnaItem);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+//                    startActivity(intent);
+//                }
                 break;
         }
     }
@@ -620,7 +638,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 QnaBoardVoteItem editModel = new QnaBoardVoteItem();
                 editModel.setEditTextValue(getQnaVoteItem.getVoteText().get(i));
                 editModel.setFlag(false);
-                editModel.setVoteboard(getQnaVoteItem.getVoteResult().get(i));
+//                editModel.setVoteboard(getQnaVoteItem.getVoteResult().get(i));
                 editModelArrayList.add(editModel);
             }
 //
@@ -628,38 +646,54 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
             rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
-            for (int i=0; i<getQnaVoteItem.getVoteResult().size(); i++)
-                voteTotalResult += getQnaVoteItem.getVoteResult().get(i);
-
-            qnaBoardDetailVoteAdapter.voteTotalNums = voteTotalResult;
             qnaBoardDetailVoteAdapter.notifyDataSetChanged();
 
-            tv_voteResultShow.setText(voteTotalResult+"");
+            try {
+                for (int i = 0; i < getQnaVoteItem.getVoteResult().size(); i++)
+                    voteTotalResult += getQnaVoteItem.getVoteResult().get(i);
+
+                qnaBoardDetailVoteAdapter.voteTotalNums = voteTotalResult;
+                qnaBoardDetailVoteAdapter.notifyDataSetChanged();
+
+                tv_voteResultShow.setText(voteTotalResult + "");
+            } catch (NullPointerException e) {
+                Log.d(TAG, "getDataSuccess: voteResult null!!!");
+            }
         } else {
             gv_gridview.setVisibility(View.VISIBLE);
 
             for (int i = 0; i < getQnaVoteItem.getVoteImage().size(); i++) {
                 File imageFile = new File(getQnaVoteItem.getVoteImage().get(i));
                 Uri uriImage = Uri.fromFile(imageFile);
-                gridVoteItem = new GridVoteItem("", uriImage, false, getQnaVoteItem.getVoteResult().get(i));
+//                gridVoteItem = new GridVoteItem("", uriImage, false, getQnaVoteItem.getVoteResult().get(i));
                 gridVoteItemArrayList.add(gridVoteItem);
             }
 
             qnaBoardDetailImageAdapter = new QnaBoardDetailImageAdapter(this, gridVoteItemArrayList, this);
             gv_gridview.setAdapter(qnaBoardDetailImageAdapter);
 
-            for (int i=0; i<getQnaVoteItem.getVoteResult().size(); i++)
-                voteTotalResult += getQnaVoteItem.getVoteResult().get(i);
-
-            qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
             qnaBoardDetailImageAdapter.notifyDataSetChanged();
+            try {
+                for (int i=0; i<getQnaVoteItem.getVoteResult().size(); i++)
+                    voteTotalResult += getQnaVoteItem.getVoteResult().get(i);
 
-            tv_voteResultShow.setText(voteTotalResult+"");
+                qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
+                qnaBoardDetailImageAdapter.notifyDataSetChanged();
+
+                tv_voteResultShow.setText(voteTotalResult+"");
+            } catch (NullPointerException e) {
+                Log.d(TAG, "getDataSuccess: voteResult null!!!");
+            }
         }
     }
 
     @Override
     public void getDataFail(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

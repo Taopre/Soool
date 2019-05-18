@@ -15,6 +15,7 @@ import com.example.taopr.soool.Object.InfoOfSooolList;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.UserProfile;
+import com.example.taopr.soool.Presenter.Interface.MypageInter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

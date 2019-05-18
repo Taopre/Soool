@@ -1,5 +1,6 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
@@ -74,11 +75,11 @@ public interface APIService {
 
 //    @FormUrlEncoded
 //    @POST("/qnapost/QnaWrite.php")
-    @POST("/test/testopj.php")
+    @POST("/qnapost/QnaWrite.php")
     Call<ResponseBody> sendNoImageYesVoteText(@Body QnaItem qnaItem);
 
 //    @POST("/qnapost/QnaWrite.php")
-    @POST("/test/testopj.php")
+    @POST("/qnapost/QnaWrite.php")
     Call<ResponseBody> sendNoImageNoVote(@Body QnaItem qnaItem);
 
     @FormUrlEncoded
@@ -94,7 +95,7 @@ public interface APIService {
 
     @Multipart
 //    @POST("qnapost/QnaWrite.php")
-    @POST("/test/testopj.php")
+    @POST("/qnapost/QnaWrite.php")
     Call<ResponseBody> sendNoImageYesVoteImage(@Part("accountNo") int accountNo,
                                                @Part("qnaCate") int qnaCate,
                                                @Part("tag") RequestBody tag,
@@ -105,7 +106,7 @@ public interface APIService {
 
     @Multipart
 //    @POST("qnapost/QnaWrite.php")
-    @POST("/test/testopj.php")
+    @POST("/qnapost/QnaWrite.php")
     Call<ResponseBody> sendYesImageYesVoteText(@Part("accountNo") int accountNo,
                                                @Part("qnaCate") int qnaCate,
                                                @Part("tag") RequestBody tag,
@@ -117,7 +118,7 @@ public interface APIService {
 
     @Multipart
 //    @POST("qnapost/QnaWrite.php")
-    @POST("/test/testopj.php")
+    @POST("/qnapost/QnaWrite.php")
     Call<ResponseBody> sendYesImageYesVoteImage(@Part("accountNo") int accountNo,
                                                 @Part("qnaCate") int qnaCate,
                                                 @Part("tag") RequestBody tag,
@@ -136,11 +137,10 @@ public interface APIService {
     @FormUrlEncoded
     @POST("/accountManage/myinfo.php")
     Observable<UserProfile> getUserProfile(@Field("accountNo") int accountNo);
-}
 
     @Multipart
 //    @POST("qnapost/QnaWrite.php")
-    @POST("/test/testopj.php")
+    @POST("/qnapost/QnaWrite.php")
     Call<ResponseBody> sendYesImageNoVote(@Part("accountNo") int accountNo,
                                           @Part("qnaCate") int qnaCate,
                                           @Part("tag") RequestBody tag,
@@ -148,4 +148,28 @@ public interface APIService {
                                           @Part("content") RequestBody qnaContent,
                                           @Part MultipartBody.Part image,
                                           @Part("qnaVoteStatus") int qnaVoteStatus);
+
+    @Multipart
+//    @POST("qnapost/QnaWrite.php")
+    @POST("/qnapost/QnaUpdate.php")
+    Call<ResponseBody> sendYesImageNoVoteModify(@Part("postNo") int postNo,
+                                                @Part("accountNo") int accountNo,
+                                                @Part("qnaCate") int qnaCate,
+                                                @Part("tag") RequestBody tag,
+                                                @Part("title") RequestBody qnaTitle,
+                                                @Part("content") RequestBody qnaContent,
+                                                @Part MultipartBody.Part image);
+
+    @FormUrlEncoded
+    @POST("/qnapost/QnaUpdate.php")
+    Call<ResponseBody> sendNoImageNoVoteModify(@Field("postNo") int postNo,
+                                               @Field("accountNo") int accountNo,
+                                               @Field("qnaCate") int qnaCate,
+                                               @Field("tag") String tag,
+                                               @Field("title") String qnaTitle,
+                                               @Field("content") String qnaContent);
+
+    @FormUrlEncoded
+    @POST("/qnapost/.php")
+    Call<ResponseBody> deleteBoardWithPostNo(@Field("postNo") int postNo);
 }

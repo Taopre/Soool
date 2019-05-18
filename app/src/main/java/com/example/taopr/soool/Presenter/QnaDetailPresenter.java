@@ -97,12 +97,17 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                                 for (int j=0; j<Integer.parseInt(count); j++) {
                                                     voteList.add(returnData.getString("voteContent"+(j+1)));
                                                 }
+                                            }catch (NullPointerException e) {
+                                                Log.d(TAG, "exception null : "+e);
+                                            }
 
+                                            // 투표한 사람인지 아닌지 식별자 받아서 처리하자
+                                            try {
                                                 for (int j=0; j<Integer.parseInt(count); j++) {
                                                     voteResult.add(returnData.getInt("voteResult"+(j+1)));
                                                 }
                                             }catch (NullPointerException e) {
-                                                Log.d(TAG, "exception null : "+e);
+                                                voteResult = null;
                                             }
 
                                             receiveQnaVoteItem.setQnaVoteStatus(qnaVoteStatus);
@@ -116,6 +121,8 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                                     receiveQnaVoteItem.setVoteResult(voteResult);
                                                     for (int i=0; i<voteResult.size(); i++)
                                                         Log.d(TAG, "vote result value: " + voteResult.get(i));
+                                                } else if (voteResult.size() == 0) {
+                                                    receiveQnaVoteItem.setVoteResult(null);
                                                 }
                                             } else if (qnaVoteStatus == 1) {
                                                 receiveQnaVoteItem.setVoteImage(voteList);
@@ -127,6 +134,8 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                                     receiveQnaVoteItem.setVoteResult(voteResult);
                                                     for (int i = 0; i < voteResult.size(); i++)
                                                         Log.d(TAG, "vote result value: " + voteResult.get(i));
+                                                }else if (voteResult.size() == 0) {
+                                                    receiveQnaVoteItem.setVoteResult(null);
                                                 }
                                             }
 

@@ -64,19 +64,19 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         switch (view.getId()){
             case R.id.msgLo:
                 Toast.makeText(getContext(),"Message",Toast.LENGTH_SHORT).show();
-                tagArray.add("Message");
+                tagArray.add("숙취");
                 break;
             case R.id.emailLo:
                 Toast.makeText(getContext(),"Email",Toast.LENGTH_SHORT).show();
-                tagArray.add("Email");
+                tagArray.add("주사");
                 break;
             case R.id.cloudLo:
                 Toast.makeText(getContext(),"Cloud",Toast.LENGTH_SHORT).show();
-                tagArray.add("Cloud");
+                tagArray.add("주량");
                 break;
             case R.id.bluetoothLo:
                 Toast.makeText(getContext(),"Bluetooth",Toast.LENGTH_SHORT).show();
-                tagArray.add("Bluetooth");
+                tagArray.add("알쓰");
                 break;
             case R.id.okBtn:
                 bottomSheetDialoggListener.onPositiveClicked(tagArray);
