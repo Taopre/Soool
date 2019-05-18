@@ -3,10 +3,12 @@ package com.example.taopr.soool.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,9 +29,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class QnaActivity extends BaseActivity implements QnaPresenter.View,SwipeRefreshLayout.OnRefreshListener{
-
-   private FloatingActionButton fab_default;
+public class QnaActivity extends BaseActivity implements QnaPresenter.View,
+        SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView qnaRecycler;
     private LinearLayoutManager linearLayoutManager;
@@ -39,8 +40,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
     private String TAG = "큐앤에이_activity";
     private final int QNA_MOVE_TO_WRITE = 3200;
     private final int QNA_MOVE_TO_DETAIL = 3100;
-
-
+    
     @BindView(R.id.qnaSwipeRefreshLayout)
     SwipeRefreshLayout qnaSwipeRefreshLayout;
 
@@ -63,6 +63,17 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
         qnaPresenter.setView(this);
         qnaPresenter.loadData();
 
+
+
+        qnaSwipeRefreshLayout.setOnRefreshListener(this);
+
+        // 새로고침 아이콘의 색이 순서대로 변함
+        // TODO: 색상 회의 적용
+        qnaSwipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this,R.color.greenMain),
+                ContextCompat.getColor(this,R.color.black),
+                ContextCompat.getColor(this,R.color.grayMain),
+                ContextCompat.getColor(this,R.color.sunflower_yellow));
     }
 
     // 리사이클러뷰 클릭 이벤트
@@ -81,21 +92,18 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
         });
     }
 
-
     @OnClick({R.id.fab_default})
     void OnClickButton(View view){
+        Log.i(TAG, "OnClickButton: ");
         switch (view.getId()){
             case R.id.fab_default:
                 Toast.makeText(this, "AAAA", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(QnaActivity.this, QnaBoardActivity.class);
                 intent.putExtra("actionKind", 0);
                 startActivityForResult(intent, QNA_MOVE_TO_WRITE);
-               // qnaBoardItems = qnaAdapter.deleteItem(0);
-                //qnaBoardItems = qnaAdapter.addItem(qnaBoardItems.get());
                 break;
         }
     }
-
 
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems) {
@@ -105,11 +113,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
         qnaAdapter = new QnaAdapter(QnaActivity.this,this.qnaBoardItems,this);
 
         qnaRecycler.setAdapter(qnaAdapter);
-        Log.i(TAG, "getDataSuccess: 리스트 수 :" + qnaBoardItems.size());
-        for(int a=0; a<this.qnaBoardItems.size(); a++){
-            Log.i(TAG, "getDataSuccess: 리스트 값 " +a+ this.qnaBoardItems.get(a).getTitle() +"  "
-                    + this.qnaBoardItems.get(a).getAccountNo());
-        }
+
     }
 
     @Override
@@ -140,7 +144,6 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
 
             // 리스트 수정, 삭제
@@ -149,10 +152,10 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
             // 추가 --> actionKind = 0
             // 수정 --> actionKind = 1
             // 삭제 --> actionKind = 2
+
             QnaBoardItem qnaBoardItem = null;
             if (data != null && data.getParcelableExtra("qnaBoardItem") != null) {
                 qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
-
             }
 
             int qnaListPosition = data.getIntExtra("qnaListPosition",0);
@@ -162,25 +165,21 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
                 case 0:
                     qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
                 case 1:
-                    //qnaAdapter.notifyItemChanged(qnaListPosition,qnaBoardItem);
-                    //qnaBoardItems.set(qnaListPosition,qnaBoardItem);
-                    Log.d(TAG, "onActivityResult: 수정"+qnaBoardItem.getTag());
                     qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
                     break;
                 case 2:
-                    //qnaAdapter.notifyItemRemoved(qnaListPosition);
                     qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
                     break;
             }
-
         }
     }
 
+    // 새로고침 시 서버에서 데이터를 새로 가져온다
+    // 서버에서 데이터를 가져온 후 setRefreshing(false)을 통해 새로고침 아이콘을 사라지게 한다
+
     @Override
     public void onRefresh() {
-
-        qnaSwipeRefreshLayout.setRefreshing(true);
-        qnaPresenter.loadData();
+       qnaPresenter.loadData();
     }
 }
 
