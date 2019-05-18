@@ -50,6 +50,7 @@ import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.TagDialog;
+import com.example.taopr.soool.ExifUtils;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
@@ -74,6 +75,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class QnaBoardActivity extends AppCompatActivity implements
@@ -81,9 +83,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     private static final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
-    private static final int PICK_FROM_CAMERA = 0;
-    private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_iMAGE = 2;
+    private final int QNA_MOVE_TO_DETAIL= 3100;
+    private final int QNA_MOVE_TO_WRITE = 3200;
 
 //    Spinner sp_qnaboardTag;
     TextView tv_qnaboardBeforeTag;
@@ -120,15 +121,18 @@ public class QnaBoardActivity extends AppCompatActivity implements
     DrawUpTagAdapter drawUpTagAdapter;
     QnaBoardPresenter qnaBoardPresenter;
     QnaBoardItem qnaBoardItem = new QnaBoardItem();
+    QnaBoardItem receiveQnaBoardItem = new QnaBoardItem();
     QnaVoteItem qnaVoteItem = new QnaVoteItem();
-    QnaItem qnaItem;
+    QnaItem qnaItem = new QnaItem();
     GridVoteItem gridVoteItem;
+    BottomSheetDialog bottomSheetDialog;
 
     Uri image;
     String title = "", content = "", tag = "", imgPath, imgName;
     static String UploadImgPath;
-    String boardImagePath;
-    int voteFlag = 1;
+    String[] tagData = new String[0];
+    String boardImagePath, accountNick;
+    int voteFlag = 1, actionKind = 9999, qnaListPosition;
     boolean boardImageSelect = false, reSelectVoteImage = false;
 
     @Override
@@ -144,55 +148,47 @@ public class QnaBoardActivity extends AppCompatActivity implements
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNo = loginSessionItem.getAccountNo();
+        accountNick = loginSessionItem.getAccountNick();
 
-        // 아래의 try / catch 문은 res/xml에 있는 스피너 메뉴값을 파싱하기 위해 가져다 쓴 부분입니다.
-        /*try{
-            // custom_list.xml 을 가져와 XmlPullParser 에 넣는다.
-            XmlPullParser customList = getResources().getXml(R.xml.drawup_tag);
-
-            // 파싱한 xml 이 END_DOCUMENT(종료 태그)가 나올때 까지 반복한다.
-            while(customList.getEventType()!=XmlPullParser.END_DOCUMENT){
-                // 태그의 첫번째 속성일 때,
-                if(customList.getEventType()==XmlPullParser.START_TAG){
-                    // 이름이 "custom" 일때, 첫번째 속성값을 ArrayList에 저장
-                    if(customList.getName().equals("custom")){
-                        tagArray.add(customList.getAttributeValue(0));
-                    }
-
-                }
-                // 다음 태그로 이동
-                customList.next();
-            }
-        }catch(XmlPullParserException e){
-            e.printStackTrace();
-        }catch(IOException e){
-            e.printStackTrace();
-        }*/
-
-//        drawUpTagAdapter = new DrawUpTagAdapter(this, tagArray);
-//        sp_qnaboardTag.setAdapter(drawUpTagAdapter);
-
-        // 태그값들 인텐트 받는 부분
         Intent intent = getIntent();
 
         if (intent != null) {
-//            if (intent.getStringArrayListExtra("tagList") != null) {
-//                tv_qnaboardBeforeTag.setVisibility(View.GONE);
-//                h_scrollView.setVisibility(View.VISIBLE);
-//
-//                arrayList = intent.getStringArrayListExtra("tagList");
-//
-//                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, arrayList);
-//                rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
-//                rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-//
-//                for (int i=0; i<arrayList.size(); i++) {
-//                    if (i == arrayList.size()-1)
-//                        tag += arrayList.get(i);
-//                    else if (i < arrayList.size())
-//                        tag += arrayList.get(i) + "@##@";
-//                }
-//            }
+            actionKind = intent.getIntExtra("actionKind", 9999);
+            qnaListPosition = intent.getIntExtra("qnaListPosition", 9999);
+            if (actionKind == 1) {
+                receiveQnaBoardItem = intent.getParcelableExtra("QnaBoardItem");
+
+                tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                h_scrollView.setVisibility(View.VISIBLE);
+                Log.d(TAG, "onCreate 태그값: "+receiveQnaBoardItem.getTag());
+                if (receiveQnaBoardItem.getTag().contains("@##@")) {
+                    tagData = receiveQnaBoardItem.getTag().split("@##@");
+                    for (int i = 0; i < tagData.length; i++) {
+                        tagArray.add(tagData[i]);
+                    }
+                }
+                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray);
+                rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
+                rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                et_qnaboardTitle.setText(receiveQnaBoardItem.getTitle());
+                et_qnaboardContent.setText(receiveQnaBoardItem.getContent());
+
+                try {
+                    Log.d(TAG, "onCreate: 이미지?? "+receiveQnaBoardItem.getImage());
+                    File file = new File(receiveQnaBoardItem.getImage());
+                    Uri test = Uri.fromFile(file);
+                    Glide.with(this)
+                            .load(test)
+                            .override(100, 100)
+                            .centerCrop()
+                            .into(iv_qnaboardImage);
+                }catch (NullPointerException e){
+                    Log.d(TAG, "이미지 없음");
+                }
+
+                btn_qnaboardVoteBtn.setVisibility(View.GONE);
+            }
         }
 
         editModelArrayList = populateList();
@@ -329,25 +325,17 @@ public class QnaBoardActivity extends AppCompatActivity implements
         Button btn_drawupEnroll = findViewById(R.id.drawupEnroll);
         Button btn_drawupDelete = findViewById(R.id.drawupDelete);
 
+        if (receiveQnaBoardItem != null)
+            if (accountNo == receiveQnaBoardItem.getAccountNo())
+                btn_drawupDelete.setVisibility(View.VISIBLE);
+
+
         ib_drawupBack.setOnClickListener(this);
         btn_drawupEnroll.setOnClickListener(this);
         btn_drawupDelete.setOnClickListener(this);
 
         return true;
     }
-
-//    //스피너 리스너 부분
-//    @Override
-//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        Toast.makeText(this, "선택한 태그 : "+tagArray.get(position), Toast.LENGTH_SHORT).show();
-//        tag = tagArray.get(position).toString();
-//        Log.d(TAG, "onItemSelected: "+tag);
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> parent) {
-//
-//    }
 
     // 투표 기능 고르는 부분
     @Override
@@ -433,7 +421,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 btn_qnaboardDeleteBtn.setVisibility(View.GONE);
 
                 UploadImgPath = null;
-                qnaBoardItem.setImage(UploadImgPath);
+                qnaItem.setImage(UploadImgPath);
 
                 break;
             case R.id.drawupBack:
@@ -461,181 +449,202 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 // 아직 적용하지 않은 이유는 객체의 데이터가 변경되야하므로 팀원들과 상의후에 변경하기 위해 아직 주석에가 남겨둡니다.
                 // 객체 tag 변수를 ArrayList<String>으로 변경해야함을 회의해야한다.
 
+                if (actionKind == 0) {
+                    if (tag.equals(null)) {
+                        Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
+                    } else if (et_qnaboardTitle.getText().length() == 0) {
+                        Log.d(TAG, "onClick: 제목을 입력해주세요.");
+                    } else if (et_qnaboardContent.getText().length() == 0) {
+                        Log.d(TAG, "onClick: 내용을 입력해주세요.");
+                    } else if (boardImagePath == null) {
 
-                if(tag.equals(null)) {
-                    Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
-                }
-                else if(et_qnaboardTitle.getText().length() == 0) {
-                    Log.d(TAG, "onClick: 제목을 입력해주세요.");
-                }
-                else if(et_qnaboardContent.getText().length() == 0) {
-                    Log.d(TAG, "onClick: 내용을 입력해주세요.");
-                }
-                else if(boardImagePath == null) {
+                        // 1. 투표가 표함되는지 안되는지 선 체크
+                        // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+                        // 3. 투표가 없다면
+                        // 이 세가지를 구별해야 할듯
 
-                    // 1. 투표가 표함되는지 안되는지 선 체크
-                    // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
-                    // 3. 투표가 없다면
-                    // 이 세가지를 구별해야 할듯
+                        // 투표가 존재한다면 투표객체도 넘겨주어야한다.
+                        // 투표 경우에 따른 예외처리 해줘야 한다.
 
-                    // 투표가 존재한다면 투표객체도 넘겨주어야한다.
-                    // 투표 경우에 따른 예외처리 해줘야 한다.
+                        if (voteFlag == 0) {
 
-                    if (voteFlag == 0) {
+                            // 투표가 존재하는 경우.
 
-                        // 투표가 존재하는 경우.
+//                            qnaBoardItem.setQnaCate(0);
+                            if (voteSelect == 0) {
 
-                        qnaBoardItem.setQnaCate(0);
-                        if (voteSelect == 0) {
+                                // 텍스트 투표 인 경우.
 
-                            // 텍스트 투표 인 경우.
+//                                qnaBoardItem.setTag(tag);
+//                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
 
-                            qnaBoardItem.setTag(tag);
-                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                                for (int i = 0; i < editModelArrayList.size(); i++) {
 
-                            for (int i=0; i<editModelArrayList.size(); i++) {
+                                    // 텍스트 투표 예외처리 부분.
 
-                                // 텍스트 투표 예외처리 부분.
-
-                                if(editModelArrayList.get(i).getEditTextValue().length() == 0){
-                                    Log.d(TAG, "onClick: "+ i+1 +"번째 내용을 입력해주세요.");
+                                    if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
+                                        Log.d(TAG, "onClick: " + i + 1 + "번째 내용을 입력해주세요.");
+                                    }
+                                    voteText.add(editModelArrayList.get(i).getEditTextValue());
                                 }
-                                voteText.add(editModelArrayList.get(i).getEditTextValue());
+
+//                                if (voteText != null)
+//                                    qnaVoteItem.setVoteText(voteText);
+//
+//                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), voteText, voteSelect);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaItem);
+
+                            } else if (voteSelect == 1) {
+
+                                // 이미지 투표 인 경우.
+
+//                                qnaBoardItem.setTag(tag);
+//                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+
+                                // 이미지 리싸이클러뷰에서 보여지면 예외처리해야함
+//                                if (voteImage.size() == 0) {
+//                                    Log.d(TAG, "onClick: 이미지를 선택해주세요");
+//                                } else {
+//                                    qnaVoteItem.setVoteImage(voteImage);
+//                                }
+//                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), voteSelect, voteImage);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaItem);
+
                             }
+                        } else if (voteFlag == 1) {
 
-                            if (voteText != null)
-                                qnaVoteItem.setVoteText(voteText);
+                            // 투표가 존재하지 않는 경우.
 
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
+                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
+
+//                            qnaBoardItem.setTag(tag);
+//                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//
+//                            qnaBoardItem.setQnaCate(1);
+//
+//                            qnaVoteItem.setQnaVoteStatus(voteSelect);
 
                             qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
-                                    et_qnaboardContent.getText().toString(), voteText, voteSelect);
+                                    et_qnaboardContent.getText().toString());
 
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
-
-                        }else if (voteSelect == 1){
-
-                            // 이미지 투표 인 경우.
-
-                            qnaBoardItem.setTag(tag);
-                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
-
-                            // 이미지 리싸이클러뷰에서 보여지면 예외처리해야함
-                            if (voteImage.size() == 0) {
-                                Log.d(TAG, "onClick: 이미지를 선택해주세요");
-                            }
-                            else {
-                                qnaVoteItem.setVoteImage(voteImage);
-                            }
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
-
-                            qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
-                                    et_qnaboardContent.getText().toString(), voteSelect, voteImage);
-
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+                            qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
                         }
-                    }else if (voteFlag == 1) {
 
-                        // 투표가 존재하지 않는 경우.
+                    } else {
+                        // 1. 투표가 표함되는지 안되는지 선 체크
+                        // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
+                        // 3. 투표가 없다면
+                        // 이 세가지를 구별해야 할듯?
 
-                        Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                                + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
+                        Log.d(TAG, "onClick: 찍혀라!!!!!!!!!!!!!!1 " + voteFlag + voteSelect);
 
-                        qnaBoardItem.setTag(tag);
-                        qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                        qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                        if (voteFlag == 0) {
+//                            qnaBoardItem.setQnaCate(0);
+                            if (voteSelect == 0) {
+//                                qnaBoardItem.setTag(tag);
+//                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//                                qnaBoardItem.setImage(boardImagePath);
 
-                        qnaBoardItem.setQnaCate(1);
+                                for (int i = 0; i < editModelArrayList.size(); i++) {
 
-                        qnaVoteItem.setQnaVoteStatus(voteSelect);
+                                    // 텍스트 투표 예외처리 부분.
 
-                        qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
-                                et_qnaboardContent.getText().toString());
-
-                        qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
-
-                    }
-
-                }else {
-                    // 1. 투표가 표함되는지 안되는지 선 체크
-                    // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
-                    // 3. 투표가 없다면
-                    // 이 세가지를 구별해야 할듯?
-
-                    Log.d(TAG, "onClick: 찍혀라!!!!!!!!!!!!!!1 "+voteFlag+voteSelect);
-
-                    if (voteFlag == 0) {
-                        qnaBoardItem.setQnaCate(0);
-                        if (voteSelect == 0) {
-                            qnaBoardItem.setTag(tag);
-                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
-                            qnaBoardItem.setImage(boardImagePath);
-
-                            for (int i=0; i<editModelArrayList.size(); i++) {
-
-                                // 텍스트 투표 예외처리 부분.
-
-                                if(editModelArrayList.get(i).getEditTextValue().length() == 0){
-                                    Log.d(TAG, "onClick: "+ i+1 +"번째 내용을 입력해주세요.");
+                                    if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
+                                        Log.d(TAG, "onClick: " + i + 1 + "번째 내용을 입력해주세요.");
+                                    }
+                                    voteText.add(editModelArrayList.get(i).getEditTextValue());
                                 }
-                                voteText.add(editModelArrayList.get(i).getEditTextValue());
+
+//                                if (voteText != null)
+//                                    qnaVoteItem.setVoteText(voteText);
+//
+//                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), boardImagePath, voteText, voteSelect);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaItem);
+
+                            } else if (voteSelect == 1) {
+//                                qnaBoardItem.setTag(tag);
+//                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//                                qnaBoardItem.setImage(boardImagePath);
+
+                                // 이미지 리싸이클러뷰에서 보여지면 예외처리해야함
+//                                if (voteImage.size() == 0) {
+//                                    Log.d(TAG, "onClick: 이미지를 선택해주세요");
+//                                } else {
+//                                    qnaVoteItem.setVoteImage(voteImage);
+//                                }
+//
+//                                qnaVoteItem.setQnaVoteStatus(voteSelect);
+
+                                qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
+                                        et_qnaboardContent.getText().toString(), boardImagePath, voteSelect, voteImage);
+
+                                qnaBoardPresenter.enrollmentBoardReq(qnaItem);
+
                             }
+                        } else if (voteFlag == 1) {
+                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
+                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + boardImagePath);
 
-                            if (voteText != null)
-                                qnaVoteItem.setVoteText(voteText);
-
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
+//                            qnaBoardItem.setTag(tag);
+//                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+//                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+//                            qnaBoardItem.setImage(boardImagePath);
+//
+//                            qnaBoardItem.setQnaCate(1);
+//
+//                            qnaVoteItem.setQnaVoteStatus(voteSelect);
 
                             qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
-                                    et_qnaboardContent.getText().toString(), boardImagePath, voteText, voteSelect);
+                                    et_qnaboardContent.getText().toString(), boardImagePath);
 
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
-
-                        }else if (voteSelect == 1){
-                            qnaBoardItem.setTag(tag);
-                            qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                            qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
-                            qnaBoardItem.setImage(boardImagePath);
-
-                            // 이미지 리싸이클러뷰에서 보여지면 예외처리해야함
-                            if (voteImage.size() == 0) {
-                                Log.d(TAG, "onClick: 이미지를 선택해주세요");
-                            }
-                            else {
-                                qnaVoteItem.setVoteImage(voteImage);
-                            }
-
-                            qnaVoteItem.setQnaVoteStatus(voteSelect);
-
-                            qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
-                                    et_qnaboardContent.getText().toString(), boardImagePath, voteSelect, voteImage);
-
-                            qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
+                            qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
                         }
-                    }else if (voteFlag == 1) {
-                        Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                                + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + boardImagePath);
-
-                        qnaBoardItem.setTag(tag);
-                        qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-                        qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
-                        qnaBoardItem.setImage(boardImagePath);
-
-                        qnaBoardItem.setQnaCate(1);
-
-                        qnaVoteItem.setQnaVoteStatus(voteSelect);
-
-                        qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
-                                et_qnaboardContent.getText().toString(), boardImagePath);
-
-                        qnaBoardPresenter.enrollmentBoardReq(qnaBoardItem, qnaVoteItem, qnaItem);
-
                     }
+                } else if (actionKind == 1) {
+                    // receiveQnaBoardItem 수정되면 모델로 넘겨서 서버에 저장
+                    if (tag.equals(null)) {
+                        Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
+                    } else if (et_qnaboardTitle.getText().length() == 0) {
+                        Log.d(TAG, "onClick: 제목을 입력해주세요.");
+                    } else if (et_qnaboardContent.getText().length() == 0) {
+                        Log.d(TAG, "onClick: 내용을 입력해주세요.");
+                    }
+
+                    try {
+                        receiveQnaBoardItem.setTag(tag);
+                        receiveQnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                        receiveQnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+                        receiveQnaBoardItem.setImage(boardImagePath);
+
+                        qnaBoardPresenter.modifyBoardReq(receiveQnaBoardItem);
+                    }catch (NullPointerException e) {
+                        receiveQnaBoardItem.setTag(tag);
+                        receiveQnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
+                        receiveQnaBoardItem.setContent(et_qnaboardContent.getText().toString());
+
+                        qnaBoardPresenter.modifyBoardReq(receiveQnaBoardItem);
+                    }
+
                 }
 
                 break;
@@ -659,39 +668,74 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 qnaBoardVoteAdapter.notifyDataSetChanged();
                 break;
             case R.id.qnaboardAddTag:
-                BottomSheetDialog bottomSheetDialog = BottomSheetDialog.getInstance();
-                bottomSheetDialog.setDialogListener(new BottomSheetDialog.BottomSheetDialoggListener() {
-                    @Override
-                    public void onPositiveClicked(ArrayList<String> arrayList) {
-                        for (int i=0; i<arrayList.size(); i++) {
-                            Log.d("main!!!!!!!!!!!", "onPositiveClicked: "+arrayList.get(i));
+                if (actionKind == 0) {
+                    bottomSheetDialog = BottomSheetDialog.getInstance();
+                    bottomSheetDialog.setDialogListener(new BottomSheetDialog.BottomSheetDialoggListener() {
+                        @Override
+                        public void onPositiveClicked(ArrayList<String> arrayList) {
+                            for (int i = 0; i < arrayList.size(); i++) {
+                                Log.d("main!!!!!!!!!!!", "onPositiveClicked: " + arrayList.get(i));
+                            }
+
+                            tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                            h_scrollView.setVisibility(View.VISIBLE);
+
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList);
+                            rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
+                            rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                            for (int i = 0; i < arrayList.size(); i++) {
+                                if (i == arrayList.size() - 1)
+                                    tag += arrayList.get(i);
+                                else if (i < arrayList.size())
+                                    tag += arrayList.get(i) + "@##@";
+                            }
                         }
 
-                        tv_qnaboardBeforeTag.setVisibility(View.GONE);
-                        h_scrollView.setVisibility(View.VISIBLE);
+                        @Override
+                        public void onNegativeClicked() {
 
-                        qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList);
-                        rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
-                        rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-
-                        for (int i=0; i<arrayList.size(); i++) {
-                            if (i == arrayList.size()-1)
-                                tag += arrayList.get(i);
-                            else if (i < arrayList.size())
-                                tag += arrayList.get(i) + "@##@";
                         }
-                    }
+                    });
+                    bottomSheetDialog.show(getSupportFragmentManager(), "bottomSheet");
+                } else {
+                    bottomSheetDialog = BottomSheetDialog.getInstance();
+                    bottomSheetDialog.tagArray = tagArray;
+                    bottomSheetDialog.setDialogListener(new BottomSheetDialog.BottomSheetDialoggListener() {
+                        @Override
+                        public void onPositiveClicked(ArrayList<String> arrayList) {
+                            for (int i = 0; i < arrayList.size(); i++) {
+                                Log.d("main!!!!!!!!!!!", "onPositiveClicked: " + arrayList.get(i));
+                            }
 
-                    @Override
-                    public void onNegativeClicked() {
+                            tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                            h_scrollView.setVisibility(View.VISIBLE);
 
-                    }
-                });
-                bottomSheetDialog.show(getSupportFragmentManager(),"bottomSheet");
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList);
+                            rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
+                            rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                            for (int i = 0; i < arrayList.size(); i++) {
+                                if (i == arrayList.size() - 1)
+                                    tag += arrayList.get(i);
+                                else if (i < arrayList.size())
+                                    tag += arrayList.get(i) + "@##@";
+                            }
+                        }
+
+                        @Override
+                        public void onNegativeClicked() {
+
+                        }
+                    });
+                    bottomSheetDialog.show(getSupportFragmentManager(), "bottomSheet");
+                }
 
                 break;
             case R.id.drawupDelete:
-
+                // 삭제기능
+                Log.d(TAG, "삭제 버튼 -> "+receiveQnaBoardItem.getPostNo());
+                qnaBoardPresenter.deleteBoardReq(receiveQnaBoardItem.getPostNo());
                 break;
         }
     }
@@ -705,63 +749,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
         switch(requestCode)
         {
-            case PICK_FROM_ALBUM:
-            {
-                // 스택오버 플로우에서 얻은 이미지 얻는 소스 부분이므로
-                // 다시 한번 도전해보자.
-
-//                try {
-//                    final Uri imageUri = data.getData();
-//                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-//                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-//                    image_view.setImageBitmap(selectedImage);
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(PostImage.this, "Something went wrong", Toast.LENGTH_LONG).show();
-//                }
-
-                // 이후의 처리가 카메라와 같으므로 일단  break없이 진행합니다.
-                // 실제 코드에서는 좀더 합리적인 방법을 선택하시기 바랍니다.
-                String name_Str = getImageNameToUri(data.getData());
-                mImageCaptureUri = data.getData();
-                image = mImageCaptureUri;
-
-                //절대경로 획득**
-                Cursor c = getContentResolver().query(Uri.parse(mImageCaptureUri.toString()), null, null, null, null);
-                c.moveToNext();
-                String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
-
-                //이미지 데이터를 비트맵으로 받아옴
-                Bitmap image_bitmap = null;
-                try {
-                    image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                ///리사이징
-                int height = image_bitmap.getHeight();
-                int width = image_bitmap.getWidth();
-
-                Bitmap src = BitmapFactory.decodeFile(absolutePath);
-                Bitmap resized = Bitmap.createScaledBitmap( src, width/4, height/4, true );
-
-                saveBitmaptoJpeg(resized, "soool", name_Str);
-                ////리사이징
-
-                iv_qnaboardImage.setVisibility(View.VISIBLE);
-                btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
-//                iv_drawupImage.setImageURI(mImageCaptureUri);
-
-                if(!UploadImgPath.equals(null)) {
-                    boardImagePath = UploadImgPath;
-                    File file = new File(boardImagePath);
-                    Uri test = Uri.fromFile(file);
-                    iv_qnaboardImage.setImageURI(test);
-                }
-
-                Log.d("SmartWheel",mImageCaptureUri.getPath().toString());
-            }
             case Define.ALBUM_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
                     // path = imageData.getStringArrayListExtra(Define.INTENT_PATH);
@@ -772,51 +759,30 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     if (boardImageSelect == false) {
                         if (reSelectVoteImage == false) {
 
-                            for (int i=1; i<path.size()+1; i++) {
+                            for (int i=0; i<path.size(); i++) {
                                 // path안의 값들을 이름 절대경로 뽑아서 저장하자
 
-                                String nameStr = getImageNameToUri(path.get(i-1));
-                                //절대경로 획득**
-                                Cursor c = getContentResolver().query(Uri.parse(path.get(i-1).toString()), null, null, null, null);
-                                c.moveToNext();
-                                String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
+                                Uri imageUri = path.get(i);
+                                String[] filePath = { MediaStore.Images.Media.DATA };
+                                Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
+                                cursor.moveToFirst();
+                                String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                                //이미지 데이터를 비트맵으로 받아옴
-                                Bitmap image_bitmap = null;
-                                try {
-                                    image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path.get(i-1));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                                Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);
+                                bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
 
-                                ///리사이징
-                                int height = image_bitmap.getHeight();
-                                int width = image_bitmap.getWidth();
+                                voteImage.add(imagePath);
+                                File file = new File(voteImage.get(i));
+                                Uri test = Uri.fromFile(file);
 
-                                Bitmap src = BitmapFactory.decodeFile(absolutePath);
-                                Bitmap resized = Bitmap.createScaledBitmap( src, width/4, height/4, true );
-
-                                saveBitmaptoJpeg(resized, "soool", nameStr);
-
-
-                                if(!UploadImgPath.equals(null)) {
-                                    voteImage.add(UploadImgPath);
-                                    UploadImgPath = "";
-                                    File file = new File(voteImage.get(i-1));
-                                    Uri test = Uri.fromFile(file);
-
-                                    realPath.add(test);
-                                    number.add(i);
-
-                                    gridVoteItem = new GridVoteItem("", test);
-                                    gridVoteItemArrayList.add(gridVoteItem);
-                                }
+                                gridVoteItem = new GridVoteItem("", test);
+                                gridVoteItemArrayList.add(gridVoteItem);
                             }
 
                             if (path.size() < 6) {
-                                number.add(path.size()+1);
-                                Uri uriTest = Uri.parse("aaaa");
-                                realPath.add(uriTest);
+                                Uri uriTest = Uri.parse("");
 
                                 gridVoteItem = new GridVoteItem("항목추가", uriTest);
                                 gridVoteItemArrayList.add(gridVoteItem);
@@ -826,49 +792,28 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             gridView.setAdapter(voteImageAdapter);
                         } else {
                             for (int i = 0; i < path.size(); i++) {
-                                String nameStr = getImageNameToUri(path.get(i));
-                                //절대경로 획득**
-                                Cursor c = getContentResolver().query(Uri.parse(path.get(i).toString()), null, null, null, null);
-                                c.moveToNext();
-                                String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
+                                Uri imageUri = path.get(i);
+                                String[] filePath = { MediaStore.Images.Media.DATA };
+                                Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
+                                cursor.moveToFirst();
+                                String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                                //이미지 데이터를 비트맵으로 받아옴
-                                Bitmap image_bitmap = null;
-                                try {
-                                    image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path.get(i));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                                Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);
+                                bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
 
-                                ///리사이징
-                                int height = image_bitmap.getHeight();
-                                int width = image_bitmap.getWidth();
+                                voteImage.add(imagePath);
 
-                                Bitmap src = BitmapFactory.decodeFile(absolutePath);
-                                Bitmap resized = Bitmap.createScaledBitmap(src, width / 4, height / 4, true);
+                                File file = new File(voteImage.get(voteImage.size() - 1));
+                                Uri test = Uri.fromFile(file);
 
-                                saveBitmaptoJpeg(resized, "soool", nameStr);
-
-
-                                if (!UploadImgPath.equals(null)) {
-                                    voteImage.add(UploadImgPath);
-                                    UploadImgPath = "";
-
-                                    File file = new File(voteImage.get(voteImage.size() - 1));
-                                    Uri test = Uri.fromFile(file);
-
-                                    realPath.add(test);
-                                    number.add(voteImage.size());
-
-                                    gridVoteItem = new GridVoteItem("a", test);
-                                    gridVoteItemArrayList.add(gridVoteItem);
-                                }
+                                gridVoteItem = new GridVoteItem("a", test);
+                                gridVoteItemArrayList.add(gridVoteItem);
                             }
 
                             if (voteImage.size() < 6) {
-                                number.add(voteImage.size()+1);
                                 Uri uriTest = Uri.parse("");
-                                realPath.add(uriTest);
                                 gridVoteItem = new GridVoteItem("항목추가", uriTest);
                                 gridVoteItemArrayList.add(gridVoteItem);
                             }
@@ -885,45 +830,31 @@ public class QnaBoardActivity extends AppCompatActivity implements
 //                        gridView.setAdapter(voteImageAdapter);
 
                     } else {
-                        String name_Str = getImageNameToUri(path.get(0));
+                        Uri imageUri = path.get(0);
+                        String[] filePath = { MediaStore.Images.Media.DATA };
+                        Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
+                        cursor.moveToFirst();
+                        String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                        //절대경로 획득**
-                        Cursor c = getContentResolver().query(Uri.parse(path.get(0).toString()), null, null, null, null);
-                        c.moveToNext();
-                        String absolutePath = c.getString(c.getColumnIndex(MediaStore.MediaColumns.DATA));
-
-                        //이미지 데이터를 비트맵으로 받아옴
-                        Bitmap image_bitmap = null;
-                        try {
-                            image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path.get(0));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        ///리사이징
-                        int height = image_bitmap.getHeight();
-                        int width = image_bitmap.getWidth();
-
-                        Bitmap src = BitmapFactory.decodeFile(absolutePath);
-                        Bitmap resized = Bitmap.createScaledBitmap( src, width/4, height/4, true );
-
-                        saveBitmaptoJpeg(resized, "soool", name_Str);
-                        ////리사이징
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                        Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);
+                        bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
 
                         iv_qnaboardImage.setVisibility(View.VISIBLE);
                         btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
-//                iv_drawupImage.setImageURI(mImageCaptureUri);
 
-                        if(!UploadImgPath.equals(null)) {
-                            boardImagePath = UploadImgPath;
-                            File file = new File(boardImagePath);
-                            Uri test = Uri.fromFile(file);
-                            Glide.with(this)
-                                    .load(test)
-                                    .override(100, 100)
-                                    .centerCrop()
-                                    .into(iv_qnaboardImage);
-                        }
+                        boardImagePath = imagePath;
+                        File file = new File(boardImagePath);
+                        Uri test = Uri.fromFile(file);
+                        Glide.with(this)
+                                .load(test)
+                                .override(100, 100)
+                                .centerCrop()
+                                .into(iv_qnaboardImage);
+
+//                        image.setImageBitmap(bitmap);
+                        cursor.close();
 
                         boardImageSelect = false;
                     }
@@ -932,108 +863,138 @@ public class QnaBoardActivity extends AppCompatActivity implements
         }
     }
 
-    /////   Uri 에서 파일명을 추출하는 로직
-    public String getImageNameToUri(Uri data)
-    {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(data, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        cursor.moveToFirst();
-
-        imgPath = cursor.getString(column_index);
-        imgName = imgPath.substring(imgPath.lastIndexOf("/") + 1);
-
-        return imgName;
-    }
-
-    //비트맵을 jpg로
-    public static void saveBitmaptoJpeg(Bitmap bitmap,String folder, String name){
-        String ex_storage = Environment.getExternalStorageDirectory().getAbsolutePath();
-        // Get Absolute Path in External Sdcard
-        String foler_name = "/"+folder+"/";
-        String file_name = name;
-        String string_path = ex_storage+foler_name;
-        UploadImgPath = string_path+file_name;
-
-        File file_path;
-        try{
-            file_path = new File(string_path);
-            if(!file_path.isDirectory()){
-                file_path.mkdirs();
-            }
-            FileOutputStream out = new FileOutputStream(string_path+file_name);
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.close();
-
-        }catch(FileNotFoundException exception){
-            Log.e("FileNotFoundException", exception.getMessage());
-        }catch(IOException exception){
-            Log.e("IOException", exception.getMessage());
-        }
-    }
     // Model에서 서버로 부터 받은 응답 값을 받아서 어떻게 처리할 지 결정하는 메서드.
     @Override
-    public void enrollmentBoardRespGoToView(int response, int vote, int voteStatus, QnaItem qnaItemResponse) {
-        Log.d(TAG, "상세보기 전 : "+qnaItemResponse.getTag());
+    public void enrollmentBoardRespGoToView(int response, QnaBoardItem qnaBoardItemResponse) {
         switch (response) {
 
             /*
              response = 1 -> 인서트 성공
-             response = 2 -> 인서트 실패
-             response = 3 -> 콜백 실패
-             response = 4 -> 전송 실패
-
-             vote = 0 -> 투표있음
-             vote = 1 -> 투표없음
-
-             voteStatus = 0 -> 텍스트
-             voteStatus = 1 -> 이미지
+             response = 2 -> 콜백 실패
+             response = 3 -> 전송 실패
             */
 
             case 1:
                 Toast.makeText(this, "게시물 작성 성공", Toast.LENGTH_SHORT).show();
 
-                if (vote == 0) {
-                    if (voteStatus == 0) {
-                        Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-                        intent.putExtra("QnaItem", qnaItemResponse);
-                        intent.putExtra("fromActivity", 1);
-                        intent.putExtra("voteStatus", 0);
-                        intent.putExtra("vote", 0);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                    else if (voteStatus == 1) {
-                        Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-                        intent.putExtra("QnaItem", qnaItemResponse);
-                        intent.putExtra("fromActivity", 1);
-                        intent.putExtra("voteStatus", 1);
-                        intent.putExtra("vote", 0);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                }
-                else if (vote == 1) {
-                    Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-                    intent.putExtra("QnaItem", qnaItemResponse);
-                    intent.putExtra("fromActivity", 1);
-                    intent.putExtra("vote", 1);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent();
+                intent.putExtra("QnaBoardItem", qnaBoardItemResponse);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                setResult(RESULT_OK);
+                finish();
                 break;
             case 2:
-                Toast.makeText(this, "인서트 실패 프론트 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
-                Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
-                // 다시 전송되도록 작성하자.
-                break;
-            case 4:
                 Toast.makeText(this, "전송 실패 와이파이가 안 좋은가??", Toast.LENGTH_SHORT).show();
                 // 다시 전송되도록 작성하자.
+                break;
+        }
+
+//        switch (response) {
+//
+//            /*
+//             response = 1 -> 인서트 성공
+//             response = 2 -> 인서트 실패
+//             response = 3 -> 콜백 실패
+//             response = 4 -> 전송 실패
+//
+//             vote = 0 -> 투표있음
+//             vote = 1 -> 투표없음
+//
+//             voteStatus = 0 -> 텍스트
+//             voteStatus = 1 -> 이미지
+//            */
+//
+//            case 1:
+//                Toast.makeText(this, "게시물 작성 성공", Toast.LENGTH_SHORT).show();
+//
+//                if (vote == 0) {
+//                    if (voteStatus == 0) {
+//                        Intent intent = new Intent(this, QnaBoardDetailActivity.class);
+//                        intent.putExtra("QnaItem", qnaItemResponse);
+//                        intent.putExtra("fromActivity", 1);
+//                        intent.putExtra("voteStatus", 0);
+//                        intent.putExtra("vote", 0);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+//                    }
+//                    else if (voteStatus == 1) {
+//                        Intent intent = new Intent(this, QnaBoardDetailActivity.class);
+//                        intent.putExtra("QnaItem", qnaItemResponse);
+//                        intent.putExtra("fromActivity", 1);
+//                        intent.putExtra("voteStatus", 1);
+//                        intent.putExtra("vote", 0);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+//                    }
+//                }
+//                else if (vote == 1) {
+//                    Intent intent = new Intent(this, QnaBoardDetailActivity.class);
+//                    intent.putExtra("QnaItem", qnaItemResponse);
+//                    intent.putExtra("fromActivity", 1);
+//                    intent.putExtra("vote", 1);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                }
+//                break;
+//            case 2:
+//                Toast.makeText(this, "인서트 실패 프론트 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 3:
+//                Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
+//                // 다시 전송되도록 작성하자.
+//                break;
+//            case 4:
+//                Toast.makeText(this, "전송 실패 와이파이가 안 좋은가??", Toast.LENGTH_SHORT).show();
+//                // 다시 전송되도록 작성하자.
+//                break;
+//        }
+    }
+
+    @Override
+    public void modifyBoardRespGoToView(int response, QnaBoardItem qnaBoardItem) {
+        Intent intent;
+        switch (response) {
+            /*
+            response = 0 -> 수정 성공
+            response = 1 -> 콜백 실패
+            response = 2 -> 통신 실패
+             */
+            case 0:
+                intent = getIntent();
+                intent.putExtra("qnaListPosition", qnaListPosition);
+                intent.putExtra("QnaBoardItem", qnaBoardItem);
+                intent.putExtra("actionKind", actionKind);
+                setResult(RESULT_OK);
+                finish();
+                break;
+            case 1:
+                Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(this, "전송 실패 와이파이가 안 좋은가??", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Override
+    public void deleteBoardRespGoToView(int response) {
+        Intent intent;
+        switch (response) {
+            case 0:
+                intent = getIntent();
+                intent.putExtra("qnaListPosition", qnaListPosition);
+                intent.putExtra("actionKind", 2);
+                setResult(RESULT_OK);
+                finish();
+                break;
+            case 1:
+                Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(this, "전송 실패 와이파이가 안 좋은가??", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -1044,16 +1005,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
         gridVoteItemArrayList.remove(position);
         voteImageAdapter.notifyDataSetChanged();
         FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
-//        if (voteImage.size() > 0 && voteImage.size() < 6) {
-//            if (position == voteImage.size()) {
-//                Toast.makeText(this, position+1 + "번째 클릭", Toast.LENGTH_SHORT).show();
-//                reSelectVoteImage = true;
-//                realPath.remove(voteImage.size());
-//                FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
-//            }else {
-//
-//            }
-//        }
     }
 
     @Override

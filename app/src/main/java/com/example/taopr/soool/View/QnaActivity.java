@@ -39,7 +39,6 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
     private final int QNA_MOVE_TO_WRITE = 3200;
     private final int QNA_MOVE_TO_DETAIL = 3100;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +89,6 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View{
                 break;
         }
     }
-
 
 
     @Override

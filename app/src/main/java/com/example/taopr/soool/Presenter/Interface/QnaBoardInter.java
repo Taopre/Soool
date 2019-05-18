@@ -10,14 +10,24 @@ public interface QnaBoardInter {
 
     void setView(QnaBoardPresenter.View view);
     // QnaDrawUpActivity로 부터 객체를 QnaDrawUpModel로 보내주는 중간다리 함수.
-    void enrollmentBoardReq(QnaBoardItem item, QnaVoteItem qnaVoteItem, QnaItem qnaItem);
+    void enrollmentBoardReq(QnaItem qnaItem);
 
-    void enrollmentBoardResp(int response, int vote, int voteStatus, QnaItem qnaItem);
+    void modifyBoardReq(QnaBoardItem qnaBoardItem);
+
+    void enrollmentBoardResp(int response, QnaBoardItem qnaBoardItem);
+
+    void modifyBoardResp(int response, QnaBoardItem qnaBoardItem);
+
+    void deleteBoardReq(int postNo);
+
+    void deleteBoardResp(int response);
 
     //-----------------------------------------------------------------------------------
 
     // View쪽에 있는 함수.
     public interface View {
-        void enrollmentBoardRespGoToView(int response, int vote, int voteStatus, QnaItem qnaItem);
+        void enrollmentBoardRespGoToView(int response, QnaBoardItem qnaBoardItem);
+        void modifyBoardRespGoToView(int response, QnaBoardItem qnaBoardItem);
+        void deleteBoardRespGoToView(int response);
     }
 }
