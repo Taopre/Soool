@@ -8,6 +8,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -88,7 +89,6 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage,3);
 
-
         //액션바 숨기기
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -103,7 +103,6 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
         // 쉐어드에 저장된 유저의 회원번호를 가져온 후 회원번호를 서버에 전송해서
         // 유저의 프로필 정보를 가져온다
         getUserProfile();
-
 
     }
 
@@ -120,7 +119,6 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
 
         accountNo = loginSessionItem.getAccountNo();
 
-        Log.i(TAG, "getUserProfile: " + accountNo);
         mypagePresenter.loadMypageData(accountNo,3);
 
         // oncreate에서 현재 탭에 맞는 프래그먼트를 띄어주기 위해서 fragmentNo값으로 구별한다.

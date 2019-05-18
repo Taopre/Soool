@@ -34,11 +34,13 @@
             layout="@layout/mypage_profile"
             />
 
-        <view
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grayLight_a50"
-            ></view>
+            android:layout_below="@id/mypageProfileTab"
+            android:id="@+id/myPageProfileLine"
+            ></TextView>
 
 
 
@@ -49,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@id/mypageProfileTab"
             app:layout_constraintLeft_toLeftOf="parent"
             android:orientation="horizontal"
-            android:layout_below="@id/mypageProfileTab"
+            android:layout_below="@id/myPageProfileLine"
             android:id="@+id/linearLayout"/>
 
 

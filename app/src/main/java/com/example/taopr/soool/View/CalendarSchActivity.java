@@ -35,8 +35,8 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
 
     private static Boolean changedEvent = false; // false 값 일때는 CalendarAddSch 액티비티에서 이벤트를 수정,추가,삭제 경우가 없을 경우
                                                  //  true 값 일때는 위 경우 중 하나라도 있을 경우
-    private static final int CALENDAR_SCH_ADD_INT = 4310;
-    private static final int DIALOG_FRAGMENT = 4320;
+    private final int CALENDAR_SCH_ADD_INT = 4310;
+    private final int DIALOG_FRAGMENT = 4320;
     private ImageView subActionBarLeftImage ;
     private TextView subActionBarRight;
     private TextView subActionBarLeft ;
