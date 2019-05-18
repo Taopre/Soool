@@ -102,7 +102,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
     public ArrayList<QnaBoardVoteItem> editModelArrayList;
     public ArrayList<GridVoteItem> gridVoteItemArrayList = new ArrayList<>();
     QnaBoardVoteAdapter qnaBoardVoteAdapter;
-    QnaBoardTagAdapter qnaBoardTagAdapter;
+    QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter();
 
     ArrayList<String> tagArray = new ArrayList<>();
     ArrayList<Uri> path = new ArrayList<>();
@@ -150,6 +150,15 @@ public class QnaBoardActivity extends AppCompatActivity implements
         accountNo = loginSessionItem.getAccountNo();
         accountNick = loginSessionItem.getAccountNick();
 
+        qnaBoardTagAdapter.setClickListeners(new QnaBoardTagAdapter.ClickListeners() {
+            @Override
+            public void onBtnClick(int position, View view) {
+                Toast.makeText(view.getContext(), position+"", Toast.LENGTH_SHORT).show();
+                tagArray.remove(position);
+                qnaBoardTagAdapter.notifyDataSetChanged();
+            }
+        });
+
         Intent intent = getIntent();
 
         if (intent != null) {
@@ -167,7 +176,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         tagArray.add(tagData[i]);
                     }
                 }
-                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray);
+                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 0);
                 rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                 rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -680,7 +689,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             tv_qnaboardBeforeTag.setVisibility(View.GONE);
                             h_scrollView.setVisibility(View.VISIBLE);
 
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList);
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0);
                             rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -711,7 +720,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             tv_qnaboardBeforeTag.setVisibility(View.GONE);
                             h_scrollView.setVisibility(View.VISIBLE);
 
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList);
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0);
                             rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 

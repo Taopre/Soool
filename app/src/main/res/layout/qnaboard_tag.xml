@@ -7,19 +7,25 @@
     android:orientation="horizontal"
     tools:context=".View.QnaBoardActivity">
 
-    <RelativeLayout
-        android:background="#eaeaea"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="60dp"
         android:layout_margin="8dp"
-        android:layout_height="wrap_content">
+        android:layout_height="30dp">
 
         <TextView
             android:id="@+id/horizon_description"
             android:layout_width="50dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:gravity="center"
+            android:gravity="bottom"
+            android:layout_gravity="bottom"
             android:text="@string/app_name" />
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/deleteTag"
+            android:layout_gravity="top|end"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+
+    </FrameLayout>
 </LinearLayout>

@@ -83,74 +83,76 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                     try {
                                         String msg = response.body().string();
+
+                                        Log.d(TAG, "onResponse: 투표 객체값들~" + msg);
                                         
-                                        jsonArray = new JSONArray(msg);
-                                        returnData = jsonArray.getJSONObject(0);
-                                        result = returnData.getString("result");
-
-                                        if (result.equals("true")) {
-                                            Log.d(TAG, "onResponse: true상태이네!!!!!!!!");
-                                            qnaVoteStatus = returnData.getInt("qnaVoteStatus");
-                                            count = returnData.getString("count");
-
-                                            try {
-                                                for (int j=0; j<Integer.parseInt(count); j++) {
-                                                    voteList.add(returnData.getString("voteContent"+(j+1)));
-                                                }
-                                            }catch (NullPointerException e) {
-                                                Log.d(TAG, "exception null : "+e);
-                                            }
-
-                                            // 투표한 사람인지 아닌지 식별자 받아서 처리하자
-                                            try {
-                                                for (int j=0; j<Integer.parseInt(count); j++) {
-                                                    voteResult.add(returnData.getInt("voteResult"+(j+1)));
-                                                }
-                                            }catch (NullPointerException e) {
-                                                voteResult = null;
-                                            }
-
-                                            receiveQnaVoteItem.setQnaVoteStatus(qnaVoteStatus);
-                                            if (qnaVoteStatus == 0) {
-                                                receiveQnaVoteItem.setVoteText(voteList);
-
-                                                for (int i=0; i<receiveQnaVoteItem.getVoteText().size(); i++)
-                                                    Log.d(TAG, "vote text value : "+receiveQnaVoteItem.getVoteText().get(i));
-
-                                                if (voteResult.size() > 0) {
-                                                    receiveQnaVoteItem.setVoteResult(voteResult);
-                                                    for (int i=0; i<voteResult.size(); i++)
-                                                        Log.d(TAG, "vote result value: " + voteResult.get(i));
-                                                } else if (voteResult.size() == 0) {
-                                                    receiveQnaVoteItem.setVoteResult(null);
-                                                }
-                                            } else if (qnaVoteStatus == 1) {
-                                                receiveQnaVoteItem.setVoteImage(voteList);
-
-                                                for (int i=0; i<receiveQnaVoteItem.getVoteImage().size(); i++)
-                                                    Log.d(TAG, "vote text value : "+receiveQnaVoteItem.getVoteImage().get(i));
-
-                                                if (voteResult.size() > 0) {
-                                                    receiveQnaVoteItem.setVoteResult(voteResult);
-                                                    for (int i = 0; i < voteResult.size(); i++)
-                                                        Log.d(TAG, "vote result value: " + voteResult.get(i));
-                                                }else if (voteResult.size() == 0) {
-                                                    receiveQnaVoteItem.setVoteResult(null);
-                                                }
-                                            }
-
-                                            view.getDataSuccess(receiveQnaVoteItem);
-
-                                        } else if (result.equals("false")) {
-                                            Log.d(TAG, "onResponse: 불러오기 실패.");
-                                        }
+//                                        jsonArray = new JSONArray(msg);
+//                                        returnData = jsonArray.getJSONObject(0);
+//                                        result = returnData.getString("result");
+//
+//                                        if (result.equals("true")) {
+//                                            Log.d(TAG, "onResponse: true상태이네!!!!!!!!");
+//                                            qnaVoteStatus = returnData.getInt("qnaVoteStatus");
+//                                            count = returnData.getString("count");
+//
+//                                            try {
+//                                                for (int j=0; j<Integer.parseInt(count); j++) {
+//                                                    voteList.add(returnData.getString("voteContent"+(j+1)));
+//                                                }
+//                                            }catch (NullPointerException e) {
+//                                                Log.d(TAG, "exception null : "+e);
+//                                            }
+//
+//                                            // 투표한 사람인지 아닌지 식별자 받아서 처리하자
+//                                            try {
+//                                                for (int j=0; j<Integer.parseInt(count); j++) {
+//                                                    voteResult.add(returnData.getInt("voteResult"+(j+1)));
+//                                                }
+//                                            }catch (NullPointerException e) {
+//                                                voteResult = null;
+//                                            }
+//
+//                                            receiveQnaVoteItem.setQnaVoteStatus(qnaVoteStatus);
+//                                            if (qnaVoteStatus == 0) {
+//                                                receiveQnaVoteItem.setVoteText(voteList);
+//
+//                                                for (int i=0; i<receiveQnaVoteItem.getVoteText().size(); i++)
+//                                                    Log.d(TAG, "vote text value : "+receiveQnaVoteItem.getVoteText().get(i));
+//
+//                                                if (voteResult.size() > 0) {
+//                                                    receiveQnaVoteItem.setVoteResult(voteResult);
+//                                                    for (int i=0; i<voteResult.size(); i++)
+//                                                        Log.d(TAG, "vote result value: " + voteResult.get(i));
+//                                                } else if (voteResult.size() == 0) {
+//                                                    receiveQnaVoteItem.setVoteResult(null);
+//                                                }
+//                                            } else if (qnaVoteStatus == 1) {
+//                                                receiveQnaVoteItem.setVoteImage(voteList);
+//
+//                                                for (int i=0; i<receiveQnaVoteItem.getVoteImage().size(); i++)
+//                                                    Log.d(TAG, "vote text value : "+receiveQnaVoteItem.getVoteImage().get(i));
+//
+//                                                if (voteResult.size() > 0) {
+//                                                    receiveQnaVoteItem.setVoteResult(voteResult);
+//                                                    for (int i = 0; i < voteResult.size(); i++)
+//                                                        Log.d(TAG, "vote result value: " + voteResult.get(i));
+//                                                }else if (voteResult.size() == 0) {
+//                                                    receiveQnaVoteItem.setVoteResult(null);
+//                                                }
+//                                            }
+//
+//                                            view.getDataSuccess(receiveQnaVoteItem);
+//
+//                                        } else if (result.equals("false")) {
+//                                            Log.d(TAG, "onResponse: 불러오기 실패.");
+//                                        }
 
                                     }catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+//                                    catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
                                 }
 
                                 @Override

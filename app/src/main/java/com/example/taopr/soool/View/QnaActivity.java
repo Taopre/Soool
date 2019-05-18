@@ -97,6 +97,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,
         Log.i(TAG, "OnClickButton: ");
         switch (view.getId()){
             case R.id.fab_default:
+                Toast.makeText(this, "AAAA", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(QnaActivity.this, QnaBoardActivity.class);
                 intent.putExtra("actionKind", 0);
                 startActivityForResult(intent, QNA_MOVE_TO_WRITE);
