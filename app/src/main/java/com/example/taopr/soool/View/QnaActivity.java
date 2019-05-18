@@ -86,6 +86,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
     void OnClickButton(View view){
         switch (view.getId()){
             case R.id.fab_default:
+                Toast.makeText(this, "AAAA", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(QnaActivity.this, QnaBoardActivity.class);
                 intent.putExtra("actionKind", 0);
                 startActivityForResult(intent, QNA_MOVE_TO_WRITE);
@@ -163,6 +164,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
                 case 1:
                     //qnaAdapter.notifyItemChanged(qnaListPosition,qnaBoardItem);
                     //qnaBoardItems.set(qnaListPosition,qnaBoardItem);
+                    Log.d(TAG, "onActivityResult: 수정"+qnaBoardItem.getTag());
                     qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
                     break;
                 case 2:

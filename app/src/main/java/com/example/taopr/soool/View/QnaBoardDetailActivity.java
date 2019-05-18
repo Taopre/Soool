@@ -167,7 +167,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         switch (fromActivity) {
             case 0:
                 if (qnaBoardItem != null) {
-
                     if (accountNo == qnaBoardItem.getAccountNo())
                         isMyBoard = true;
                     else
@@ -185,7 +184,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             tv_qnaboardTagOne.setVisibility(View.VISIBLE);
                             tv_qnaboardTagOne.setText(qnaBoardItem.getTag());
                         } else if (tagData.length > 0) {
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray);
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                             rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                         }
@@ -218,7 +217,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             tv_qnaboardTagOne.setVisibility(View.VISIBLE);
                             tv_qnaboardTagOne.setText(qnaBoardItem.getTag());
                         } else if (tagData.length > 0) {
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray);
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                             rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                         }
@@ -268,7 +267,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                                 tv_qnaboardTagOne.setVisibility(View.VISIBLE);
                                 tv_qnaboardTagOne.setText(qnaItem.getTag());
                             } else if (tagData.length > 0) {
-                                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray);
+                                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                                 rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                                 rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                             }
@@ -323,7 +322,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                                 tv_qnaboardTagOne.setVisibility(View.VISIBLE);
                                 tv_qnaboardTagOne.setText(qnaItem.getTag());
                             } else if (tagData.length > 0) {
-                                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray);
+                                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                                 rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                                 rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                             }
@@ -374,7 +373,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             tv_qnaboardTagOne.setVisibility(View.VISIBLE);
                             tv_qnaboardTagOne.setText(qnaItem.getTag());
                         } else if (tagData.length > 0) {
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray);
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                             rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                         }
