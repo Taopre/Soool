@@ -974,7 +974,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
             case 0:
                 intent = getIntent();
                 intent.putExtra("qnaListPosition", qnaListPosition);
-                intent.putExtra("QnaBoardItem", qnaBoardItem);
+                intent.putExtra("qnaBoardItem", qnaBoardItem);
                 intent.putExtra("actionKind", actionKind);
                 setResult(RESULT_OK, intent);
                 finish();

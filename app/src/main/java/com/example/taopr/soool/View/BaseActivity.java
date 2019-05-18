@@ -3,10 +3,14 @@ package com.example.taopr.soool.View;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.LayoutRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taopr.soool.R;
@@ -22,9 +26,12 @@ import static android.content.Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED;
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener{
 
     public Activity mActivity;
-    Button btn_tabMain, btn_tabInfo, btn_tabQna, btn_tabMypage;
+    ViewGroup btn_tabMain, btn_tabInfo, btn_tabQna, btn_tabMypage;
     private String TAG = "베이스 액티비티 ";
     private int tabMenu;
+    ImageView tabMainImage , tabInfoImage, tabQnaImage, tabMypageImage;
+    TextView tabMainText, tabInfoText, tabQnaText, tabMypageText;
+
 
     // tab의 메뉴별로 각각의 처리를 추가로 해주기 위해 tabMenu를 추가로 받음
     // 0 = main , 1 = info , 2 = qna , 3 = mypage
@@ -48,15 +55,23 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         switch (tabMenu){
             case 0:
                 btn_tabMain.setClickable(false);
+                tabMainImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.nav_home_off));
+                tabMainText.setTextColor(ContextCompat.getColor(this,R.color.greenDark));
                 break;
             case 1:
                 btn_tabInfo.setClickable(false);
+                tabInfoImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.nav_home_off));
+                tabInfoText.setTextColor(ContextCompat.getColor(this,R.color.greenDark));
                 break;
             case 2:
                 btn_tabQna.setClickable(false);
+                tabQnaImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.nav_home_off));
+                tabQnaText.setTextColor(ContextCompat.getColor(this,R.color.greenDark));
                 break;
             case 3:
                 btn_tabMypage.setClickable(false);
+                tabMypageImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.nav_home_off));
+                tabMypageText.setTextColor(ContextCompat.getColor(this,R.color.greenDark));
                 break;
         }
     }
@@ -66,6 +81,15 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         btn_tabInfo = findViewById(R.id.tabInfo);
         btn_tabQna = findViewById(R.id.tabQna);
         btn_tabMypage = findViewById(R.id.tabMypage);
+        tabMainImage = findViewById(R.id.tabMainImage);
+        tabMainText = findViewById(R.id.tabMainText);
+        tabInfoImage = findViewById(R.id.tabInfoImage);
+        tabInfoText = findViewById(R.id.tabInfoText);
+        tabQnaImage = findViewById(R.id.tabQnaImage);
+        tabQnaText = findViewById(R.id.tabQnaText);
+        tabMypageImage = findViewById(R.id.tabMypageImage);
+        tabMypageText = findViewById(R.id.tabMypageText);
+
         btn_tabMain.setOnClickListener(this);
         btn_tabInfo.setOnClickListener(this);
         btn_tabQna.setOnClickListener(this);
