@@ -164,7 +164,6 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,Swipe
                 case 1:
                     //qnaAdapter.notifyItemChanged(qnaListPosition,qnaBoardItem);
                     //qnaBoardItems.set(qnaListPosition,qnaBoardItem);
-                    Log.d(TAG, "onActivityResult: 수정"+qnaBoardItem.getTag());
                     qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
                     break;
                 case 2:
