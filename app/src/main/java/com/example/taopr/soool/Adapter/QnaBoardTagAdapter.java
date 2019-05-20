@@ -26,6 +26,12 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
 
     public QnaBoardTagAdapter() {}
 
+    public QnaBoardTagAdapter(Context ctx, ArrayList<String> data){
+        inflater = LayoutInflater.from(ctx);
+        this.data = data;
+    }
+
+
     public QnaBoardTagAdapter(Context ctx, ArrayList<String> data, int whatActivity){
         inflater = LayoutInflater.from(ctx);
         this.data = data;

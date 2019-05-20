@@ -41,6 +41,7 @@ import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -104,8 +105,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         actionKind = getIntent().getIntExtra("actionKind", 9999);
         qnaListPosition = getIntent().getIntExtra("qnaListPosition", 9999);
         voteStatus = getIntent().getIntExtra("voteStatus", 3);
-        qnaItem = (QnaItem) getIntent().getSerializableExtra("QnaItem");
-        qnaBoardItem = (QnaBoardItem) getIntent().getParcelableExtra("QnaBoardItem");
+        qnaItem = (QnaItem) getIntent().getSerializableExtra("qnaItem");
+        qnaBoardItem = (QnaBoardItem) getIntent().getParcelableExtra("qnaBoardItem");
 
         if (qnaItem != null) {
             if (qnaItem.getTag().contains("@##@")) {
@@ -197,11 +198,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_qnaboardViewCount.setText(qnaBoardItem.getViews()+"");
 
                         try {
-                            File files = new File(qnaBoardItem.getImage());
-                            Uri tests = Uri.fromFile(files);
+//                            File files = new File(Whatisthis.serverIp+qnaBoardItem.getImage());
+//                            Uri tests = Uri.fromFile(files);
+
 
                             Glide.with(this)
-                                    .load(tests)
+                                    .load(Whatisthis.serverIp+qnaBoardItem.getImage())
                                     .override(100, 100)
                                     .centerCrop()
                                     .into(iv_qnaboardImage);
@@ -230,11 +232,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_qnaboardViewCount.setText(qnaBoardItem.getViews()+"");
 
                         try {
-                            File files = new File(qnaBoardItem.getImage());
-                            Uri tests = Uri.fromFile(files);
-
                             Glide.with(this)
-                                    .load(tests)
+                                    .load(Whatisthis.serverIp+qnaBoardItem.getImage())
                                     .override(100, 100)
                                     .centerCrop()
                                     .into(iv_qnaboardImage);
@@ -284,11 +283,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             tv_qnaboardViewCount.setText("0");
 
                             try {
-                                File files = new File(qnaItem.getImage());
-                                Uri tests = Uri.fromFile(files);
-
                                 Glide.with(this)
-                                        .load(tests)
+                                        .load(Whatisthis.serverIp+qnaItem.getImage())
                                         .override(100, 100)
                                         .centerCrop()
                                         .into(iv_qnaboardImage);
@@ -339,11 +335,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             tv_qnaboardViewCount.setText("0");
 
                             try {
-                                File files = new File(qnaItem.getImage());
-                                Uri tests = Uri.fromFile(files);
-
                                 Glide.with(this)
-                                        .load(tests)
+                                        .load(Whatisthis.serverIp+qnaItem.getImage())
                                         .override(100, 100)
                                         .centerCrop()
                                         .into(iv_qnaboardImage);
@@ -390,11 +383,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_qnaboardViewCount.setText("0");
 
                         try {
-                            File files = new File(qnaItem.getImage());
-                            Uri tests = Uri.fromFile(files);
-
                             Glide.with(this)
-                                    .load(tests)
+                                    .load(Whatisthis.serverIp+qnaItem.getImage())
                                     .override(100, 100)
                                     .centerCrop()
                                     .into(iv_qnaboardImage);
@@ -574,7 +564,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.drawupModify:
                 Intent intent = new Intent(this, QnaBoardActivity.class);
-                intent.putExtra("QnaBoardItem", qnaBoardItem);
+                intent.putExtra("qnaBoardItem", qnaBoardItem);
                 intent.putExtra("actionKind", actionKind);
                 intent.putExtra("qnaListPosition", qnaListPosition);
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
@@ -666,7 +656,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             for (int i = 0; i < getQnaVoteItem.getVoteImage().size(); i++) {
                 File imageFile = new File(getQnaVoteItem.getVoteImage().get(i));
                 Uri uriImage = Uri.fromFile(imageFile);
-//                gridVoteItem = new GridVoteItem("", uriImage, false, getQnaVoteItem.getVoteResult().get(i));
+//                Glide.with(this)
+//                        .load(Whatisthis.serverIp+qnaBoardItem.getImage())
+//                        .override(100, 100)
+//                        .centerCrop()
+//                        .into(iv_qnaboardImage);
+                gridVoteItem = new GridVoteItem("", uriImage, false, getQnaVoteItem.getVoteResult().get(i));
                 gridVoteItemArrayList.add(gridVoteItem);
             }
 

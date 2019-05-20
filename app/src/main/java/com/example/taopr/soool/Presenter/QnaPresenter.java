@@ -92,7 +92,7 @@ public class QnaPresenter extends BasePresenter implements QnaInter {
         Toast.makeText(activity, qnaBoardItem.getTitle(), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
-        intent.putExtra("QnaBoardItem",qnaBoardItem);
+        intent.putExtra("qnaBoardItem",qnaBoardItem);
         intent.putExtra("fromActivity", 0);
         intent.putExtra("actionKind", 1);
         intent.putExtra("qnaListPosition",qnaListPosition);
