@@ -24,7 +24,18 @@
         <item>Dec</item>
     </string-array>
 
+
+    <!-- Home -->
+    <string name="home_label_home_tab">홈</string>
+
+    <!-- info -->
+    <string name="info_label_info_tab">정보</string>
+
+    <!-- qna -->
+    <string name="qna_label_qna_tab">커뮤니티</string>
+
     <!-- 마이페이지  -->
+    <string name="my_page_label_qna_my_page">마이페이지</string>
     <string name="my_page_tab_label_my_qna_board">내 글</string>
     <string name="my_page_tab_label_bookmark">스크랩</string>
     <string name="my_page_tab_label_calendar">캘린더</string>

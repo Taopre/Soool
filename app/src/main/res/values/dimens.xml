@@ -21,12 +21,19 @@
     <dimen name="text_size_20dp">20dp</dimen>
     <dimen name="text_size_120dp">120dp</dimen>
     
-    <!-- 모든 액티비티 padding 값 -->
-    <dimen name="all_left_right_padding">18dp</dimen>
+    <!-- 모든 액티비티 padding margin 값 -->
+    <dimen name="all_text_12dp_space_6dp">6dp</dimen>
+
+    <dimen name="all_space_between_8dp">8dp</dimen>
+    <dimen name="all_space_between_10dp">10dp</dimen>
+    <dimen name="all_space_between_12dp">12dp</dimen>
+    <dimen name="all_space_between_16dp">16dp</dimen>
+    <dimen name="all_space_between_18dp">18dp</dimen>
+
 
     <!-- 액션바 -->
     <dimen name="actionbar_line_height">21dp</dimen>
-    <dimen name="actionbar_height">78dp</dimen>
+    <dimen name="actionbar_height">57dp</dimen>
     <dimen name="actionbar_padding_right">8dp</dimen>
 
 
@@ -36,5 +43,7 @@
     <dimen name="all_menu_icon_ver_padding">10dp</dimen>
 
     <dimen name="profile_image_height_width">64dp</dimen>
+
+    <dimen name="all_line_1dp">1dp</dimen>
 
 </resources>
