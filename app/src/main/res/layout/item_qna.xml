@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="108dp"
+   >
+
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/ic_add_a_photo_gray_100dp"
+        android:id="@+id/qnaBoardImage"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/all_space_between_18dp"
+
+        />
+
+    <HorizontalScrollView
+        android:id="@+id/h_scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/all_space_between_18dp"
+        android:layout_marginTop="@dimen/all_space_between_16dp"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/qnaboardTagView"/>
+    </HorizontalScrollView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/h_scrollView"
+        android:layout_below="@id/h_scrollView"
+        android:layout_marginTop="12dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_15dp"
+            android:id="@+id/qnaBoardTitle"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qnaBoardWriter"
+            android:text="작성자"
+            android:textColor="@color/grayMain"
+            android:textSize="@dimen/text_size_12dp"
+            android:layout_below="@id/qnaBoardTitle"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qnaBoardDate"
+            android:text="작성시간"
+            android:textSize="@dimen/text_size_12dp"
+            android:textColor="@color/grayMain"
+            android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
+            android:layout_toRightOf="@id/qnaBoardWriter"
+            android:layout_alignTop="@id/qnaBoardWriter"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qnaBoardViewsTV"
+            android:textSize="@dimen/text_size_12dp"
+            android:textColor="@color/grayMain"
+            android:text="조회수"
+            android:layout_toRightOf="@id/qnaBoardDate"
+            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qnaBoardViews"
+            android:textSize="@dimen/text_size_12dp"
+            android:textColor="@color/grayMain"
+            android:text="5"
+            android:layout_toRightOf="@id/qnaBoardViewsTV"
+            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qnaBoardCommentsTV"
+            android:text="댓글수"
+            android:textSize="@dimen/text_size_12dp"
+            android:textColor="@color/grayMain"
+            android:layout_toRightOf="@id/qnaBoardViews"
+            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qnaBoardComments"
+            android:text="12"
+            android:textSize="@dimen/text_size_12dp"
+            android:textColor="@color/grayMain"
+            android:layout_toRightOf="@id/qnaBoardCommentsTV"
+            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

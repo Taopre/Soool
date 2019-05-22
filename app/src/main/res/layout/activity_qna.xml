@@ -4,20 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="50dp"
-        android:layout_marginEnd="22dp"
-        android:backgroundTint="#9500ff"
-        android:src="@color/colorAccent" />
-
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/qnaSwipeRefreshLayout"
         android:layout_width="match_parent"
@@ -36,28 +22,25 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
-        <include layout="@layout/include_tab"/>
-    </LinearLayout>-->
     <include
         layout="@layout/view_main_tab"
+        android:id="@+id/qnaMainTab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/qnaMainTab"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="18dp"
+        android:src="@drawable/qna_post_float"
+        />
+
 </android.support.constraint.ConstraintLayout>

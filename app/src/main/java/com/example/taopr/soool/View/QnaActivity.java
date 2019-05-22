@@ -68,12 +68,10 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,
         qnaSwipeRefreshLayout.setOnRefreshListener(this);
 
         // 새로고침 아이콘의 색이 순서대로 변함
-        // TODO: 색상 회의 적용
+
         qnaSwipeRefreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(this,R.color.greenMain),
-                ContextCompat.getColor(this,R.color.black),
-                ContextCompat.getColor(this,R.color.grayMain),
-                ContextCompat.getColor(this,R.color.sunflower_yellow));
+                ContextCompat.getColor(this,R.color.greenMain));
+
     }
 
     // 리사이클러뷰 클릭 이벤트
@@ -183,5 +181,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,
     public void onRefresh() {
        qnaPresenter.loadData();
     }
+
+
 }
 
