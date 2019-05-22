@@ -34,13 +34,13 @@
             layout="@layout/mypage_profile"
             />
 
-        <TextView
+        <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/all_line_1dp"
             android:background="@color/grayLight_a50"
             android:layout_below="@id/mypageProfileTab"
             android:id="@+id/myPageProfileLine"
-            ></TextView>
+            />
 
 
 

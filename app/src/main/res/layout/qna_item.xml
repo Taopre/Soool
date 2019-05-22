@@ -82,10 +82,9 @@
         android:padding="20dp"
         >
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:src="@drawable/ic_add_a_photo_gray_100dp"
-
             android:id="@+id/qnaBoardImage"
 
             />
