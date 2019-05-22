@@ -112,19 +112,19 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         QnaBoardItem qnaBoardItem = qnaBoardItems.get(position);
 
-//        if (qnaBoardItem.getTag().contains("@##@")) {
-//            holder.qnaBoardTag.setVisibility(View.GONE);
-//            holder.h_scrollView.setVisibility(View.VISIBLE);
-//
-//            tagData = qnaBoardItem.getTag().split("@##@");
-//            for (int i = 0; i < tagData.length; i++) {
-//                tagArray.add(tagData[i]);
-//            }
-//            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray);
-//            holder.qnaboardTagView.setAdapter(qnaBoardTagAdapter);
-//            holder.qnaboardTagView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-//        } else
-//            holder.qnaBoardTag.setText(qnaBoardItem.getTag());
+        if (qnaBoardItem.getTag().contains("@##@")) {
+            holder.qnaBoardTag.setVisibility(View.GONE);
+            holder.h_scrollView.setVisibility(View.VISIBLE);
+
+            tagData = qnaBoardItem.getTag().split("@##@");
+            for (int i = 0; i < tagData.length; i++) {
+                tagArray.add(tagData[i]);
+            }
+            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray, 1);
+            holder.qnaboardTagView.setAdapter(qnaBoardTagAdapter);
+            holder.qnaboardTagView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        } else
+            holder.qnaBoardTag.setText(qnaBoardItem.getTag());
 
         holder.qnaBoardTag.setText(qnaBoardItem.getTag());
         holder.qnaBoardTitle.setText(qnaBoardItem.getTitle());

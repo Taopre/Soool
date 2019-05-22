@@ -154,6 +154,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
             @Override
             public void onBtnClick(int position, View view) {
                 Toast.makeText(view.getContext(), position+"", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onBtnClick: "+tagArray.size());
                 tagArray.remove(position);
                 qnaBoardTagAdapter.notifyDataSetChanged();
             }
@@ -165,7 +166,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
             actionKind = intent.getIntExtra("actionKind", 9999);
             qnaListPosition = intent.getIntExtra("qnaListPosition", 9999);
             if (actionKind == 1) {
-                receiveQnaBoardItem = intent.getParcelableExtra("QnaBoardItem");
+                receiveQnaBoardItem = intent.getParcelableExtra("qnaBoardItem");
 
                 tv_qnaboardBeforeTag.setVisibility(View.GONE);
                 h_scrollView.setVisibility(View.VISIBLE);
@@ -693,6 +694,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
+                            tagArray = arrayList;
+
                             for (int i = 0; i < arrayList.size(); i++) {
                                 if (i == arrayList.size() - 1)
                                     tag += arrayList.get(i);
@@ -723,6 +726,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0);
                             rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                            tagArray = arrayList;
 
                             for (int i = 0; i < arrayList.size(); i++) {
                                 if (i == arrayList.size() - 1)
@@ -887,7 +892,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 Toast.makeText(this, "게시물 작성 성공", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent();
-                intent.putExtra("QnaBoardItem", qnaBoardItemResponse);
+                intent.putExtra("qnaBoardItem", qnaBoardItemResponse);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 setResult(RESULT_OK, intent);
                 finish();

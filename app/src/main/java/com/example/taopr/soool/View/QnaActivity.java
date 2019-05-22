@@ -40,7 +40,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,
     private String TAG = "큐앤에이_activity";
     private final int QNA_MOVE_TO_WRITE = 3200;
     private final int QNA_MOVE_TO_DETAIL = 3100;
-    
+
     @BindView(R.id.qnaSwipeRefreshLayout)
     SwipeRefreshLayout qnaSwipeRefreshLayout;
 
@@ -103,6 +103,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,
         }
     }
 
+
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems) {
         this.qnaBoardItems = qnaBoardItems;
@@ -142,6 +143,7 @@ public class QnaActivity extends BaseActivity implements QnaPresenter.View,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
 
             // 리스트 수정, 삭제

@@ -231,7 +231,7 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
                 intent.putExtra("fromActivity",0);
                 intent.putExtra("actionKind", 1);
                 intent.putExtra("qnaListPosition",position);
-                intent.putExtra("QnaBoardItem",qnaBoardItems.get(position));
+                intent.putExtra("qnaBoardItem",qnaBoardItems.get(position));
                 startActivityForResult(intent,MY_BOARD_MOVE_TO_DETAIL);
             }
 
