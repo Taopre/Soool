@@ -27,7 +27,7 @@
         <include
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:id="@+id/mypageProfileTab"
+            android:id="@+id/mypageProfile"
             app:layout_constraintTop_toBottomOf="@id/myPageActionBar"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_below="@id/myPageActionBar"
@@ -38,8 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/all_line_1dp"
             android:background="@color/grayLight_a50"
-            android:layout_below="@id/mypageProfileTab"
-            android:id="@+id/myPageProfileLine"
+            android:layout_below="@id/mypageProfile"
+            android:id="@+id/mypageProfileLine"
             />
 
 
@@ -48,10 +48,10 @@
         <include layout="@layout/mypage_tab"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:layout_constraintTop_toBottomOf="@id/mypageProfileTab"
+            app:layout_constraintTop_toBottomOf="@id/mypageProfileLine"
             app:layout_constraintLeft_toLeftOf="parent"
             android:orientation="horizontal"
-            android:layout_below="@id/myPageProfileLine"
+            android:layout_below="@id/mypageProfileLine"
             android:id="@+id/linearLayout"/>
 
 

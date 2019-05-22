@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/itemTag"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:layout_height="24dp"
+    android:background="@drawable/tag_frame_gray"
     tools:context=".View.QnaBoardActivity">
 
-    <FrameLayout
-        android:layout_width="60dp"
-        android:layout_margin="8dp"
-        android:layout_height="30dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/horizon_description"
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:gravity="bottom"
-            android:layout_gravity="bottom"
+            android:id="@+id/tagTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="9dp"
+            android:textColor="@color/grayMain"
+            android:textSize="@dimen/text_size_12dp"
             android:text="@string/app_name" />
 
-        <Button
+        <ImageView
+            android:layout_marginLeft="2dp"
             android:id="@+id/deleteTag"
-            android:layout_gravity="top|end"
-            android:layout_width="25dp"
-            android:layout_height="25dp" />
+            android:layout_marginRight="2dp"
+            android:cropToPadding="true"
+            android:src="@drawable/qna_post_remove_tag"
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
 
-    </FrameLayout>
-</LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

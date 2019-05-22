@@ -40,7 +40,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="18dp"
         android:layout_marginEnd="18dp"
-        android:src="@drawable/qna_post_float"
+        android:src="@drawable/qna_post_float_icon"
+        android:backgroundTint="@color/greenMain"
         />
 
 </android.support.constraint.ConstraintLayout>
