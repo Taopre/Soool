@@ -67,6 +67,12 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
     TextView mypageProfileNickname;
     @BindView(R.id.mainActionBarTitle)
     TextView mainActionBarTitle;
+    @BindView(R.id.tabCalendarBar)
+    View tabCalendarBar;
+    @BindView(R.id.tabBookMarkBar)
+    View tabBookMarkBar;
+    @BindView(R.id.tabMyBoardBar)
+    View tabMyBoardBar;
 
     private final int MYBOARD_INT = 0;
     private final int BOOKMARK_INT = 1;
@@ -145,6 +151,7 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
     // 프래그먼트가 null인 경우에는 서버로부터 리스트 데이터를 받아오지 못했기 때문에
     // 서버에 데이터를 요청 후 받아온다
 
+
     @OnClick({R.id.tabMyBoard,R.id.tabBookmark,R.id.tabCalendar,R.id.myPageDrawerButton})
     void OnClickButton(View view){
         switch (view.getId()) {
@@ -152,10 +159,16 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
                 if(myBoardFragment==null){
                     myBoardFragment = new MyBoardFragment();
 
+                    // 프래그먼트 탭 이동시 탭에 맞는 bar 만 보여주기
                     mypagePresenter.loadMypageData(accountNo,MYBOARD_INT);
+
                 }
                 else{
                     callFragment(MYBOARD_INT);
+
+                    tabMyBoardBar.setVisibility(View.VISIBLE);
+                    tabBookMarkBar.setVisibility(View.INVISIBLE);
+                    tabCalendarBar.setVisibility(View.INVISIBLE);
                 }
 
                 break;
@@ -163,11 +176,20 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
             case R.id.tabBookmark:
                 // '버튼2' 클릭 시 '프래그먼트2' 호출
                 callFragment(BOOKMARK_INT);
+
+                tabMyBoardBar.setVisibility(View.INVISIBLE);
+                tabBookMarkBar.setVisibility(View.VISIBLE);
+                tabCalendarBar.setVisibility(View.INVISIBLE);
+
                 break;
 
             case R.id.tabCalendar:
                 mypagePresenter.getCalendarItem(MyPageActivity.this,String.valueOf(accountNo));
-               //callFragment(CALENDAR_INT;
+
+                tabMyBoardBar.setVisibility(View.INVISIBLE);
+                tabBookMarkBar.setVisibility(View.INVISIBLE);
+                tabCalendarBar.setVisibility(View.VISIBLE);
+
 
                 break;
 
@@ -264,6 +286,7 @@ public class MyPageActivity extends BaseActivity implements MypagePresenter.View
         callFragment(MYBOARD_INT);
     }
 
+    // 유저의 프로필 정보를 response 받아 뷰로 보여주기
     @Override
     public void getUserProfileResponse(UserProfile userProfile){
         mypageProfileNickname.setText(userProfile.getAccountNick());

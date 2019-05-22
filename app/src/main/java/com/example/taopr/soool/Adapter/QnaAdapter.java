@@ -12,9 +12,13 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.View.MyPageActivity;
 import com.example.taopr.soool.View.QnaActivity;
+import com.example.taopr.soool.Whatisthis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +64,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         TextView qnaBoardComments;
 
-        TextView qnaBoardTag;
+        //TextView qnaBoardTag;
 
         HorizontalScrollView h_scrollView;
 
@@ -75,7 +79,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
             qnaBoardViews = v.findViewById(R.id.qnaBoardViews);
             qnaBoardWriter = v.findViewById(R.id.qnaBoardWriter);
             qnaBoardComments = v.findViewById(R.id.qnaBoardComments);
-            qnaBoardTag = v.findViewById(R.id.qnaBoardTag);
+          //  qnaBoardTag = v.findViewById(R.id.qnaBoardTag);
             h_scrollView = v.findViewById(R.id.h_scrollView);
             qnaboardTagView = v.findViewById(R.id.qnaboardTagView);
 
@@ -102,7 +106,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.qna_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_qna,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -113,25 +117,37 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
         QnaBoardItem qnaBoardItem = qnaBoardItems.get(position);
 
         if (qnaBoardItem.getTag().contains("@##@")) {
-            holder.qnaBoardTag.setVisibility(View.GONE);
-            holder.h_scrollView.setVisibility(View.VISIBLE);
-
+            tagArray = new ArrayList<String>();
             tagData = qnaBoardItem.getTag().split("@##@");
             for (int i = 0; i < tagData.length; i++) {
                 tagArray.add(tagData[i]);
             }
-            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray, 1);
+            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray,1);
             holder.qnaboardTagView.setAdapter(qnaBoardTagAdapter);
+            holder.qnaboardTagView.addItemDecoration(new RecyclerDecoration(32));
             holder.qnaboardTagView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        } else
-            holder.qnaBoardTag.setText(qnaBoardItem.getTag());
+        }
 
-        holder.qnaBoardTag.setText(qnaBoardItem.getTag());
+
         holder.qnaBoardTitle.setText(qnaBoardItem.getTitle());
         holder.qnaBoardComments.setText(String.valueOf(qnaBoardItem.getComments()));
         holder.qnaBoardWriter.setText(qnaBoardItem.getWriter());
         holder.qnaBoardViews.setText(String.valueOf(qnaBoardItem.getViews()));
-        holder.qnaBoardViews.setText(qnaBoardItem.getDate());
+        holder.qnaBoardDate.setText(qnaBoardItem.getDate());
+
+
+        if(qnaBoardItem.getImage() != null){
+            //holder.qnaBoardImage
+            String qnaImageURI= Whatisthis.serverIp + qnaBoardItem.getImage();
+
+            Glide.with(context)
+                    .load(qnaImageURI)
+                    .centerCrop()
+                    .into(holder.qnaBoardImage);
+        }
+        else{
+            holder.qnaBoardImage.setVisibility(View.INVISIBLE);
+        }
 
     }
 }

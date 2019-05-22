@@ -1,6 +1,7 @@
 package com.example.taopr.soool.Adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
@@ -23,7 +25,7 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     public static ArrayList<String> data;
     private static ClickListeners clickListeners;
     private int whatActivity = 9998;
-
+    private Context context;
     public QnaBoardTagAdapter() {}
 
     public QnaBoardTagAdapter(Context ctx, ArrayList<String> data){
@@ -36,6 +38,12 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
         inflater = LayoutInflater.from(ctx);
         this.data = data;
         this.whatActivity = whatActivity;
+    }
+    public QnaBoardTagAdapter(Context ctx, ArrayList<String> data, int whatActivity,Context context){
+        inflater = LayoutInflater.from(ctx);
+        this.data = data;
+        this.whatActivity = whatActivity;
+        this.context = context;
     }
 
     public interface ClickListeners {
@@ -54,8 +62,8 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     @Override
     public void onBindViewHolder(final QnaBoardTagAdapter.MyViewHolder holder, final int position) {
 
-        holder.textView.setText(data.get(position));
-        holder.deleteTag.setText(data.get(position));
+        holder.tagTitle.setText(data.get(position));
+        //holder.deleteTag.setText(data.get(position));
         Log.d("print","yes");
 
     }
@@ -71,20 +79,28 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        protected TextView textView;
-        protected Button deleteTag;
+        protected TextView tagTitle;
+        protected ImageView deleteTag;
+        protected ViewGroup tagLayout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            textView = itemView.findViewById(R.id.horizon_description);
+            tagTitle = itemView.findViewById(R.id.tagTitle);
             deleteTag = itemView.findViewById(R.id.deleteTag);
+            tagLayout = itemView.findViewById(R.id.tagLayout);
 
-            if (whatActivity == 1)
+            if (whatActivity == 1) {
                 deleteTag.setVisibility(View.GONE);
-            else
-                deleteTag.setVisibility(View.VISIBLE);
+                tagTitle.setPadding(36,0,36,0);
 
+            }
+            else {
+                deleteTag.setVisibility(View.VISIBLE);
+                tagLayout.setBackground(ContextCompat.getDrawable(context,R.drawable.tag_frame_green));
+                tagTitle.setTextColor(ContextCompat.getColor(context,R.color.greenMain));
+
+            }
             deleteTag.setOnClickListener(this);
         }
 
