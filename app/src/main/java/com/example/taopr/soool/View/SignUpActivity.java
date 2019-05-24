@@ -60,6 +60,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         signUpPresenter = new SignUpPresenter(SignUpActivity.this, this);
         signUpPresenter.setView(this);
 
+        StringBuffer stacktrace = new StringBuffer();
+        StackTraceElement[] stackTrace = new Exception().getStackTrace();
+        for(int x=0; x<stackTrace.length; x++)
+        {
+            stacktrace.append(stackTrace[x].toString() + " ");
+        }
+        Log.e(TAG, "스택 : ");
+        Log.e(TAG, "스택 : " + stacktrace.toString());
+
+        Log.d(TAG, "스택 : ", new Throwable("stack dump"));
+
         if(getIntent() != null) {
             signUpThroughSNS();
         }
@@ -261,8 +272,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         }
         else{
             Log.i(TAG, "clickSignUp: 회원가입 성공 ");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(this, HomeActivity.class);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }

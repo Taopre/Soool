@@ -63,7 +63,6 @@
     <string name="all_button_close">닫기</string>
 
 
-
     <!-- qna 작성페이지 -->
     <string name="qna_board_hint_of_choice_tag">주제를 선택해주세요.</string>
     <string name="qna_board_hint_of_write_title">제목을 입력해주세요.</string>
@@ -105,7 +104,7 @@
     <string name="drawer_handling_privacy">개인정보 취급방침</string>
     <string name="drawer_tos">이용약관</string>
     <string name="drawer_logout">로그아웃</string>
-    
+
     <!-- 회원가입 페이지 -->
     <string name="sign_up_email">이메일</string>
     <string name="sign_up_password">비밀번호</string>

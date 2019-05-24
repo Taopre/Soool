@@ -17,7 +17,7 @@
         android:layout_alignBottom="@id/cal_add_icon"
         android:text="일정추가"
         android:gravity="center"
-        android:textColor="@color/greenDark"
+        android:textColor="@color/greenMain"
         android:lineSpacingExtra="3.2dp"
         android:textSize="@dimen/button_text_size"/>
 </RelativeLayout>

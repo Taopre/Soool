@@ -1,17 +1,14 @@
 package com.example.taopr.soool.View;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -24,11 +21,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,20 +32,15 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.taopr.soool.Adapter.DrawUpTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.BottomSheetDialogVoteSelect;
-import com.example.taopr.soool.Dialog.TagDialog;
 import com.example.taopr.soool.ExifUtils;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.Object.LoginSessionItem;
@@ -58,7 +48,6 @@ import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
-import com.example.taopr.soool.Presenter.Interface.QnaBoardInter;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
@@ -69,15 +58,8 @@ import com.sangcomz.fishbun.FishBun;
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter;
 import com.sangcomz.fishbun.define.Define;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class QnaBoardActivity extends AppCompatActivity implements
         View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener, VoteImageAdapter.GridviewItemClickListner {
@@ -103,7 +85,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
     public ArrayList<QnaBoardVoteItem> editModelArrayList;
     public ArrayList<GridVoteItem> gridVoteItemArrayList = new ArrayList<>();
     QnaBoardVoteAdapter qnaBoardVoteAdapter;
-    QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter();
+    QnaBoardTagAdapter qnaBoardTagAdapter;
 
     ArrayList<String> tagArray = new ArrayList<>();
     ArrayList<Uri> path = new ArrayList<>();
@@ -119,7 +101,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
     int count = 2, accountNo, voteSelect = 2;
 
     VoteImageAdapter voteImageAdapter;
-    DrawUpTagAdapter drawUpTagAdapter;
     QnaBoardPresenter qnaBoardPresenter;
     QnaBoardItem qnaBoardItem = new QnaBoardItem();
     QnaBoardItem receiveQnaBoardItem = new QnaBoardItem();
@@ -152,6 +133,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         accountNo = loginSessionItem.getAccountNo();
         accountNick = loginSessionItem.getAccountNick();
 
+        qnaBoardTagAdapter = new QnaBoardTagAdapter(this);
         qnaBoardTagAdapter.setClickListeners(new QnaBoardTagAdapter.ClickListeners() {
             @Override
             public void onBtnClick(int position, View view) {
@@ -452,7 +434,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
             case R.id.drawupBack:
                 Toast.makeText(this, "뒤로가기 클릭", Toast.LENGTH_SHORT).show();
                 //이전 액티비티로 인탠트 사용해줘야할 부분.
-                Intent intent = new Intent(this, QnaActivity.class);
                 finish();
                 break;
             case R.id.drawupEnroll:

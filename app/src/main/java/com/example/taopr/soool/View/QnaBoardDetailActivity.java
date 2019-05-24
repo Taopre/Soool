@@ -94,6 +94,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNick = loginSessionItem.getAccountNick();
+        Log.i(TAG, "onCreate: 닉네임" + accountNick);
         accountNo = loginSessionItem.getAccountNo();
 
         long now = System.currentTimeMillis();
@@ -202,10 +203,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             iv_qnaboardImage.setVisibility(View.GONE);
                         } else {
                             Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaBoardItem.getImage());
-
-                            try {
-                                //                            File files = new File(Whatisthis.serverIp+qnaBoardItem.getImage());
-                                //                            Uri tests = Uri.fromFile(files);
                                 
                                 
                             Glide.with(this)

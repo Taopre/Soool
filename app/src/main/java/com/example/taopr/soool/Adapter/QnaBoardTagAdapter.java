@@ -26,7 +26,9 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     private static ClickListeners clickListeners;
     private int whatActivity = 9998;
     private Context context;
-    public QnaBoardTagAdapter() {}
+    public QnaBoardTagAdapter(Context ctx) {
+        this.context = ctx;
+    }
 
     public QnaBoardTagAdapter(Context ctx, ArrayList<String> data){
         inflater = LayoutInflater.from(ctx);
@@ -38,13 +40,9 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
         inflater = LayoutInflater.from(ctx);
         this.data = data;
         this.whatActivity = whatActivity;
+        this.context = ctx;
     }
-    public QnaBoardTagAdapter(Context ctx, ArrayList<String> data, int whatActivity,Context context){
-        inflater = LayoutInflater.from(ctx);
-        this.data = data;
-        this.whatActivity = whatActivity;
-        this.context = context;
-    }
+
 
     public interface ClickListeners {
         void onBtnClick(int position, View view) ;
@@ -81,14 +79,14 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
 
         protected TextView tagTitle;
         protected ImageView deleteTag;
-        protected ViewGroup tagLayout;
+        protected ViewGroup itemTag;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
             tagTitle = itemView.findViewById(R.id.tagTitle);
             deleteTag = itemView.findViewById(R.id.deleteTag);
-            tagLayout = itemView.findViewById(R.id.tagLayout);
+            itemTag = itemView.findViewById(R.id.itemTag);
 
             if (whatActivity == 1) {
                 deleteTag.setVisibility(View.GONE);
@@ -97,8 +95,8 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
             }
             else {
                 deleteTag.setVisibility(View.VISIBLE);
-                tagLayout.setBackground(ContextCompat.getDrawable(context,R.drawable.tag_frame_green));
-                tagTitle.setTextColor(ContextCompat.getColor(context,R.color.greenMain));
+                itemTag.setBackground(ContextCompat.getDrawable(itemView.getContext(),R.drawable.tag_frame_green));
+                tagTitle.setTextColor(ContextCompat.getColor(itemView.getContext(),R.color.greenMain));
 
             }
             deleteTag.setOnClickListener(this);

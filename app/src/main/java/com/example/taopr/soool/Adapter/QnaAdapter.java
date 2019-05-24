@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +15,14 @@ import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.R;
-import com.example.taopr.soool.View.MyPageActivity;
-import com.example.taopr.soool.View.QnaActivity;
 import com.example.taopr.soool.Whatisthis;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
     private Activity activity;
     private ArrayList<QnaBoardItem> qnaBoardItems;
-    private QnaActivity ac;
     private Context context;
     private static String TAG ="큐앤에이_adapter";
     private  String[] tagData = new String[0];
@@ -116,17 +111,27 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         QnaBoardItem qnaBoardItem = qnaBoardItems.get(position);
 
-        if (qnaBoardItem.getTag().contains("@##@")) {
+        if(qnaBoardItem.getTag().length() > 0) {
             tagArray = new ArrayList<String>();
-            tagData = qnaBoardItem.getTag().split("@##@");
-            for (int i = 0; i < tagData.length; i++) {
-                tagArray.add(tagData[i]);
+
+            if (qnaBoardItem.getTag().contains("@##@")) {
+
+                //tagArray = new ArrayList<String>();
+                tagData = qnaBoardItem.getTag().split("@##@");
+                for (int i = 0; i < tagData.length; i++) {
+                    tagArray.add(tagData[i]);
+                }
+
             }
-            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray,1);
+            else{
+                tagArray.add(qnaBoardItem.getTag());
+            }
+            QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray, 1);
             holder.qnaboardTagView.setAdapter(qnaBoardTagAdapter);
             holder.qnaboardTagView.addItemDecoration(new RecyclerDecoration(32));
             holder.qnaboardTagView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         }
+
 
 
         holder.qnaBoardTitle.setText(qnaBoardItem.getTitle());
