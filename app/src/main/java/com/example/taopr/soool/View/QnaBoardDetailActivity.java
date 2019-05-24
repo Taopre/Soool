@@ -202,6 +202,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             iv_qnaboardImage.setVisibility(View.GONE);
                         } else {
                             Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaBoardItem.getImage());
+
+                            try {
+                                //                            File files = new File(Whatisthis.serverIp+qnaBoardItem.getImage());
+                                //                            Uri tests = Uri.fromFile(files);
+                                
+                                
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaBoardItem.getImage())
                                     .override(100, 100)
