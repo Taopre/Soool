@@ -81,8 +81,18 @@ public class QnaBoardModel {
                                     try {
                                         String msg = response.body().string();
                                         Log.d(TAG, "onResponse okhttp: " + msg);
+                                        msg = msg.replace("[","");
+                                        msg = msg.replace("]","");
 
-                                        qnaBoardPresenter.deleteBoardResp(0);
+                                        Gson gsonObject = new Gson();
+                                        ResponseTest responseTest = gsonObject.fromJson(msg, ResponseTest.class);
+                                        
+                                        if (responseTest.isResult().equals("true")) {
+                                            Log.d(TAG, "onResponse: 삭제 true");
+                                            qnaBoardPresenter.deleteBoardResp(0);
+                                        } else {
+                                            Log.d(TAG, "onResponse: 삭제 false");
+                                        }
                                     }catch (IOException e) {
                                         e.printStackTrace();
                                     }

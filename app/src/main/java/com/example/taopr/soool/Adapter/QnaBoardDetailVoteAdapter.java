@@ -24,7 +24,7 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
     private LayoutInflater inflater;
     public ArrayList<QnaBoardVoteItem> editModelArrayList = new ArrayList<>();
     public int voteTotalNums;
-    public boolean voteFlag = false, textSelectFlag = false;
+    public boolean voteFlag = false, textSelectFlag = false, alreadyVote = false;
 
     private static ClickListener clickListener;
     public TextView selected = null;
@@ -32,6 +32,7 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
     public interface ClickListener {
         void onListVoteListClick(int position, View view) ;
     }
+
 
     public QnaBoardDetailVoteAdapter() {}
 
@@ -57,6 +58,20 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
         holder.progressBar.setMax(voteTotalNums);
         holder.progressBar.setScaleY(5f);
 
+
+        final int pos = position;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    clickListener.onListVoteListClick(pos, v);
+                } catch (NullPointerException e) {
+                    Log.d("adapter", "onClick: 끝나라!!!");
+                }
+            }
+        });
+
+
         if (position == getItemCount() - 1) {
             if (selected == null) {
                 holder.textView.setTextColor(Color.parseColor("#000000"));
@@ -67,6 +82,11 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
 
         if (voteFlag == true) {
             holder.progressBar.setVisibility(View.VISIBLE);
+        }
+
+        if (alreadyVote == true) {
+            Log.d("adapter", "onBindViewHolder: 투표끝 작동되지마");
+            clickListener = null;
         }
 
         if (textSelectFlag == true) {
@@ -102,7 +122,7 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
     }
 
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView textView;
         protected ProgressBar progressBar;
@@ -112,12 +132,6 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
 
             textView = itemView.findViewById(R.id.textViewssss);
             progressBar = itemView.findViewById(R.id.progressbar);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onListVoteListClick(getAdapterPosition(), v);
         }
     }
 }

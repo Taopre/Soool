@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.example.taopr.soool.Adapter.QnaBoardDetailImageAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardDetailVoteAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
@@ -51,7 +52,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class QnaBoardDetailActivity extends AppCompatActivity implements View.OnClickListener,
-        QnaBoardDetailImageAdapter.GridviewItemClickListner, QnaDetailPresenter.View {
+        QnaBoardDetailImageAdapter.GridviewItemClickListner, QnaDetailPresenter.View, QnaBoardDetailVoteAdapter.ClickListener {
 
     String TAG = "QnaBoardDetailActivity", accountNick;
     String[] tagData = new String[0];
@@ -197,20 +198,16 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_qnaboardCommentCount.setText(qnaBoardItem.getComments()+"");
                         tv_qnaboardViewCount.setText(qnaBoardItem.getViews()+"");
 
-                        try {
-//                            File files = new File(Whatisthis.serverIp+qnaBoardItem.getImage());
-//                            Uri tests = Uri.fromFile(files);
-
-
+                        if (qnaBoardItem.getImage() == null) {
+                            iv_qnaboardImage.setVisibility(View.GONE);
+                        } else {
+                            Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaBoardItem.getImage());
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaBoardItem.getImage())
                                     .override(100, 100)
                                     .centerCrop()
                                     .into(iv_qnaboardImage);
-                        } catch (NullPointerException e) {
-                            iv_qnaboardImage.setVisibility(View.GONE);
                         }
-
                     } else if (qnaBoardItem.getQnaCate() == 1) {
                         // 투표 X.
 
@@ -231,14 +228,15 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_qnaboardCommentCount.setText(qnaBoardItem.getComments()+"");
                         tv_qnaboardViewCount.setText(qnaBoardItem.getViews()+"");
 
-                        try {
+                        if (qnaBoardItem.getImage() == null) {
+                            iv_qnaboardImage.setVisibility(View.GONE);
+                        } else {
+                            Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaBoardItem.getImage());
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaBoardItem.getImage())
                                     .override(100, 100)
                                     .centerCrop()
                                     .into(iv_qnaboardImage);
-                        } catch (NullPointerException e) {
-                            iv_qnaboardImage.setVisibility(View.GONE);
                         }
 
                     }
@@ -282,14 +280,15 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 //        tv_qnaboardViewCount.setText(qnaBoardItem.getViews());
                             tv_qnaboardViewCount.setText("0");
 
-                            try {
+                            if (qnaItem.getImage() == null) {
+                                iv_qnaboardImage.setVisibility(View.GONE);
+                            } else {
+                                Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaItem.getImage());
                                 Glide.with(this)
                                         .load(Whatisthis.serverIp+qnaItem.getImage())
                                         .override(100, 100)
                                         .centerCrop()
                                         .into(iv_qnaboardImage);
-                            } catch (NullPointerException e) {
-                                iv_qnaboardImage.setVisibility(View.GONE);
                             }
 
                             for (int i = 0; i < qnaItem.getVoteText().size(); i++) {
@@ -334,14 +333,15 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 //        tv_qnaboardViewCount.setText(qnaBoardItem.getViews());
                             tv_qnaboardViewCount.setText("0");
 
-                            try {
+                            if (qnaItem.getImage() == null) {
+                                iv_qnaboardImage.setVisibility(View.GONE);
+                            } else {
+                                Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaItem.getImage());
                                 Glide.with(this)
                                         .load(Whatisthis.serverIp+qnaItem.getImage())
                                         .override(100, 100)
                                         .centerCrop()
                                         .into(iv_qnaboardImage);
-                            } catch (NullPointerException e) {
-                                iv_qnaboardImage.setVisibility(View.GONE);
                             }
 
                             Log.d(TAG, "이미지 투표 항목 수: " + qnaItem.getVoteImage().size());
@@ -351,7 +351,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             for (int i = 0; i < qnaItem.getVoteImage().size(); i++) {
                                 File imageFile = new File(qnaItem.getVoteImage().get(i));
                                 Uri uriImage = Uri.fromFile(imageFile);
-                                gridVoteItem = new GridVoteItem("", uriImage, false);
+                                gridVoteItem = new GridVoteItem("", uriImage, false, false);
                                 gridVoteItemArrayList.add(gridVoteItem);
                             }
 
@@ -382,14 +382,15 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 //        tv_qnaboardViewCount.setText(qnaBoardItem.getViews());
                         tv_qnaboardViewCount.setText("0");
 
-                        try {
+                        if (qnaItem.getImage() == null) {
+                            iv_qnaboardImage.setVisibility(View.GONE);
+                        } else {
+                            Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaItem.getImage());
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaItem.getImage())
                                     .override(100, 100)
                                     .centerCrop()
                                     .into(iv_qnaboardImage);
-                        } catch (NullPointerException e) {
-                            iv_qnaboardImage.setVisibility(View.GONE);
                         }
 
                     }
@@ -536,6 +537,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 }
 
                 btn_voteTextFinishBtn.setVisibility(View.GONE);
+                qnaBoardDetailVoteAdapter.alreadyVote = true;
+                qnaBoardDetailVoteAdapter.notifyDataSetChanged();
                 break;
             case R.id.voteImageFinishBtn:
                 qnaBoardDetailImageAdapter.voteFlag = true;
@@ -561,6 +564,9 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 }
 
                 btn_voteImageFinishBtn.setVisibility(View.GONE);
+
+                qnaBoardDetailImageAdapter.alreadyVote = true;
+                qnaBoardDetailImageAdapter.notifyDataSetChanged();
                 break;
             case R.id.drawupModify:
                 Intent intent = new Intent(this, QnaBoardActivity.class);
@@ -570,17 +576,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 startActivity(intent);
                 finish();
-//                if (fromActivity == 0) {
-//                    intent = new Intent(this, QnaBoardActivity.class);
-//                    intent.putExtra("QnaBoardItem", qnaBoardItem);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-//                    startActivity(intent);
-//                } else if (fromActivity == 1) {
-//                    intent = new Intent(this, QnaBoardActivity.class);
-//                    intent.putExtra("QnaItem", qnaItem);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-//                    startActivity(intent);
-//                }
                 break;
         }
     }
@@ -625,60 +620,95 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         if (getQnaVoteItem.getQnaVoteStatus() == 0) {
             rc_recycler.setVisibility(View.VISIBLE);
 
-            for (int i = 0; i < getQnaVoteItem.getVoteText().size(); i++) {
-                QnaBoardVoteItem editModel = new QnaBoardVoteItem();
-                editModel.setEditTextValue(getQnaVoteItem.getVoteText().get(i));
-                editModel.setFlag(false);
-//                editModel.setVoteboard(getQnaVoteItem.getVoteResult().get(i));
-                editModelArrayList.add(editModel);
-            }
-//
-            qnaBoardDetailVoteAdapter = new QnaBoardDetailVoteAdapter(this, editModelArrayList);
-            rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
-            rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+            if (getQnaVoteItem.getMemberIsVoted() == 0) {
+                for (int i = 0; i < getQnaVoteItem.getVoteText().size(); i++) {
+                    QnaBoardVoteItem editModel = new QnaBoardVoteItem();
+                    editModel.setEditTextValue(getQnaVoteItem.getVoteText().get(i));
+                    editModel.setFlag(false);
+                    editModelArrayList.add(editModel);
+                }
 
-            qnaBoardDetailVoteAdapter.notifyDataSetChanged();
+                qnaBoardDetailVoteAdapter = new QnaBoardDetailVoteAdapter(this, editModelArrayList);
+                rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
+                rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
-            try {
-                for (int i = 0; i < getQnaVoteItem.getVoteResult().size(); i++)
-                    voteTotalResult += getQnaVoteItem.getVoteResult().get(i);
-
+                Log.d(TAG, "getDataSuccess: text total : "+getQnaVoteItem.getTotalVoteCount());
+                voteTotalResult = getQnaVoteItem.getTotalVoteCount();
                 qnaBoardDetailVoteAdapter.voteTotalNums = voteTotalResult;
                 qnaBoardDetailVoteAdapter.notifyDataSetChanged();
 
                 tv_voteResultShow.setText(voteTotalResult + "");
-            } catch (NullPointerException e) {
-                Log.d(TAG, "getDataSuccess: voteResult null!!!");
+            } else {
+                for (int i = 0; i < getQnaVoteItem.getVoteText().size(); i++) {
+                    QnaBoardVoteItem editModel = new QnaBoardVoteItem();
+                    editModel.setEditTextValue(getQnaVoteItem.getVoteText().get(i));
+//                    editModel.setFlag(true);
+                    editModel.setVoteboard(getQnaVoteItem.getVoteResult().get(i));
+                    editModelArrayList.add(editModel);
+                }
+
+                qnaBoardDetailVoteAdapter = new QnaBoardDetailVoteAdapter(this, editModelArrayList);
+                rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
+                rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+
+                qnaBoardDetailVoteAdapter.voteFlag = true;
+                qnaBoardDetailVoteAdapter.notifyDataSetChanged();
+
+                qnaBoardDetailVoteAdapter.alreadyVote = true;
+                qnaBoardDetailVoteAdapter.notifyDataSetChanged();
+                Log.d(TAG, "getDataSuccess: 투표했지?"+ qnaBoardDetailVoteAdapter.alreadyVote);
+
+                Log.d(TAG, "getDataSuccess: text total : "+getQnaVoteItem.getTotalVoteCount());
+                voteTotalResult = getQnaVoteItem.getTotalVoteCount();
+                qnaBoardDetailVoteAdapter.voteTotalNums = voteTotalResult;
+                qnaBoardDetailVoteAdapter.notifyDataSetChanged();
+
+                tv_voteResultShow.setText(voteTotalResult + "");
             }
+
+
         } else {
             gv_gridview.setVisibility(View.VISIBLE);
 
-            for (int i = 0; i < getQnaVoteItem.getVoteImage().size(); i++) {
-                File imageFile = new File(getQnaVoteItem.getVoteImage().get(i));
-                Uri uriImage = Uri.fromFile(imageFile);
-//                Glide.with(this)
-//                        .load(Whatisthis.serverIp+qnaBoardItem.getImage())
-//                        .override(100, 100)
-//                        .centerCrop()
-//                        .into(iv_qnaboardImage);
-                gridVoteItem = new GridVoteItem("", uriImage, false, getQnaVoteItem.getVoteResult().get(i));
-                gridVoteItemArrayList.add(gridVoteItem);
-            }
+            if (getQnaVoteItem.getMemberIsVoted() == 0) {
+                for (int i = 0; i < getQnaVoteItem.getVoteImage().size(); i++) {
+                    gridVoteItem = new GridVoteItem(
+                            "", getQnaVoteItem.getVoteImage().get(i), false, true);
+                    gridVoteItemArrayList.add(gridVoteItem);
+                }
 
-            qnaBoardDetailImageAdapter = new QnaBoardDetailImageAdapter(this, gridVoteItemArrayList, this);
-            gv_gridview.setAdapter(qnaBoardDetailImageAdapter);
+                qnaBoardDetailImageAdapter = new QnaBoardDetailImageAdapter(this, gridVoteItemArrayList, this);
+                gv_gridview.setAdapter(qnaBoardDetailImageAdapter);
 
-            qnaBoardDetailImageAdapter.notifyDataSetChanged();
-            try {
-                for (int i=0; i<getQnaVoteItem.getVoteResult().size(); i++)
-                    voteTotalResult += getQnaVoteItem.getVoteResult().get(i);
-
+                voteTotalResult = getQnaVoteItem.getTotalVoteCount();
+                Log.d(TAG, "getDataSuccess: total in act "+voteTotalResult+"");
                 qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
                 qnaBoardDetailImageAdapter.notifyDataSetChanged();
 
                 tv_voteResultShow.setText(voteTotalResult+"");
-            } catch (NullPointerException e) {
-                Log.d(TAG, "getDataSuccess: voteResult null!!!");
+            } else {
+                for (int i = 0; i < getQnaVoteItem.getVoteImage().size(); i++) {
+                    gridVoteItem = new GridVoteItem(
+                            "", getQnaVoteItem.getVoteImage().get(i), getQnaVoteItem.getVoteResult().get(i), true);
+                    gridVoteItemArrayList.add(gridVoteItem);
+                }
+
+                qnaBoardDetailImageAdapter = new QnaBoardDetailImageAdapter(this, gridVoteItemArrayList, this);
+                gv_gridview.setAdapter(qnaBoardDetailImageAdapter);
+
+                qnaBoardDetailImageAdapter.voteFlag = true;
+                qnaBoardDetailImageAdapter.notifyDataSetChanged();
+
+                qnaBoardDetailImageAdapter.alreadyVote = true;
+                qnaBoardDetailImageAdapter.notifyDataSetChanged();
+
+                voteTotalResult = getQnaVoteItem.getTotalVoteCount();
+                Log.d(TAG, "getDataSuccess: total in act "+voteTotalResult+"");
+                qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
+                qnaBoardDetailImageAdapter.notifyDataSetChanged();
+
+                tv_voteResultShow.setText(voteTotalResult+"");
+
             }
         }
     }
@@ -691,5 +721,33 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    public void onListVoteListClick(int position, View view) {
+        Toast.makeText(view.getContext(), "hihi", Toast.LENGTH_SHORT).show();
+        TextView textView = view.findViewById(R.id.textViewssss);
+
+        if (position != isSelectedPosition) {
+            if(isSelectedPosition != 9999){
+                editModelArrayList.get(isSelectedPosition).setFlag(false);
+                tv_inActSelected.setTextColor(Color.parseColor("#000000"));
+            }
+            isSelectedPosition = position;
+            textView.setTextColor(Color.parseColor("#FF0000"));
+            editModelArrayList.get(isSelectedPosition).setFlag(true);
+
+            tv_inActSelected = textView;
+        }
+
+        qnaBoardDetailVoteAdapter.textSelectFlag = true;
+        qnaBoardDetailVoteAdapter.notifyDataSetChanged();
+
+        fl_btnFrame.setVisibility(View.VISIBLE);
+        btn_voteTextFinishBtn.setVisibility(View.VISIBLE);
+
+        for (int i=0; i<editModelArrayList.size(); i++) {
+            Log.d("어뎁터", "플레그: "+i+"  "+editModelArrayList.get(i).isFlag());
+        }
     }
 }
