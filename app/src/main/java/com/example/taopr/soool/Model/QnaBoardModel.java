@@ -416,22 +416,6 @@ public class QnaBoardModel {
                                                         qnaBoardPresenter.enrollmentBoardResp(
                                                                 1, modelQnaBoardItem);
 
-//                                                        JSONArray jsonArray = new JSONArray(msg);
-//                                                        for (int i = 0; i < jsonArray.length(); i++) {
-//                                                            JSONObject returnData = jsonArray.getJSONObject(i);
-//
-//                                                            result = returnData.getString("result");
-//
-//                                                            if(result.equals("true")){
-//                                                                Log.d(TAG, "onResponse: 인서트 성공");
-//                                                                qnaBoardPresenter.enrollmentBoardResp(
-//                                                                        1, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
-//                                                            }else {
-//                                                                Log.d(TAG, "onResponse: 인서트 실패");
-//                                                                qnaBoardPresenter.enrollmentBoardResp(
-//                                                                        2, qnaItem.getQnaCate(), qnaItem.qnaVoteStatus, qnaItem);
-//                                                            }
-//                                                        }
                                                     }catch (IOException e) {
                                                         e.printStackTrace();
                                                     }
