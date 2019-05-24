@@ -46,6 +46,18 @@ public class StartingActivity extends AppCompatActivity {
 
         mLoginCallback = new LoginCallback(this);
 
+        StringBuffer stacktrace = new StringBuffer();
+        StackTraceElement[] stackTrace = new Exception().getStackTrace();
+        for(int x=0; x<stackTrace.length; x++)
+        {
+            stacktrace.append(stackTrace[x].toString() + " ");
+        }
+        Log.e(TAG, "스택 : ");
+        Log.e(TAG, "스택 : " + stacktrace.toString());
+
+        Log.d(TAG, "스택 : ", new Throwable("stack dump"));
+
+
        // 카카오API 로그인
         customKakaoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +119,7 @@ public class StartingActivity extends AppCompatActivity {
 
                 if( termsOfServiceCheck.isChecked()) {
                     Intent intent = new Intent(StartingActivity.this, SignUpActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
                 }
                 else{

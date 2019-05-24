@@ -30,6 +30,7 @@ import com.example.taopr.soool.View.QnaBoardDetailActivity;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
@@ -45,7 +46,7 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
     private ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList<>();
     private final int MY_BOARD_MOVE_TO_WRITE = 4110;
     private final int MY_BOARD_MOVE_TO_DETAIL = 4120;
-    private final String TAG = "내 게시물 프래그먼트";
+    private final String TAG = "마이페이지 내 게시물 프래그먼트";
     private Context context;
     private Activity activity;
 
@@ -61,6 +62,7 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -81,6 +83,7 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
         Log.i(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_my_board, container, false);
 
+
         // 리사이클러뷰 기본 설정
         myBoardRecycler = view.findViewById(R.id.myBoardRecycler);
         linearLayoutManager = new LinearLayoutManager(view.getContext());
@@ -96,6 +99,7 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
 
         // qnaboarditem 리스트 전달 받은후 리사이클러뷰 어댑터에 전달
         qnaBoardItems = getArguments().getParcelableArrayList("qnaBoardItems");
+        Log.i(TAG, "onCreateView: 사이즈 " + qnaBoardItems.size());
 
 
         // 리스트 갯수가 0일 때는 작성한 게시물이 없다는 문구를 보여주면서 리사이클러뷰는 없어지지만

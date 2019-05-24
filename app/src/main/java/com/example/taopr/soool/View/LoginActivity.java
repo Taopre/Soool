@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         simpleObservable
                 .map(text -> text + " - goo")
                 .subscribe(text -> tv_loginStatus.setText(text));
+
     }
 
     private void DoBinding() {
@@ -102,8 +103,10 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         //예를 들어 nee일 경우 이메일 존재하지않은 다는걸 toast메시지로 띄워줄지 이런거
         //내가 어떻게 하기로 했는지 기억못하는건지 뭔지 몰라서 주석 남겨놓음.
         if (response.equals("true")) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(this, HomeActivity.class);
+          //  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (response.equals("false")) {
             setConfirmText("Login Fail!!");

@@ -38,6 +38,7 @@ public class APIClient {
         return retrofit;
     }
 
+
     // getClient1로 따로 함수를 만든 이유는
     // getClient1은 받은 응답을 옵저버블 형태로 변환하기 때문에
     // 혹시 기존 소스가 에러가 날 수 있다는 생각이 들어서 이렇게 따로 뺏다.

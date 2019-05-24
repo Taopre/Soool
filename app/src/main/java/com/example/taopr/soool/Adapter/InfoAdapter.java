@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.example.taopr.soool.Object.InfoOfSoool;
 import com.example.taopr.soool.R;
-import com.example.taopr.soool.View.InfoActivity;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
     private Activity activity;
     private List<InfoOfSoool> infoOfSoools;
-    private InfoActivity ac;
     private Context context;
     private static String TAG ="정보_adapter";
 
