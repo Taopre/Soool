@@ -170,6 +170,6 @@ public interface APIService {
                                                @Field("content") String qnaContent);
 
     @FormUrlEncoded
-    @POST("/qnapost/.php")
+    @POST("/qnapost/QnaDelete.php")
     Call<ResponseBody> deleteBoardWithPostNo(@Field("postNo") int postNo);
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.Whatisthis;
 
 import java.util.ArrayList;
 
@@ -26,14 +27,16 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
     private ArrayList<GridVoteItem> item = new ArrayList<>();
     private GridviewItemClickListner gridviewItemClickListner;
     private RadioButton selected = null;
-    public boolean voteFlag = false;
-    public int voteTotalNum;
+    public boolean voteFlag = false, alreadyVote = false;
+    public int voteTotalNum = 0;
     ProgressBar progressBars;
 
     public interface GridviewItemClickListner {
         void onListImageClick(int position) ;
         void onListRadioClick(int position, View view) ;
     }
+
+    public QnaBoardDetailImageAdapter() {}
 
 
     public QnaBoardDetailImageAdapter(Context c, ArrayList<GridVoteItem> item, GridviewItemClickListner gridviewItemClickListner) {
@@ -66,30 +69,39 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        ViewHolder viewHolder;
+
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.qnadetail_item, null);
 
-            TextView textView = convertView.findViewById(R.id.grid_text);
-            ImageView imageView = convertView.findViewById(R.id.grid_image);
-            ProgressBar progressBar = convertView.findViewById(R.id.progressbar);
-            RadioButton radioButton = convertView.findViewById(R.id.radio);
+            viewHolder = new ViewHolder();
+            viewHolder.textView = convertView.findViewById(R.id.grid_text);
+            viewHolder.imageView = convertView.findViewById(R.id.grid_image);
+            viewHolder.progressBar = convertView.findViewById(R.id.progressbar);
+            viewHolder.radioButton = convertView.findViewById(R.id.radio);
 
-            final ViewHolder viewHolder = new ViewHolder(textView, imageView, progressBar, radioButton);
             convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder)convertView.getTag();
         }
-
-        Log.d("어댑터", "getView 투표 값 상태: "+position+" "+item.get(position).getVote());
-
-        final ViewHolder viewHolder = (ViewHolder)convertView.getTag();
-        viewHolder.textView.setText(item.get(position).getStatus());
-        viewHolder.imageView.setImageURI(item.get(position).getImage());
-        viewHolder.progressBar.setProgress(item.get(position).getVote());
-        viewHolder.progressBar.setScaleY(20f);
 
         viewHolder.progressBar.setTag(position);
         viewHolder.radioButton.setTag(position);
         viewHolder.textView.setTag(position);
-        viewHolder.imageView.setTag(position);
+        viewHolder.imageView.setTag(R.id.grid_image, position);
+
+        viewHolder.textView.setText(item.get(position).getStatus());
+        if (item.get(position).isStringOrUri() == true) {
+            Glide.with(convertView.getContext())
+                    .load(Whatisthis.serverIp+item.get(position).getStrImage())
+                    .override(100, 100)
+                    .centerCrop()
+                    .into(viewHolder.imageView);
+        } else {
+            viewHolder.imageView.setImageURI(item.get(position).getImage());
+        }
+        viewHolder.progressBar.setProgress(item.get(position).getVote());
+        viewHolder.progressBar.setScaleY(20f);
         viewHolder.progressBar.setMax(voteTotalNum);
 
 //        if (position == getCount() - 1) {
@@ -103,6 +115,11 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
             viewHolder.radioButton.setVisibility(View.GONE);
             viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.imageView.setAlpha(50);
+        }
+
+        if (alreadyVote == true) {
+            viewHolder.progressBar.setClickable(true);
+            viewHolder.imageView.setClickable(true);
         }
 
         viewHolder.imageView.setOnClickListener(this);
@@ -136,12 +153,12 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         private ProgressBar progressBar;
         private RadioButton radioButton;
 
-        public ViewHolder(TextView textView, ImageView imageView, ProgressBar progressBar, RadioButton radioButton) {
-            this.textView = textView;
-            this.imageView = imageView;
-            this.progressBar = progressBar;
-            this.radioButton = radioButton;
-        }
+//        public ViewHolder(TextView textView, ImageView imageView, ProgressBar progressBar, RadioButton radioButton) {
+//            this.textView = textView;
+//            this.imageView = imageView;
+//            this.progressBar = progressBar;
+//            this.radioButton = radioButton;
+//        }
     }
 
     public void onClick(View v) {
