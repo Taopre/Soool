@@ -1,9 +1,11 @@
 package com.example.taopr.soool.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
@@ -21,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,19 +61,22 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     String TAG = "QnaBoardDetailActivity", accountNick;
     String[] tagData = new String[0];
-    int vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0, actionKind, qnaListPosition;
+    int likeAndunlike = 9999, flagLike = 0, flagUnLike = 0, vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0, actionKind, qnaListPosition;
     boolean isMyBoard = false;
 
-    TextView tv_qnaboardTitle, tv_qnaboardWriter, tv_qnaboardContent, tv_qnaboardDate, tv_qnaboardCommentCount, tv_qnaboardViewCount, tv_qnaboardTagOne, tv_voteResultShow;
+    TextView tv_qnaboardLikeText, tv_qnaboardUnLikeText, tv_qnaboardTitle, tv_qnaboardWriter, tv_qnaboardContent, tv_qnaboardDate, tv_qnaboardCommentCount, tv_qnaboardViewCount, tv_qnaboardTagOne, tv_voteResultShow, tv_qnaboardLike, tv_qnaboardUnLike;
+    EditText et_commentWrite;
     ImageView iv_qnaboardImage;
-    Button btn_qnaboardLike, btn_qnaboardUnLike, btn_voteTextFinishBtn, btn_voteImageFinishBtn;
+    Button btn_voteTextFinishBtn, btn_voteImageFinishBtn, btn_commentEnroll;
     LinearLayout ll_voteLayout;
     RecyclerView rc_recycler, rc_qnaboardTagMany;
     GridView gv_gridview;
     HorizontalScrollView tagView;
     FrameLayout fl_btnFrame;
+    RelativeLayout rl_qnadetailLayout, rl_qnaboardUnLikeLayout, rl_qnaboardLikeLayout;
     private TextView tv_inActSelected = null;
     private RadioButton rb_inActSelected = null;
+    InputMethodManager inputMethodManager;
 
     QnaItem qnaItem;
     QnaBoardItem qnaBoardItem;
@@ -88,6 +96,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_qnaboard_detail);
 
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
+
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
         Gson gson = new GsonBuilder().create();
@@ -198,6 +208,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_qnaboardDate.setText(qnaBoardItem.getDate());
                         tv_qnaboardCommentCount.setText(qnaBoardItem.getComments()+"");
                         tv_qnaboardViewCount.setText(qnaBoardItem.getViews()+"");
+                        tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                        tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
 
                         if (qnaBoardItem.getImage() == null) {
                             iv_qnaboardImage.setVisibility(View.GONE);
@@ -230,6 +242,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_qnaboardDate.setText(qnaBoardItem.getDate());
                         tv_qnaboardCommentCount.setText(qnaBoardItem.getComments()+"");
                         tv_qnaboardViewCount.setText(qnaBoardItem.getViews()+"");
+                        tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                        tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
 
                         if (qnaBoardItem.getImage() == null) {
                             iv_qnaboardImage.setVisibility(View.GONE);
@@ -404,29 +418,20 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             case 9999:
                 break;
         }
-        // 값이 넘어왔으므로 이제 뷰들 만들어서 넣어주는 작업하면 될거같다.
-
-
-        /*
-        만약 객체에서 tag값을 어레이리스트로 변경한다면
-        어댑터 생성시 객체의 tag 어레이값을 넣어줘서 보여지게 작업하면됩니다.
-        그 후 이 주석위의 tv_qnaboardTag는 삭제해주면 됩니다.
-
-        qnaBoardTagAdapter = new QnaBoardTagAdapter(this, );
-        rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
-        rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-         */
-
 
         // 객체 넘어왔을 경우
         // 1. 게시물의 이미지가 존재하는지 구별
         // 2. 투표가 존재하는지 안하는지 구별.
         // 3. 투표 존재의 경우 이미지 or 텍스트 투표인지 구별.
         // 4. 이 주석 위에 것들을 아래 조건문에 잘 맞게 넣어줘서 보여질수 있게 하면 끝날 것 같다.
-
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        flagLike = 0;
+        flagUnLike = 0;
+    }
 
     private void DoBinding() {
         qnaDetailPresenter = new QnaDetailPresenter(this);
@@ -440,8 +445,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         tv_qnaboardCommentCount = findViewById(R.id.qnaboardCommentCount);
         tv_qnaboardViewCount = findViewById(R.id.qnaboardViewCount);
         iv_qnaboardImage = findViewById(R.id.qnaboardImage);
-        btn_qnaboardLike = findViewById(R.id.qnaboardLike);
-        btn_qnaboardUnLike = findViewById(R.id.qnaboardUnLike);
+        tv_qnaboardLike = findViewById(R.id.qnaboardLike);
+        tv_qnaboardUnLike = findViewById(R.id.qnaboardUnLike);
         ll_voteLayout = findViewById(R.id.voteLayout);
         rc_recycler = findViewById(R.id.recycler);
         gv_gridview = findViewById(R.id.gridview);
@@ -452,15 +457,24 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         fl_btnFrame = findViewById(R.id.btnFrame);
         btn_voteImageFinishBtn = findViewById(R.id.voteImageFinishBtn);
         tv_voteResultShow = findViewById(R.id.voteResultShow);
+        et_commentWrite = findViewById(R.id.commentWrite);
+        btn_commentEnroll = findViewById(R.id.commentEnroll);
+        rl_qnadetailLayout = findViewById(R.id.qnadetailLayout);
+        rl_qnaboardUnLikeLayout = findViewById(R.id.qnaboardUnLikeLayout);
+        rl_qnaboardLikeLayout = findViewById(R.id.qnaboardLikeLayout);
+        tv_qnaboardLikeText = findViewById(R.id.qnaboardLikeText);
+        tv_qnaboardUnLikeText = findViewById(R.id.qnaboardUnLikeText);
 
         ll_voteLayout.setVisibility(View.GONE);
         fl_btnFrame.setVisibility(View.GONE);
 
         // 뷰의 리스너 선언 부분입니다.
-        btn_qnaboardLike.setOnClickListener(this);
-        btn_qnaboardUnLike.setOnClickListener(this);
         btn_voteTextFinishBtn.setOnClickListener(this);
         btn_voteImageFinishBtn.setOnClickListener(this);
+        btn_commentEnroll.setOnClickListener(this);
+        rl_qnadetailLayout.setOnClickListener(this);
+        rl_qnaboardUnLikeLayout.setOnClickListener(this);
+        rl_qnaboardLikeLayout.setOnClickListener(this);
     }
 
     @Override
@@ -484,24 +498,22 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         Toolbar parent = (Toolbar)actionbar.getParent();
         parent.setContentInsetsAbsolute(0,0);
 
-        ImageButton ib_drawupBack = findViewById(R.id.drawupBack);
-        TextView tv_drawupTitle = findViewById(R.id.drawupTitle);
-        Button btn_drawupReport = findViewById(R.id.drawupReport);
-        Button btn_drawupModify = findViewById(R.id.drawupModify);
+        ImageView iv_drawupBack = findViewById(R.id.drawupBack);
+        TextView tv_drawupReport = findViewById(R.id.drawupReport);
+        TextView tv_drawupModify = findViewById(R.id.drawupModify);
 
         if (isMyBoard == true) {
-            btn_drawupReport.setVisibility(View.GONE);
-            btn_drawupModify.setVisibility(View.VISIBLE);
+            tv_drawupReport.setVisibility(View.GONE);
+            tv_drawupModify.setVisibility(View.VISIBLE);
         }
         else {
-            btn_drawupModify.setVisibility(View.GONE);
-            btn_drawupReport.setVisibility(View.VISIBLE);
+            tv_drawupModify.setVisibility(View.GONE);
+            tv_drawupReport.setVisibility(View.VISIBLE);
         }
 
-        tv_drawupTitle.setText("Board");
-        ib_drawupBack.setOnClickListener(this);
-        btn_drawupReport.setOnClickListener(this);
-        btn_drawupModify.setOnClickListener(this);
+        iv_drawupBack.setOnClickListener(this);
+        tv_drawupReport.setOnClickListener(this);
+        tv_drawupModify.setOnClickListener(this);
 
         return true;
     }
@@ -509,6 +521,46 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.qnaboardLikeLayout:
+                flagLike++;
+
+                // 추천 클릭시 색깔 변함 준 부분
+                if (flagLike % 2 == 1) {
+                    likeAndunlike = 1;
+                    tv_qnaboardLike.setTextColor(Color.parseColor("#08883e"));
+                    tv_qnaboardLikeText.setTextColor(Color.parseColor("#08883e"));
+//                    rl_qnaboardUnLikeLayout.setClickable(false);
+                } else {
+                    likeAndunlike = 2;
+                    tv_qnaboardLike.setTextColor(Color.parseColor("#9d9d97"));
+                    tv_qnaboardLikeText.setTextColor(Color.parseColor("#9d9d97"));
+//                    rl_qnaboardUnLikeLayout.setClickable(true);
+                }
+
+                // 이 게시물의 추천 수를 올리기 위한 통신을 구현해야함. 보내야 할 값 아마도 게시물 번호, 회원 번호 정도?
+                break;
+            case R.id.qnaboardUnLikeLayout:
+                flagUnLike++;
+                // 비추천 클릭시 색깔 변함 준 부분
+                if (flagUnLike % 2 == 1) {
+                    likeAndunlike = 3;
+                    tv_qnaboardUnLike.setTextColor(Color.parseColor("#08883e"));
+                    tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#08883e"));
+//                    rl_qnaboardLikeLayout.setClickable(false);
+                } else {
+                    likeAndunlike = 4;
+                    tv_qnaboardUnLike.setTextColor(Color.parseColor("#9d9d97"));
+                    tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#9d9d97"));
+//                    rl_qnaboardLikeLayout.setClickable(true);
+                }
+
+                Toast.makeText(view.getContext(), likeAndunlike+"", Toast.LENGTH_SHORT).show();
+
+                // 이 게시물의 비추천 수를 올리기 위한 통신을 구현해야함. 보내야 할 값 아마도 게시물 번호, 회원 번호 정도?
+                break;
+            case R.id.qnadetailLayout:
+                hideKeyboard();
+                break;
             case R.id.drawupBack:
                 finish();
                 break;
@@ -580,7 +632,14 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.commentEnroll:
+                break;
         }
+    }
+
+    private void hideKeyboard()
+    {
+        inputMethodManager.hideSoftInputFromWindow(et_commentWrite.getWindowToken(), 0);
     }
 
     @Override

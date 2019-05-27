@@ -23,10 +23,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -64,22 +66,19 @@ import java.util.ArrayList;
 public class QnaBoardActivity extends AppCompatActivity implements
         View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener, VoteImageAdapter.GridviewItemClickListner {
 
-    private static final String TAG = "QnaBoardActivity";
-    private static final int MY_PERMISSION_STORAGE = 1111;
+    private final String TAG = "QnaBoardActivity";
+    private final int MY_PERMISSION_STORAGE = 1111;
     private final int QNA_MOVE_TO_DETAIL= 3100;
     private final int QNA_MOVE_TO_WRITE = 3200;
 
-//    Spinner sp_qnaboardTag;
     TextView tv_qnaboardBeforeTag;
     EditText et_qnaboardTitle, et_qnaboardContent;
-    ImageButton ib_qnaboardImagebtn, iv_qnaboardAddBtn, iv_qnaboardVoteBtn;
-    ImageView iv_qnaboardImage;
-    Button btn_qnaboardDeleteBtn, btn_qnaboardAddTag;
+    ImageButton iv_qnaboardAddBtn;
+    ImageView iv_qnaboardImage, iv_qnaboardAddTag, iv_qnaboardDeleteBtn, iv_qnaboardImagebtn, iv_qnaboardVoteBtn;
     HorizontalScrollView h_scrollView;
     LinearLayout lay_qnaboardVoteLayout;
-    private RecyclerView recyclerView, rc_qnaboardTag;
-//    RadioGroup rg_qnaboardVoteSelect;
-//    RadioButton rb_qnaboardVoteText, rb_qnaboardVoteImage;
+    FrameLayout imageLayout;
+    RecyclerView recyclerView, rc_qnaboardTag;
     GridView gridView;
 
     public ArrayList<QnaBoardVoteItem> editModelArrayList;
@@ -89,16 +88,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     ArrayList<String> tagArray = new ArrayList<>();
     ArrayList<Uri> path = new ArrayList<>();
-    ArrayList<Uri> realPath = new ArrayList<>();
-    ArrayList<Integer> number = new ArrayList<>();
     ArrayList<String> voteImage = new ArrayList<>();
     ArrayList<String> voteText = new ArrayList<>();
-    ArrayList<String> arrayList = new ArrayList<>();
-
-    private Uri mImageCaptureUri;
-    private int id_view;
-    String absoultePath;
-    int count = 2, accountNo, voteSelect = 2;
 
     VoteImageAdapter voteImageAdapter;
     QnaBoardPresenter qnaBoardPresenter;
@@ -110,12 +101,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
     BottomSheetDialog bottomSheetDialog;
     BottomSheetDialogVoteSelect bottomSheetDialogVoteSelect;
 
-    Uri image;
-    String title = "", content = "", tag = "", imgPath, imgName;
-    static String UploadImgPath;
+    String tag = "";
+    String UploadImgPath, boardImagePath, accountNick;
     String[] tagData = new String[0];
-    String boardImagePath, accountNick;
-    int voteFlag = 1, actionKind = 9999, qnaListPosition;
+    int voteFlag = 1, actionKind = 9999, qnaListPosition, count = 2, accountNo, voteSelect = 2;
     boolean boardImageSelect = false, reSelectVoteImage = false;
 
     @Override
@@ -152,6 +141,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
             if (actionKind == 1) {
                 receiveQnaBoardItem = intent.getParcelableExtra("qnaBoardItem");
 
+//                if (receiveQnaBoardItem != null)
+//                    if (accountNo == receiveQnaBoardItem.getAccountNo())
+//                        tv_drawupDelete.setVisibility(View.VISIBLE);
+
                 tv_qnaboardBeforeTag.setVisibility(View.GONE);
                 h_scrollView.setVisibility(View.VISIBLE);
                 Log.d(TAG, "onCreate 태그값: "+receiveQnaBoardItem.getTag());
@@ -169,11 +162,9 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 et_qnaboardContent.setText(receiveQnaBoardItem.getContent());
 
                 if (receiveQnaBoardItem.getImage() == null) {
-                    iv_qnaboardImage.setVisibility(View.GONE);
-                    btn_qnaboardDeleteBtn.setVisibility(View.GONE);
+                    imageLayout.setVisibility(View.GONE);
                 } else {
-                    iv_qnaboardImage.setVisibility(View.VISIBLE);
-                    btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
+                    imageLayout.setVisibility(View.VISIBLE);
                     Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+receiveQnaBoardItem.getImage());
                     Glide.with(this)
                             .load(Whatisthis.serverIp+receiveQnaBoardItem.getImage())
@@ -189,6 +180,17 @@ public class QnaBoardActivity extends AppCompatActivity implements
         qnaBoardVoteAdapter = new QnaBoardVoteAdapter(this,editModelArrayList);
         recyclerView.setAdapter(qnaBoardVoteAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.drawupBack:
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private ArrayList<QnaBoardVoteItem> populateList(){
@@ -211,30 +213,30 @@ public class QnaBoardActivity extends AppCompatActivity implements
         // 뷰들 선언하는 부분입니다.
         et_qnaboardTitle = findViewById(R.id.qnaboardTitle);
         et_qnaboardContent = findViewById(R.id.qnaboardContent);
-        ib_qnaboardImagebtn = findViewById(R.id.qnaboardImageBtn);
+        iv_qnaboardImagebtn = findViewById(R.id.qnaboardImageBtn);
         iv_qnaboardImage = findViewById(R.id.qnaboardImage);
-        btn_qnaboardDeleteBtn = findViewById(R.id.qnaboardDeleteBtn);
+        iv_qnaboardDeleteBtn = findViewById(R.id.qnaboardDeleteBtn);
         iv_qnaboardVoteBtn = findViewById(R.id.qnaboardVoteBtn);
         lay_qnaboardVoteLayout = findViewById(R.id.qnaboardVoteLayout);
         iv_qnaboardAddBtn = findViewById(R.id.qnaboardAddBtn);
         recyclerView = findViewById(R.id.recycler);
         gridView = findViewById(R.id.gridview);
         tv_qnaboardBeforeTag = findViewById(R.id.qnaboardBeforeTag);
-        btn_qnaboardAddTag = findViewById(R.id.qnaboardAddTag);
+        iv_qnaboardAddTag = findViewById(R.id.qnaboardAddTag);
         rc_qnaboardTag = findViewById(R.id.qnaboardTag);
         h_scrollView = findViewById(R.id.h_scrollView);
+        imageLayout = findViewById(R.id.imageLayout);
 
-        iv_qnaboardImage.setVisibility(View.GONE);
-        btn_qnaboardDeleteBtn.setVisibility(View.GONE);
+        imageLayout.setVisibility(View.GONE);
         lay_qnaboardVoteLayout.setVisibility(View.GONE);
         iv_qnaboardAddBtn.setVisibility(View.GONE);
 
         // 뷰의 리스너 선언 부분입니다.
-        ib_qnaboardImagebtn.setOnClickListener(this);
-        btn_qnaboardDeleteBtn.setOnClickListener(this);
+        iv_qnaboardImagebtn.setOnClickListener(this);
+        iv_qnaboardDeleteBtn.setOnClickListener(this);
         iv_qnaboardVoteBtn.setOnClickListener(this);
         iv_qnaboardAddBtn.setOnClickListener(this);
-        btn_qnaboardAddTag.setOnClickListener(this);
+        iv_qnaboardAddTag.setOnClickListener(this);
         gridView.setOnItemClickListener(this);
     }
 
@@ -298,7 +300,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
         actionBar.setDisplayShowTitleEnabled(false);        //액션바에 표시되는 제목의 표시유무를 설정합니다.
         actionBar.setDisplayShowHomeEnabled(false);            //홈 아이콘을 숨김처리합니다.
 
-
         //layout을 가지고 와서 actionbar에 포팅을 시킵니다.
         LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
         View actionbar = inflater.inflate(R.layout.qna_actionbar, null);
@@ -309,18 +310,18 @@ public class QnaBoardActivity extends AppCompatActivity implements
         Toolbar parent = (Toolbar)actionbar.getParent();
         parent.setContentInsetsAbsolute(0,0);
 
-        ImageButton ib_drawupBack = findViewById(R.id.drawupBack);
-        Button btn_drawupEnroll = findViewById(R.id.drawupEnroll);
-        Button btn_drawupDelete = findViewById(R.id.drawupDelete);
+        TextView tv_drawupBack = findViewById(R.id.drawupBack);
+        TextView tv_drawupEnroll = findViewById(R.id.drawupEnroll);
+        TextView tv_drawupDelete = findViewById(R.id.drawupDelete);
 
         if (receiveQnaBoardItem != null)
             if (accountNo == receiveQnaBoardItem.getAccountNo())
-                btn_drawupDelete.setVisibility(View.VISIBLE);
+                tv_drawupDelete.setVisibility(View.VISIBLE);
 
 
-        ib_drawupBack.setOnClickListener(this);
-        btn_drawupEnroll.setOnClickListener(this);
-        btn_drawupDelete.setOnClickListener(this);
+        tv_drawupBack.setOnClickListener(this);
+        tv_drawupEnroll.setOnClickListener(this);
+        tv_drawupDelete.setOnClickListener(this);
 
         return true;
     }
@@ -363,8 +364,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
             case R.id.qnaboardDeleteBtn:
                 Toast.makeText(this, "이미지가 삭제됩니다.", Toast.LENGTH_SHORT).show();
                 iv_qnaboardImage.setImageBitmap(null);
-                iv_qnaboardImage.setVisibility(View.GONE);
-                btn_qnaboardDeleteBtn.setVisibility(View.GONE);
+                imageLayout.setVisibility(View.GONE);
 
                 UploadImgPath = null;
                 qnaItem.setImage(UploadImgPath);
@@ -767,8 +767,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);
                         bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
 
-                        iv_qnaboardImage.setVisibility(View.VISIBLE);
-                        btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
+                        imageLayout.setVisibility(View.VISIBLE);
 
                         boardImagePath = imagePath;
                         File file = new File(boardImagePath);
