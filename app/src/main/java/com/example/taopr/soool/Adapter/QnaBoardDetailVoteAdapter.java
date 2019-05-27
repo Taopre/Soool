@@ -95,21 +95,6 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
 //            }
         }
 
-//        holder.textView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                textSelectFlag = true;
-//                Toast.makeText(v.getContext(), position+"", Toast.LENGTH_LONG).show();
-//
-//                if (selected != null) {
-//                    selected.setTextColor(Color.parseColor("#000000"));
-//                    editModelArrayList.get(position).setFlag(false);
-//                }
-//                holder.textView.setTextColor(Color.parseColor("#FF0000"));
-//                selected = holder.textView;
-//                editModelArrayList.get(position).setFlag(true);
-//            }
-//        });
     }
 
     @Override

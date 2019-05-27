@@ -1,265 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/functionLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/tagLayout"
+        <RelativeLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:spinnerMode="dropdown"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="주제를 선택해주세요"
-                android:id="@+id/qnaboardBeforeTag"/>
-
-            <HorizontalScrollView
-                android:id="@+id/h_scrollView"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <android.support.v7.widget.RecyclerView
+            <RelativeLayout
+                android:id="@+id/tagLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/qnaboardTag"/>
-            </HorizontalScrollView>
+                android:background="@drawable/border_bottom"
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                android:id="@+id/qnaboardAddTag"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/all_space_between_18dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:hint="@string/qna_board_hint_of_choice_tag"
+                    android:textSize="@dimen/text_size_18dp"
+                    android:textColor="@color/grayMain"
+                    android:id="@+id/qnaboardBeforeTag"
+                    android:visibility="visible"/>
 
-        <!--<Spinner-->
-            <!--android:id="@+id/qnaboardTag"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="43dp"-->
-            <!--android:layout_marginEnd="8dp"-->
-            <!--android:layout_marginStart="8dp"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:spinnerMode="dropdown"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent" />-->
+                <HorizontalScrollView
+                    android:id="@+id/h_scrollView"
+                    android:visibility="gone"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/qnaboardTitle"
-            android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:hint="제목을 입력하세요."
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tagLayout"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <FrameLayout
-            android:id="@+id/frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/qnaboardTitle">
-
-            <EditText
-                android:id="@+id/qnaboardContent"
-                android:layout_width="match_parent"
-                android:layout_height="273dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/drawupTitle" />
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal">
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_alignTop="@+id/qnaboardBeforeTag"
+                        android:layout_alignBottom="@+id/qnaboardBeforeTag"
+                        android:layout_marginStart="@dimen/all_space_between_18dp"
+                        android:layout_width="300dp"
+                        android:layout_height="26dp"
+                        android:id="@+id/qnaboardTag"/>
+                </HorizontalScrollView>
 
                 <ImageView
-                    android:id="@+id/qnaboardImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center_horizontal|top" />
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="@dimen/all_space_between_16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="+"
+                    android:src="@drawable/qna_post_add_tag"
+                    android:id="@+id/qnaboardAddTag"/>
+            </RelativeLayout>
 
-                <Button
-                    android:id="@+id/qnaboardDeleteBtn"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal|right"
-                    android:text="X"
-                    android:textSize="10dp" />
-            </FrameLayout>
-        </FrameLayout>
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="424dp"
-            android:background="#4682B4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="448dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/btnWrapLayount">
-
-            <ImageButton
-                android:id="@+id/qnaboardImageBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/qna_post_add_img"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/frame"
-                app:layout_constraintVertical_bias="0.106" />
-
-            <ImageButton
-                android:id="@+id/qnaboardVoteBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/qna_post_add_vote"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/qnaboardImageBtn"
-                app:layout_constraintVertical_bias="0.0" />
-        </LinearLayout>
-
-
-        <ImageButton
-            android:id="@+id/qnaboardAddBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            android:src="@drawable/vote_remove_opt_img"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/qnaboardVoteLayout"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <!--<RadioGroup-->
-            <!--android:id="@+id/qnaboardVoteSelect"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginEnd="8dp"-->
-            <!--android:layout_marginStart="8dp"-->
-            <!--android:visibility="gone"-->
-            <!--android:orientation="horizontal"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintHorizontal_bias="0.0"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toBottomOf="@+id/qnaboardImageBtn"-->
-            <!--app:layout_constraintVertical_bias="0.0"-->
-            <!--tools:ignore="MissingConstraints">-->
-
-            <!--<RadioButton-->
-                <!--android:id="@+id/qnaboardVoteText"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="텍스트"/>-->
-
-            <!--<RadioButton-->
-                <!--android:id="@+id/qnaboardVoteImage"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="이미지"/>-->
-        <!--</RadioGroup>-->
-
-        <LinearLayout
-            android:id="@+id/qnaboardVoteLayout"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnWrapLayount"
-            app:layout_constraintVertical_bias="0.247">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler"
+            <LinearLayout
+                android:id="@+id/titleLayout"
+                android:background="@drawable/border_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="15dp" />
+                android:layout_below="@id/tagLayout">
 
-        <GridView
-            android:id="@+id/gridview"
-            android:visibility="gone"
-            android:numColumns="3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+                <EditText
+                    android:id="@+id/qnaboardTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/all_space_between_18dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="@dimen/all_space_between_16dp"
+                    android:hint="@string/qna_board_hint_of_write_title"
+                    android:background="@android:color/transparent"
+                    android:textSize="@dimen/text_size_18dp" />
+            </LinearLayout>
 
-</ScrollView>
+            <LinearLayout
+                android:id="@+id/contentLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titleLayout">
+
+                <EditText
+                    android:id="@+id/qnaboardContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/all_space_between_18dp"
+                    android:layout_marginEnd="@dimen/all_space_between_16dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/qna_board_hint_of_write_content"
+                    android:textSize="@dimen/text_size_18dp"
+                    android:inputType="textMultiLine"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/drawupTitle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/imageLayout"
+                        android:layout_marginTop="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal">
+
+                        <ImageView
+                            android:id="@+id/qnaboardImage"
+                            android:layout_marginStart="@dimen/all_space_between_18dp"
+                            android:layout_marginEnd="@dimen/all_space_between_16dp"
+                            android:layout_width="324dp"
+                            android:scaleType="fitXY"
+                            android:layout_height="186dp"
+                            android:layout_gravity="center_horizontal|top" />
+
+                        <ImageView
+                            android:id="@+id/qnaboardDeleteBtn"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_marginEnd="26dp"
+                            android:layout_marginTop="@dimen/all_space_between_16dp"
+                            android:layout_gravity="center_horizontal|right"
+                            android:src="@drawable/qna_post_remove_img" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/qnaboardVoteLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginTop="15dp" />
+
+                        <GridView
+                            android:id="@+id/gridview"
+                            android:visibility="gone"
+                            android:numColumns="3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/qnaboardAddBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone"
+                        android:src="@drawable/vote_remove_opt_img"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/qnaboardVoteLayout"
+                        app:layout_constraintVertical_bias="0.0" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@drawable/border_top"
+        android:id="@+id/functionLayout">
+
+        <ImageView
+            android:id="@+id/qnaboardImageBtn"
+            android:layout_marginStart="@dimen/all_space_between_18dp"
+            android:layout_marginTop="@dimen/all_space_between_16dp"
+            android:layout_marginBottom="@dimen/all_space_between_16dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/qna_post_add_img"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/qnaboardVoteBtn"
+            android:layout_marginTop="@dimen/all_space_between_16dp"
+            android:layout_marginBottom="@dimen/all_space_between_16dp"
+            android:layout_toRightOf="@+id/qnaboardImageBtn"
+            android:layout_marginStart="26dp"
+            android:layout_width="26dp"
+            android:layout_height="28dp"
+            android:src="@drawable/qna_post_add_vote" />
+    </RelativeLayout>
+</RelativeLayout>

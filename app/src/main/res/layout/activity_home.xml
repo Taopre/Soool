@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent"
-        tools:context=".View.MainActivity">
+        tools:context=".View.HomeActivity">
 
         <include
             android:id="@+id/myPageActionBar"

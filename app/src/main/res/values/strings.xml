@@ -61,6 +61,7 @@
     <string name="all_button_delete">삭제하기</string>
     <string name="all_button_choice">선택</string>
     <string name="all_button_close">닫기</string>
+    <string name="all_button_complete">완료</string>
 
 
     <!-- qna 작성페이지 -->
