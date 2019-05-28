@@ -33,7 +33,7 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
     @BindView(R.id.calendarSchTextContent)
     TextView calendarSchTextContent;
 
-    private static Boolean changedEvent = false; // false 값 일때는 CalendarAddSch 액티비티에서 이벤트를 수정,추가,삭제 경우가 없을 경우
+    private Boolean changedEvent = false; // false 값 일때는 CalendarAddSch 액티비티에서 이벤트를 수정,추가,삭제 경우가 없을 경우
                                                  //  true 값 일때는 위 경우 중 하나라도 있을 경우
     private final int CALENDAR_SCH_ADD_INT = 4310;
     private final int DIALOG_FRAGMENT = 4320;
@@ -211,7 +211,7 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
         actionBar.setDisplayHomeAsUpEnabled(false);            //액션바 아이콘을 업 네비게이션 형태로 표시합니다.
         actionBar.setDisplayShowTitleEnabled(false);        //액션바에 표시되는 제목의 표시유무를 설정합니다.
         actionBar.setDisplayShowHomeEnabled(false);            //홈 아이콘을 숨김처리합니다.
-
+        actionBar.setElevation(0);
 
         //layout을 가지고 와서 actionbar에 포팅을 시킵니다.
         LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);

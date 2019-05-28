@@ -7,6 +7,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,9 +68,9 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     private final int MYBOARD_INT = 0;
     private final int BOOKMARK_INT = 1;
     private final int CALENDAR_INT = 2;
-    public static final String CALENDAR_LIST_EXTRA = "calendarItems";
-    private static final String ACCOUNT_NO_EXTRA = "accountNo";
-    private static int fragmentNo=0;  // 마이 페이지 첫 화면은 myBoard 프래그먼트 화면이기 때문
+    public final String CALENDAR_LIST_EXTRA = "calendarItems";
+    private final String ACCOUNT_NO_EXTRA = "accountNo";
+    private int fragmentNo=0;  // 마이 페이지 첫 화면은 myBoard 프래그먼트 화면이기 때문
 
     public MyBoardFragment myBoardFragment = null;
     public CalendarFragment calendarFragment = null;
@@ -81,6 +82,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     private CalendarItemMap calendarItemMap = new CalendarItemMap();
     private UserProfile userProfile=null;
     private int accountNo=0;
+
 
     public MypageFragment() {
 
@@ -355,14 +357,22 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
         drawable.getPaint().setColor(Color.rgb(255,255,255)); // 원형 백그라운드 색상 (디폴트 검정색)
         mypageProfileImage.setBackground(drawable);
+        mypageProfileImage.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.profile_default));
         mypageProfileImage.setClipToOutline(true);
 
-        String accountImageAddress= Whatisthis.serverIp + userProfile.getAccountImage();
+        // 유저가 프로필 이미지를 저장한 경우에만 보여주기
+        // TODO: 서버에서 디폴트 이미지 주소를 'default' 저장한 후에 주석 제거할 것
 
-        Glide.with(getActivity())
-                .load(accountImageAddress)
-                .centerCrop()
-                .into(mypageProfileImage);
+      /*  if(!userProfile.getAccountImage().equals("default")) {
+
+            String accountImageAddress = Whatisthis.serverIp + userProfile.getAccountImage();
+
+            Glide.with(getActivity())
+                    .load(accountImageAddress)
+                    .centerCrop()
+                    .into(mypageProfileImage);
+
+        }*/
     }
 
 }

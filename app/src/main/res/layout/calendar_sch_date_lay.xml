@@ -9,10 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="April 2019"
-        android:textSize="@dimen/calendar_title_text_size"
+        android:textSize="@dimen/text_size_18dp"
         android:id="@+id/calendarSelectedMonthYear"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"/>
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/all_space_between_18dp"
+        android:layout_marginBottom="7dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,15 +23,17 @@
         android:id="@+id/calendarSelectedDay"
         android:layout_below="@id/calendarSelectedMonthYear"
         android:layout_centerHorizontal="true"
-        android:textSize="@dimen/calendar_selected_day_size"
+        android:textColor="@color/greenMain"
+        android:textSize="@dimen/text_size_120dp"
 
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="12"
-        android:textSize="@dimen/calendar_previous_next_day_size"
+        android:textSize="@dimen/text_size_20dp"
         android:layout_marginRight="40dp"
+        android:textColor="@color/grayMain"
         android:id="@+id/calendarPreviousDay"
         android:layout_toLeftOf="@id/calendarSelectedDay"
         android:layout_alignTop="@id/calendarSelectedDay"
@@ -41,21 +45,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="14"
-        android:textSize="@dimen/calendar_previous_next_day_size"
+        android:textSize="@dimen/text_size_20dp"
         android:layout_marginLeft="40dp"
         android:id="@+id/calendarNextDay"
         android:layout_alignTop="@id/calendarSelectedDay"
         android:layout_alignBottom="@id/calendarSelectedDay"
         android:gravity="center"
+        android:textColor="@color/grayMain"
         android:layout_toRightOf="@id/calendarSelectedDay"/>
 
+    <View
+        android:layout_width="30dp"
+        android:layout_height="2dp"
+        android:background="@color/greenMain"
+        android:id="@+id/calendarDateBar"
+        android:layout_below="@id/calendarSelectedDay"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Thursday"
         android:id="@+id/calendarSelectedDayOfWeek"
-        android:textSize="@dimen/calendar_selected_day_text_size"
-        android:layout_below="@id/calendarSelectedDay"
+        android:textSize="@dimen/text_size_20dp"
+        android:textColor="@color/grayMain"
+
+        android:layout_marginTop="28dp"
+        android:layout_below="@id/calendarDateBar"
         android:layout_centerHorizontal="true"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="36dp"
+        android:background="@color/grayLight_a50"
+        android:layout_below="@+id/calendarSelectedDayOfWeek"
+        />
 </RelativeLayout>

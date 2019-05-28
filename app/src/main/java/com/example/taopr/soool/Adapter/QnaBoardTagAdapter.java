@@ -22,9 +22,14 @@ import java.util.ArrayList;
 public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.MyViewHolder> {
 
     private LayoutInflater inflater;
-    public static ArrayList<String> data;
-    private static ClickListeners clickListeners;
+
+    // ArrayList<String> data 와 ClickListeners 가 static 변수로 되어있었음.
+    // 해당 부분을 static 를 해제해서 태그 동기화 문제를 해결할 수 있었는데, 정확한 이유는 모르겠음.
+
+    private ArrayList<String> data;
+    private ClickListeners clickListeners;
     private int whatActivity = 9998;
+    private final String TAG = "큐앤에이 태그 어댑터 ";
     private Context context;
     public QnaBoardTagAdapter(Context ctx) {
         this.context = ctx;
@@ -58,7 +63,9 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final QnaBoardTagAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder( QnaBoardTagAdapter.MyViewHolder holder, final int position) {
+
+        Log.i(TAG, "onBindViewHolder: 포지션 "+ position  + " 태그값 :" + data.get(position) + "태그리스트사이즈" + data.size());
 
         holder.tagTitle.setText(data.get(position));
         //holder.deleteTag.setText(data.get(position));
@@ -72,7 +79,7 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     }
 
     public void setClickListeners(ClickListeners clickListeners) {
-        QnaBoardTagAdapter.clickListeners = clickListeners;
+        this.clickListeners = clickListeners;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -91,7 +98,6 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
             if (whatActivity == 1) {
                 deleteTag.setVisibility(View.GONE);
                 tagTitle.setPadding(36,0,36,0);
-
             }
             else {
                 deleteTag.setVisibility(View.VISIBLE);

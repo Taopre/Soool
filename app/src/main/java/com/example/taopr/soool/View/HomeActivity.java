@@ -17,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.View.HomeFragment.InfoFragment;
 import com.example.taopr.soool.View.HomeFragment.MainFragment;
 import com.example.taopr.soool.View.HomeFragment.MypageFragment;
@@ -25,6 +27,10 @@ import com.example.taopr.soool.View.HomeFragment.QnaFragment;
 import com.example.taopr.soool.View.MyPageFragment.BookmarkFragment;
 import com.example.taopr.soool.View.MyPageFragment.CalendarFragment;
 import com.example.taopr.soool.View.MyPageFragment.MyBoardFragment;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -159,9 +165,23 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.HomeDrawerButton)
     public void drawerButtonClick(){
         DrawerLayout mypageDrawerLayout = (DrawerLayout) findViewById(R.id.myPageDrawerLayout) ;
+        TextView mypageDrawerNickname = findViewById(R.id.myPageDrawerNickname);
+        TextView mypageDrawerEmail = findViewById(R.id.myPageDrawerEmail);
+
         if (!mypageDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mypageDrawerLayout.openDrawer(Gravity.RIGHT);
         }
+    }
+
+    void getUserProfile() {
+
+        String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
+        Gson gson = new GsonBuilder().create();
+        // JSON 으로 변환
+        LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
+
+        String accountNick = loginSessionItem.getAccountNick();
+
     }
 
 

@@ -49,14 +49,14 @@ import static android.app.Activity.RESULT_OK;
 
 public class CalendarFragment extends Fragment implements OnMonthChangedListener,OnDateSelectedListener {
 
-    private static OnFragmentInteractionListener mListener;
-    private static Collection<CalendarDay> eventDates = new HashSet<>();  // 캘린더에 event 표시를 해줘야하는 날짜 리스트
-    private static HashMap<String,CalendarItem> calendarItemMap;
-    private static MaterialCalendarView mcv;
-    private static SooolCalendar sooolCalendar = new SooolCalendar();
-    private static View view;
-    private static String TAG = "캘린더 fragment";
-    private static String accountNo=null;
+    private  OnFragmentInteractionListener mListener;
+    private  Collection<CalendarDay> eventDates = new HashSet<>();  // 캘린더에 event 표시를 해줘야하는 날짜 리스트
+    private  HashMap<String,CalendarItem> calendarItemMap;
+    private  MaterialCalendarView mcv;
+    private  SooolCalendar sooolCalendar = new SooolCalendar();
+    private  View view;
+    private  String TAG = "캘린더 fragment";
+    private  String accountNo=null;
     private Context context;
     private final String DATE_EXTRA = "selectedDay";
     private final String CALENDAR_LIST_EXTRA = "calendarItems";
@@ -115,7 +115,6 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         // '월/년' 타이틀 애니메이션 위아래, 좌우 선택 -> 1이 좌우
         mcv.setTitleAnimationOrientation(1);
 
-        //mcv.setRightArrowMask();
         mcv.state().edit()
                 .setFirstDayOfWeek(Calendar.SUNDAY)  // week 시작하는 날짜 mon / sun
                 .setMinimumDate(CalendarDay.from(1916, 4, 3))  // 달력의 범위 min
@@ -123,7 +122,6 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
                 .setCalendarDisplayMode(CalendarMode.MONTHS) // 달력 보여주는 단위
                 // .setSaveCurrentPosition(true)
                 .commit();
-
 
         // 캘린더 이벤트 날짜, 유저 닉네임을 bundle 객체로 받아오기
         // 작성한 데이터 없을 경우 예외처리
@@ -138,7 +136,6 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
             showEventDate();
         }
-
 
         return view;
     }

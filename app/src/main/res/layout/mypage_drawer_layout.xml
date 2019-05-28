@@ -5,11 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/background_white"
     android:orientation="vertical"
-    android:paddingLeft="20dp"
+
     >
     <LinearLayout
+        android:paddingLeft="@dimen/all_space_between_18dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:orientation="vertical"
 
         >
@@ -23,65 +24,95 @@
                 android:layout_width="match_parent"
                 android:text="닉네임"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="@dimen/text_size_20dp"
                 android:textColor="@color/black"
                 android:id="@+id/myPageDrawerNickname"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_12dp"
+                android:textColor="@color/grayMain"
                 android:text="testemail@gmail.com"
                 android:id="@+id/myPageDrawerEmail"/>
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grayLight_a50"
+        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingLeft="@dimen/all_space_between_18dp"
+        android:paddingTop="20dp"
+        android:textSize="@dimen/text_size_15dp"
+        android:paddingBottom="@dimen/all_space_between_16dp"
         android:id="@+id/myPageDrawerMyAccount"
-        android:text="내 계정"
+        android:text="@string/drawer_my_account"
         android:textColor="@color/black"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:id="@+id/myPageDrawerDataSync"
-        android:paddingBottom="10dp"
-        android:text="데이터 동기화"
-        android:textColor="@color/black"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingLeft="@dimen/all_space_between_18dp"
+        android:paddingTop="@dimen/all_space_between_16dp"
         android:id="@+id/myPageDrawerPush"
-        android:text="푸시 알림 설정"
+        android:paddingBottom="@dimen/all_space_between_16dp"
+        android:textSize="@dimen/text_size_15dp"
+        android:text="@string/drawer_push_notification"
         android:textColor="@color/black"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:id="@+id/myPageDrawerHelp"
-        android:text="도움말"
+        android:paddingLeft="@dimen/all_space_between_18dp"
+        android:paddingTop="@dimen/all_space_between_16dp"
+        android:paddingBottom="@dimen/all_space_between_16dp"
+        android:id="@+id/myPageDrawerReport"
+        android:text="@string/drawer_report"
+        android:textSize="@dimen/text_size_15dp"
         android:textColor="@color/black"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="@dimen/all_space_between_16dp"
+        android:paddingBottom="@dimen/all_space_between_16dp"
         android:id="@+id/myPageDrawerVersion"
-        android:text="버전 정보"
+        android:paddingLeft="@dimen/all_space_between_18dp"
+        android:textSize="@dimen/text_size_15dp"
+        android:text="@string/drawer_version"
+        android:textColor="@color/black"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/all_space_between_16dp"
+        android:paddingBottom="@dimen/all_space_between_16dp"
+        android:id="@+id/myPageDrawerHandlingPrivacy"
+        android:paddingLeft="@dimen/all_space_between_18dp"
+        android:textSize="@dimen/text_size_15dp"
+        android:text="@string/drawer_handling_privacy"
+        android:textColor="@color/black"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/all_space_between_16dp"
+        android:paddingBottom="@dimen/all_space_between_16dp"
+        android:id="@+id/myPageDrawerTos"
+        android:paddingLeft="@dimen/all_space_between_18dp"
+        android:textSize="@dimen/text_size_15dp"
+        android:text="@string/drawer_tos"
         android:textColor="@color/black"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="@dimen/all_space_between_16dp"
+        android:paddingBottom="@dimen/all_space_between_16dp"
         android:id="@+id/myPageDrawerLogOut"
-        android:text="로그아웃"
+        android:paddingLeft="@dimen/all_space_between_18dp"
+        android:textSize="@dimen/text_size_15dp"
+        android:text="@string/drawer_logout"
         android:textColor="@color/black"/>
 </LinearLayout>

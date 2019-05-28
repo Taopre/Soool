@@ -22,7 +22,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
     private Activity activity;
     private List<InfoOfSoool> infoOfSoools;
     private Context context;
-    private static String TAG ="정보_adapter";
+    private final String TAG ="정보_adapter";
 
     public InfoAdapter(Activity activity, List<InfoOfSoool> info, Context context) {
         this.activity = activity;

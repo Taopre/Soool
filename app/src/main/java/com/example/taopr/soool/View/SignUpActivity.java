@@ -49,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     private Boolean clickEmailDupBool = false; // 이메일 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
     private Boolean clickNickDupBool = false; // 닉네임 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
 
-    private static String TAG = "SignUpActivity";
+    private String TAG = "SignUpActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

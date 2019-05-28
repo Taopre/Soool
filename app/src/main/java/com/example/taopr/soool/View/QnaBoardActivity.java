@@ -67,7 +67,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener, VoteImageAdapter.GridviewItemClickListner {
 
     private final String TAG = "QnaBoardActivity";
-    private final int MY_PERMISSION_STORAGE = 1111;
+    private static final int MY_PERMISSION_STORAGE = 1111;
     private final int QNA_MOVE_TO_DETAIL= 3100;
     private final int QNA_MOVE_TO_WRITE = 3200;
 
@@ -172,6 +172,19 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             .centerCrop()
                             .into(iv_qnaboardImage);
                 }
+//                try {
+//                    iv_qnaboardImage.setVisibility(View.VISIBLE);
+//                    btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
+//                    Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+"/"+receiveQnaBoardItem.getImage());
+//                    Glide.with(this)
+//                            .load(Whatisthis.serverIp+receiveQnaBoardItem.getImage())
+//                            .override(100, 100)
+//                            .centerCrop()
+//                            .into(iv_qnaboardImage);
+//                }catch (NullPointerException e){
+//                    Log.d(TAG, "이미지 없음");
+//                }
+
                 iv_qnaboardVoteBtn.setVisibility(View.GONE);
             }
         }
@@ -299,7 +312,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         actionBar.setDisplayHomeAsUpEnabled(false);            //액션바 아이콘을 업 네비게이션 형태로 표시합니다.
         actionBar.setDisplayShowTitleEnabled(false);        //액션바에 표시되는 제목의 표시유무를 설정합니다.
         actionBar.setDisplayShowHomeEnabled(false);            //홈 아이콘을 숨김처리합니다.
-
+        actionBar.setElevation(0);
         //layout을 가지고 와서 actionbar에 포팅을 시킵니다.
         LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
         View actionbar = inflater.inflate(R.layout.qna_actionbar, null);
@@ -326,6 +339,38 @@ public class QnaBoardActivity extends AppCompatActivity implements
         return true;
     }
 
+    // 투표 기능 고르는 부분
+//    @Override
+//    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+//        if(i == R.id.qnaboardVoteText) {
+//            voteSelect = 0;
+////            Toast.makeText(this, voteSelect, Toast.LENGTH_SHORT).show();
+//
+//            rg_qnaboardVoteSelect.setVisibility(View.GONE);
+//            lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
+//            recyclerView.setVisibility(View.VISIBLE);
+//            iv_qnaboardAddBtn.setVisibility(View.VISIBLE);
+//        }else if(i == R.id.qnaboardVoteImage) {
+//            voteSelect = 1;
+//
+//            rg_qnaboardVoteSelect.setVisibility(View.GONE);
+//            lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
+//            recyclerView.setVisibility(View.GONE);
+//            gridView.setVisibility(View.VISIBLE);
+//            // 다중 이미지 테스트 성공.
+//            // 리싸이클러뷰로 이미지 최대 5개 보여지는지 데모앱아닌 여기서 테스트 해봐야함.
+//            // 라디오버튼 클릭되면 앨범으로 바로 이동.
+//            // 5개로 제한두도록 메시지 처리해줘야함.
+//            // 이미지 셀렉하면 셀렉된 이미지 리싸이클러뷰로 보여지도록 처리해야함.
+//            // 여기까지 완료된다면 예외처리부분 처리해준다.
+//            // 다 된다면 mvp로 서버로 보내주는 처리를 해준다면 작성하는 곳은 완료.
+//
+//            FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6).setMinCount(2).startAlbum();
+//        }
+//    }
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -339,6 +384,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
         switch (v.getId()) {
             case R.id.qnaboardImageBtn:
                 //앨범 연동.
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(intent, 1);
+//                DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        doTakePhotoAction();
+//                    }
+//                };
                 DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -803,6 +858,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                 Intent intent = new Intent();
                 intent.putExtra("qnaBoardItem", qnaBoardItemResponse);
+                intent.putExtra("actionKind",actionKind);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 setResult(RESULT_OK, intent);
                 finish();

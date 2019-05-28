@@ -40,16 +40,16 @@ public class CalendarDialogFragment extends DialogFragment
         implements OnDateSelectedListener,View.OnClickListener
 {
     private TextView schDialogSelectButton,schDialogCancelButton;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
-    public static final String DATE_EXTRA = "selectedDay";
-    public static final String CALENDAR_LIST_EXTRA = "calendarItems";
-    private static Collection<CalendarDay> eventDates = new HashSet<>();
-    private static SooolCalendar sooolCalendar = new SooolCalendar();
-    private static final String TAG = "캘린더 다이얼로그 ";
-    public static View view;
-    public static Date selectedDay;
-    public static HashMap<String,CalendarItem> calendarItemMap;
-    private static MaterialCalendarView schDialogCalendar;
+    private  final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("EEE, d MMM yyyy");
+    public  static final String DATE_EXTRA = "selectedDay";
+    public  static final String CALENDAR_LIST_EXTRA = "calendarItems";
+    private  Collection<CalendarDay> eventDates = new HashSet<>();
+    private  SooolCalendar sooolCalendar = new SooolCalendar();
+    private  final String TAG = "캘린더 다이얼로그 ";
+    public  View view;
+    public  Date selectedDay;
+    public  HashMap<String,CalendarItem> calendarItemMap;
+    private MaterialCalendarView schDialogCalendar;
 
     private CalendarDialogListener mCallback;
 

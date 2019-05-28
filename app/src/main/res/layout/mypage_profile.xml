@@ -12,7 +12,7 @@
         android:cropToPadding="true"
         android:layout_gravity="center"
         android:id="@+id/mypageProfileImage"
-        android:src="@drawable/photo"/>
+       />
     <RelativeLayout
         android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
