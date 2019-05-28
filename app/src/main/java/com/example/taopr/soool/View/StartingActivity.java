@@ -22,7 +22,7 @@ import java.util.Arrays;
 public class StartingActivity extends AppCompatActivity {
 
     private SessionCallback callback;
-    private static String TAG = "페이스북";
+    private String TAG = "페이스북";
     private CheckBox termsOfServiceCheck;
     private Button customFaceLogin;
     private Button customKakaoLogin;

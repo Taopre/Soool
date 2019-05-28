@@ -47,7 +47,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
 
 
     public QnaFragment() {
-
+        Log.i(TAG, "QnaFragment: ");
     }
 
     // 액티비티에서 프래그먼트로 값 넘기는 거 확인
@@ -194,7 +194,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.i(TAG, "onActivityResult:  " +resultCode);
         if (resultCode == RESULT_OK) {
 
             // 리스트 수정, 삭제
@@ -204,17 +204,23 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
             // 수정 --> actionKind = 1
             // 삭제 --> actionKind = 2
 
+            Log.i(TAG, "onActivityResult: RESULT_OK");
             QnaBoardItem qnaBoardItem = null;
             if (data != null && data.getParcelableExtra("qnaBoardItem") != null) {
                 qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
+                Log.i(TAG, "onActivityResult: ");
             }
 
             int qnaListPosition = data.getIntExtra("qnaListPosition",0);
             int actionKind = data.getIntExtra("actionKind",99);
 
+            Log.i(TAG, "onActivityResult: actionKind : " + actionKind);
+
             switch (actionKind){
                 case 0:
-                    qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
+                    qnaAdapter.addItem(qnaBoardItem);
+                    qnaBoardItems.add(qnaBoardItem);
+                    qnaRecycler.smoothScrollToPosition(0);
                 case 1:
                     qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
                     break;

@@ -45,18 +45,18 @@ public class CalendarSchBaseActivity extends AppCompatActivity {
     Activity mActivity;
     String TAG = "캘린더 액티비티 ";
     public int layoutKind; // calendarSch 액티비티일 경우 0, calendarAddSch일 경우 1
-    public static Date selectedDay,previousDay,nextDay; // 선택한 날짜, 선택한 날짜의 이전 날, 다음 날을 Date 변수타입으로 가지는 변수
-    public static final String DATE_EXTRA = "selectedDay";
-    public static final String CALENDAR_LIST_EXTRA = "calendarItems";
-    public static final String ACCOUNT_NO_EXTRA = "accountNo";
-    private static String monthYearPattern = " MMMM yyyy ";
-    private static String dayPattern = "dd";
-    public static String accountNo;
+    public Date selectedDay,previousDay,nextDay; // 선택한 날짜, 선택한 날짜의 이전 날, 다음 날을 Date 변수타입으로 가지는 변수
+    public final String DATE_EXTRA = "selectedDay";
+    public final String CALENDAR_LIST_EXTRA = "calendarItems";
+    public final String ACCOUNT_NO_EXTRA = "accountNo";
+    private String monthYearPattern = " MMMM yyyy ";
+    private String dayPattern = "dd";
+    public String accountNo;
 
     public ArrayList<CalendarItem> calendarItems= new ArrayList<CalendarItem>();
     HashMap<String,CalendarItem> calendarItemMap;
 
-    public static String selectedDayDate; // 선택한 날짜를 "yyyymmdd" 형식으로 가지고 있는 string 변수
+    public String selectedDayDate; // 선택한 날짜를 "yyyymmdd" 형식으로 가지고 있는 string 변수
 
 
     SooolCalendar sooolCalendar = new SooolCalendar();

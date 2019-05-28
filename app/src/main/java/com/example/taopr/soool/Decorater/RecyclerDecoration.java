@@ -3,6 +3,7 @@ package com.example.taopr.soool.Decorater;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 public class RecyclerDecoration extends RecyclerView.ItemDecoration {
@@ -10,6 +11,7 @@ public class RecyclerDecoration extends RecyclerView.ItemDecoration {
 
     public RecyclerDecoration(int divWidth) {
         this.divWidth = divWidth;
+
     }
 
     @Override
@@ -17,5 +19,4 @@ public class RecyclerDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
         outRect.right = divWidth;
     }
-
 }

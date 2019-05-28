@@ -17,10 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mcv_tileHeight="@dimen/calendar_tile_height"
+
             app:mcv_showOtherDates="none"
             app:mcv_selectionColor="#00F"
-            app:mcv_leftArrowMask="@drawable/cal_month_prev"
-            app:mcv_rightArrowMask="@drawable/cal_month_next"
+            app:mcv_leftArrowMask="@drawable/cal_month_small_left"
+            app:mcv_rightArrowMask="@drawable/cal_month_small_right"
             />
         <include layout="@layout/button_add_calendar_sch"
             android:layout_width="wrap_content"

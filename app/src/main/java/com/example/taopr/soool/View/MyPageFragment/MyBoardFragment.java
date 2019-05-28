@@ -201,7 +201,9 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
 
             switch (actionKind) {
                 case 0:
-                    qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
+                    qnaAdapter.addItem(qnaBoardItem);
+                    qnaBoardItems.add(qnaBoardItem);
+                    myBoardRecycler.smoothScrollToPosition(0);
                 case 1:
                     qnaAdapter.notifyItemChanged(qnaListPosition,qnaBoardItem);
                     qnaBoardItems.set(qnaListPosition,qnaBoardItem);
