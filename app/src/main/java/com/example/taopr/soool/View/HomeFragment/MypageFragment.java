@@ -83,6 +83,8 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     private UserProfile userProfile=null;
     private int accountNo=0;
 
+    private getUserProfileListener getUserProfileListener; //
+
 
     public MypageFragment() {
 
@@ -121,7 +123,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         else{
             callFragment(fragmentNo);
             tabSetting(fragmentNo);
-            getUserProfileResponse(userProfile);
+            getUserProfileSuccess(userProfile);
         }
 
         return view;
@@ -295,16 +297,25 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         }
     }
 
+    // 프래그먼트를 액티비티에 부착할 때 액티비티와 프래그먼트 사이의 인터페이스가 될줄 getUserProfileListener 를 생성하고
+    // detach() 일때 getUserProfileListener = null 값을 넣어준다
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+          if (context instanceof getUserProfileListener) {
+              getUserProfileListener = (getUserProfileListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
 
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        getUserProfileListener = null;
     }
 
     // 북마크 게시물 데이터를 받아온 후
@@ -348,7 +359,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
     // 유저의 프로필 정보를 response 받아 뷰로 보여주기
     @Override
-    public void getUserProfileResponse(UserProfile userProfile){
+    public void getUserProfileSuccess(UserProfile userProfile){
         this.userProfile = userProfile;
         mypageProfileNickname.setText(userProfile.getAccountNick());
         mypageProfileMyQnaCount.setText(String.valueOf(userProfile.getAccountBc()));
@@ -361,9 +372,8 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         mypageProfileImage.setClipToOutline(true);
 
         // 유저가 프로필 이미지를 저장한 경우에만 보여주기
-        // TODO: 서버에서 디폴트 이미지 주소를 'default' 저장한 후에 주석 제거할 것
 
-      /*  if(!userProfile.getAccountImage().equals("default")) {
+        if(!userProfile.getAccountImage().equals("soool_default")) {
 
             String accountImageAddress = Whatisthis.serverIp + userProfile.getAccountImage();
 
@@ -372,7 +382,12 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                     .centerCrop()
                     .into(mypageProfileImage);
 
-        }*/
+        }
+        getUserProfileListener.getUserProfile(userProfile.getAccountNick(),userProfile.getAccountEmail());
+    }
+
+    public interface getUserProfileListener{
+        void getUserProfile(String accountNick,String accountEmail);
     }
 
 }

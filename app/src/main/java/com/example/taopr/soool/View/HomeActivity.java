@@ -1,5 +1,6 @@
 package com.example.taopr.soool.View;
 
+import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.example.taopr.soool.Object.LoginSessionItem;
+import com.example.taopr.soool.Presenter.HomePresenter;
+import com.example.taopr.soool.Presenter.Interface.HomeInter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.View.HomeFragment.InfoFragment;
@@ -39,7 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MypageFragment.getUserProfileListener{
 
     @BindView(R.id.tabMain)
     ViewGroup btn_tabMain;
@@ -53,6 +56,10 @@ public class HomeActivity extends AppCompatActivity {
     ImageView HomeDrawerButton;
     @BindView(R.id.mainActionBarTitle)
     TextView mainActionBarTitle;
+    @BindView(R.id.myPageDrawerEmail)
+    TextView myPageDrawerEmail;
+    @BindView(R.id.myPageDrawerNickname)
+    TextView myPageDrawerNickname;
 
     private String TAG = "홈 액티비티 ";
     // 현재 탭, 이전 탭
@@ -62,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
     private int currentTab=0,previousTab=1;
 
     private String PREVIOUS_TAB_KEY = "previousTab";
+    private int CHANGE_PROFILE = 4400;
     ImageView tabMainImage , tabInfoImage, tabQnaImage, tabMypageImage;
     TextView tabMainText, tabInfoText, tabQnaText, tabMypageText;
 
@@ -70,6 +78,10 @@ public class HomeActivity extends AppCompatActivity {
     InfoFragment infoFragment = null;
     MypageFragment mypageFragment = null;
     FragmentTransaction transaction = null;
+
+    private int accountNo;
+    HomePresenter homePresenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +92,12 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.hide();
 
         ButterKnife.bind(this);
-        
+
+        homePresenter = new HomePresenter(this);
+
+        homePresenter.setView(this);
+        homePresenter.getUserProfile();
+
         viewBinding();
         callFragment(0,1);
         tabSetting();
@@ -162,26 +179,31 @@ public class HomeActivity extends AppCompatActivity {
         tabSetting();
     }
 
+    // DrawerLayout 제어
     @OnClick(R.id.HomeDrawerButton)
     public void drawerButtonClick(){
-        DrawerLayout mypageDrawerLayout = (DrawerLayout) findViewById(R.id.myPageDrawerLayout) ;
-        TextView mypageDrawerNickname = findViewById(R.id.myPageDrawerNickname);
-        TextView mypageDrawerEmail = findViewById(R.id.myPageDrawerEmail);
+        DrawerLayout mypageDrawerLayout = findViewById(R.id.myPageDrawerLayout) ;
 
         if (!mypageDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mypageDrawerLayout.openDrawer(Gravity.RIGHT);
         }
     }
 
-    void getUserProfile() {
+    @OnClick({R.id.myPageDrawerMyAccount})
+    public void drawerTabOnClick(){
+        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+        Log.i(TAG, "drawerTabOnClick: 회원번호 " + accountNo);
+        intent.putExtra("accountNo", accountNo);
+        startActivityForResult(intent,CHANGE_PROFILE);
 
-        String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
-        Gson gson = new GsonBuilder().create();
-        // JSON 으로 변환
-        LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
+    }
 
-        String accountNick = loginSessionItem.getAccountNick();
+    // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때 액태비티로 닉네임과 이메일을 전송해서 뷰로 보여준다
 
+    @Override
+    public void getUserProfile(String accountNick, String accountEmail) {
+        myPageDrawerEmail.setText(accountEmail);
+        myPageDrawerNickname.setText(accountNick);
     }
 
 
@@ -238,5 +260,10 @@ public class HomeActivity extends AppCompatActivity {
                 HomeDrawerButton.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override
+    public void getAccountNo(int accountNo) {
+        this.accountNo = accountNo;
     }
 }

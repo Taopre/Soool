@@ -24,6 +24,36 @@
         <item>Dec</item>
     </string-array>
 
+    <string-array name="capacity_array">
+        <item>항목을 선택해주세요</item>
+        <item>유종현</item>
+        <item>소주 1잔</item>
+        <item>소주 1병</item>
+        <item>소주 2병</item>
+        <item>소주 3병</item>
+        <item>김병구</item>
+    </string-array>
+
+    <string-array name="favorite_array">
+        <item>항목을 선택해주세요</item>
+        <item>맥주</item>
+        <item>소주</item>
+        <item>고량주</item>
+        <item>데킬라</item>
+        <item>칵테일</item>
+        <item>김병구</item>
+    </string-array>
+
+    <string-array name="reason_array">
+        <item>항목을 선택해주세요</item>
+        <item>술이 좋아서</item>
+        <item>술자리가 좋아서</item>
+        <item>취하고 싶어서</item>
+        <item>이성과의 만남</item>
+        <item>다른 이유3</item>
+        <item>김병구</item>
+    </string-array>
+
 
     <!-- Home -->
     <string name="home_label_home_tab">홈</string>
@@ -120,7 +150,7 @@
     <string name="profile_password">비밀번호</string>
     <string name="profile_nickname">닉네임</string>
     <string name="profile_additional_information">부가정보</string>
-    <string name="profile_drinking_capacity">주량</string>
+    <string name="profile_capacity">주량</string>
     <string name="profile_favorite_drink">즐겨마시는 술</string>
     <string name="profile_reason_of_drinking">술마시는 이유</string>
     <string name="profile_hint_select_item">항목을 선택해주세요</string>

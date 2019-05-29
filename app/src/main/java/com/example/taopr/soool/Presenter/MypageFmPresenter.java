@@ -133,7 +133,7 @@ public class MypageFmPresenter extends BasePresenter implements MypageFmInter {
                             public void onSuccess(UserProfile userProfile) {
                                 if (userProfile != null) {
                                     Log.i(TAG, "onSuccess: 유저 프로필 정보 " + userProfile.getAccountImage());
-                                    view.getUserProfileResponse(userProfile);
+                                    view.getUserProfileSuccess(userProfile);
                                 }
                                 else{
                                     Log.i(TAG, "onSuccess: list = null");

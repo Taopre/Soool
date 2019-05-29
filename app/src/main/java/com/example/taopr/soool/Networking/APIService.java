@@ -1,5 +1,6 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.ChangeProfile;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
@@ -173,4 +174,8 @@ public interface APIService {
     @FormUrlEncoded
     @POST("/qnapost/QnaDelete.php")
     Call<ResponseBody> deleteBoardWithPostNo(@Field("postNo") int postNo);
+
+    @FormUrlEncoded
+    @POST("/accountManage/myinfoUpdate.php")
+    Observable<ChangeProfile> getChangeProfile(@Field("accountNo") int accountNo);
 }
