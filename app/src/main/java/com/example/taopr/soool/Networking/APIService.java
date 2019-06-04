@@ -181,15 +181,18 @@ public interface APIService {
     @POST("/accountManage/myinfoUpdate.php")
     Observable<ProfileInfo> getProfileInfo(@Field("accountNo") int accountNo);
 
+    // 프로필 이미지 교환
     @Multipart
     @POST("/accountManage/accountImage.php")
     Observable<SooolResponseBody> changeProfileImage(@Part("accountNo") int accountNo,
                                                      @Part MultipartBody.Part accountImage );
 
+    // 프로필 이미지 삭제
     @FormUrlEncoded
     @POST("/accountManage/accountImage.php")
     Observable<SooolResponseBody> deleteProfileImage(@Field("accountNo") int accountNo, @Field("delete") String delete);
 
+    // 프로필 수정
     @FormUrlEncoded
     @POST("/accountManage/myinfoUpdateResult.php")
     Observable<ProfileInfo> changeProfileInfo(@Field("accountNo") int accountNo,

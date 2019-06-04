@@ -43,4 +43,5 @@ public class LoginSessionItem {
     public boolean isAccountAutoLogin() {
         return accountAutoLogin;
     }
+
 }

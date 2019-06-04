@@ -56,24 +56,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         ButterKnife.bind(this);
         signUpPresenter = new SignUpPresenter(SignUpActivity.this, this);
         signUpPresenter.setView(this);
-
-        StringBuffer stacktrace = new StringBuffer();
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        for(int x=0; x<stackTrace.length; x++)
-        {
-            stacktrace.append(stackTrace[x].toString() + " ");
-        }
-        Log.e(TAG, "스택 : ");
-        Log.e(TAG, "스택 : " + stacktrace.toString());
-
-        Log.d(TAG, "스택 : ", new Throwable("stack dump"));
-
-        if(getIntent() != null) {
-            signUpThroughSNS();
-        }
 
     }
 

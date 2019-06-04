@@ -63,6 +63,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     @BindView(R.id.myPageDrawerNickname)
     TextView myPageDrawerNickname;
 
+
     private String TAG = "홈 액티비티 ";
     // 현재 탭, 이전 탭
     // 0 -> main , 1 -> info
@@ -191,12 +192,28 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         }
     }
 
-    @OnClick({R.id.myPageDrawerMyAccount})
-    public void drawerTabOnClick(){
-        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-        intent.putExtra("accountNo", accountNo);
-        startActivityForResult(intent,CHANGE_PROFILE);
+    @OnClick({R.id.myPageDrawerMyAccount,R.id.myPageDrawerLogOut})
+    public void drawerTabOnClick(View view){
+        switch (view.getId()) {
+            case R.id.myPageDrawerMyAccount:
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                intent.putExtra("accountNo", accountNo);
+                startActivityForResult(intent, CHANGE_PROFILE);
+                break;
+            case R.id.myPageDrawerLogOut:
+                setLogout();
+                break;
 
+        }
+
+    }
+
+    private void setLogout() {
+        LoginSharedPreferences.LoginUserDelete(HomeActivity.this,"LoginAccount");
+        Intent intent = new Intent(HomeActivity.this, StartingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때

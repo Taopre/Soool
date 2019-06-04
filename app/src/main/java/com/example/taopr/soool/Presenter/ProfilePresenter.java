@@ -94,7 +94,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
         Log.i(TAG, "changeProfileInfo: " + profileInfo.getCapacity());
         addSubscription(
                 apiService.changeProfileInfo(accountNo,profileInfo.getAccountEmail(),profileInfo.getAccountNick()
-                ,profileInfo.getAccountPw(), profileInfo.getAccountImage(),profileInfo.getCapacity() ,
+                , profileInfo.getAccountImage(),profileInfo.getAccountPw(),profileInfo.getCapacity() ,
                         profileInfo.getFavorite(), profileInfo.getReason()),
                 new APICallback<ProfileInfo>() {
                     @Override

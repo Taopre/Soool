@@ -17,4 +17,11 @@ public class LoginSharedPreferences {
         String data = pref.getString(key, "");
         return data;
     }
+
+    public static void LoginUserDelete(Context context, String key){
+        SharedPreferences pref = context.getSharedPreferences("LoginUser", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove(key);
+        editor.commit();
+    }
 }

@@ -27,13 +27,22 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".View.StartingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".View.QnaBoardActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".View.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+        </activity>
+
         <activity
             android:name=".View.QnaBoardDetailActivity"
             android:screenOrientation="portrait" />
@@ -42,11 +51,7 @@
         <activity
             android:name=".View.HomeActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".View.ProfileActivity"></activity>
     </application>

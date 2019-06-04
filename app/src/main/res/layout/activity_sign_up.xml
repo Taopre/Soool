@@ -6,18 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".View.SignUpActivity">
 
+    <ImageView
+        android:layout_marginTop="115dp"
+        android:layout_width="240dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo"
+        android:id="@+id/signUpLogo"
+        android:layout_centerHorizontal="true"
+        />
+
 
     <EditText
         android:layout_width="200dp"
-        android:id="@+id/accountEmail"
-        android:hint="이메일"
         android:layout_height="50dp"
+        android:background="@drawable/sign_up_ed_frame"
+        android:id="@+id/accountEmail"
+        android:paddingLeft="@dimen/all_space_between_12dp"
+        android:hint="@string/sign_up_email"
+        android:textSize="@dimen/text_size_13dp"
+        android:layout_marginLeft="37dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:layout_below="@id/signUpLogo"
+        android:layout_marginTop="68dp"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="중복확인"
+
+        android:layout_width="68dp"
+        android:layout_height="48dp"
+        android:text="@string/sign_up_button_check_overlap"
+        android:textSize="@dimen/text_size_13dp"
+        android:textColor="@color/background_white"
+        android:background="@drawable/sign_up_green_button"
         android:layout_toRightOf="@id/accountEmail"
+        android:layout_alignTop="@id/accountEmail"
+        android:layout_marginLeft="@dimen/all_space_between_8dp"
         android:id="@+id/accountEmailDup"/>
     <EditText
         android:layout_width="match_parent"
