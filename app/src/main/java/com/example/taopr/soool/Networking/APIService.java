@@ -1,10 +1,11 @@
 package com.example.taopr.soool.Networking;
 
-import com.example.taopr.soool.Object.ChangeProfile;
+import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Object.SooolResponseBody;
 import com.example.taopr.soool.Object.UserProfile;
 
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -177,5 +179,26 @@ public interface APIService {
 
     @FormUrlEncoded
     @POST("/accountManage/myinfoUpdate.php")
-    Observable<ChangeProfile> getChangeProfile(@Field("accountNo") int accountNo);
+    Observable<ProfileInfo> getProfileInfo(@Field("accountNo") int accountNo);
+
+    @Multipart
+    @POST("/accountManage/accountImage.php")
+    Observable<SooolResponseBody> changeProfileImage(@Part("accountNo") int accountNo,
+                                                     @Part MultipartBody.Part accountImage );
+
+    @FormUrlEncoded
+    @POST("/accountManage/accountImage.php")
+    Observable<SooolResponseBody> deleteProfileImage(@Field("accountNo") int accountNo, @Field("delete") String delete);
+
+    @FormUrlEncoded
+    @POST("/accountManage/myinfoUpdateResult.php")
+    Observable<ProfileInfo> changeProfileInfo(@Field("accountNo") int accountNo,
+                                              @Field("accountEmail") String accountEmail,
+                                              @Field("accountNick") String accountNick,
+                                              @Field("accountImage") String accountImage,
+                                              @Field("accountPw") String accountPw,
+                                              @Field("capacity") int capacity,
+                                              @Field("favorite") int favorite,
+                                              @Field("reason") int reason);
+
 }

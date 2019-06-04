@@ -3,23 +3,12 @@ package com.example.taopr.soool.Object;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ChangeProfile implements Parcelable{
-
+public class ProfileInfo implements Parcelable {
     private String accountEmail;
     private String accountNick;
     private String accountImage;
     private String accountPw;
     private int capacity,favorite,reason;
-
-    public ChangeProfile(String accountEmail, String accountNick, String accountImage, String accountPw, int capacity, int favorite, int reason) {
-        this.accountEmail = accountEmail;
-        this.accountNick = accountNick;
-        this.accountImage = accountImage;
-        this.accountPw = accountPw;
-        this.capacity = capacity;
-        this.favorite = favorite;
-        this.reason = reason;
-    }
 
     public String getAccountEmail() {
         return accountEmail;
@@ -77,7 +66,17 @@ public class ChangeProfile implements Parcelable{
         this.reason = reason;
     }
 
-    protected ChangeProfile(Parcel in) {
+    public ProfileInfo(String accountEmail, String accountNick, String accountImage, String accountPw, int capacity, int favorite, int reason) {
+        this.accountEmail = accountEmail;
+        this.accountNick = accountNick;
+        this.accountImage = accountImage;
+        this.accountPw = accountPw;
+        this.capacity = capacity;
+        this.favorite = favorite;
+        this.reason = reason;
+    }
+
+    protected ProfileInfo(Parcel in) {
         accountEmail = in.readString();
         accountNick = in.readString();
         accountImage = in.readString();
@@ -87,15 +86,15 @@ public class ChangeProfile implements Parcelable{
         reason = in.readInt();
     }
 
-    public static final Creator<ChangeProfile> CREATOR = new Creator<ChangeProfile>() {
+    public static final Creator<ProfileInfo> CREATOR = new Creator<ProfileInfo>() {
         @Override
-        public ChangeProfile createFromParcel(Parcel in) {
-            return new ChangeProfile(in);
+        public ProfileInfo createFromParcel(Parcel in) {
+            return new ProfileInfo(in);
         }
 
         @Override
-        public ChangeProfile[] newArray(int size) {
-            return new ChangeProfile[size];
+        public ProfileInfo[] newArray(int size) {
+            return new ProfileInfo[size];
         }
     };
 

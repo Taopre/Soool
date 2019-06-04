@@ -67,6 +67,10 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
 
         Log.i(TAG, "onBindViewHolder: 포지션 "+ position  + " 태그값 :" + data.get(position) + "태그리스트사이즈" + data.size());
 
+        if(data.get(position).equals("투표")){
+            holder.itemTag.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.tag_frame_green));
+            holder.tagTitle.setTextColor(ContextCompat.getColor(holder.itemView.getContext(),R.color.greenMain));
+        }
         holder.tagTitle.setText(data.get(position));
         //holder.deleteTag.setText(data.get(position));
         Log.d("print","yes");
@@ -100,6 +104,7 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
                 tagTitle.setPadding(36,0,36,0);
             }
             else {
+
                 deleteTag.setVisibility(View.VISIBLE);
                 itemTag.setBackground(ContextCompat.getDrawable(itemView.getContext(),R.drawable.tag_frame_green));
                 tagTitle.setTextColor(ContextCompat.getColor(itemView.getContext(),R.color.greenMain));

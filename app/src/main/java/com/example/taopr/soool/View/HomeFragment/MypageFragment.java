@@ -6,6 +6,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -104,8 +105,15 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i(TAG, "onActivityCreated: ");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_home_mypage, container, false);
 
         unbinder = ButterKnife.bind(this,view);
@@ -114,7 +122,9 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         mypagePresenter = new MypageFmPresenter(context);
         mypagePresenter.setView(this);
 
-        Log.i(TAG, "onCreateView: " + fragmentNo);
+        ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
+        drawable.getPaint().setColor(Color.rgb(255,255,255)); // 원형 백그라운드 색상 (디폴트 검정색)
+        mypageProfileImage.setBackground(drawable);
 
         // 받아온 프로필 정보가 없을 시 서버에서 받는다
         if(userProfile == null){
@@ -178,6 +188,38 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         }
     }
 
+    public void showProfileInfo(String accountImage,String accountNick){
+
+        // TODO : 바뀐 프로필 정보 보여주기
+
+
+    }
+
+    // 회원정보 페이지(ProfileAct) 에서 회원정보를 수정했을 때
+    // 마이페이지에서도 수정한 데이터를 보여줘야 하기 때문에
+    // 메서드로 따로 땜
+    public void showProfileImgNick(String accountImage,String accountNick){
+
+        mypageProfileNickname.setText(accountNick);
+
+        // 유저가 프로필 이미지를 저장한 경우에는 저장한 이미지를
+        // 그렇지 않은 경우에는 디폴트 이미지를 보여준다.
+
+        if(!accountImage.equals("soool_default")) {
+
+            String accountImageAddress = Whatisthis.serverIp + accountImage;
+
+            Glide.with(getActivity())
+                    .load(accountImageAddress)
+                    .centerCrop()
+                    .into(mypageProfileImage);
+        }
+        else{
+            mypageProfileImage.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.profile_default));
+        }
+        mypageProfileImage.setClipToOutline(true);
+    }
+
 
     // 탭 클릭 시 클릭한 페이지의 프래그먼트가 null인지 아닌지를 구별하여
     // 내 게시물,북마크에서는 서버에서 데이터를 받아올지를 선택한다
@@ -190,7 +232,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
             case R.id.tabMyBoard:
                 if(myBoardFragment==null){
                     myBoardFragment = new MyBoardFragment();
-
                     // 프래그먼트 탭 이동시 탭에 맞는 bar 만 보여주기
                     mypagePresenter.loadMypageData(accountNo,MYBOARD_INT);
 
@@ -198,7 +239,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 else{
                     callFragment(MYBOARD_INT);
                     tabSetting(MYBOARD_INT);
-
                 }
 
                 break;
@@ -303,6 +343,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.i(TAG, "onAttach: ");
           if (context instanceof getUserProfileListener) {
               getUserProfileListener = (getUserProfileListener) context;
         } else {
@@ -315,6 +356,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.i(TAG, "onDetach: ");
         getUserProfileListener = null;
     }
 
@@ -361,28 +403,18 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     @Override
     public void getUserProfileSuccess(UserProfile userProfile){
         this.userProfile = userProfile;
-        mypageProfileNickname.setText(userProfile.getAccountNick());
+
         mypageProfileMyQnaCount.setText(String.valueOf(userProfile.getAccountBc()));
         mypageProfileMyPointCount.setText(String.valueOf(userProfile.getAccountPoint()));
 
-        ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
-        drawable.getPaint().setColor(Color.rgb(255,255,255)); // 원형 백그라운드 색상 (디폴트 검정색)
-        mypageProfileImage.setBackground(drawable);
-        mypageProfileImage.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.profile_default));
-        mypageProfileImage.setClipToOutline(true);
 
-        // 유저가 프로필 이미지를 저장한 경우에만 보여주기
+        showProfileImgNick(userProfile.getAccountImage(),userProfile.getAccountNick());
 
-        if(!userProfile.getAccountImage().equals("soool_default")) {
 
-            String accountImageAddress = Whatisthis.serverIp + userProfile.getAccountImage();
+        // Home 액티비티의 Drawer 레이아웃에서 회원정보 중에 닉네임과 이메일주소로 필요로 한다
+        // 그래서 서버로 부터 회원정보를 받아온 후에 프래그먼트에서 액티비티로 데이터를 전달해줘야 하기 때문에
+        // getUserProfileListener 를 인터페이스로 둬서 이를 통해 전달한다
 
-            Glide.with(getActivity())
-                    .load(accountImageAddress)
-                    .centerCrop()
-                    .into(mypageProfileImage);
-
-        }
         getUserProfileListener.getUserProfile(userProfile.getAccountNick(),userProfile.getAccountEmail());
     }
 

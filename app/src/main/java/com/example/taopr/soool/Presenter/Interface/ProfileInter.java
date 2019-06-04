@@ -1,14 +1,23 @@
 package com.example.taopr.soool.Presenter.Interface;
 
-import com.example.taopr.soool.Object.ChangeProfile;
+import android.content.Context;
+import android.net.Uri;
+
+import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Presenter.ProfilePresenter;
 
 public interface ProfileInter {
-    public void setView(ProfilePresenter.View view);
+    public void setView(ProfilePresenter.View view,Context context);
     public void getProfileInfo(int accountNo);
+    void changeProfileImage(Uri uri);
+    void changeProfileInfo(ProfileInfo profileInfo);
+    void deleteProfileImg();
 
     public interface View{
-        void getChangeProfileSuccess(ChangeProfile changeProfile);
+        void getProfileInfoSuccess(ProfileInfo profileInfo);
         void getDataFail(int dataKind);
+        void changeProfileImgSuccess(String accountImage);
+        void changeProfileInfoSuccess(ProfileInfo profileInfo);
+        void deleteProfileImgSuccess();
     }
 }

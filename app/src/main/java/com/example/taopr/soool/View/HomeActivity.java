@@ -2,6 +2,7 @@ package com.example.taopr.soool.View;
 
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.example.taopr.soool.Object.LoginSessionItem;
+import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Presenter.HomePresenter;
 import com.example.taopr.soool.Presenter.Interface.HomeInter;
 import com.example.taopr.soool.R;
@@ -69,7 +71,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     private int currentTab=0,previousTab=1;
 
     private String PREVIOUS_TAB_KEY = "previousTab";
-    private int CHANGE_PROFILE = 4400;
+    private final int CHANGE_PROFILE = 4400;
     ImageView tabMainImage , tabInfoImage, tabQnaImage, tabMypageImage;
     TextView tabMainText, tabInfoText, tabQnaText, tabMypageText;
 
@@ -192,14 +194,35 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     @OnClick({R.id.myPageDrawerMyAccount})
     public void drawerTabOnClick(){
         Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-        Log.i(TAG, "drawerTabOnClick: 회원번호 " + accountNo);
         intent.putExtra("accountNo", accountNo);
         startActivityForResult(intent,CHANGE_PROFILE);
 
     }
 
-    // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때 액태비티로 닉네임과 이메일을 전송해서 뷰로 보여준다
+    // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때
+    // Drawer 레이아웃 뷰에서 닉네임과 이메일의 변경 된 값을 보여준다
+    // Home 액티비티에 붙어있는 마이페이지 프래그먼트의 변경된 프로필 정보를 변경한다
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            switch (requestCode){
+                case CHANGE_PROFILE:
+                    ProfileInfo profileInfo = data.getParcelableExtra("profileInfo");
+
+                    // drawer 레이아웃에 바뀐 프로필 정보 보여주기
+                    myPageDrawerNickname.setText(profileInfo.getAccountNick());
+                    myPageDrawerEmail.setText(profileInfo.getAccountEmail());
+
+                    // 마이페이지 프래그먼트에 변경된 프로필 내용으로 보여주기
+                    mypageFragment.showProfileInfo(profileInfo.getAccountImage(),profileInfo.getAccountNick());
+                    break;
+            }
+        }
+    }
+
+    // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때
     @Override
     public void getUserProfile(String accountNick, String accountEmail) {
         myPageDrawerEmail.setText(accountEmail);

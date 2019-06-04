@@ -37,7 +37,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
 
     public void loadData(){
         // view.showLoading(); 로딩 화면
-        Log.i(TAG, "loadData: ");
         //<
         //데이터 로딩
         addSubscription(

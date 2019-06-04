@@ -190,6 +190,10 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
             // 수정 --> actionKind = 1
             // 삭제 --> actionKind = 2
 
+            // TODO:::::::::::::
+            // 추가와 삭제인 경우에는 프로필에서 '내 게시물 수' 값을 동기화 해줘야 하기 때문에
+            // 이 경우에는 인터페이스를 통해 마이페이지 프래그먼트에 추가인지 삭제인지에 대한 값을 전달한다
+
             // 삭제인 경우에는 qnaBoardItem 을 보내지 않기 때문에 예외처리
             QnaBoardItem qnaBoardItem = null;
             if (data != null && data.getParcelableExtra("qnaBoardItem") != null) {
@@ -231,7 +235,7 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
         return new RecyclerItemClickListener(view.getContext(), myBoardRecycler, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Log.i(TAG, "onItemClick: 포지션값 : " + position);
+
                 Intent intent = new Intent(view.getContext(), QnaBoardDetailActivity.class);
                 intent.putExtra("fromActivity",0);
                 intent.putExtra("actionKind", 1);
@@ -242,7 +246,6 @@ public class MyBoardFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onLongItemClick(View view, int position) {
-                Log.i(TAG, "onLongItemClick: 포지션 값" + position);
 
             }
         });

@@ -1,21 +1,27 @@
 package com.example.taopr.soool;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class TimeCalculator {
+    private final String TAG = "큐앤에이 시간 계산";
+    private static String monthYearPattern = "yyyyMMddHHmmss";
 
-    public String beforeTime(Date date){
+    public String getbeforeTime(String dateString){
 
         Calendar c = Calendar.getInstance();
 
+
         long now = c.getTimeInMillis();
-        long dateM = date.getTime();
+        long dateM = getLongDate(dateString);
 
         long gap = now - dateM;
 
         String ret = "";
+        Log.i(TAG, "beforeTime: " + now + "  "+ "  "+dateM + "  " + gap );
 
 //        초       분   시
 //        1000    60  60
@@ -48,11 +54,36 @@ public class TimeCalculator {
         else if(min > 0){
             ret = String.valueOf(min)+"분 전";
         }
-        else if(sec > 0){
+        else{
             ret = "방금 전";
         }
 
         return ret;
 
+    }
+
+
+    // string 으로된 날짜 값을 Date 변수로 변환
+    public Long getLongDate(String dateString){
+        int year,month,date,hour,min,sec;
+        year = Integer.parseInt(dateString.substring(0,4));
+        month = Integer.parseInt(dateString.substring(5,7))-1;  // month는 값이 0일 때 1월
+        date = Integer.parseInt(dateString.substring(8,10));
+        hour =  Integer.parseInt(dateString.substring(11,13));
+        min =  Integer.parseInt(dateString.substring(14,16));
+        sec =  Integer.parseInt(dateString.substring(17,19));
+
+        Log.i(TAG, "getDate: " + year +"  " + month +"  " + date + " " +hour +"  "+min +"  "+ sec);
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(monthYearPattern);
+        Calendar cal = Calendar.getInstance();
+
+        Log.i(TAG, "getLongDate: 오늘 날짜 +" + simpleDateFormat.format(cal.getTime()));
+
+        cal.set(year,month,date,hour,min,sec);
+        Log.i(TAG, "getLongDate: 작성 날짜 +" + simpleDateFormat.format(cal.getTime()));
+
+        return cal.getTimeInMillis();
     }
 }

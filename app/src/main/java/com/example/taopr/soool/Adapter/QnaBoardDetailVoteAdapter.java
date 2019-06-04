@@ -53,7 +53,8 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
     @Override
     public void onBindViewHolder(final QnaBoardDetailVoteAdapter.MyViewHolder holder, final int position) {
         Log.d("어댑터", "onBindViewHolder: 하위" + " " + editModelArrayList.get(position).getVoteboard());
-        holder.textView.setText(editModelArrayList.get(position).getEditTextValue());
+        //holder.textView.setText(editModelArrayList.get(position).getEditTextValue());
+        holder.textView.setText(String.valueOf(editModelArrayList.get(position).getVoteboard()));
         holder.progressBar.setProgress((editModelArrayList.get(position).getVoteboard()));
         holder.progressBar.setMax(voteTotalNums);
         holder.progressBar.setScaleY(5f);
