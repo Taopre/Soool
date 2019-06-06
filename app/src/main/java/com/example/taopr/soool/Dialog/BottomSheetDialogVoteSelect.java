@@ -67,21 +67,25 @@ public class BottomSheetDialogVoteSelect extends BottomSheetDialogFragment imple
             case R.id.iv_textVote:
                 voteSelectInDialog = 0;
                 bottomSheetDialogVoteSelectDialoggListener.onSelectVoteStatus(voteSelectInDialog);
+                bottomSheetDialogVoteSelectDialoggListener.noVotesoReturn(false);
                 dismiss();
                 break;
             case R.id.iv_imageVote:
                 voteSelectInDialog = 1;
                 bottomSheetDialogVoteSelectDialoggListener.onSelectVoteStatus(voteSelectInDialog);
+                bottomSheetDialogVoteSelectDialoggListener.noVotesoReturn(false);
                 dismiss();
                 break;
             case R.id.tv_textVote:
                 voteSelectInDialog = 0;
                 bottomSheetDialogVoteSelectDialoggListener.onSelectVoteStatus(voteSelectInDialog);
+                bottomSheetDialogVoteSelectDialoggListener.noVotesoReturn(false);
                 dismiss();
                 break;
             case R.id.tv_imageVote:
                 voteSelectInDialog = 1;
                 bottomSheetDialogVoteSelectDialoggListener.onSelectVoteStatus(voteSelectInDialog);
+                bottomSheetDialogVoteSelectDialoggListener.noVotesoReturn(false);
                 dismiss();
                 break;
             case R.id.iv_Exit:
