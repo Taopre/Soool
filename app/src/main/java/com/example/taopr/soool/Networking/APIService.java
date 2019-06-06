@@ -173,4 +173,11 @@ public interface APIService {
     @FormUrlEncoded
     @POST("/qnapost/QnaDelete.php")
     Call<ResponseBody> deleteBoardWithPostNo(@Field("postNo") int postNo);
+
+    @FormUrlEncoded
+    @POST("/qnapost/QnaPostLike.php")
+    Call<ResponseBody> recommendOnOffReq(@Field("postNo") int postNo,
+                                         @Field("accountNo") int accountNo,
+                                         @Field("likeType") int likeType,
+                                         @Field("btnOnOff") int btnOnOff);
 }

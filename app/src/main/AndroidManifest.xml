@@ -30,13 +30,15 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".View.QnaBoardActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle"/>
         <activity
             android:name=".View.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".View.QnaBoardDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle"/>
         <activity android:name=".View.CalendarSchActivity" />
         <activity android:name=".View.CalendarAddSchActivity" />
         <activity
@@ -48,7 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.ProfileActivity"></activity>
+        <activity android:name=".View.VoteImageActivity" android:screenOrientation="portrait"  android:theme="@style/NoTitle"/>
     </application>
 
 </manifest>

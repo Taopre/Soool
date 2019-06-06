@@ -3,7 +3,7 @@
     android:gravity="center_vertical"
     android:background="@drawable/border_bottom"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/drawupBack"
@@ -23,7 +23,8 @@
         android:layout_marginEnd="@dimen/all_space_between_18dp"
         android:textSize="@dimen/text_size_15dp"
         android:textColor="@color/greenMain"
-        android:text="@string/qna_detail_button_report"
+
+        android:text="@string/all_button_modify"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -36,8 +37,8 @@
         android:layout_marginEnd="@dimen/all_space_between_18dp"
         android:textSize="@dimen/text_size_15dp"
         android:textColor="@color/greenMain"
-        android:text="@string/all_button_modify"
         android:visibility="visible"
+        android:text="@string/qna_detail_button_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>

@@ -6,8 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/qna_actionbar"
+        android:id="@+id/actionbar"/>
+
     <ScrollView
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/actionbar"
         android:layout_above="@+id/functionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -118,7 +121,8 @@
                         android:layout_marginTop="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal">
+                        android:layout_marginEnd="@dimen/all_space_between_18dp"
+                        android:layout_marginStart="@dimen/all_space_between_18dp">
 
                         <ImageView
                             android:id="@+id/qnaboardImage"
@@ -140,56 +144,127 @@
                     </FrameLayout>
 
                     <LinearLayout
-                        android:id="@+id/qnaboardVoteLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/text_size_13dp"
+                        android:layout_marginStart="@dimen/all_space_between_18dp"
+                        android:layout_marginEnd="@dimen/all_space_between_18dp"
+                        android:id="@+id/qnaVoteTextLayout"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/grayLight">
+
+                            <TextView
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/text_size_13dp"
+                                android:layout_marginTop="@dimen/text_size_14dp"
+                                android:layout_marginBottom="@dimen/text_size_15dp"
+                                android:text="텍스트 투표 (6개 항목까지 가능합니다)"
+                                android:textColor="@color/grayMain"
+                                android:textSize="@dimen/text_size_14dp"/>
+
+                            <ImageView
+                                android:id="@+id/qnaTextVoteRemove"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginTop="@dimen/all_space_between_10dp"
+                                android:layout_alignParentEnd="true"
+                                android:src="@drawable/qna_post_remove_vote"/>
+                        </RelativeLayout>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
                             android:layout_marginTop="15dp" />
 
-                        <GridView
-                            android:id="@+id/gridview"
-                            android:visibility="gone"
-                            android:numColumns="3"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="wrap_content"
+                            android:id="@+id/qnaTextAddLayout">
+
+                            <ImageView
+                                android:id="@+id/qnaboardAddBtn"
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_marginTop="@dimen/all_space_between_12dp"
+                                android:layout_marginBottom="@dimen/text_size_14dp"
+                                android:src="@drawable/vote_add_opt" />
+
+                            <TextView
+                                android:layout_toRightOf="@+id/qnaboardAddBtn"
+                                android:layout_alignTop="@+id/qnaboardAddBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="26dp"
+                                android:layout_marginStart="@dimen/all_space_between_8dp"
+                                android:textSize="@dimen/text_size_14dp"
+                                android:gravity="center"
+                                android:textColor="@color/grayMain"
+                                android:text="항목 추가"/>
+                        </RelativeLayout>
                     </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/qnaboardAddBtn"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_marginTop="@dimen/text_size_13dp"
+                        android:layout_marginStart="@dimen/all_space_between_18dp"
+                        android:layout_marginEnd="@dimen/all_space_between_18dp"
+                        android:id="@+id/qnaVoteImageLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:visibility="gone"
-                        android:src="@drawable/vote_remove_opt_img"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/qnaboardVoteLayout"
-                        app:layout_constraintVertical_bias="0.0" />
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/grayLight">
+
+                            <TextView
+                                android:id="@+id/textViews"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/text_size_13dp"
+                                android:layout_marginTop="@dimen/text_size_14dp"
+                                android:layout_marginBottom="@dimen/text_size_15dp"
+                                android:text="이미지    투표 (6개 항목까지 가능합니다)"
+                                android:textColor="@color/grayMain"
+                                android:textSize="@dimen/text_size_14dp"/>
+
+                            <ImageView
+                                android:id="@+id/qnaImageVoteRemove"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginTop="@dimen/all_space_between_10dp"
+                                android:layout_alignParentEnd="true"
+                                android:src="@drawable/qna_post_remove_vote"/>
+                        </RelativeLayout>
+
+                        <GridView
+                            android:layout_marginTop="@dimen/text_size_13dp"
+                            android:id="@+id/gridview"
+                            android:layout_marginStart="@dimen/text_size_13dp"
+                            android:layout_marginEnd="@dimen/text_size_14dp"
+                            android:numColumns="3"
+                            android:layout_width="match_parent"
+                            android:layout_height="212dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
-
             </LinearLayout>
-
         </RelativeLayout>
-
     </ScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:background="@drawable/border_top"
         android:id="@+id/functionLayout">
 

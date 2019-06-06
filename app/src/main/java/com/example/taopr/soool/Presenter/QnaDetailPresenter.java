@@ -2,17 +2,13 @@ package com.example.taopr.soool.Presenter;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
-import com.example.taopr.soool.Object.InfoOfSoool;
+import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.QnaVoteItem;
-import com.example.taopr.soool.Object.ResponseVote;
 import com.example.taopr.soool.Presenter.Interface.QnaDetailInter;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +37,8 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
 
     JSONArray jsonArray;
     JSONObject returnData;
+    Gson gson = new Gson();
+    BoardRecommend boardRecommend;
 
     String result, count;
     int qnaVoteStatus, memberIsVoted, totalVoteCount;
@@ -207,21 +205,35 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                     try {
                                         String msg = response.body().string();
-
                                         jsonArray = new JSONArray(msg);
                                         returnData = jsonArray.getJSONObject(0);
-                                        result = returnData.getString("result");
+                                        receiveQnaVoteItem = new QnaVoteItem();
+                                        receiveQnaVoteItem.setResult(returnData.getString("result"));
 
-                                        if (result.equals("true")) {
-                                            Log.d(TAG, "onResponse: 업데이트 성공.");
-                                        } else if (result.equals("false")) {
-                                            Log.d(TAG, "onResponse: 업데이트 실패.");
+                                        if (receiveQnaVoteItem.getResult().equals("true")) {
+                                            receiveQnaVoteItem.setQnaVoteStatus(returnData.getInt("qnaVoteStatus"));
+                                            receiveQnaVoteItem.setCount(returnData.getInt("count"));
+                                            receiveQnaVoteItem.setTotalVoteCount(returnData.getInt("totalVoteCount"));
+                                            receiveQnaVoteItem.setMemberIsVoted(selectNum-1);
+                                            voteResult.clear();
+                                            voteList.clear();
+                                            for (int i = 0; i < receiveQnaVoteItem.getCount(); i++) {
+                                                voteList.add(returnData.getString("voteContent" + (i + 1)));
+                                            }
+                                            receiveQnaVoteItem.setVoteText(voteList);
+                                            for (int i = 0; i < receiveQnaVoteItem.getCount(); i++) {
+                                                voteResult.add(returnData.getInt("voteResult" + (i + 1)));
+                                            }
+                                            Log.d(TAG, "onResponse: 하이 프레젠터"+receiveQnaVoteItem.getCount()+receiveQnaVoteItem.getVoteText().size());
+                                            receiveQnaVoteItem.setVoteResult(voteResult);
+
+                                            view.updateVoteResultComplete(true, receiveQnaVoteItem);
+                                        } else {
+
                                         }
-
-                                    }catch (IOException e) {
+                                    } catch (IOException e) {
                                         e.printStackTrace();
-                                    }
-                                    catch (JSONException e) {
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
@@ -229,7 +241,7 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                     // 콜백 실패
-
+                                    view.updateVoteResultComplete(true, receiveQnaVoteItem);
                                     Log.d(TAG, "onFailure: 콜백 실패");
                                     Log.e(TAG, "onFailure: ", t);
                                 }
@@ -237,7 +249,80 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                         }
                         catch(Exception e) {
                             // 통신 실패
+                            view.updateVoteResultComplete(true, receiveQnaVoteItem);
+                            Log.d(TAG, "onFailure: 통신 실패");
+                            Log.e(TAG, "apply: ", e);
+                        }
 
+                        return true;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>()
+                {
+                    @Override
+                    public void onSubscribe(Disposable d)
+                    {
+                        Log.d(TAG, "onSubscribe : "+d);
+                    }
+                    @Override
+                    public void onNext(Boolean s)
+                    {
+                        Log.d(TAG, "onNext: "+s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: "+e);
+                    }
+                    @Override
+                    public void onComplete()
+                    {
+                    }
+                });
+    }
+
+    @Override
+    public void recommendOnOffReq(int accountNo, int postNo, int likeType, int btnOnOff) {
+        Observable.just("")
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
+                .map(new Function<String, Boolean>()
+                {
+                    @Override
+                    public Boolean apply(String s) throws Exception
+                    {
+                        try
+                        {
+                            Log.d(TAG, "시작 바로 전");
+                            apiService = APIClient.getClient1().create(APIService.class);
+                            Call<ResponseBody> callServer = apiService.recommendOnOffReq(postNo, accountNo, likeType, btnOnOff);
+
+                            callServer.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    try {
+                                        String msg = response.body().string();
+                                        Log.d(TAG, "onResponse: 서버 응답 "+msg);
+
+                                        boardRecommend = gson.fromJson(msg, BoardRecommend.class);
+                                        view.recommendComplete(true, boardRecommend);
+                                    }catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    // 콜백 실패
+                                    view.recommendComplete(false, boardRecommend);
+                                    Log.d(TAG, "onFailure: 콜백 실패");
+                                    Log.e(TAG, "onFailure: ", t);
+                                }
+                            });
+                        }
+                        catch(Exception e) {
+                            // 통신 실패
+                            view.recommendComplete(false, boardRecommend);
                             Log.d(TAG, "onFailure: 통신 실패");
                             Log.e(TAG, "apply: ", e);
                         }

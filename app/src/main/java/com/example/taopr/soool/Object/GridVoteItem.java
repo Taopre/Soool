@@ -24,6 +24,13 @@ public class GridVoteItem {
 
     }
 
+    public GridVoteItem (boolean isStringOrUri, String status, String strImage) {
+        this.isStringOrUri = isStringOrUri;
+        this.status = status;
+        this.strImage = strImage;
+
+    }
+
     public GridVoteItem (String status, Uri image, boolean isSelected, boolean isStringOrUri) {
         this.status = status;
         this.image = image;

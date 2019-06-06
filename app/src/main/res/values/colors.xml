@@ -13,4 +13,6 @@
     <color name="grayMid">#7f7f79</color>
     <color name="sunflower_yellow">#ffd400</color>
     <color name="grayLight_a50">#80d2d2ca</color>
+    <color name="greenLight">#ceecdb</color>
+    <color name="greenLightImg">#acd7ba</color>
 </resources>
