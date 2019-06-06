@@ -27,19 +27,26 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     // 해당 부분을 static 를 해제해서 태그 동기화 문제를 해결할 수 있었는데, 정확한 이유는 모르겠음.
 
     private ArrayList<String> data;
-    private ClickListeners clickListeners;
     private int whatActivity = 9998;
     private final String TAG = "큐앤에이 태그 어댑터 ";
     private Context context;
-    public QnaBoardTagAdapter(Context ctx) {
+    private ClickListener clickListener;
+
+    public interface ClickListener {
+        void ListClick(int position, View view) ;
+    }
+
+
+    public QnaBoardTagAdapter(Context ctx, ClickListener clickListener) {
         this.context = ctx;
+        this.clickListener = clickListener;
+
     }
 
     public QnaBoardTagAdapter(Context ctx, ArrayList<String> data){
         inflater = LayoutInflater.from(ctx);
         this.data = data;
     }
-
 
     public QnaBoardTagAdapter(Context ctx, ArrayList<String> data, int whatActivity){
         inflater = LayoutInflater.from(ctx);
@@ -48,9 +55,12 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
         this.context = ctx;
     }
 
-
-    public interface ClickListeners {
-        void onBtnClick(int position, View view) ;
+    public QnaBoardTagAdapter(Context ctx, ArrayList<String> data, int whatActivity,ClickListener clickListener){
+        inflater = LayoutInflater.from(ctx);
+        this.data = data;
+        this.whatActivity = whatActivity;
+        this.context = ctx;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -73,8 +83,7 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
         }
         holder.tagTitle.setText(data.get(position));
         //holder.deleteTag.setText(data.get(position));
-        Log.d("print","yes");
-
+        holder.bind(data.get(position), clickListener);
     }
 
     @Override
@@ -82,15 +91,12 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
         return data.size();
     }
 
-    public void setClickListeners(ClickListeners clickListeners) {
-        this.clickListeners = clickListeners;
-    }
-
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView tagTitle;
         protected ImageView deleteTag;
         protected ViewGroup itemTag;
+
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -110,16 +116,33 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
                 tagTitle.setTextColor(ContextCompat.getColor(itemView.getContext(),R.color.greenMain));
 
             }
-            deleteTag.setOnClickListener(this);
+
+//            deleteTag.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.deleteTag:
-                    clickListeners.onBtnClick(getAdapterPosition(), v);
-                    break;
-            }
+        public void bind(String data, ClickListener clickListener) {
+            deleteTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "onClick: 하위");
+                    clickListener.ListClick(getAdapterPosition(), v);
+                }
+            });
         }
+
+//        @Override
+//        public void onClick(View v) {
+//            switch (v.getId()) {
+//                case R.id.deleteTag:
+//                    Log.i(TAG, "onClick: 삭제");
+//                    if (clickListener != null) {
+//                        clickListener.ListClick(getAdapterPosition(), v) ;
+//                        Log.i(TAG, "onClick: 널 x");
+//                    }else {
+//                        Log.i(TAG, "onClick: 널이다");
+//                    }
+//                    break;
+//            }
+//        }
     }
 }

@@ -204,4 +204,11 @@ public interface APIService {
                                               @Field("favorite") int favorite,
                                               @Field("reason") int reason);
 
+
+    @FormUrlEncoded
+    @POST("/qnapost/QnaPostLike.php")
+    Call<ResponseBody> recommendOnOffReq(@Field("postNo") int postNo,
+                                         @Field("accountNo") int accountNo,
+                                         @Field("likeType") int likeType,
+                                         @Field("btnOnOff") int btnOnOff);
 }

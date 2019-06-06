@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.R;
@@ -18,19 +19,31 @@ import java.util.ArrayList;
 public class QnaBoardVoteAdapter extends RecyclerView.Adapter<QnaBoardVoteAdapter.MyViewHolder> {
 
     private LayoutInflater inflater;
-    public static ArrayList<QnaBoardVoteItem> editModelArrayList;
+    public ArrayList<QnaBoardVoteItem> editModelArrayList;
+    private QnaBoardVoteListener qnaBoardVoteListener;
+    private Context context;
 
+    public interface QnaBoardVoteListener {
+        void voteContentClickListner(int position, View view) ;
+    }
 
-    public QnaBoardVoteAdapter(Context ctx, ArrayList<QnaBoardVoteItem> editModelArrayList){
+    public QnaBoardVoteAdapter(Context context, QnaBoardVoteListener qnaBoardVoteListener) {
+        this.context = context;
+        this.qnaBoardVoteListener = qnaBoardVoteListener;
+    }
+
+    public QnaBoardVoteAdapter(Context ctx, ArrayList<QnaBoardVoteItem> editModelArrayList, QnaBoardVoteListener qnaBoardVoteListener){
 
         inflater = LayoutInflater.from(ctx);
         this.editModelArrayList = editModelArrayList;
+        this.context = ctx;
+        this.qnaBoardVoteListener = qnaBoardVoteListener;
     }
 
     @Override
     public QnaBoardVoteAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.rv_item, parent, false);
+        View view = inflater.inflate(R.layout.qna_text_vote_item, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
 
         return holder;
@@ -39,10 +52,8 @@ public class QnaBoardVoteAdapter extends RecyclerView.Adapter<QnaBoardVoteAdapte
     @Override
     public void onBindViewHolder(final QnaBoardVoteAdapter.MyViewHolder holder, final int position) {
 
-
         holder.editText.setText(editModelArrayList.get(position).getEditTextValue());
-        Log.d("print","yes");
-
+        holder.bind(qnaBoardVoteListener);
     }
 
     @Override
@@ -50,14 +61,16 @@ public class QnaBoardVoteAdapter extends RecyclerView.Adapter<QnaBoardVoteAdapte
         return editModelArrayList.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
         protected EditText editText;
+        protected ImageView deleteText;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            editText = (EditText) itemView.findViewById(R.id.editid);
+            editText = itemView.findViewById(R.id.editid);
+            deleteText = itemView.findViewById(R.id.deleteText);
 
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -77,6 +90,16 @@ public class QnaBoardVoteAdapter extends RecyclerView.Adapter<QnaBoardVoteAdapte
                 }
             });
 
+        }
+
+        public void bind(QnaBoardVoteListener qnaBoardVoteListener) {
+            deleteText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("adpater", "onClick: 하위");
+                    qnaBoardVoteListener.voteContentClickListner(getAdapterPosition(), v);
+                }
+            });
         }
 
     }

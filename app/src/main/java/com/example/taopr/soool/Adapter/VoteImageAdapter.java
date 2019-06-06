@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.Whatisthis;
 
 import java.util.ArrayList;
 
@@ -58,24 +59,32 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        ViewHolder viewHolder;
+
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.qna_vote_image, null);
 
             TextView textView = convertView.findViewById(R.id.grid_text);
             ImageView imageView = convertView.findViewById(R.id.grid_image);
-            Button button = convertView.findViewById(R.id.grid_btn);
+            ImageView button = convertView.findViewById(R.id.grid_btn);
 
-            final ViewHolder viewHolder = new ViewHolder(textView, imageView, button);
+            viewHolder = new ViewHolder(textView, imageView, button);
             convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-
-        final ViewHolder viewHolder = (ViewHolder)convertView.getTag();
-        viewHolder.textView.setText(item.get(position).getStatus());
-        viewHolder.imageView.setImageURI(item.get(position).getImage());
-
         viewHolder.button.setTag(position);
         viewHolder.textView.setTag(position);
         viewHolder.imageView.setTag(position);
+
+        viewHolder.textView.setText(item.get(position).getStatus());
+        viewHolder.imageView.setImageURI(item.get(position).getImage());
+
+//        Glide.with(convertView.getContext())
+//                .load(Whatisthis.serverIp+item.get(position).getStrImage())
+//                .override(103, 103)
+//                .centerCrop()
+//                .into(viewHolder.imageView);
 
         viewHolder.button.setOnClickListener(this);
         viewHolder.textView.setOnClickListener(this);
@@ -84,21 +93,15 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
             viewHolder.button.setVisibility(View.GONE);
         }
 
-//            if (image.size() < 7) {
-//                textView.setVisibility(View.VISIBLE);
-//            } else {
-//                textView.setVisibility(View.GONE);
-//            }
-
         return convertView;
     }
 
     private class ViewHolder {
         private TextView textView;
         private ImageView imageView;
-        private Button button;
+        private ImageView button;
 
-        public ViewHolder(TextView textView, ImageView imageView, Button button) {
+        public ViewHolder(TextView textView, ImageView imageView, ImageView button) {
             this.textView = textView;
             this.imageView = imageView;
             this.button = button;

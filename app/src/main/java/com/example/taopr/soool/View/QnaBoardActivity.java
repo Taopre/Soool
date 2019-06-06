@@ -34,12 +34,14 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
+import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.BottomSheetDialogVoteSelect;
@@ -64,19 +66,20 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class QnaBoardActivity extends AppCompatActivity implements
-        View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener, VoteImageAdapter.GridviewItemClickListner {
+        View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener, 
+        VoteImageAdapter.GridviewItemClickListner {
 
     private final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
     private final int QNA_MOVE_TO_DETAIL= 3100;
     private final int QNA_MOVE_TO_WRITE = 3200;
 
-    TextView tv_qnaboardBeforeTag;
+    TextView tv_qnaboardBeforeTag, tv_drawupBack, tv_drawupEnroll, tv_drawupDelete;
     EditText et_qnaboardTitle, et_qnaboardContent;
-    ImageButton iv_qnaboardAddBtn;
-    ImageView iv_qnaboardImage, iv_qnaboardAddTag, iv_qnaboardDeleteBtn, iv_qnaboardImagebtn, iv_qnaboardVoteBtn;
+    ImageView iv_qnaImageVoteRemove, iv_qnaboardAddBtn, iv_qnaboardImage, iv_qnaboardAddTag, iv_qnaboardDeleteBtn, iv_qnaboardImagebtn, iv_qnaboardVoteBtn, iv_qnaTextVoteRemove;
     HorizontalScrollView h_scrollView;
-    LinearLayout lay_qnaboardVoteLayout;
+    LinearLayout ll_qnaVoteTextLayout, ll_qnaVoteImageLayout;
+    RelativeLayout rl_qnaTextAddLayout;
     FrameLayout imageLayout;
     RecyclerView recyclerView, rc_qnaboardTag;
     GridView gridView;
@@ -93,7 +96,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     VoteImageAdapter voteImageAdapter;
     QnaBoardPresenter qnaBoardPresenter;
-    QnaBoardItem qnaBoardItem = new QnaBoardItem();
+    QnaBoardVoteItem qnaBoardVoteItem = new QnaBoardVoteItem();
     QnaBoardItem receiveQnaBoardItem = new QnaBoardItem();
     QnaVoteItem qnaVoteItem = new QnaVoteItem();
     QnaItem qnaItem = new QnaItem();
@@ -122,17 +125,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
         accountNo = loginSessionItem.getAccountNo();
         accountNick = loginSessionItem.getAccountNick();
 
-        qnaBoardTagAdapter = new QnaBoardTagAdapter(this);
-        qnaBoardTagAdapter.setClickListeners(new QnaBoardTagAdapter.ClickListeners() {
-            @Override
-            public void onBtnClick(int position, View view) {
-                Toast.makeText(view.getContext(), position+"", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onBtnClick: "+tagArray.size());
-                tagArray.remove(position);
-                qnaBoardTagAdapter.notifyDataSetChanged();
-            }
-        });
-
         Intent intent = getIntent();
 
         if (intent != null) {
@@ -141,9 +133,9 @@ public class QnaBoardActivity extends AppCompatActivity implements
             if (actionKind == 1) {
                 receiveQnaBoardItem = intent.getParcelableExtra("qnaBoardItem");
 
-//                if (receiveQnaBoardItem != null)
-//                    if (accountNo == receiveQnaBoardItem.getAccountNo())
-//                        tv_drawupDelete.setVisibility(View.VISIBLE);
+                if (receiveQnaBoardItem != null)
+                    if (accountNo == receiveQnaBoardItem.getAccountNo())
+                        tv_drawupDelete.setVisibility(View.VISIBLE);
 
                 tv_qnaboardBeforeTag.setVisibility(View.GONE);
                 h_scrollView.setVisibility(View.VISIBLE);
@@ -153,8 +145,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     for (int i = 0; i < tagData.length; i++) {
                         tagArray.add(tagData[i]);
                     }
+                } else {
+                    tagArray.add((receiveQnaBoardItem.getTag()));
                 }
-                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 0);
+                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 0, new QnaBoardTagAdapter.ClickListener() {
+                    @Override
+                    public void ListClick(int position, View view) {
+                        tagArray.remove(position);
+                        qnaBoardTagAdapter.notifyDataSetChanged();
+                    }
+                });
                 rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                 rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -172,25 +172,19 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             .centerCrop()
                             .into(iv_qnaboardImage);
                 }
-//                try {
-//                    iv_qnaboardImage.setVisibility(View.VISIBLE);
-//                    btn_qnaboardDeleteBtn.setVisibility(View.VISIBLE);
-//                    Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+"/"+receiveQnaBoardItem.getImage());
-//                    Glide.with(this)
-//                            .load(Whatisthis.serverIp+receiveQnaBoardItem.getImage())
-//                            .override(100, 100)
-//                            .centerCrop()
-//                            .into(iv_qnaboardImage);
-//                }catch (NullPointerException e){
-//                    Log.d(TAG, "이미지 없음");
-//                }
 
                 iv_qnaboardVoteBtn.setVisibility(View.GONE);
             }
         }
 
         editModelArrayList = populateList();
-        qnaBoardVoteAdapter = new QnaBoardVoteAdapter(this,editModelArrayList);
+        qnaBoardVoteAdapter = new QnaBoardVoteAdapter(this,editModelArrayList, new QnaBoardVoteAdapter.QnaBoardVoteListener() {
+            @Override
+            public void voteContentClickListner(int position, View view) {
+                editModelArrayList.remove(position);
+                qnaBoardVoteAdapter.notifyDataSetChanged();
+            }
+        });
         recyclerView.setAdapter(qnaBoardVoteAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     }
@@ -230,7 +224,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
         iv_qnaboardImage = findViewById(R.id.qnaboardImage);
         iv_qnaboardDeleteBtn = findViewById(R.id.qnaboardDeleteBtn);
         iv_qnaboardVoteBtn = findViewById(R.id.qnaboardVoteBtn);
-        lay_qnaboardVoteLayout = findViewById(R.id.qnaboardVoteLayout);
+        ll_qnaVoteTextLayout = findViewById(R.id.qnaVoteTextLayout);
+        ll_qnaVoteImageLayout = findViewById(R.id.qnaVoteImageLayout);
         iv_qnaboardAddBtn = findViewById(R.id.qnaboardAddBtn);
         recyclerView = findViewById(R.id.recycler);
         gridView = findViewById(R.id.gridview);
@@ -239,10 +234,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
         rc_qnaboardTag = findViewById(R.id.qnaboardTag);
         h_scrollView = findViewById(R.id.h_scrollView);
         imageLayout = findViewById(R.id.imageLayout);
+        iv_qnaTextVoteRemove = findViewById(R.id.qnaTextVoteRemove);
+        rl_qnaTextAddLayout = findViewById(R.id.qnaTextAddLayout);
+        iv_qnaImageVoteRemove = findViewById(R.id.qnaImageVoteRemove);
+        tv_drawupBack = findViewById(R.id.drawupBack);
+        tv_drawupEnroll = findViewById(R.id.drawupEnroll);
+        tv_drawupDelete = findViewById(R.id.drawupDelete);
 
         imageLayout.setVisibility(View.GONE);
-        lay_qnaboardVoteLayout.setVisibility(View.GONE);
-        iv_qnaboardAddBtn.setVisibility(View.GONE);
+        ll_qnaVoteTextLayout.setVisibility(View.GONE);
+        ll_qnaVoteImageLayout.setVisibility(View.GONE);
 
         // 뷰의 리스너 선언 부분입니다.
         iv_qnaboardImagebtn.setOnClickListener(this);
@@ -250,7 +251,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
         iv_qnaboardVoteBtn.setOnClickListener(this);
         iv_qnaboardAddBtn.setOnClickListener(this);
         iv_qnaboardAddTag.setOnClickListener(this);
+        iv_qnaTextVoteRemove.setOnClickListener(this);
+        iv_qnaImageVoteRemove.setOnClickListener(this);
         gridView.setOnItemClickListener(this);
+        tv_drawupBack.setOnClickListener(this);
+        tv_drawupEnroll.setOnClickListener(this);
+        tv_drawupDelete.setOnClickListener(this);
     }
 
     // 권한 묻는 부분.
@@ -304,74 +310,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        ActionBar actionBar = getSupportActionBar();
-
-        // Custom Actionbar를 사용하기 위해 CustomEnabled을 true 시키고 필요 없는 것은 false 시킨다
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);            //액션바 아이콘을 업 네비게이션 형태로 표시합니다.
-        actionBar.setDisplayShowTitleEnabled(false);        //액션바에 표시되는 제목의 표시유무를 설정합니다.
-        actionBar.setDisplayShowHomeEnabled(false);            //홈 아이콘을 숨김처리합니다.
-        actionBar.setElevation(0);
-        //layout을 가지고 와서 actionbar에 포팅을 시킵니다.
-        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-        View actionbar = inflater.inflate(R.layout.qna_actionbar, null);
-
-        actionBar.setCustomView(actionbar);
-
-        //액션바 양쪽 공백 없애기
-        Toolbar parent = (Toolbar)actionbar.getParent();
-        parent.setContentInsetsAbsolute(0,0);
-
-        TextView tv_drawupBack = findViewById(R.id.drawupBack);
-        TextView tv_drawupEnroll = findViewById(R.id.drawupEnroll);
-        TextView tv_drawupDelete = findViewById(R.id.drawupDelete);
-
-        if (receiveQnaBoardItem != null)
-            if (accountNo == receiveQnaBoardItem.getAccountNo())
-                tv_drawupDelete.setVisibility(View.VISIBLE);
-
-
-        tv_drawupBack.setOnClickListener(this);
-        tv_drawupEnroll.setOnClickListener(this);
-        tv_drawupDelete.setOnClickListener(this);
-
-        return true;
-    }
-
-    // 투표 기능 고르는 부분
-//    @Override
-//    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-//        if(i == R.id.qnaboardVoteText) {
-//            voteSelect = 0;
-////            Toast.makeText(this, voteSelect, Toast.LENGTH_SHORT).show();
-//
-//            rg_qnaboardVoteSelect.setVisibility(View.GONE);
-//            lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
-//            recyclerView.setVisibility(View.VISIBLE);
-//            iv_qnaboardAddBtn.setVisibility(View.VISIBLE);
-//        }else if(i == R.id.qnaboardVoteImage) {
-//            voteSelect = 1;
-//
-//            rg_qnaboardVoteSelect.setVisibility(View.GONE);
-//            lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
-//            recyclerView.setVisibility(View.GONE);
-//            gridView.setVisibility(View.VISIBLE);
-//            // 다중 이미지 테스트 성공.
-//            // 리싸이클러뷰로 이미지 최대 5개 보여지는지 데모앱아닌 여기서 테스트 해봐야함.
-//            // 라디오버튼 클릭되면 앨범으로 바로 이동.
-//            // 5개로 제한두도록 메시지 처리해줘야함.
-//            // 이미지 셀렉하면 셀렉된 이미지 리싸이클러뷰로 보여지도록 처리해야함.
-//            // 여기까지 완료된다면 예외처리부분 처리해준다.
-//            // 다 된다면 mvp로 서버로 보내주는 처리를 해준다면 작성하는 곳은 완료.
-//
-//            FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6).setMinCount(2).startAlbum();
-//        }
-//    }
-
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         voteSelect = 2; // 투표 0이면 텍스트 1이면 이미지이므로 아무것도 아닌 상태 2로 저장해둠.
@@ -382,18 +320,46 @@ public class QnaBoardActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.qnaImageVoteRemove:
+                ll_qnaVoteImageLayout.setVisibility(View.GONE);
+
+                // 항목에 값이 있다면 값을 다 없애주자.
+                try {
+                    gridVoteItemArrayList.clear();
+
+                    voteImageAdapter.notifyDataSetChanged();
+
+                    voteImage.clear();
+                } catch (NullPointerException e) {
+                    Log.d(TAG, "onClick: "+e);
+                }
+
+                iv_qnaboardVoteBtn.setClickable(true);
+                break;
+            case R.id.qnaTextVoteRemove:
+                ll_qnaVoteTextLayout.setVisibility(View.GONE);
+
+                // 항목에 값이 있다면 값을 다 없애주자.
+                try {
+                    editModelArrayList.clear();
+
+                    for (int i=0; i<2; i++) {
+                        QnaBoardVoteItem editModel = new QnaBoardVoteItem();
+                        editModel.setEditTextValue("");
+                        editModelArrayList.add(editModel);
+                    }
+
+                    qnaBoardVoteAdapter.notifyDataSetChanged();
+
+                    voteText.clear();
+                } catch (NullPointerException e) {
+                    Log.d(TAG, "onClick: "+e);
+                }
+
+                iv_qnaboardVoteBtn.setClickable(true);
+                 break;
             case R.id.qnaboardImageBtn:
                 //앨범 연동.
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(intent, 1);
-//                DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        doTakePhotoAction();
-//                    }
-//                };
                 DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -598,16 +564,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 bottomSheetDialogVoteSelect.setDialogListener(new BottomSheetDialogVoteSelect.BottomSheetDialogVoteSelectDialoggListener() {
                     @Override
                     public void onSelectVoteStatus(int voteSelectFromDialog) {
+                        iv_qnaboardVoteBtn.setClickable(false);
+
                         voteSelect = voteSelectFromDialog;
 
                         if (voteSelect == 0) {
-                            lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            iv_qnaboardAddBtn.setVisibility(View.VISIBLE);
+                            ll_qnaVoteTextLayout.setVisibility(View.VISIBLE);
+//                            recyclerView.setVisibility(View.VISIBLE);
+//                            rl_qnaTextAddLayout.setVisibility(View.VISIBLE);
                         } else {
-                            lay_qnaboardVoteLayout.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                            gridView.setVisibility(View.VISIBLE);
+                            ll_qnaVoteImageLayout.setVisibility(View.VISIBLE);
                             // 다중 이미지 테스트 성공.
                             // 리싸이클러뷰로 이미지 최대 5개 보여지는지 데모앱아닌 여기서 테스트 해봐야함.
                             // 라디오버튼 클릭되면 앨범으로 바로 이동.
@@ -625,6 +591,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         if (flag == true) {
                             Log.d(TAG, "noVotesoReturn: 아무것도 안누름");
                             iv_qnaboardVoteBtn.setVisibility(View.VISIBLE);
+                        } else {
+
                         }
                     }
                 });
@@ -659,7 +627,15 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             tv_qnaboardBeforeTag.setVisibility(View.GONE);
                             h_scrollView.setVisibility(View.VISIBLE);
 
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0);
+
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0, new QnaBoardTagAdapter.ClickListener(){
+                                @Override
+                                public void ListClick(int position, View view) {
+                                    Log.i(TAG, "ListClick: 삭제");
+                                    tagArray.remove(position);
+                                    qnaBoardTagAdapter.notifyDataSetChanged();
+                                }
+                            });
                             rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -692,7 +668,13 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             tv_qnaboardBeforeTag.setVisibility(View.GONE);
                             h_scrollView.setVisibility(View.VISIBLE);
 
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0);
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0, new QnaBoardTagAdapter.ClickListener() {
+                                @Override
+                                public void ListClick(int position, View view) {
+                                    tagArray.remove(position);
+                                    qnaBoardTagAdapter.notifyDataSetChanged();
+                                }
+                            });
                             rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -936,5 +918,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
         gridVoteItemArrayList.remove(position);
         voteImageAdapter.notifyDataSetChanged();
     }
+
 }
 
