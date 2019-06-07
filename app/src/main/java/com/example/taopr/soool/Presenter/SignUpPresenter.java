@@ -28,30 +28,17 @@ public class SignUpPresenter implements AccountManager {
     // 전달 받은 값을 SignUpModel에 전달한다
     // SignUpModel에서 서버에 이메일 혹은 닉네임 값이 중복 확인
     // 중복할 경우 false, 사용가능한 경우 true값을 SignUpModel로부터 전달받는다
-    // SignUpModel로부터 전달받은 boolean값을 다시 view에 전달
-
-
-
-
-    //잠시 주석처리했음. 내가 테스트할라고.
-//    @Override
-//    public boolean clickDuplicity(int separator,String emailorNick) {
-//        Log.i(TAG, "clickDuplicity: 전달 받은 값  : " + separator +"  , " + emailorNick);
-////        enable =
-//        signUpModel.checkDuplicity(separator,emailorNick);
-//        return enable;
-//    }
-
-    //중복 체크를 하기위해 model로 보내기 위해 사용한 함수
+    // 전달 받는 함수 => clickDuplicityResponse
     @Override
     public void clickDuplicity(int separator,String emailorNick) {
         Log.i(TAG, "clickDuplicity: 전달 받은 값  : " + separator +"  , " + emailorNick);
-//        enable =
+        view.showLoading();
         signUpModel.checkDuplicity(separator,emailorNick);
     }
 
     //이메일, 닉네임 중복 체크의 결과를 View에게 전송하기 위해 사용한 함수.
     public void clickDuplicityResponse(int separator, String emailorNick, boolean response) {
+        view.hideLoading();
         Log.d(TAG, "clickDuplicityResponse: 모델로부터 넘어온 결과" + separator + " // " + emailorNick + " // " + response);
         view.clickDuplicityResponseGoToVIew(separator, emailorNick, response);
     }
@@ -69,11 +56,16 @@ public class SignUpPresenter implements AccountManager {
 
     //회원가입 버튼을 클릭했을 때 서버로 보낼 정보를 위해 사용한 함수.
     public void signUpReq(String acconutEmail, String accountPW, String accountNick){
+        view.showLoading();
         signUpModel.signUpReq(acconutEmail,accountPW,accountNick);
+
     }
 
-    //회원가입 결과를 view에게 전송하기 위해 사용한 함수.
+    // 회원가입 결과를 view에게 전송하기 위해 사용한 함수.
+    // 서버로 response 를 받았다면 프로그래스바 숨기기
     public void signUpReqResponse (boolean response) {
+        view.hideLoading();
         view.signUpReqResponseGoToVIew(response);
+
     }
 }

@@ -41,7 +41,5 @@ public class BasePresenter {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(observer);
-
-
     }
 }

@@ -21,12 +21,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Adapter.ProfileSpinnerAdapter;
+import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Presenter.ProfilePresenter;
 import com.example.taopr.soool.R;
@@ -61,6 +63,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Spinner reasonSpinner;
     @BindView(R.id.profileImage)
     ImageView profileImage;
+    @BindView(R.id.profileProgress)
+    ProgressBar profileProgress;
 
     private final String TAG = "마이 프로필 액티비티";
 
@@ -77,6 +81,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isChangeProfile = false; // 프로필 정보를 수정했다면 true, 아니라면 false
 
     private ProfileInfo profileInfo;
+
+    private NoticeDialog noticeDialog;
 
     int accountNo;
 
@@ -182,6 +188,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         isChangeProfile = true;
         profileInfo.setAccountImage("soool_default");
         showProfileImage("soool_default");
+    }
+
+    @Override
+    public void showLoading() {
+        profileProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        profileProgress.setVisibility(View.GONE);
     }
 
 
@@ -304,16 +320,30 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     // 프로필 이미지 삭제부분
+    // 프로필 이미지를 설정했을 경우에만 가능하도록
     @OnLongClick({R.id.profileChangeImage,R.id.profileImage})
     public boolean deleteImage(){
-
-        // TODO: 이미지를 길게 눌렀을 때 삭제하겠냐고 묻는 다이얼로그를 띄워주고
-        // TODO: 삭제하겠다 했을 때 프로필 이미지를 서버에서 삭제
-        profilePresenter.deleteProfileImg();
-
+        if (!profileInfo.getAccountImage().equals("soool_default")) {
+            noticeDialog = new NoticeDialog(ProfileActivity.this,
+                    getString(R.string.my_page_dialog_ask_delete_image), false, getString(R.string.all_button_yes),
+                    getString(R.string.all_button_no), positiveListener, negativeListener);
+            noticeDialog.show();
+        }
         return true;
     }
 
+    private View.OnClickListener positiveListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
+            profilePresenter.deleteProfileImg();
+        }
+    };
+
+    private View.OnClickListener negativeListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
+        }
+    };
 
     // 사용자가 이미지 선택을 했을 경우 다이얼로그를 띄워 프로필 이미지 변경을 할 것인지 묻는다.
     // 이미지 변경을 응했을 때 presenter 에 이미지 URI 를 전송한다

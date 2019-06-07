@@ -205,6 +205,14 @@
             android:layout_marginBottom="@dimen/all_space_between_18dp"
             android:stateListAnimator="@null"
             />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:id="@+id/profileProgress"
+            />
     </RelativeLayout>
 
 

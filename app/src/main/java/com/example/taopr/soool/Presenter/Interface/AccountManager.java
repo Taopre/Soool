@@ -37,5 +37,7 @@ public interface AccountManager {
        // void setConfirmText(String text);
         void clickDuplicityResponseGoToVIew(int separator, String emailorNick, boolean response);
         void signUpReqResponseGoToVIew(boolean response);
+        void showLoading();
+        void hideLoading();
     }
 }

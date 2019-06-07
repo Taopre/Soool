@@ -125,6 +125,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
         drawable.getPaint().setColor(Color.rgb(255,255,255)); // 원형 백그라운드 색상 (디폴트 검정색)
         mypageProfileImage.setBackground(drawable);
+        mypageProfileImage.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.profile_default));
 
         // 받아온 프로필 정보가 없을 시 서버에서 받는다
         if(userProfile == null){
@@ -238,7 +239,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 }
                 else{
                     callFragment(MYBOARD_INT);
-                    tabSetting(MYBOARD_INT);
+                   // tabSetting(MYBOARD_INT);
                 }
 
                 break;
@@ -247,12 +248,14 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 // '버튼2' 클릭 시 '프래그먼트2' 호출
                 if(bookmarkFragment ==null){
                     // TODO: 나중에 지워줘야 하는 부분
-                    callFragment(BOOKMARK_INT);
                     tabSetting(BOOKMARK_INT);
+                    callFragment(BOOKMARK_INT);
+
                 }
                 else {
+                  //  tabSetting(BOOKMARK_INT);
                     callFragment(BOOKMARK_INT);
-                    tabSetting(BOOKMARK_INT);
+
                 }
                 break;
 
@@ -262,7 +265,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 }
                 else{
                     callFragment(CALENDAR_INT);
-                    tabSetting(CALENDAR_INT);
+
                 }
 
                 break;
@@ -306,6 +309,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                     bundle.putParcelableArrayList("qnaBoardItems", (ArrayList<? extends Parcelable>) qnaBoardItems); // list 넘기기
                     myBoardFragment.setArguments(bundle);
 
+                    tabSetting(MYBOARD_INT);
                     transaction.replace(R.id.fragment_container, myBoardFragment);
                     transaction.commit();
                 }
@@ -315,8 +319,10 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
             case 1:
                 bookmarkFragment = new BookmarkFragment();
+                tabSetting(BOOKMARK_INT);
                 transaction.replace(R.id.fragment_container, bookmarkFragment);
                 transaction.commit();
+
                 break;
 
             case 2:
@@ -329,9 +335,10 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                     bundle.putString(ACCOUNT_NO_EXTRA
                             ,String.valueOf(accountNo));
                     calendarFragment.setArguments(bundle);
-
                 }
+                tabSetting(CALENDAR_INT);
                 transaction.replace(R.id.fragment_container, calendarFragment );
+
                 transaction.commit();
                 break;
         }

@@ -28,12 +28,14 @@ public interface APIService {
     // 이메일 중복 확인
     @FormUrlEncoded
     @POST("/Signup/overlapConfirm.php")
-    Call<ResponseBody> checkEmailDup(@Field("accountEmail") String accountEmail);
+    Call<ResponseBody> checkEmailDup(@Field("separator") int separator,
+                                     @Field("accountEmail") String accountEmail);
 
     // 닉네임 중복 확인
     @FormUrlEncoded
     @POST("/Signup/overlapConfirm.php")
-    Call<ResponseBody> checkNickDup(@Field("accountNick") String accountNick);
+    Call<ResponseBody> checkNickDup(@Field("separator") int separator,
+                                    @Field("accountNick") String accountNick);
 
     //  @GET("/answers?order=desc&sort=activity&site=stackoverflow")
     // Call<SOAnswersResponse> getAnswers(@Query("tagged") String tags);

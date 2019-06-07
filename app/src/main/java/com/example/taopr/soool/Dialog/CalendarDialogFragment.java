@@ -164,7 +164,7 @@ public class CalendarDialogFragment extends DialogFragment
             eventDates.add(CalendarDay.from(date));
         }
 
-        DayViewDecorator dayViewDecorator = new EventDecorator(ContextCompat.getColor(view.getContext(),R.color.colorAccent),eventDates,view.getContext());
+        DayViewDecorator dayViewDecorator = new EventDecorator(ContextCompat.getColor(view.getContext(),R.color.greenMain),eventDates,view.getContext());
 
         // 가공한 decorator 변수를 캘린더뷰에 추가
         // 추가하기 전에 달력 리셋하는 이유는 addDecorator 함수는 eventDates 에 날짜로 이벤트를 리셋하는 것이라 이전에 추가한 것이 있다면

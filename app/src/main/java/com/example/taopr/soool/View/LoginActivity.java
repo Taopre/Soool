@@ -3,6 +3,8 @@ package com.example.taopr.soool.View;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,8 +28,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     LoginPresenter loginPresenter;
     LoginSessionItem loginSessionItem;
 
-    @BindView(R.id.textView)
-    TextView tv_loginStatus;
+
     @BindView(R.id.accountFindPwd) TextView tv_findpwd;
     @BindView(R.id.accountSignup) TextView tv_signup;
     @BindView(R.id.accountId)
@@ -42,6 +43,9 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         ButterKnife.bind(this);
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
 
@@ -53,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         //4. model로부터 일치여부를 view로 전달된다.
         //5. 일치할 경우 login 일치하지 않을 경우 wrong을 textview로 보여준다.
 
+        drawUnderline();
         btn_login.setOnClickListener(this);
         tv_findpwd.setOnClickListener(this);
         tv_signup.setOnClickListener(this);
@@ -67,11 +72,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
 //            }
 //        });
 
-        //아래껀 rxjava 람다식 테스트용 소스.
-        Observable<String> simpleObservable = Observable.just("Hello Lambda! (test rxjava)");
-        simpleObservable
-                .map(text -> text + " - goo")
-                .subscribe(text -> tv_loginStatus.setText(text));
 
     }
 
@@ -79,7 +79,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         loginPresenter = new LoginPresenter(LoginActivity.this, this);
         loginPresenter.setView(this);
 
-        tv_loginStatus = findViewById(R.id.textView);
         et_id = findViewById(R.id.accountId);
         et_pwd = findViewById(R.id.accountPass);
         btn_login = findViewById(R.id.accountLoginBtn);
@@ -88,11 +87,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         cb_autologin = findViewById(R.id.accountAutoLoginCheck);
     }
 
-    //이 함수는 데이터 결과 확인차 만들어놓은 함수. 나중에 없애도 되는 부분.
-    @Override
-    public void setConfirmText(String text) {
-        tv_loginStatus.setText(text);
-    }
 
 
     //loginResponseGoToView 이 함수는 LoginModel(model)에서 서버로부터 넘어온 응답을 LoginActivity(view)로 보낼 때 LoginPresenter(presenter)가 먼저 받고 LoginActivity(view)로 보낼 때 사용되는 함수입니다.
@@ -109,9 +103,8 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (response.equals("false")) {
-            setConfirmText("Login Fail!!");
+
         } else if (response.equals("nee")) {
-            setConfirmText("Not Exist Email!!");
         }
 //        if (response == true) {
 //            Intent intent = new Intent(this, MainActivity.class);
@@ -178,7 +171,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 //회원가입하기 텍뷰 리스터
                 Log.d(TAG, "onClick: 회원가입하기 클릭");
                 Toast.makeText(LoginActivity.this, "회원가입 화면으로 가기.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, StartingActivity.class);
+                Intent intent = new Intent(this, SignUpActivity.class);
                 startActivity(intent);
                 break;
             case R.id.accountAutoLoginCheck :
@@ -186,6 +179,19 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 Toast.makeText(LoginActivity.this, "체크박스 클릭.", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+
+    private void drawUnderline() {
+
+        SpannableString content = new SpannableString(getString(R.string.login_button_find_password));
+        content.setSpan(new UnderlineSpan(), 0, getString(R.string.login_button_find_password).length(), 0);
+        tv_findpwd.setText(content);
+
+        content = new SpannableString(getString(R.string.login_button_sign_up));
+        content.setSpan(new UnderlineSpan(), 0, getString(R.string.login_button_sign_up).length(), 0);
+        tv_signup.setText(content);
+
     }
 }
 

@@ -31,9 +31,12 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
         this.context = context;
     }
 
+    // 프로필 정보 가져오기
     @Override
     public void getProfileInfo(int accountNo) {
         this.accountNo = accountNo;
+
+        view.showLoading();
         addSubscription(
                 apiService.getProfileInfo(accountNo ),
                 new APICallback<ProfileInfo>() {
@@ -50,14 +53,17 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
 
                     @Override
                     public void onFinish() {
-
+                        view.hideLoading();
                     }
                 });
 
     }
 
+    // 프로필 이미지 변경
     @Override
     public void changeProfileImage(Uri uri) {
+
+        view.showLoading();
 
         File file = new File(getPathFromUri(uri));
 
@@ -82,7 +88,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
 
                     @Override
                     public void onFinish() {
-                        //dismissProgressDialog();
+                        view.hideLoading();
                     }
                 });
     }
@@ -90,8 +96,8 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
     // 변경한 프로필 정보 서버에 전달
     @Override
     public void changeProfileInfo(ProfileInfo profileInfo) {
-        Log.i(TAG, "changeProfileInfo: " + profileInfo.getAccountEmail());
-        Log.i(TAG, "changeProfileInfo: " + profileInfo.getCapacity());
+
+        view.showLoading();
         addSubscription(
                 apiService.changeProfileInfo(accountNo,profileInfo.getAccountEmail(),profileInfo.getAccountNick()
                 , profileInfo.getAccountImage(),profileInfo.getAccountPw(),profileInfo.getCapacity() ,
@@ -112,7 +118,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
 
                     @Override
                     public void onFinish() {
-                        //dismissProgressDialog();
+                        view.hideLoading();
                     }
                 });
     }
@@ -120,6 +126,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
     // 프로필 이미지 삭제
     @Override
     public void deleteProfileImg() {
+        view.showLoading();
         addSubscription(
                 apiService.deleteProfileImage(accountNo,"true"),
                 new APICallback<SooolResponseBody>() {
@@ -138,7 +145,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
 
                     @Override
                     public void onFinish() {
-                        //dismissProgressDialog();
+                        view.hideLoading();
                     }
                 });
     }

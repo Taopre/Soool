@@ -24,15 +24,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:gravity="center"
             >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_15dp"
                 android:text="@string/my_page_notice_no_write_qna"/>
             <TextView
-                android:padding="10dp"
+                android:padding="@dimen/all_space_between_8dp"
+                android:textSize="@dimen/text_size_15dp"
+                android:textColor="@color/greenMain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/myBoardMoveToWriteBoard"

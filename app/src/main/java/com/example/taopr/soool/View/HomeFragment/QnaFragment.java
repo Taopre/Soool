@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.taopr.soool.Adapter.QnaAdapter;
@@ -41,6 +42,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     private final int QNA_MOVE_TO_WRITE = 3200;
     private final int QNA_MOVE_TO_DETAIL = 3100;
     private SwipeRefreshLayout qnaSwipeRefreshLayout;
+    private ProgressBar qnaProgress;
 
 
     private boolean isResponse = false ; // 서버에 isResponse 를 받았다면 true , 아니면 false
@@ -71,6 +73,8 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
 
         unbinder = ButterKnife.bind(this,view);
 
+        qnaProgress = view.findViewById(R.id.qnaProgress);
+
         // 리사이클러뷰 기본 설정
         qnaRecycler = view.findViewById(R.id.qnaRecycler);
 
@@ -97,7 +101,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
             Log.i(TAG, "onCreateView:  " + isResponse);
             qnaFmPresenter = new QnaFmPresenter(context);
             qnaFmPresenter.setView(this);
-            qnaFmPresenter.loadData();
+            qnaFmPresenter.loadData(0);
         }
         else{
             Log.i(TAG, "onCreateView:  " + isResponse);
@@ -156,7 +160,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     // 페이징을 하게 될 경우 여기서 페이징 넘버를 초기화 해줘야함
     @Override
     public void onRefresh() {
-        qnaFmPresenter.loadData();
+        qnaFmPresenter.loadData(1);
     }
 
     // response 를 성공적으로 받았다면 새로고침일 경우 새로고침 아이콘을 없애주고
@@ -189,6 +193,19 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void moveToPage(Intent intent, int requestCode) {
         startActivityForResult(intent,requestCode);
+    }
+
+
+    // 서버에서 데이터 통신을 하는 동안 progress 바로 로딩화면을 보여줌
+    @Override
+    public void showLoading() {
+        qnaProgress.setVisibility(View.VISIBLE);
+    }
+
+    // 서버에서 데이터를 성공적으로 가져왔다면 로딩화면을 종료
+    @Override
+    public void hideLoading() {
+        qnaProgress.setVisibility(View.GONE);
     }
 
     @Override

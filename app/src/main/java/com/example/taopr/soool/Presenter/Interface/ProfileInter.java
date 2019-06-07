@@ -19,5 +19,7 @@ public interface ProfileInter {
         void changeProfileImgSuccess(String accountImage);
         void changeProfileInfoSuccess(ProfileInfo profileInfo);
         void deleteProfileImgSuccess();
+        void showLoading();
+        void hideLoading();
     }
 }

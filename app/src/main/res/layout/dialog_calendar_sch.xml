@@ -11,8 +11,8 @@
       android:id="@+id/schDialogCalendar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:mcv_leftArrowMask="@drawable/cal_month_prev"
-      app:mcv_rightArrowMask="@drawable/cal_month_next"
+      app:mcv_leftArrowMask="@drawable/cal_month_smaller_left"
+      app:mcv_rightArrowMask="@drawable/cal_month_smaller_right"
       />
 
   <TextView

@@ -114,7 +114,6 @@ public class StartingActivity extends AppCompatActivity {
             }
         });
 
-
         // 회원가입을 진행하기 전에 약관에 동의를 했는지 확인 후 진행
         startingToSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

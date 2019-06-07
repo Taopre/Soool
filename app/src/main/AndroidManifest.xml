@@ -56,6 +56,9 @@
 
         </activity>
         <activity android:name=".View.VoteImageActivity" android:screenOrientation="portrait"  android:theme="@style/NoTitle"/>
+        <activity android:name=".View.ProfileActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

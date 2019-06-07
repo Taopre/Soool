@@ -1,12 +1,18 @@
 package com.example.taopr.soool.View;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.taopr.soool.Presenter.SignUpPresenter;
 import com.example.taopr.soool.R;
@@ -39,17 +45,33 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     TextView signUpToLogIn;
     @BindView(R.id.signUp)
     Button signUp;
+    @BindView(R.id.signUpProgress)
+    ProgressBar signUpProgress;
+    @BindView(R.id.signUpNoticeEnablePw)
+    TextView signUpNoticeEnablePw;
+    @BindView(R.id.signUpNoticeEnableEmail)
+    TextView signUpNoticeEnableEmail;
+    @BindView(R.id.signUpNoticeEnableNick)
+    TextView signUpNoticeEnableNick;
 
     private SignUpPresenter signUpPresenter;
     private Boolean emailEnable=false; // 이메일 값 사용 불가능 시 false, 이메일 값 사용 가능 시 true
     private Boolean nickEnable=false;  // false = 닉네임값 사용 불가능 , true = 닉네임 값 사용 가능
     private Boolean pwEnable=false; // 비밀번호와 비밀번호 확인 칸에 입력한 값 false=불일치 true=일치
 
+    // enableEmail,enableNick 두가지를 만든 이유는 중복체크를 했을 때 사용가능하다고 나왔음에도
+    // 사용자가 입력한 이메일이나 닉네임을 변경 했다가 다시 중복체크를 통해서 사용가능하다고 했던 아이디로 돌아왔을 때
+    // 다시 중복체크를 하지 않게 해주기 위해서
+
+    private String enableEmailValue=null; // 이메일 중복 체크 결과 사용가능한 이메일
+    private String enableNickValue=null;  // 닉네임 중복 체크 결과 사용가능한 이메일
+
 
     private Boolean clickEmailDupBool = false; // 이메일 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
     private Boolean clickNickDupBool = false; // 닉네임 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
 
     private String TAG = "SignUpActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +85,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         signUpPresenter = new SignUpPresenter(SignUpActivity.this, this);
         signUpPresenter.setView(this);
 
+        drawUnderline();
     }
 
     // sns를 통해 가입하는 사람들의 경우
@@ -79,8 +102,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         Intent intent = getIntent();
         Boolean throughSNS = intent.getBooleanExtra("throughSNS", false);
 
-        Log.i(TAG, "signUpThroughSNS: " + intent.getBooleanExtra("throughSNS", false) +
-                intent.getStringExtra("snsAccountEmail") );
+ /*       Log.i(TAG, "signUpThroughSNS: " + intent.getBooleanExtra("throughSNS", false) +
+                intent.getStringExtra("snsAccountEmail") );*/
 
         if(throughSNS) {
             if(intent.getStringExtra("snsAccountEmail").length() > 0){
@@ -123,11 +146,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         // 이메일 값을 아무것도 입력하지 않은 경우
         if(accountEmail.getText().length()==0){
             Log.i(TAG, "emailDupClick: 이메일 값 입력해주세요");
+            Toast.makeText(this, "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
 
         // 이메일 값을 정규식에 맞춰 작성하지 않은 경우
         else if(ismail == false){
             Log.i(TAG, "emailDupClick: 이메일 정규식 불일치");
+            Toast.makeText(this, "양식에 맞게 작성해주세요", Toast.LENGTH_SHORT).show();
         }
 
         // 이메일 값을 정규식에 맞춰 입력한 경우
@@ -149,22 +174,48 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
 
     //이메일, 닉네임 중복 체크에 대한 응답을 View에서 처리하기 위해 만든 함수.
     public void clickDuplicityResponseGoToVIew(int separator, String emailorNick, boolean response) {
-        // 중복 false, 중복x true
+        // separator 이메일일때 0, 닉네임일때 1
+        // response 값 중복 false, 중복x true
         if (separator == 0) {
-            Log.i(TAG, "emailDupClick: email = " + emailorNick + ", 사용 가능 여부 : " + response);
+           // Log.i(TAG, "emailDupClick: email = " + emailorNick + ", 사용 가능 여부 : " + response);
 
+            //signUpNoticeEnableEmail.setVisibility(View.VISIBLE);
+            if (response){
+            //    Toast.makeText(this, "사용가능", Toast.LENGTH_SHORT).show();
+
+                enableEmailValue = emailorNick;
+                accountNick.requestFocus();
+              /*  signUpNoticeEnableEmail.setText(getString(R.string.sign_up_usable_email));
+                signUpNoticeEnableEmail.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));*/
+
+           } else{
+              /*  Toast.makeText(this, "사용 불가능", Toast.LENGTH_SHORT).show();
+
+                signUpNoticeEnableEmail.setText(getString(R.string.sign_up_disable_email));
+                signUpNoticeEnableEmail.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.redMain));*/
+           }
             emailEnable = response;
             clickEmailDupBool = true;
 
-            accountPW.requestFocus();
+          //  accountPW.requestFocus();
         } else {
-            Log.i(TAG, "nickDupClick: nick = " + accountNick.getText().toString() + ", 중복 여부 : " + response);
+            if (response){
+                accountPW.requestFocus();
+                enableNickValue = emailorNick;
+         /*       Toast.makeText(this, "사용가능", Toast.LENGTH_SHORT).show();
+                signUpNoticeEnableNick.setText(getString(R.string.sign_up_usable_nickname));
+                signUpNoticeEnableNick.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));*/
 
-            // 중복 false, 중복x true
+            }else{
+               /* Toast.makeText(this, "사용 불가능", Toast.LENGTH_SHORT).show();
+                signUpNoticeEnableNick.setText(getString(R.string.sign_up_disable_nickname));
+                signUpNoticeEnableNick.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.redMain));*/
+            }
 
             nickEnable = response;
             clickNickDupBool = true;
         }
+        noticeEnableOrDisable(separator,response);
     }
 
 
@@ -195,9 +246,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         if(accountPW.getText().length() >0 && confirmPW.getText().length()>0) {
             if (accountPW.getText().toString().equals(confirmPW.getText().toString())) {
                 Log.i(TAG, "editConfirmPW: 일치");
+                signUpNoticeEnablePw.setVisibility(View.GONE);
                 pwEnable = true;
             } else {
                 Log.i(TAG, "editConfirmPW: 불일치");
+                signUpNoticeEnablePw.setVisibility(View.VISIBLE);
                 pwEnable = false;
             }
         }
@@ -208,17 +261,66 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     // 위와 같은 현상을 방지하기 위해 닉네임이나 이메일 값을 수정하게 될 경우
     // 그 값을 EmailEnable이나 PWEnable 값을 false로 설정해준다
     // 그리고 위 두 값은 중복체크를 통해 사용가능한 경우에만 true로 설정해준다.
+    // 중복 체크를 통해 사용가능한 결과를 받았음에도 수정을 하게되면 사용불가능하다는 문구를 띄워주게 된다
+    // 하지만 다시 수정을 통해 중복체크를 통해 사용가능하다는 결과를 받았던 이메일이나 닉네임으로 수정할 경우
+    // 다시 사용가능하다는 문구를 띄워준다
 
     @OnTextChanged(R.id.accountEmail)
     void editAccountEmail(){
-        emailEnable = false;
-        clickEmailDupBool = false;
+        if (enableEmailValue!=null) {
+            if (accountEmail.getText().toString().equals(enableEmailValue)) {
+                emailEnable = true;
+                clickEmailDupBool = true;
+                noticeEnableOrDisable(0, true);
+            } else {
+                emailEnable = false;
+                clickEmailDupBool = false;
+                noticeEnableOrDisable(0, false);
+            }
+        }
     }
 
     @OnTextChanged(R.id.accountNick)
     void editAccountNick(){
-        nickEnable = false;
-        clickNickDupBool = false;
+        if (enableNickValue!=null) {
+            if (accountNick.getText().toString().equals(enableNickValue)) {
+                nickEnable = true;
+                clickNickDupBool = true;
+                noticeEnableOrDisable(1, true);
+            }
+            else{
+                nickEnable = false;
+                clickNickDupBool = false;
+                noticeEnableOrDisable(1, false);
+            }
+        }
+    }
+
+    // 이메일이나 닉네임이 사용가능한지 불가능한지 사용자에게 보여주는 부분
+    // enableValue 은 사용가능 할때 true, 사용불가능할때 false
+    private void noticeEnableOrDisable(int emailOrNick , boolean enableValue){
+        switch (emailOrNick){
+            case 0:
+                signUpNoticeEnableEmail.setVisibility(View.VISIBLE);
+                if (enableValue){
+                    signUpNoticeEnableEmail.setText(getString(R.string.sign_up_usable_email));
+                    signUpNoticeEnableEmail.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));
+                }else{
+                    signUpNoticeEnableEmail.setText(getString(R.string.sign_up_disable_email));
+                    signUpNoticeEnableEmail.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.redMain));
+                }
+                break;
+            case 1:
+                signUpNoticeEnableNick.setVisibility(View.VISIBLE);
+                if (enableValue){
+                    signUpNoticeEnableNick.setText(getString(R.string.sign_up_usable_nickname));
+                    signUpNoticeEnableNick.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));
+                }else{
+                    signUpNoticeEnableNick.setText(getString(R.string.sign_up_disable_nickname));
+                    signUpNoticeEnableNick.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.redMain));
+                }
+                break;
+        }
     }
 
     // 닉네임 중복 확인
@@ -237,6 +339,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         // 이메일 값을 아무것도 입력하지 않은 경우
         if(accountNick.getText().length()==0){
             Log.i(TAG, "emailDupClick: nick 값 입력해주세요");
+            Toast.makeText(this, "닉네임을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
 
         else {
@@ -256,16 +359,26 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     //회원가입에 대한 서버로 부터의 응답을 View에서 처리하기 위해 만든 메서드.
     public void signUpReqResponseGoToVIew (boolean response) {
         if( response == false){
-            Log.i(TAG, "clickSignUp: 다시 시도해주세요 ");
+            Toast.makeText(this, "다시 시도해주세요", Toast.LENGTH_SHORT).show();
         }
         else{
-            Log.i(TAG, "clickSignUp: 회원가입 성공 ");
+            Toast.makeText(this, "가입 성공! 환영합니다 :)", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, HomeActivity.class);
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void showLoading() {
+        signUpProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        signUpProgress.setVisibility(View.GONE);
     }
 
     // 회원가입 요청
@@ -296,6 +409,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
                 accountPWSt.length()==0 || confirmPW.getText().length()==0){
 
             Log.i(TAG, "clickSignUp: 모든 텍스트를 입력해주세요");
+            Toast.makeText(this, "모든 항목을 입력해주세요", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -303,24 +417,29 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         else if(emailEnable == false){
             if(clickEmailDupBool){
                 Log.i(TAG, "clickSignUp: 사용불가능한 이메일입니다");
+                Toast.makeText(this,getString(R.string.sign_up_disable_email), Toast.LENGTH_SHORT).show();
             }
             else{
                 Log.i(TAG, "clickSignUp: 중복 체크를 부탁드립니다");
+                Toast.makeText(this, "이메일 중복 체크를 부탁드립니다", Toast.LENGTH_SHORT).show();
             }
         }
 
         // 4번 , 비밀번호와 비밀번호확인카에 입력한 두 값이 일치하는지
         else if(pwEnable == false){
             Log.i(TAG, "clickSignUp: 비밀번호 불일치 ");
+            Toast.makeText(this, "비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
         }
 
         // 5번 , 6번
         else if(nickEnable == false){
             if (clickNickDupBool){
                 Log.i(TAG, "clickSignUp: 사용 불가능한 닉네임입니다");
+                Toast.makeText(this,getString(R.string.sign_up_disable_nickname), Toast.LENGTH_SHORT).show();
             }
             else{
                 Log.i(TAG, "clickSignUp: 중복 체크를 부탁드립니다");
+                Toast.makeText(this, "닉네임 중복 체크를 부탁드립니다", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -348,4 +467,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         Log.i(TAG, "setLinkToLogin: 로그인 페이지 이동");
     }
 
+    private void drawUnderline() {
+
+        // '개인정보 취급방취'와 '이용약관' text 에 밑줄 추가
+        SpannableString content = new SpannableString(getString(R.string.sign_up_button_move_to_login));
+        content.setSpan(new UnderlineSpan(), 0, getString(R.string.sign_up_button_move_to_login).length(), 0);
+        signUpToLogIn.setText(content);
+
+
+    }
 }

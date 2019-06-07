@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Presenter.HomePresenter;
@@ -83,8 +84,8 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     FragmentTransaction transaction = null;
 
     private int accountNo;
-    HomePresenter homePresenter;
-
+    private HomePresenter homePresenter;
+    private NoticeDialog noticeDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         tabMypageText = findViewById(R.id.tabMypageText);
     }
 
-
+    // 프래그먼트 변경시 액티비티에 프래그먼트를 부착하고 탈착하는 액션에 애니메이션을 부여
     private void callFragment(int currentTabNo,int previousTabNo){
         currentTab = currentTabNo;
         previousTab = previousTabNo;
@@ -134,10 +135,16 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         switch (currentTab){
             case 0:
                 if(mainFragment == null) mainFragment = new MainFragment();
+                transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 transaction.replace(R.id.homeFragmentContainer, mainFragment);
                 break;
             case 1:
+                // 정보 탭에서는 이전탭이 홈 탭일 경우, 오른쪽에 들어오는
+                //              이전탭이 커뮤니티와 마이페이지 탭일 경우,
                 if (infoFragment== null) infoFragment = new InfoFragment();
+
+                if (previousTabNo == 0) transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                else transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
 
                 transaction.replace(R.id.homeFragmentContainer, infoFragment);
 
@@ -147,11 +154,14 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
                     qnaFragment = new QnaFragment();
                     Log.i(TAG, "callFragment: null");
                 }
+                if (previousTabNo ==3 ) transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+                else transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
 
                 transaction.replace(R.id.homeFragmentContainer, qnaFragment);
                 break;
             case 3:
                 if (mypageFragment == null) mypageFragment = new MypageFragment();
+                transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
 
                 transaction.replace(R.id.homeFragmentContainer, mypageFragment);
                 break;
@@ -189,6 +199,8 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
         if (!mypageDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mypageDrawerLayout.openDrawer(Gravity.RIGHT);
+
+
         }
     }
 
@@ -201,12 +213,31 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
                 startActivityForResult(intent, CHANGE_PROFILE);
                 break;
             case R.id.myPageDrawerLogOut:
-                setLogout();
+                //setLogout();
+
+                noticeDialog = new NoticeDialog(HomeActivity.this,getString(R.string.notice_dialog_logout_title),
+                        getString(R.string.notice_dialog_logout_content),false,getString(R.string.all_button_ok),
+                        getString(R.string.all_button_cancel),positiveListener,negativeListener);
+                noticeDialog.show();
+
                 break;
 
         }
 
     }
+    private View.OnClickListener positiveListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
+            setLogout();
+        }
+    };
+
+    private View.OnClickListener negativeListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
+        }
+    };
+
 
     private void setLogout() {
         LoginSharedPreferences.LoginUserDelete(HomeActivity.this,"LoginAccount");

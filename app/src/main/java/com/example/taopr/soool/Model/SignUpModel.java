@@ -166,12 +166,12 @@ public class SignUpModel {
         //separator로 무슨 중복체크인지 구별하기위해.
         if(separator == 0){
             Log.i(TAG, "checkDuplicity: 00");
-            request = service.checkEmailDup(emailOrNick);
+            request = service.checkEmailDup(0,emailOrNick);
         }
 
         else{
             Log.i(TAG, "checkDuplicity: 11");
-            request = service.checkNickDup(emailOrNick);
+            request = service.checkNickDup(1,emailOrNick);
         }
 
         Observable.just("")
@@ -193,9 +193,10 @@ public class SignUpModel {
 //                                      Log.i(TAG, "onResponse: 결과 값 :" + response.message() + response.body().string());
                                         String msg = response.body().string();
                                         Log.d(TAG, "onResponse 1st : "+msg);
-                                        JSONArray jsonArray = new JSONArray(msg);
-                                        for (int i=0; i<jsonArray.length(); i++) {
-                                            JSONObject returnData = jsonArray.getJSONObject(i);
+                                       // JSONArray jsonArray = new JSONArray(msg);
+                                        JSONObject returnData = new JSONObject(msg);
+                                        /*for (int i=0; i<jsonArray.length(); i++) {
+                                            JSONObject returnData = jsonArray.getJSONObject(i);*/
 
                                             String result = returnData.getString("result");
 
@@ -208,7 +209,7 @@ public class SignUpModel {
                                                 duplicity = false;
                                                 signUpPresenter.clickDuplicityResponse(separator, emailOrNick, duplicity);
                                             }
-                                        }
+                                        //}
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     } catch (JSONException e) {
@@ -374,15 +375,20 @@ public class SignUpModel {
                                     }
                                 }
 
+
+                                // 우선은 회원가입에 실패하는 경우 모두 다같이 처리 중
+                                // TODO: 후에 각각 상황에 맞는 처리를 해줘야 할듯
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
 
+                                    signUpPresenter.signUpReqResponse(false);
                                     Log.d(TAG, "onFailure: 실패");
                                     Log.e(TAG, "onFailure: ", t);
                                 }
                             });
                         }
                         catch(Exception e) {
+                            signUpPresenter.signUpReqResponse(false);
                             Log.d(TAG, "onFailure: 실패2");
                             Log.e(TAG, "apply: ", e);
                         }
