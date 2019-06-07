@@ -17,7 +17,7 @@ public interface LoginInter {
 //--------------------------------------------------------------------------------------
 
     public interface View {
-        void setConfirmText(String text);
+
         void loginResponseGoToVIew(String response);
 //        void loginDataSend(LoginSessionItem item);
     }

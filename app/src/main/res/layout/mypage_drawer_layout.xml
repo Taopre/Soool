@@ -106,7 +106,7 @@
         android:text="@string/drawer_tos"
         android:textColor="@color/black"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/all_space_between_16dp"
         android:paddingBottom="@dimen/all_space_between_16dp"
@@ -115,4 +115,10 @@
         android:textSize="@dimen/text_size_15dp"
         android:text="@string/drawer_logout"
         android:textColor="@color/black"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="invisible"/>
+
 </LinearLayout>

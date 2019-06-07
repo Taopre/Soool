@@ -18,6 +18,6 @@ public interface MypageFmInter {
         //  void getCalendarDataResponse(ArrayList<CalendarItem> calendarItems);
         void getCalendarDataResponse(CalendarItemMap calendarItemMap);
         void getDataFail(boolean response, int i);
-        void getUserProfileResponse(UserProfile userProfile);
+        void getUserProfileSuccess(UserProfile userProfile);
     }
 }

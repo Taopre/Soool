@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/noticeDialogTitle"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_20dp"
+        android:text="Title"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/all_space_between_24dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:gravity="bottom"
+        android:layout_below="@id/noticeDialogTitle"
+        android:id="@+id/noticeDialogContent"
+        android:textSize="@dimen/text_size_16dp"
+        android:textColor="@color/grayMid"
+        android:text="content"
+        android:layout_marginBottom="@dimen/all_space_between_10dp"
+        android:layout_marginLeft="@dimen/all_space_between_24dp"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/noticeDialogContent"
+        android:id="@+id/noticeDialogCheck"
+        android:textSize="@dimen/text_size_13dp"
+android:visibility="gone"
+        android:text="@string/notice_dialog_hint_never_show"
+        android:layout_below="@id/noticeDialogContent"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:text="@string/all_button_cancel"
+        android:textSize="@dimen/text_size_15dp"
+        android:textColor="@color/grayMid"
+        android:id="@+id/noticeDialogNegative"
+        android:layout_alignTop="@id/noticeDialogPositive"
+        android:layout_toLeftOf="@id/noticeDialogPositive"
+        android:paddingHorizontal="@dimen/all_space_between_8dp"
+        android:layout_marginRight="@dimen/all_space_between_8dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:gravity="center"
+        android:id="@+id/noticeDialogPositive"
+        android:textSize="@dimen/text_size_15dp"
+        android:textColor="@color/greenDark"
+        android:paddingHorizontal="@dimen/all_space_between_8dp"
+        android:layout_marginTop="@dimen/all_space_between_8dp"
+        android:text="@string/all_button_ok"
+        android:layout_below="@id/noticeDialogCheck"
+        android:layout_marginRight="@dimen/all_space_between_8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>

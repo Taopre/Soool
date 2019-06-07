@@ -24,6 +24,36 @@
         <item>Dec</item>
     </string-array>
 
+    <string-array name="capacity_array">
+        <item>항목을 선택해주세요</item>
+        <item>유종현</item>
+        <item>소주 1잔</item>
+        <item>소주 1병</item>
+        <item>소주 2병</item>
+        <item>소주 3병</item>
+        <item>김병구</item>
+    </string-array>
+
+    <string-array name="favorite_array">
+        <item>항목을 선택해주세요</item>
+        <item>맥주</item>
+        <item>소주</item>
+        <item>고량주</item>
+        <item>데킬라</item>
+        <item>칵테일</item>
+        <item>김병구</item>
+    </string-array>
+
+    <string-array name="reason_array">
+        <item>항목을 선택해주세요</item>
+        <item>술이 좋아서</item>
+        <item>술자리가 좋아서</item>
+        <item>취하고 싶어서</item>
+        <item>이성과의 만남</item>
+        <item>다른 이유3</item>
+        <item>김병구</item>
+    </string-array>
+
 
     <!-- Home -->
     <string name="home_label_home_tab">홈</string>
@@ -45,6 +75,7 @@
     <string name="my_page_notice_no_write_qna">아직 작성한 글이 없습니다</string>
     <string name="my_page_button_move_to_write_qna">글 작성하기</string>
     <string name="my_page_button_add_sch">일정추가</string>
+    <string name="my_page_dialog_ask_delete_image">이미지를 삭제하시겠습니까?</string>
 
 
     <!-- 캘린더 -->
@@ -57,11 +88,19 @@
     <string name="all_button_add">추가하기</string>
     <string name="all_button_modify">수정하기</string>
     <string name="all_button_cancel">취소</string>
+    <string name="all_button_ok">확인</string>
     <string name="all_button_save">저장하기</string>
     <string name="all_button_delete">삭제하기</string>
     <string name="all_button_choice">선택</string>
     <string name="all_button_close">닫기</string>
     <string name="all_button_complete">완료</string>
+    <string name="all_button_yes">예</string>
+    <string name="all_button_no">아니요</string>
+
+    <!-- 다이얼로그 -->
+    <string name="notice_dialog_hint_never_show">다시 보지 않기</string>
+    <string name="notice_dialog_logout_title">로그아웃</string>
+    <string name="notice_dialog_logout_content">로그아웃을 하시겠습니까? </string>
 
 
     <!-- qna 작성페이지 -->
@@ -108,19 +147,25 @@
 
     <!-- 회원가입 페이지 -->
     <string name="sign_up_email">이메일</string>
+    <string name="sign_up_disable_email">사용 불가능한 이메일입니다</string>
+    <string name="sign_up_usable_email">사용 가능한 이메일입니다</string>
     <string name="sign_up_password">비밀번호</string>
     <string name="sign_up_nickname">닉네임</string>
+    <string name="sign_up_disable_nickname">사용 불가능한 닉네임입니다</string>
+    <string name="sign_up_usable_nickname">사용 가능한 닉네임입니다</string>
     <string name="sign_up_check_password">비밀번호 확인</string>
+    <string name="sign_up_not_match_password">비밀번호가 일치하지 않습니다</string>
     <string name="sign_up_button_check_overlap">중복확인</string>
     <string name="sign_up_button_submit_profile">회원가입하기</string>
     <string name="sign_up_button_move_to_login">로그인하러 가기</string>
+
 
     <!-- 회원정보 페이지 -->
     <string name="profile_email">이메일</string>
     <string name="profile_password">비밀번호</string>
     <string name="profile_nickname">닉네임</string>
     <string name="profile_additional_information">부가정보</string>
-    <string name="profile_drinking_capacity">주량</string>
+    <string name="profile_capacity">주량</string>
     <string name="profile_favorite_drink">즐겨마시는 술</string>
     <string name="profile_reason_of_drinking">술마시는 이유</string>
     <string name="profile_hint_select_item">항목을 선택해주세요</string>
@@ -130,7 +175,7 @@
     <!-- starting 페이지 -->
     <string name="starting_handling_privacy">개인정보 취급방침</string>
     <string name="starting_tos">이용약관</string>
-    <string name="staring_button_agree1">및</string>
+    <string name="starting_button_agree1">" 및 "</string>
     <string name="starting_button_agree2">에 동의합니다.</string>
     <string name="starting_button_start_kakao">카카오톡으로 시작하기</string>
     <string name="starting_button_start_facebook">페이스북으로 시작하기</string>

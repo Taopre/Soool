@@ -1,6 +1,8 @@
 package com.example.taopr.soool.View;
 
+import android.content.Intent;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,7 +19,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.LoginSessionItem;
+import com.example.taopr.soool.Object.ProfileInfo;
+import com.example.taopr.soool.Presenter.HomePresenter;
+import com.example.taopr.soool.Presenter.Interface.HomeInter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.View.HomeFragment.InfoFragment;
@@ -39,7 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MypageFragment.getUserProfileListener{
 
     @BindView(R.id.tabMain)
     ViewGroup btn_tabMain;
@@ -53,6 +59,11 @@ public class HomeActivity extends AppCompatActivity {
     ImageView HomeDrawerButton;
     @BindView(R.id.mainActionBarTitle)
     TextView mainActionBarTitle;
+    @BindView(R.id.myPageDrawerEmail)
+    TextView myPageDrawerEmail;
+    @BindView(R.id.myPageDrawerNickname)
+    TextView myPageDrawerNickname;
+
 
     private String TAG = "홈 액티비티 ";
     // 현재 탭, 이전 탭
@@ -62,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
     private int currentTab=0,previousTab=1;
 
     private String PREVIOUS_TAB_KEY = "previousTab";
+    private final int CHANGE_PROFILE = 4400;
     ImageView tabMainImage , tabInfoImage, tabQnaImage, tabMypageImage;
     TextView tabMainText, tabInfoText, tabQnaText, tabMypageText;
 
@@ -70,6 +82,10 @@ public class HomeActivity extends AppCompatActivity {
     InfoFragment infoFragment = null;
     MypageFragment mypageFragment = null;
     FragmentTransaction transaction = null;
+
+    private int accountNo;
+    private HomePresenter homePresenter;
+    private NoticeDialog noticeDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +96,12 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.hide();
 
         ButterKnife.bind(this);
-        
+
+        homePresenter = new HomePresenter(this);
+
+        homePresenter.setView(this);
+        homePresenter.getUserProfile();
+
         viewBinding();
         callFragment(0,1);
         tabSetting();
@@ -101,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
         tabMypageText = findViewById(R.id.tabMypageText);
     }
 
-
+    // 프래그먼트 변경시 액티비티에 프래그먼트를 부착하고 탈착하는 액션에 애니메이션을 부여
     private void callFragment(int currentTabNo,int previousTabNo){
         currentTab = currentTabNo;
         previousTab = previousTabNo;
@@ -114,10 +135,16 @@ public class HomeActivity extends AppCompatActivity {
         switch (currentTab){
             case 0:
                 if(mainFragment == null) mainFragment = new MainFragment();
+                transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 transaction.replace(R.id.homeFragmentContainer, mainFragment);
                 break;
             case 1:
+                // 정보 탭에서는 이전탭이 홈 탭일 경우, 오른쪽에 들어오는
+                //              이전탭이 커뮤니티와 마이페이지 탭일 경우,
                 if (infoFragment== null) infoFragment = new InfoFragment();
+
+                if (previousTabNo == 0) transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                else transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
 
                 transaction.replace(R.id.homeFragmentContainer, infoFragment);
 
@@ -127,11 +154,14 @@ public class HomeActivity extends AppCompatActivity {
                     qnaFragment = new QnaFragment();
                     Log.i(TAG, "callFragment: null");
                 }
+                if (previousTabNo ==3 ) transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+                else transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
 
                 transaction.replace(R.id.homeFragmentContainer, qnaFragment);
                 break;
             case 3:
                 if (mypageFragment == null) mypageFragment = new MypageFragment();
+                transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
 
                 transaction.replace(R.id.homeFragmentContainer, mypageFragment);
                 break;
@@ -162,26 +192,89 @@ public class HomeActivity extends AppCompatActivity {
         tabSetting();
     }
 
+    // DrawerLayout 제어
     @OnClick(R.id.HomeDrawerButton)
     public void drawerButtonClick(){
-        DrawerLayout mypageDrawerLayout = (DrawerLayout) findViewById(R.id.myPageDrawerLayout) ;
-        TextView mypageDrawerNickname = findViewById(R.id.myPageDrawerNickname);
-        TextView mypageDrawerEmail = findViewById(R.id.myPageDrawerEmail);
+        DrawerLayout mypageDrawerLayout = findViewById(R.id.myPageDrawerLayout) ;
 
         if (!mypageDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mypageDrawerLayout.openDrawer(Gravity.RIGHT);
+
+
         }
     }
 
-    void getUserProfile() {
+    @OnClick({R.id.myPageDrawerMyAccount,R.id.myPageDrawerLogOut})
+    public void drawerTabOnClick(View view){
+        switch (view.getId()) {
+            case R.id.myPageDrawerMyAccount:
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                intent.putExtra("accountNo", accountNo);
+                startActivityForResult(intent, CHANGE_PROFILE);
+                break;
+            case R.id.myPageDrawerLogOut:
+                //setLogout();
 
-        String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
-        Gson gson = new GsonBuilder().create();
-        // JSON 으로 변환
-        LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
+                noticeDialog = new NoticeDialog(HomeActivity.this,getString(R.string.notice_dialog_logout_title),
+                        getString(R.string.notice_dialog_logout_content),false,getString(R.string.all_button_ok),
+                        getString(R.string.all_button_cancel),positiveListener,negativeListener);
+                noticeDialog.show();
 
-        String accountNick = loginSessionItem.getAccountNick();
+                break;
 
+        }
+
+    }
+    private View.OnClickListener positiveListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
+            setLogout();
+        }
+    };
+
+    private View.OnClickListener negativeListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
+        }
+    };
+
+
+    private void setLogout() {
+        LoginSharedPreferences.LoginUserDelete(HomeActivity.this,"LoginAccount");
+        Intent intent = new Intent(HomeActivity.this, StartingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때
+    // Drawer 레이아웃 뷰에서 닉네임과 이메일의 변경 된 값을 보여준다
+    // Home 액티비티에 붙어있는 마이페이지 프래그먼트의 변경된 프로필 정보를 변경한다
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            switch (requestCode){
+                case CHANGE_PROFILE:
+                    ProfileInfo profileInfo = data.getParcelableExtra("profileInfo");
+
+                    // drawer 레이아웃에 바뀐 프로필 정보 보여주기
+                    myPageDrawerNickname.setText(profileInfo.getAccountNick());
+                    myPageDrawerEmail.setText(profileInfo.getAccountEmail());
+
+                    // 마이페이지 프래그먼트에 변경된 프로필 내용으로 보여주기
+                    mypageFragment.showProfileInfo(profileInfo.getAccountImage(),profileInfo.getAccountNick());
+                    break;
+            }
+        }
+    }
+
+    // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때
+    @Override
+    public void getUserProfile(String accountNick, String accountEmail) {
+        myPageDrawerEmail.setText(accountEmail);
+        myPageDrawerNickname.setText(accountNick);
     }
 
 
@@ -238,5 +331,10 @@ public class HomeActivity extends AppCompatActivity {
                 HomeDrawerButton.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override
+    public void getAccountNo(int accountNo) {
+        this.accountNo = accountNo;
     }
 }

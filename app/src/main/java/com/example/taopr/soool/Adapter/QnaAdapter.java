@@ -126,10 +126,18 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         QnaBoardItem qnaBoardItem = qnaBoardItems.get(position);
 
-        //Log.i(TAG, "onBindViewHolder: 포지션 "+ position  + " 태그값 :" +qnaBoardItem.getTag());
+
+        tagArray = new ArrayList<String>();
+
+
+        // 투표 태그 추가 부분
+        // qnaCate 값이 0이 투표가 있는 경우이기 때문에
+        // 투표 태그를 추가. 그리고 투표 태그만 다른 태그와 달리 태그의 색상을 초록색으로 설정
+        if(qnaBoardItem.getQnaCate() == 0){
+            tagArray.add("투표");
+        }
 
         if(qnaBoardItem.getTag().length() > 0) {
-            tagArray = new ArrayList<String>();
 
             if (qnaBoardItem.getTag().contains("@##@")) {
                 tagData = qnaBoardItem.getTag().split("@##@");
@@ -141,8 +149,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
             else{
                 tagArray.add(qnaBoardItem.getTag());
             }
-            Log.i(TAG, "onBindViewHolder: position :" +position + "태그 값" + qnaBoardItem.getTag() +
-                    " tagArray 사이즈 : " + tagArray.size());
+
 
             QnaBoardTagAdapter qnaBoardTagAdapter = new QnaBoardTagAdapter(context, tagArray, 1);
             holder.qnaboardTagView.setAdapter(qnaBoardTagAdapter);
@@ -163,9 +170,11 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
         holder.qnaBoardViews.setText(String.valueOf(position));
 
 
-        holder.qnaBoardDate.setText(qnaBoardItem.getDate());
+        //holder.qnaBoardDate.setText(qnaBoardItem.getDate());
         // TODO: 게시글 작성시간 데이터 폼을 정한 후에 진행.( 몇시간 전, 몇분 전 )
-       // holder.qnaBoardDate.setText(timeCalculator.beforeTime(sooolCalendar.getDate(qnaBoardItem.getDate())));
+       holder.qnaBoardDate.setText(timeCalculator.getbeforeTime(qnaBoardItem.date));
+
+        //timeCalculator.getDate(qnaBoardItem.getDate());
 
         if(qnaBoardItem.getImage() != null){
             //holder.qnaBoardImage

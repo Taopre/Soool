@@ -60,7 +60,6 @@ public class BookmarkFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(TAG, "onAttach: ");
        /* if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
             Log.i(TAG, "onAttach: context");

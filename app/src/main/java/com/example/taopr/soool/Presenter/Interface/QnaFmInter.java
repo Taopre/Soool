@@ -17,5 +17,7 @@ public interface QnaFmInter {
         void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems);
         void getDataFail(String message);
         void moveToPage(Intent intent,int requestCode);
+        void showLoading();
+        void hideLoading();
     }
 }

@@ -114,7 +114,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
         // '월/년' 타이틀 애니메이션 위아래, 좌우 선택 -> 1이 좌우
         mcv.setTitleAnimationOrientation(1);
-
+        mcv.setSelectionColor(ContextCompat.getColor(context,R.color.greenMain));
         mcv.state().edit()
                 .setFirstDayOfWeek(Calendar.SUNDAY)  // week 시작하는 날짜 mon / sun
                 .setMinimumDate(CalendarDay.from(1916, 4, 3))  // 달력의 범위 min
@@ -158,7 +158,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             eventDates.add(CalendarDay.from(date));
         }
 
-        dayViewDecorator = new EventDecorator(ContextCompat.getColor(view.getContext(),R.color.colorAccent),eventDates,view.getContext());
+        dayViewDecorator = new EventDecorator(ContextCompat.getColor(view.getContext(),R.color.greenMain),eventDates,view.getContext());
 
         // 가공한 decorator 변수를 캘린더뷰에 추가
         // 추가하기 전에 달력 리셋하는 이유는 addDecorator 함수는 eventDates 에 날짜로 이벤트를 리셋하는 것이라 이전에 추가한 것이 있다면

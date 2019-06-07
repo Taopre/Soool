@@ -1,10 +1,16 @@
 package com.example.taopr.soool.View;
 
 import android.content.Intent;
+import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -12,33 +18,52 @@ import android.widget.Toast;
 
 import com.example.taopr.soool.Facebook.LoginCallback;
 import com.example.taopr.soool.Kakao.SessionCallback;
+import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.facebook.CallbackManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kakao.auth.Session;
 import com.kakao.usermgmt.LoginButton;
 
 import java.util.Arrays;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class StartingActivity extends AppCompatActivity {
 
     private SessionCallback callback;
-    private String TAG = "페이스북";
+    private String TAG = " 시작 화면 ";
     private CheckBox termsOfServiceCheck;
-    private Button customFaceLogin;
-    private Button customKakaoLogin;
-    private Button startingToSignUp;
+    private ViewGroup customFaceLogin;
+    private ViewGroup customKakaoLogin;
+    private ViewGroup startingToSignUp;
     private LoginButton kakaoLogin;
     private com.facebook.login.widget.LoginButton faceLogin;
     private LoginCallback mLoginCallback;
     private CallbackManager mCallbackManager;
     private TextView startingToLogIn;
 
+    @BindView(R.id.stHandlingPrivacy)
+    TextView stHandlingPrivacy;
+    @BindView(R.id.stTos)
+    TextView stTos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+        ButterKnife.bind(this);
+
         doBinding();
+
+        checkAutoLogin();
 
        callback = new SessionCallback(this);
 
@@ -46,25 +71,12 @@ public class StartingActivity extends AppCompatActivity {
 
         mLoginCallback = new LoginCallback(this);
 
-        StringBuffer stacktrace = new StringBuffer();
-        StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        for(int x=0; x<stackTrace.length; x++)
-        {
-            stacktrace.append(stackTrace[x].toString() + " ");
-        }
-        Log.e(TAG, "스택 : ");
-        Log.e(TAG, "스택 : " + stacktrace.toString());
-
-        Log.d(TAG, "스택 : ", new Throwable("stack dump"));
-
 
        // 카카오API 로그인
         customKakaoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(termsOfServiceCheck.isChecked()){
-
-                    Log.i(TAG, "onClick: kakao 로그인");
 
                     // 로그인 Activity가 생성될 때 로그인 버튼을 찾아오고,
                     // 세션의 상태가 변경될 때 불리는 세션 콜백을 추가해 줍니다.
@@ -82,15 +94,6 @@ public class StartingActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*faceLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                faceLogin.setReadPermissions(Arrays.asList("public_profile", "email"));
-
-                faceLogin.registerCallback(mCallbackManager, mLoginCallback);
-            }
-        });*/
 
         // 페이스북 API 로그인
         customFaceLogin.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +113,6 @@ public class StartingActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         // 회원가입을 진행하기 전에 약관에 동의를 했는지 확인 후 진행
         startingToSignUp.setOnClickListener(new View.OnClickListener() {
@@ -142,9 +144,30 @@ public class StartingActivity extends AppCompatActivity {
 
     }
 
+
+    // 자동로그인 설정을 한 경우
+    // Home 페이지로 이동
+    private void checkAutoLogin() {
+        try {
+            String data = LoginSharedPreferences.LoginUserLoad(StartingActivity.this, "LoginAccount");
+            Gson gson = new GsonBuilder().create();
+            LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
+
+            if (loginSessionItem.isAccountAutoLogin()) {
+                Intent intent = new Intent(StartingActivity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }
+        catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult: ");
+
 
         if(Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)){
             Log.i(TAG, "onActivityResult: requestCode : " + requestCode +", resultCode :" + resultCode +
@@ -181,5 +204,23 @@ public class StartingActivity extends AppCompatActivity {
         kakaoLogin = findViewById(R.id.kakaoLogin);
         faceLogin = findViewById(R.id.faceLogin);
         startingToLogIn = findViewById(R.id.startingToLogIn);
+
+        drawUnderline();
+    }
+
+    private void drawUnderline() {
+
+        // '개인정보 취급방취'와 '이용약관' text 에 밑줄 추가
+        SpannableString content = new SpannableString(getString(R.string.starting_handling_privacy));
+        content.setSpan(new UnderlineSpan(), 0, getString(R.string.starting_handling_privacy).length(), 0);
+        stHandlingPrivacy.setText(content);
+
+        content = new SpannableString(getString(R.string.starting_tos));
+        content.setSpan(new UnderlineSpan(), 0, getString(R.string.starting_tos).length(), 0);
+        stTos.setText(content);
+
+        content = new SpannableString(getString(R.string.starting_button_move_to_login));
+        content.setSpan(new UnderlineSpan(), 0, getString(R.string.starting_button_move_to_login).length(), 0);
+        startingToLogIn.setText(content);
     }
 }

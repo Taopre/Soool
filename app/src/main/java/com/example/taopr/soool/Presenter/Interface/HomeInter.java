@@ -9,10 +9,9 @@ import java.util.ArrayList;
 
 public interface HomeInter {
     void setView(HomePresenter.View view);
-
-    void UserProfile();
+    void getUserProfile();
 
     public interface View{
-        void getUserProfile();
+        void getAccountNo(int accountNo);
     }
 }

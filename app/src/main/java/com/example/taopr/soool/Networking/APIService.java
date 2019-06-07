@@ -1,9 +1,11 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Object.SooolResponseBody;
 import com.example.taopr.soool.Object.UserProfile;
 
 
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,12 +28,14 @@ public interface APIService {
     // 이메일 중복 확인
     @FormUrlEncoded
     @POST("/Signup/overlapConfirm.php")
-    Call<ResponseBody> checkEmailDup(@Field("accountEmail") String accountEmail);
+    Call<ResponseBody> checkEmailDup(@Field("separator") int separator,
+                                     @Field("accountEmail") String accountEmail);
 
     // 닉네임 중복 확인
     @FormUrlEncoded
     @POST("/Signup/overlapConfirm.php")
-    Call<ResponseBody> checkNickDup(@Field("accountNick") String accountNick);
+    Call<ResponseBody> checkNickDup(@Field("separator") int separator,
+                                    @Field("accountNick") String accountNick);
 
     //  @GET("/answers?order=desc&sort=activity&site=stackoverflow")
     // Call<SOAnswersResponse> getAnswers(@Query("tagged") String tags);
@@ -173,6 +178,34 @@ public interface APIService {
     @FormUrlEncoded
     @POST("/qnapost/QnaDelete.php")
     Call<ResponseBody> deleteBoardWithPostNo(@Field("postNo") int postNo);
+
+    @FormUrlEncoded
+    @POST("/accountManage/myinfoUpdate.php")
+    Observable<ProfileInfo> getProfileInfo(@Field("accountNo") int accountNo);
+
+    // 프로필 이미지 교환
+    @Multipart
+    @POST("/accountManage/accountImage.php")
+    Observable<SooolResponseBody> changeProfileImage(@Part("accountNo") int accountNo,
+                                                     @Part MultipartBody.Part accountImage );
+
+    // 프로필 이미지 삭제
+    @FormUrlEncoded
+    @POST("/accountManage/accountImage.php")
+    Observable<SooolResponseBody> deleteProfileImage(@Field("accountNo") int accountNo, @Field("delete") String delete);
+
+    // 프로필 수정
+    @FormUrlEncoded
+    @POST("/accountManage/myinfoUpdateResult.php")
+    Observable<ProfileInfo> changeProfileInfo(@Field("accountNo") int accountNo,
+                                              @Field("accountEmail") String accountEmail,
+                                              @Field("accountNick") String accountNick,
+                                              @Field("accountImage") String accountImage,
+                                              @Field("accountPw") String accountPw,
+                                              @Field("capacity") int capacity,
+                                              @Field("favorite") int favorite,
+                                              @Field("reason") int reason);
+
 
     @FormUrlEncoded
     @POST("/qnapost/QnaPostLike.php")

@@ -20,8 +20,8 @@
 
             app:mcv_showOtherDates="none"
             app:mcv_selectionColor="#00F"
-            app:mcv_leftArrowMask="@drawable/cal_month_small_left"
-            app:mcv_rightArrowMask="@drawable/cal_month_small_right"
+            app:mcv_leftArrowMask="@drawable/cal_month_smaller_left"
+            app:mcv_rightArrowMask="@drawable/cal_month_smaller_right"
             />
         <include layout="@layout/button_add_calendar_sch"
             android:layout_width="wrap_content"

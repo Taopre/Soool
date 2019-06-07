@@ -17,6 +17,7 @@
     <dimen name="text_size_13dp">13dp</dimen>
     <dimen name="text_size_14dp">14dp</dimen>
     <dimen name="text_size_15dp">15dp</dimen>
+    <dimen name="text_size_16dp">16dp</dimen>
     <dimen name="text_size_18dp">18dp</dimen>
     <dimen name="text_size_20dp">20dp</dimen>
     <dimen name="text_size_120dp">120dp</dimen>
@@ -29,6 +30,9 @@
     <dimen name="all_space_between_12dp">12dp</dimen>
     <dimen name="all_space_between_16dp">16dp</dimen>
     <dimen name="all_space_between_18dp">18dp</dimen>
+    <dimen name="all_space_between_20dp">20dp</dimen>
+    <dimen name="all_space_between_24dp">24dp</dimen>
+    <dimen name="all_space_between_28dp">28dp</dimen>
 
 
     <!-- 액션바 -->

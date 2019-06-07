@@ -35,10 +35,12 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
 
     }
 
-    public void loadData(){
-        // view.showLoading(); 로딩 화면
-        Log.i(TAG, "loadData: ");
-        //<
+    // actionKind 가 1일 경우에는 새로고침이므로 새로고침 아이콘을 통해 로딩중을 표시하기 때문에
+    // 프로그래스바는 실행하지 않도록 한다
+    public void loadData(int actionKind){
+        if (actionKind==0) {
+            view.showLoading(); //로딩 화면
+        }
         //데이터 로딩
         addSubscription(
                 apiService.getQnaItem(),
@@ -62,12 +64,14 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
                     @Override
                     public void onFailure(String msg) {
                         Log.i(TAG, "onFailure: qna" + msg);
+                        view.hideLoading();
                         view.getDataFail(msg);
                     }
 
                     @Override
                     public void onFinish() {
                         Log.i(TAG, "onFinish: qna");
+                        view.hideLoading();
                         //dismissProgressDialog();
                     }
                 });
