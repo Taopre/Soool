@@ -60,6 +60,8 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
     public void onBindViewHolder(final QnaBoardDetailVoteAdapter.MyViewHolder holder, final int position) {
 
         holder.textView.setText(editModelArrayList.get(position).getEditTextValue());
+        holder.voteContentValue.setVisibility(View.INVISIBLE);
+        holder.voteContentValue.setText((editModelArrayList.get(position).getVoteboard())+"");
         holder.itemView.setTag(position);
         holder.textSelect.setVisibility(View.INVISIBLE);
         holder.progressBar.post(new Runnable() {
@@ -82,6 +84,7 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
 
         if (voteFlag == true) {
             holder.progressBar.setVisibility(View.VISIBLE);
+            holder.voteContentValue.setVisibility(View.VISIBLE);
             Log.d(TAG, "onBindViewHolder: 포지션이당"+userSelectPos);
             if (position != (userSelectPos - 1)) {
                 Log.d(TAG, "onBindViewHolder: 틀린 포지션이당"+position);
@@ -107,6 +110,7 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView textView;
+        protected TextView voteContentValue;
         protected ProgressBar progressBar;
         protected ImageView textSelect;
         // 리스트 아이템 클릭 -> 클릭된 아이템 글자 색 변경 및 체크표시 이미지 출력 -> 클릭되지않은 아이템 글자 검정 및 널 이미지 출력
@@ -115,6 +119,7 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
             super(itemView);
 
             textView = itemView.findViewById(R.id.textViewssss);
+            voteContentValue = itemView.findViewById(R.id.voteContentValue);
             progressBar = itemView.findViewById(R.id.progressbar);
             textSelect = itemView.findViewById(R.id.textSelect);
         }

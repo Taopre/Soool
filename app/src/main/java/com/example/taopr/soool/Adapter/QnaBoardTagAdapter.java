@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
@@ -110,7 +111,6 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
                 tagTitle.setPadding(36,0,36,0);
             }
             else {
-
                 deleteTag.setVisibility(View.VISIBLE);
                 itemTag.setBackground(ContextCompat.getDrawable(itemView.getContext(),R.drawable.tag_frame_green));
                 tagTitle.setTextColor(ContextCompat.getColor(itemView.getContext(),R.color.greenMain));

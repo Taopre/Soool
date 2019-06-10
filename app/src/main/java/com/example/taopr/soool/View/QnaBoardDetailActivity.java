@@ -41,6 +41,7 @@ import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
+import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.Object.LoginSessionItem;
@@ -442,6 +443,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         rc_recycler = findViewById(R.id.recycler);
         gv_gridview = findViewById(R.id.gridview);
         rc_qnaboardTagMany = findViewById(R.id.qnaboardTagMany);
+        rc_qnaboardTagMany.addItemDecoration(new RecyclerDecoration(32));
         tv_qnaboardTagOne = findViewById(R.id.qnaboardTagOne);
         tagView = findViewById(R.id.tagView);
         tv_voteResultShow = findViewById(R.id.voteResultShow);
@@ -489,7 +491,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     tv_qnaboardLike.setTextColor(Color.parseColor("#9d9d97"));
                     tv_qnaboardLikeText.setTextColor(Color.parseColor("#9d9d97"));
 //                    rl_qnaboardUnLikeLayout.setClickable(true);
-                    tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                    tv_qnaboardLike.setText((qnaBoardItem.getGoods()-1)+"");
                     tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
                 }
 
@@ -515,7 +517,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#9d9d97"));
 //                    rl_qnaboardLikeLayout.setClickable(true);
                     tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
-                    tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
+                    tv_qnaboardUnLike.setText((qnaBoardItem.getBads()-1)+"");
                 }
 
                 Toast.makeText(view.getContext(), "비추천 상태 : "+btnOnOff+"", Toast.LENGTH_SHORT).show();

@@ -176,7 +176,6 @@
                             android:paddingStart="5dp"
                             android:text="참여수"
                             android:textColor="@color/grayMain"
-                            android:textStyle="bold"
                             android:textSize="@dimen/text_size_14dp"
                             android:id="@+id/voteResultShow"/>
                     </RelativeLayout>
@@ -229,54 +228,67 @@
                 <RelativeLayout
                     android:id="@+id/qnaboardLikeLayout"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_all">
 
-                    <TextView
-                        android:id="@+id/qnaboardLikeText"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/text_size_15dp"
-                        android:layout_marginBottom="@dimen/text_size_15dp"
                         android:layout_marginStart="58dp"
-                        android:text="추천" />
-                    <TextView
-                        android:id="@+id/qnaboardLike"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/text_size_15dp"
-                        android:layout_marginBottom="@dimen/text_size_15dp"
-                        android:layout_toRightOf="@+id/qnaboardLikeText"
-                        android:text="0" />
+                        android:layout_marginTop="13dp"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/qnaboardLikeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="6dp"
+                            android:textSize="14dp"
+                            android:text="추천" />
+                        <TextView
+                            android:id="@+id/qnaboardLike"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/qnaboardLikeText"
+                            android:textSize="14dp"
+                            android:textColor="@color/black"
+                            android:text="0" />
+                    </RelativeLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/qnaboardUnLikeLayout"
                     android:layout_weight="1"
                     android:layout_gravity="end"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_all">
 
-                    <TextView
-                        android:id="@+id/qnaboardUnLikeText"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/text_size_15dp"
-                        android:layout_marginBottom="@dimen/text_size_15dp"
-                        android:layout_marginStart="56dp"
-                        android:text="비추천" />
-                    <TextView
-                        android:id="@+id/qnaboardUnLike"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/text_size_15dp"
-                        android:layout_marginBottom="@dimen/text_size_15dp"
-                        android:layout_toRightOf="@+id/qnaboardUnLikeText"
-                        android:text="0" />
+                        android:layout_marginTop="13dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginStart="56dp">
+
+                        <TextView
+                            android:id="@+id/qnaboardUnLikeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="6dp"
+                            android:textSize="14dp"
+                            android:text="비추천" />
+                        <TextView
+                            android:id="@+id/qnaboardUnLike"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/qnaboardUnLikeText"
+                            android:textSize="14dp"
+                            android:textColor="@color/black"
+                            android:text="0" />
+                    </RelativeLayout>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -308,7 +320,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/functionsLayout"
         android:orientation="horizontal">
@@ -317,6 +329,7 @@
             android:id="@+id/commentWrite"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/all_space_between_18dp"
+            android:textSize="14dp"
             android:hint="@string/qna_detail_hint_write_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -327,8 +340,8 @@
             android:textColor="@color/background_white"
             android:textSize="@dimen/text_size_14dp"
             android:id="@+id/commentEnroll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="51dp"
             android:text="등록"/>
     </LinearLayout>
 </RelativeLayout>
