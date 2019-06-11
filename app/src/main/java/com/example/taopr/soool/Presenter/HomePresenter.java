@@ -23,7 +23,7 @@ public class HomePresenter implements HomeInter{
     }
 
     @Override
-    public void getUserProfile() {
+    public void getAccountNo() {
         String data = LoginSharedPreferences.LoginUserLoad(context, "LoginAccount");
         Gson gson = new GsonBuilder().create();
         // JSON 으로 변환
@@ -31,7 +31,7 @@ public class HomePresenter implements HomeInter{
 
         int accountNo = loginSessionItem.getAccountNo();
 
-        view.getAccountNo(accountNo);
+        view.getAccountNoSuc(accountNo);
     }
 
 }

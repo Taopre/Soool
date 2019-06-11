@@ -66,7 +66,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.i(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_home_qna, container, false);
 
         context = view.getContext();
