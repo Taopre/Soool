@@ -8,11 +8,11 @@ import com.example.taopr.soool.Presenter.QnaFmPresenter;
 
 import java.util.ArrayList;
 
-public interface QnaFmInter {
+public interface MyBoardInter {
 
-    void setView(QnaFmPresenter.View view);
+    void setView(MyBoardInter.View view);
     void getItem(QnaBoardItem qnaBoardItem, Activity activity, int qnaListPosition);
-
+    void loadData(int accountNo,int actionKind);
 
     public interface View{
         void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems);
