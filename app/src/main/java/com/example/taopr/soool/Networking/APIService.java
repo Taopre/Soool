@@ -1,6 +1,7 @@
 package com.example.taopr.soool.Networking;
 
 import com.example.taopr.soool.Object.ProfileInfo;
+import com.example.taopr.soool.Object.CommentListObject;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
@@ -213,4 +214,41 @@ public interface APIService {
                                          @Field("accountNo") int accountNo,
                                          @Field("likeType") int likeType,
                                          @Field("btnOnOff") int btnOnOff);
+
+    @FormUrlEncoded
+    @POST("/comment/commentinsert.php")
+    Call<ResponseBody> commentRequest(@Field("postNo") int postNo,
+                                      @Field("accountNo") int accountNo,
+                                      @Field("commentContent") String commentContent);
+
+
+    @FormUrlEncoded
+    @POST("/comment/commentinsert.php")
+    Call<ResponseBody> recommentRequest(@Field("postNo") int postNo,
+                                        @Field("commentNo") int commentNo,
+                                        @Field("accountNo") int accountNo,
+                                        @Field("commentContent") String commentContent);
+
+    @FormUrlEncoded
+    @POST("/comment/commentLike.php")
+    Call<ResponseBody> commentLikeRequest(@Field("postNo") int postNo,
+                                          @Field("commentNo") int commentNo,
+                                          @Field("accountNo") int accountNo,
+                                          @Field("like_check") int like_check,
+                                          @Field("commentORrecomment") int commentORrecomment,
+                                          @Field("recommentNo") int recommentNo
+    );
+
+    @FormUrlEncoded
+    @POST("/comment/commentDelete.php")
+    Call<ResponseBody> commentDeleteRequest(@Field("postNo") int postNo,
+                                            @Field("commentNo") int commentNo
+                                            );
+
+    @FormUrlEncoded
+    @POST("/comment/commentList.php")//게시물 번호 쏴줘야됨
+    Observable<CommentListObject> getCommentItem(@Field("postNo") int postNo);
+
+
+
 }

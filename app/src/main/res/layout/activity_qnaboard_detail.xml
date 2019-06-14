@@ -224,7 +224,6 @@
                 android:layout_marginEnd="@dimen/all_space_between_18dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
-
                 <RelativeLayout
                     android:id="@+id/qnaboardLikeLayout"
                     android:layout_weight="1"
@@ -292,30 +291,14 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:visibility="gone"
+            <include
+                android:layout_below="@+id/likeShowLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:layout_marginBottom="52dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="댓글" />
-
-                <TextView
-                    android:id="@+id/qnaboardCommentCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="댓글 갯수" />
-            </LinearLayout>
+                layout="@layout/commentlayout" />
         </RelativeLayout>
+
     </ScrollView>
 
     <LinearLayout
@@ -324,10 +307,10 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/functionsLayout"
         android:orientation="horizontal">
-
         <EditText
             android:id="@+id/commentWrite"
             android:layout_weight="1"
+            android:textSize="@dimen/text_size_14dp"
             android:layout_marginStart="@dimen/all_space_between_18dp"
             android:textSize="14dp"
             android:hint="@string/qna_detail_hint_write_comment"
