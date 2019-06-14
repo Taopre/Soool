@@ -20,7 +20,6 @@ import com.example.taopr.soool.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 
 public class LoginActivity extends AppCompatActivity implements LoginPresenter.View, Button.OnClickListener {
     String TAG = "LoginActivity log : ";
@@ -103,8 +102,9 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (response.equals("false")) {
-
+            Toast.makeText(this, "이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
         } else if (response.equals("nee")) {
+            Toast.makeText(this, "존재하지 않는 이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
         }
 //        if (response == true) {
 //            Intent intent = new Intent(this, MainActivity.class);
@@ -151,6 +151,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.accountLoginBtn :
                 //로그인 버튼 리스너
@@ -166,12 +167,14 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 //비밀번호 찾기 텍뷰 리스너
                 Log.d(TAG, "onClick: 비밀번호 찾기 클릭");
                 Toast.makeText(LoginActivity.this, "비밀번호 찾기 화면으로 가기.", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, PassFindActivity.class);
+                startActivity(intent);
                 break;
             case R.id.accountSignup :
                 //회원가입하기 텍뷰 리스터
                 Log.d(TAG, "onClick: 회원가입하기 클릭");
                 Toast.makeText(LoginActivity.this, "회원가입 화면으로 가기.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, SignUpActivity.class);
+                intent = new Intent(this, SignUpActivity.class);
                 startActivity(intent);
                 break;
             case R.id.accountAutoLoginCheck :

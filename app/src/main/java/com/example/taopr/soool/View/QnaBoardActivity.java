@@ -43,6 +43,7 @@ import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
 import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
+import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.BottomSheetDialogVoteSelect;
 import com.example.taopr.soool.ExifUtils;
@@ -232,6 +233,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         tv_qnaboardBeforeTag = findViewById(R.id.qnaboardBeforeTag);
         iv_qnaboardAddTag = findViewById(R.id.qnaboardAddTag);
         rc_qnaboardTag = findViewById(R.id.qnaboardTag);
+//        rc_qnaboardTag.addItemDecoration(new RecyclerDecoration(32));
         h_scrollView = findViewById(R.id.h_scrollView);
         imageLayout = findViewById(R.id.imageLayout);
         iv_qnaTextVoteRemove = findViewById(R.id.qnaTextVoteRemove);

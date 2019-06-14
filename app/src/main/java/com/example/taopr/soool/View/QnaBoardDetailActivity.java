@@ -192,6 +192,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                             rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                            rc_qnaboardTagMany.addItemDecoration(new RecyclerDecoration(32));
                         }
 
                         tv_qnaboardTitle.setText(qnaBoardItem.getTitle());
@@ -599,8 +600,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         qnaBoardDetailImageAdapter.notifyDataSetChanged();
                         break;
                 }
-
-
+                
                 break;
             case R.id.drawupModify:
                 Intent intent = new Intent(this, QnaBoardActivity.class);
