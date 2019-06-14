@@ -1,11 +1,16 @@
 package com.example.taopr.soool.Presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.taopr.soool.Model.CommentModel;
+import com.example.taopr.soool.Networking.APICallback;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.BoardRecommend;
+import com.example.taopr.soool.Object.CommentItem;
+import com.example.taopr.soool.Object.CommentListObject;
 import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Presenter.Interface.QnaDetailInter;
 import com.google.gson.Gson;
@@ -46,6 +51,17 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
     ArrayList<Integer> voteResult = new ArrayList<>();
     QnaVoteItem receiveQnaVoteItem = new QnaVoteItem();
 
+
+    private CommentModel commentModel;
+    private Activity activity;
+
+    public QnaDetailPresenter(Activity activity,Context context)
+    {
+        this.activity = activity;
+        this.commentModel = new CommentModel(context,this);
+        this.apiService = APIClient.getClient1().create(APIService.class);
+        Log.d(TAG, "commentRequest: 프레젠터");
+    }
 
     public QnaDetailPresenter(Context context){
         this.context = context;
@@ -353,4 +369,83 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                     }
                 });
     }
+    public void loadData(int postNo)
+    {
+        addSubscription
+                (
+                        apiService.getCommentItem(postNo),
+                        new APICallback<CommentListObject>()
+                        {
+                            @Override
+                            public void onSuccess(CommentListObject commentList_object)
+                            {
+                                ArrayList<CommentItem> commentitem = new ArrayList(commentList_object.getQnaCommentItems());
+                                view.getCommentDataSuccess(commentitem);
+                            }
+
+                            @Override
+                            public void onFailure(String msg)
+                            {
+
+                            }
+                            @Override
+                            public void onFinish()
+                            {
+
+                            }
+                        }
+                );
+    }
+    @Override
+    public void commentRequest(int postNo, int accountNo, String commentContent)
+    {
+        commentModel.commentRequest(postNo,accountNo,commentContent);
+        Log.d(TAG, "commentRequest: 성공?????");
+    }
+
+    @Override
+    public void recommentRequest(int postNo, int commentNo, int accountNo, String commentContent)
+    {
+        commentModel.recommentRequest(postNo,commentNo,accountNo,commentContent);
+    }
+
+    @Override
+    public void likeRequest(int postNo, int commentNo, int accountNo, int like_check,int commentORrecomment,int recommentNo) {
+        commentModel.commentLikeRequest(postNo,commentNo,accountNo,like_check,commentORrecomment,recommentNo);
+    }
+    @Override
+    public void commentDeleteRequest(int post, int commentNo)
+    {
+        commentModel.commentDeleteRequest(post,commentNo);
+    }
+
+    @Override
+    public void commentDeleteResponss(int response,int commentCount)
+    {
+        Log.d(TAG, "닌불려지냐?");
+        view.commentDeleteGoResponse(response,commentCount);
+    }
+
+    @Override
+    public void commentInsertResponse(int response,int commentCount) {
+        view.commentInsertGoResponse(response,commentCount);
+    }
+
+    @Override
+    public void recommentInsertResponse(int response) {
+        view.recommentInsertGoResponse(response);
+    }
+    @Override
+    public void likeResponse(int response)
+    {
+        view.likeGoResponse(response);
+    }
+
+    @Override
+    public void CommentOrRecomment(int commentNo)
+    {
+        view.CommentOrRecommentActivity(commentNo);
+    }
+
+
 }
