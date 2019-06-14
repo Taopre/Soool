@@ -286,19 +286,21 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         check = Arrays.binarySearch(likeList,accountNo);//생성자에 회원번호 추가
         //Log.d(TAG, String.valueOf(check) + "@@@@@@@@@@@@@@@@@@@@@@@@@" + String.valueOf(position));
         //추후에 아이콘색 채워넣기로 바꿔야됨됨
-
-
         if (check >= 0)
         {
-            like_confirm = like_confirm + 1;
+            //like_confirm = like_confirm + 1;
             //이미 좋아요를 누른 댓글
             holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
+
+            commentitem.setAccountNo(accountNo + 1);
         }
         else
         {
-            like_confirm = like_confirm + 0;
+            //like_confirm = like_confirm + 0;
             //안누른 댓글
             holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
+
+            commentitem.setAccountNo(accountNo + 0);
         }
 
         //Log.d(TAG,String.valueOf(likeList[0]));
@@ -319,7 +321,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 Log.d(TAG,String.valueOf(check));
                 Log.d(TAG, "onClickSDGSDG:" + String.valueOf(position) +"ASDASDAS" + String.valueOf(commentitem.getCommentNo()));
                 int commentORrecomment = 0;
-                if (like_confirm == 1)
+                CommentItem commentItemA = commentitems.get(position);
+                if (commentItemA.getAccountNo() - accountNo  == 1)
                 {
                     //좋아요 취소
                     //이미 눌렀는데 또 누를경우
@@ -341,10 +344,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                         holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
 
-                        like_confirm = like_confirm - 1;
-
+                    commentitem.setAccountNo(accountNo + 0);
                 }
-                else if (like_confirm == 0)
+                else if (commentItemA.getAccountNo() - accountNo == 0)
                 {
                         //좋아요
                         int like_check = 1;
@@ -364,7 +366,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
                         Log.d(TAG, "Asdsgsdgsgsg: " + String.valueOf(v.getId()));
                         Log.d(TAG, "Asdsgsdgsgsgas: " + String.valueOf(position));
-                        like_confirm = like_confirm + 1;
+
+                      commentitem.setAccountNo(accountNo + 1);
+
                 }
 
             }
