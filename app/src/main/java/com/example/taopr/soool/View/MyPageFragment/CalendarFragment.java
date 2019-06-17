@@ -18,6 +18,7 @@ import com.example.taopr.soool.Calendar.EventDecorator;
 import com.example.taopr.soool.Calendar.SooolCalendar;
 import com.example.taopr.soool.Object.CalendarItem;
 import com.example.taopr.soool.Object.CalendarItemMap;
+import com.example.taopr.soool.Presenter.CalendarFmPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.View.CalendarAddSchActivity;
 import com.example.taopr.soool.View.CalendarSchActivity;
@@ -47,15 +48,16 @@ import butterknife.Unbinder;
 import static android.app.Activity.RESULT_OK;
 
 
-public class CalendarFragment extends Fragment implements OnMonthChangedListener,OnDateSelectedListener {
+public class CalendarFragment extends Fragment implements CalendarFmPresenter.View,
+        OnMonthChangedListener,OnDateSelectedListener {
 
     private  OnFragmentInteractionListener mListener;
     private  Collection<CalendarDay> eventDates = new HashSet<>();  // 캘린더에 event 표시를 해줘야하는 날짜 리스트
-    private  HashMap<String,CalendarItem> calendarItemMap;
+    private  HashMap<String,CalendarItem> calendarItemMap= new HashMap<String,CalendarItem>();
     private  MaterialCalendarView mcv;
     private  SooolCalendar sooolCalendar = new SooolCalendar();
     private  View view;
-    private  String TAG = "캘린더 fragment";
+    private  String TAG = "마이페이지 캘린더 프래그먼트";
     private  String accountNo=null;
     private Context context;
     private final String DATE_EXTRA = "selectedDay";
@@ -64,20 +66,12 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     private final int CALENDAR_ADD_INT = 4300;
     private static Date selectedDay;
     private Unbinder unbinder;
+    private CalendarFmPresenter calendarFmPresenter;
 
     DayViewDecorator dayViewDecorator;
 
     public CalendarFragment() {
         // Required empty public constructor
-    }
-
-
-    public static CalendarFragment newInstance(String param1, String param2) {
-        CalendarFragment fragment = new CalendarFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -86,8 +80,9 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
     }
 
-
     // 뷰 바인딩과 intent 받는 부분
+    // intent 로 회원번호를 받은 뒤 캘린더 DB 에서 작성했던 내용들을 가져온다
+
 
     // 선택한 날짜는 디폴트로 현재날짜를 받는다. 날짜 선택 없이 일정추가를 할 경우 현재 날짜에 일정을 추가하므로
     // 그 후, 날짜 선택을 통해 캘린더 상세 페이지나 캘린더 작성 페이지로 넘어갔다가
@@ -130,12 +125,11 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         Log.i(TAG, "onCreateView: 닉네임 " + accountNo);
 
 
-        if(getArguments().getSerializable(CALENDAR_LIST_EXTRA)!=null) {
-            calendarItemMap = getArguments().getParcelable(CALENDAR_LIST_EXTRA);
-            Log.i(TAG, "onCreateView: " + calendarItemMap.size());
+        //수정
+        calendarFmPresenter = new CalendarFmPresenter();
+        calendarFmPresenter.setView(this);
+        calendarFmPresenter.getCalendarItem(getActivity(),accountNo);
 
-            showEventDate();
-        }
 
         return view;
     }
@@ -199,6 +193,20 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     public void onMonthChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
         Log.i(TAG, "onMonthChanged: ");
     }
+
+    // 캘린더에서 작성한 내용들을 가져오면 달력 해당 날짜들을 표시해준다
+
+    @Override
+    public void getCalendarDataResponse(CalendarItemMap calendarItemMap) {
+        this.calendarItemMap = calendarItemMap;
+        showEventDate();
+    }
+
+    @Override
+    public void getDataFail(boolean response, int i) {
+
+    }
+
 
     public interface OnFragmentInteractionListener {
 

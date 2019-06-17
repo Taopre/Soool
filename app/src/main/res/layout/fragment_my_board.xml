@@ -6,13 +6,19 @@
     tools:context=".View.MyPageFragment.MyBoardFragment">
 
 
-
-    <android.support.v7.widget.RecyclerView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/myBoardSwipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/myBoardRecycler"
-        android:visibility="gone">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/myBoardRecycler"
+            android:visibility="gone">
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 
@@ -44,5 +50,7 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+
 
 </FrameLayout>

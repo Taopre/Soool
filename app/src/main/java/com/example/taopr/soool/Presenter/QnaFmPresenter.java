@@ -24,7 +24,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
     private Activity activity;
     //  private List<QnaBoardItem> qnaBoardItems = new ArrayList<>();
     private String TAG = "큐앤에이_presenter";
-    private APIService apiService;
     private final int QNA_MOVE_TO_DETAIL= 3100;
     private final int QNA_MOVE_TO_WRITE = 3200;
 
@@ -64,7 +63,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
                     @Override
                     public void onFailure(String msg) {
                         Log.i(TAG, "onFailure: qna" + msg);
-                        view.hideLoading();
                         view.getDataFail(msg);
                     }
 

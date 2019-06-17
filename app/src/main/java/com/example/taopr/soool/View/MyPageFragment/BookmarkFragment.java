@@ -19,7 +19,7 @@ public class BookmarkFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    String TAG = "북마크 프래그먼트";
+    String TAG = "마이페이지 북마크 프래그먼트";
 
     private OnFragmentInteractionListener mListener;
 

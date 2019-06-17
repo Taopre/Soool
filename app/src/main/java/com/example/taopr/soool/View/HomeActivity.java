@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.taopr.soool.Dialog.NoticeDialog;
@@ -45,7 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MypageFragment.getUserProfileListener{
+public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MypageFragment.getUserProfileListener, MyBoardFragment.MyPageView{
 
     @BindView(R.id.tabMain)
     ViewGroup btn_tabMain;
@@ -100,11 +101,17 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         homePresenter = new HomePresenter(this);
 
         homePresenter.setView(this);
-        homePresenter.getUserProfile();
+        homePresenter.getAccountNo();
 
         viewBinding();
         callFragment(0,1);
         tabSetting();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 
     private void viewBinding() {
@@ -126,11 +133,11 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     private void callFragment(int currentTabNo,int previousTabNo){
         currentTab = currentTabNo;
         previousTab = previousTabNo;
+
         // 프래그먼트 사용을 위해
         // onCreate 에서 한번만 생성하려 했을때는 에러
         // 그 이유는 아직 모름
         transaction = getSupportFragmentManager().beginTransaction();
-        Log.i(TAG, "callFragment: 현재 탭" + currentTab);
 
         switch (currentTab){
             case 0:
@@ -204,7 +211,9 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         }
     }
 
-    @OnClick({R.id.myPageDrawerMyAccount,R.id.myPageDrawerLogOut})
+    // DrawerLayout 탭 클릭
+    @OnClick({R.id.myPageDrawerMyAccount,R.id.myPageDrawerLogOut,R.id.myPageDrawerHandlingPrivacy,R.id.myPageDrawerPush,R.id.myPageDrawerTos
+    ,R.id.myPageDrawerVersion,R.id.myPageDrawerReport,R.id.myPageDrawerElseTab})
     public void drawerTabOnClick(View view){
         switch (view.getId()) {
             case R.id.myPageDrawerMyAccount:
@@ -334,7 +343,12 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     }
 
     @Override
-    public void getAccountNo(int accountNo) {
+    public void getAccountNoSuc(int accountNo) {
         this.accountNo = accountNo;
+    }
+
+    @Override
+    public void getMyBoardRes(Boolean isMyBoardRes) {
+        mypageFragment.getFragmentRes(0,isMyBoardRes);
     }
 }

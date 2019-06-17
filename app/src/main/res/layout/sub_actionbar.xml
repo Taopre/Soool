@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="14dp"
     android:background="#ffffff"
     android:paddingRight="@dimen/all_space_between_18dp">
 
@@ -12,8 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="@string/all_button_cancel"
+        android:layout_marginLeft="@dimen/all_space_between_10dp"
         android:textSize="@dimen/text_size_15dp"
-        android:layout_marginLeft="4dp"
+        android:paddingHorizontal="@dimen/all_space_between_8dp"
         android:textColor="@color/grayMid"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
@@ -21,8 +21,10 @@
         android:id="@+id/subActionBarLeft"
         />
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginLeft="@dimen/all_space_between_12dp"
+        android:padding="@dimen/all_text_12dp_space_6dp"
         android:src="@drawable/app_back"
         android:layout_alignParentLeft="true"
         android:gravity="center"

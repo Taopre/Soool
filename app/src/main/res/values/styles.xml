@@ -43,4 +43,17 @@
         <item name="android:typeface">serif</item>
         <item name="android:paddingBottom">@dimen/all_space_between_20dp</item>
     </style>
+
+    <style name="grayMainSize12TextView"  parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/grayMain</item>
+        <item name="android:textSize">@dimen/text_size_12dp</item>
+
+    </style>
+
+    <style name="grayLightSize12TextView"  parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/grayMain</item>
+        <item name="android:textSize">@dimen/text_size_12dp</item>
+
+    </style>
+
 </resources>

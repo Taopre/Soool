@@ -223,8 +223,6 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
         Toolbar parent = (Toolbar)actionbar.getParent();
         parent.setContentInsetsAbsolute(0,0);
 
-
-
         subActionBarLeftImage = findViewById(R.id.subActionBarLeftImage);
         subActionBarRight = findViewById(R.id.subActionBarRight);
         subActionBarLeft = findViewById(R.id.subActionBarLeft);

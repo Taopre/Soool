@@ -10,13 +10,10 @@ import java.util.ArrayList;
 
 public interface MypageFmInter {
     void setView(MypageFmPresenter.View view);
-    void loadMypageData(int accountNo, int i);
+    void loadMypageData(int accountNo);
 
     public interface View{
-        void getInfoBookmarkResponse(ArrayList<InfoOfSoool> infoOfSoools);
-        void getQnaMyboardResponse(ArrayList<QnaBoardItem> qnaBoardItems);
-        //  void getCalendarDataResponse(ArrayList<CalendarItem> calendarItems);
-        void getCalendarDataResponse(CalendarItemMap calendarItemMap);
+
         void getDataFail(boolean response, int i);
         void getUserProfileSuccess(UserProfile userProfile);
     }
