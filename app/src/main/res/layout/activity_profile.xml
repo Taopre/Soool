@@ -7,7 +7,9 @@
     tools:context=".View.ProfileActivity">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
         <ImageView
             android:layout_marginTop="32dp"
             android:layout_width="96dp"
@@ -204,6 +206,7 @@
             android:layout_marginTop="58dp"
             android:layout_marginBottom="@dimen/all_space_between_18dp"
             android:stateListAnimator="@null"
+            android:id="@+id/deleteAccount"
             />
 
         <ProgressBar

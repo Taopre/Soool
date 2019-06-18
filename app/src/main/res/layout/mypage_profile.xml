@@ -13,6 +13,7 @@
         android:layout_gravity="center"
         android:id="@+id/mypageProfileImage"
        />
+
     <RelativeLayout
         android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"

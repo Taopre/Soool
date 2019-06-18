@@ -19,7 +19,6 @@
         android:id="@+id/mypageProfileLine"
         />
 
-
     <include layout="@layout/mypage_tab"
         android:layout_width="match_parent"
         android:layout_height="50dp"

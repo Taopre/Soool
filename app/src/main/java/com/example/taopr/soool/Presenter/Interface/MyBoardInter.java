@@ -12,10 +12,11 @@ public interface MyBoardInter {
 
     void setView(MyBoardInter.View view);
     void getItem(QnaBoardItem qnaBoardItem, Activity activity, int qnaListPosition);
-    void loadData(int accountNo,int actionKind);
+    void loadData(int accountNo,int loadingKind,int lastPostNo);
+
 
     public interface View{
-        void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems);
+        void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind);
         void getDataFail(String message);
         void moveToPage(Intent intent,int requestCode);
         void showLoading();

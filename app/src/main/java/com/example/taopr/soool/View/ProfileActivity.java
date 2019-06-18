@@ -1,6 +1,8 @@
 package com.example.taopr.soool.View;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,13 +37,17 @@ import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Presenter.ProfilePresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.Whatisthis;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.sangcomz.fishbun.FishBun;
 import com.sangcomz.fishbun.adapter.image.ImageAdapter;
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter;
 import com.sangcomz.fishbun.define.Define;
+import com.sangcomz.fishbun.permission.PermissionCheck;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @BindView(R.id.profileProgress)
     ProgressBar profileProgress;
 
+
     private final String TAG = "마이 프로필 액티비티";
 
     private ImageView subActionBarLeftImage ;
@@ -77,6 +86,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private ProfileSpinnerAdapter<CharSequence> reasonAdapter;
     private ProfilePresenter profilePresenter;
     private int capacitySpiPosition,favoriteSpiPosition, reasonSpiPosition;
+    private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 4500;
 
     private boolean isChangeProfile = false; // 프로필 정보를 수정했다면 true, 아니라면 false
 
@@ -84,13 +94,35 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private NoticeDialog noticeDialog;
 
+    private PermissionListener permissionlistener;
     int accountNo;
+
+
+    // 권한
+    // onCreate() 에서는 권한을 묻는 다이얼로그르 띄어준다.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+
+        permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                FishBun.with(ProfileActivity.this)
+                        .setImageAdapter(new GlideAdapter())
+                        .setMinCount(0)
+                        .setMaxCount(1)
+                        .setActionBarColor(ContextCompat.getColor(ProfileActivity.this, R.color.greenMain))
+                        .startAlbum();
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+                Toast.makeText(ProfileActivity.this, "권한 거부", Toast.LENGTH_SHORT).show();
+            }
+        };
 
         ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
         drawable.getPaint().setColor(Color.rgb(255,255,255)); // 원형 백그라운드 색상 (디폴트 검정색)
@@ -101,6 +133,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         profilePresenter.setView(this,this);
 
         getProfileIntent();
+    }
+
+    // 퍼미션 체크
+    private void permissionCheck() {
+
+        TedPermission.with(this)
+                .setPermissionListener(permissionlistener)
+//                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setDeniedMessage(getString(R.string.permission_notice_setting_permission))
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                .check();
+
     }
 
     // 인텐트 받는 부분
@@ -118,9 +162,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     // 그렇기 않은 경우에는 기본 이미지를 보여준다
 
     private void showProfileImage(String accountImage){
-        Log.i(TAG, "showProfileImage: ");
+
         if(!accountImage.equals("soool_default")) {
-            Log.i(TAG, "showProfileImage: 다름");
             String imageUri = Whatisthis.serverIp + accountImage;
             Glide.with(this)
                     .load(imageUri)
@@ -156,6 +199,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     // 1 => 프로필 이미지 수정하기
     // 2 => 프로필 이미지 삭제하기
     // 3 => 프로필 정보 수정하기
+    // 4 => 회원 탈퇴
+
     @Override
     public void getDataFail(int dataKind) {
         // TODO: 서버로 부터 Response 받는 것에 실패 했을 때 어떻게 처리할지
@@ -189,6 +234,22 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         profileInfo.setAccountImage("soool_default");
         showProfileImage("soool_default");
     }
+
+    // 회원 탈퇴 성공
+    // 회원 탈퇴 성공 시 탈퇴가 성공했다는 Toast 메시지를 보여주고
+    // Starting 페이지로 이동하면서 스택 초기화
+
+    @Override
+    public void deleteAccountSuccess() {
+
+        Toast.makeText(this, "탈퇴 ", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(ProfileActivity.this,StartingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+    }
+
 
     @Override
     public void showLoading() {
@@ -305,18 +366,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    // 프로필 이미지 변경하는 부분
-    // 이미지나 '프로필 사진 변경하기' 버튼 모두 클릭 했을 때 갤러리로 넘어가게 설정
-    // 이미지는 하나만 선택이 가능하게 설정
+    @OnClick({R.id.profileChangeImage,R.id.profileImage,R.id.deleteAccount})
+    public void OnClick(View view){
 
-    @OnClick({R.id.profileChangeImage,R.id.profileImage})
-    public void ChangeImage(){
-        FishBun.with(ProfileActivity.this)
-                .setImageAdapter(new GlideAdapter())
-                .setMinCount(0)
-                .setMaxCount(1)
-                .setActionBarColor(ContextCompat.getColor(ProfileActivity.this,R.color.greenMain))
-                .startAlbum();
+        // 프로필 이미지 변경하는 부분
+        // 이미지나 '프로필 사진 변경하기' 버튼 모두 클릭 했을 때 갤러리로 넘어가게 설정
+        // 이미지는 하나만 선택이 가능하게 설정
+        if (view.getId() == R.id.profileImage || view.getId() == R.id.profileChangeImage) {
+
+            permissionCheck();
+        }
+        // 회원탈퇴
+        // 성공시 deleteAccountSuccess() 에서 starting 액티비티 페이지로 이동
+        // 이동할 때 스택을 초기화 후 이동
+        else if(view.getId() == R.id.deleteAccount){
+
+            profilePresenter.deleteAccount(accountNo);
+        }
     }
 
     // 프로필 이미지 삭제부분
@@ -331,6 +397,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
         return true;
     }
+
 
     private View.OnClickListener positiveListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -369,7 +436,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     // 이메일 , 닉네임 , 비밀번호를 수정한 값이 기존에 저장한 값과 일치할 경우에는
     // '저장하기' 버튼 비활성화
-    // 일치하지 않을 경우네는
+    // 일치하지 않을 경우에는
     // '저장하기' 버튼 활성화
     @OnTextChanged(R.id.profileAccountEmail)
     void onEditEmail(CharSequence text){

@@ -41,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MypageFragment extends BaseFragment implements MypageFmPresenter.View{ //}, MyBoardFragment.MyPageView  {
+public class MypageFragment extends BaseFragment implements MypageFmPresenter.View{
 
     @BindView(R.id.tabMyBoard)
     TextView tabMyBoard;
@@ -89,8 +89,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     private Boolean isProfileRes = false;  // 프로필 정보를 서버로 응답을 받았는지 (성공,실패 포함)
     private Boolean isFragmentRes = false; // 부착한 프래그먼트에서 서버로부터 응답을 받았는지 ( 성공.실패 포함 )
 
-    private getUserProfileListener getUserProfileListener; //
-
 
     public MypageFragment() {
 
@@ -107,14 +105,12 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
     }
 
-
     // 유저의 프로필 정보를 가져오기 위해서 쉐어드에 저장된 accountNo를 가져온다
     // accountNo를 가져온 후 서버를 통해 프로필 정보를 가져온 후 뷰로 보여준다
 
     // 프래그먼트 부분
     // 우선 첫 페이지는 내 게시물 프래그먼트 탭을 부착한다.
     // 값으로 0으로 생성한 fragmentNo 를 callFragment 에 전달해 프래그먼트를 부착한다
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,7 +137,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         }
         else showProfileInfo();
 
-        callFragment(currentTab);
+        callFragment();
 
         return view;
 
@@ -151,7 +147,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     // 현재 탭의 탭바를 보여주고 , 이전 탭의 탭바를 숨겨준다
     // 그리고 현재 탭 타이틀의 글자색을 green_dark 색상으로 변경해주고, 이전 탭의 색상은 gray_mid 색상으로 변경
     private void tabSetting(){
-
+        Log.i(TAG, "tabSetting: 이전탭 : "+ previousTab +"현재탭 " +currentTab);
         switch (previousTab){
             case 0:
                 tabMyBoardBar.setVisibility(View.INVISIBLE);
@@ -206,7 +202,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
         // TODO : 바뀐 프로필 정보 보여주기
 
-
     }
 
     // 회원정보 페이지(ProfileAct) 에서 회원정보를 수정했을 때
@@ -242,24 +237,29 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
     @OnClick({R.id.tabMyBoard,R.id.tabBookmark,R.id.tabCalendar})
     void OnClickButton(View view){
+        previousTab = currentTab;
+
         switch (view.getId()) {
             case R.id.tabMyBoard:
-                callFragment(MYBOARD_INT);
+                currentTab = MYBOARD_INT;
+                callFragment();
                 break;
             case R.id.tabBookmark:
+                currentTab = BOOKMARK_INT;
                 // '버튼2' 클릭 시 '프래그먼트2' 호출
                 if(bookmarkFragment ==null){
                     // TODO: 나중에 지워줘야 하는 부분
-                    callFragment(BOOKMARK_INT);
+                    callFragment();
 
                 }
                 else {
-                    callFragment(BOOKMARK_INT);
+                    callFragment();
                 }
                 break;
 
             case R.id.tabCalendar:
-                callFragment(CALENDAR_INT);
+                currentTab = CALENDAR_INT;
+                callFragment();
                 break;
 
         }
@@ -271,22 +271,15 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     // 서버에 데이터 요청을 받아온 페이지에 대해서는 다시 요청을 보내지 않기 위해서
     // 프래그먼트가 null 값이 아니라면 프래그먼트를 새로 생성하지 않고 이전에 생성했던 프래그먼트를 재사용하도록 한다
     // 하지만 이렇게 했을 때 생성을 했지만 서버 요청을 받는데 실패 했을 경우에 대처를 못하기 때문에
+    // 서버로부터 요청이 실패를 받는 방법은 마이프래그먼트에 부착한 프래그먼트에서 요청을 받아왔을 경우
+    // Home 액티비티에서 Response 값을 전달 받는다. 그 다음 Home 액티비티에서 전달받은 Response 값을
+    // MyPage 프래그먼트로 전달하는 방식이다. 그리고 받은 Response 값이 false 일 경우 Response 를 전달한 프래그먼트는
+    // null 값으로 변경하여 프래그먼트를 부착할 때 다시 생성해서 서버에 다시 요청을 받아오도록 한다
 
-    // TODO: 요청을 마이페이지 프래그먼트에 부착한 프래그먼트에서 요청을 받는데 실패가 있었을 때 마이페이지에 알려주는 것이 필요
-    // 위 문제에 대한 생각한 방법
-    // 마이페이지 부착한 프래그먼트가 탈착할 때 isResponse 값이 false 일 경우 마이페이지에 알려주는 방법
+    private void callFragment(){
 
-    private void callFragment(int fragment_no){
-
-        fragmentNo = fragment_no;
-        //
-        previousTab = currentTab;
-        currentTab = fragment_no;
-
-        Log.i(TAG, "callFragment: " + fragment_no);
 
         // FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-
 
         // 프래그먼트 안의 프래그먼트를 관리할 때는 getChildFragmentManager 를 통해 관리한다
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -330,20 +323,11 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         transaction.commit();
     }
 
-    // 프래그먼트를 액티비티에 부착할 때 액티비티와 프래그먼트 사이의 인터페이스가 될줄 getUserProfileListener 를 생성하고
-    // detach() 일때 getUserProfileListener = null 값을 넣어준다
-    // 홈 액티비티와의 인터페이스
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.i(TAG, "onAttach: ");
-        if (context instanceof getUserProfileListener) {
-            getUserProfileListener = (getUserProfileListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
 
     }
 
@@ -351,8 +335,9 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     public void onDetach() {
         super.onDetach();
         Log.i(TAG, "onDetach: ");
-        getUserProfileListener = null;
-        myBoardFragment.onDetach();
+        if (myBoardFragment != null) {
+            myBoardFragment.onDetach();
+        }
     }
 
     @Override
@@ -378,11 +363,15 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
             hideLoading();
         }
 
-        // Home 액티비티의 Drawer 레이아웃에서 회원정보 중에 닉네임과 이메일주소로 필요로 한다
-        // 그래서 서버로 부터 회원정보를 받아온 후에 프래그먼트에서 액티비티로 데이터를 전달해줘야 하기 때문에
-        // getUserProfileListener 를 인터페이스로 둬서 이를 통해 전달한다
+        // 프로필 액티비티에서 회원 정보를 수정했을 경우 수정된 내용을 Drawer Layout 에서도 갱신해줘야 한다.
+        // 하지만 DrawerLayout 은 홈액티비티에 상속되어 있는 뷰이기 때문에 마이페이지 프래그먼트에서 홈액티비티의 뷰에
+        // 접근하기 위해서 getActivity() 를 통해 홈액티비티를 가져와 접근하면 된다
 
-        getUserProfileListener.getUserProfile(userProfile.getAccountNick(),userProfile.getAccountEmail());
+        TextView myPageDrawerEmail = getActivity().findViewById(R.id.myPageDrawerEmail);
+        TextView myPageDrawerNickname = getActivity().findViewById(R.id.myPageDrawerNickname);
+
+        myPageDrawerEmail.setText(userProfile.getAccountEmail());
+        myPageDrawerNickname.setText(userProfile.getAccountNick());
     }
 
 
@@ -391,11 +380,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         mypageProfileMyQnaCount.setText(String.valueOf(userProfile.getAccountBc()));
         mypageProfileMyPointCount.setText(String.valueOf(userProfile.getAccountPoint()));
         showProfileImgNick(userProfile.getAccountImage(),userProfile.getAccountNick());
-    }
-
-
-    public interface getUserProfileListener{
-        void getUserProfile(String accountNick,String accountEmail);
     }
 
     // 로딩 화면
@@ -426,6 +410,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
             }
         }
     }
+
 
     private void showLoading(){
         mypageProgress.setVisibility(View.VISIBLE);

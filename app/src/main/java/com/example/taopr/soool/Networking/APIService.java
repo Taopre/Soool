@@ -1,7 +1,7 @@
 package com.example.taopr.soool.Networking;
 
-import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.CommentListObject;
+import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.QnaItem;
@@ -68,8 +68,10 @@ public interface APIService {
                                         @Field("qnaCate") String qnaCate);
 
     // QnaRecyclerview 리스트 아이템 받아오기
+    @FormUrlEncoded
     @POST("/qnapost/QnaList.php")
-    Observable<QnaBoardList> getQnaItem();
+    Observable<QnaBoardList> getQnaItem(@Field("accountNo") int accountNo,
+                                        @Field("lastPostNo") int lastPostNo);
 
     // MypageList 객체로 받는 형식
     // 수정해야함 php 경로
@@ -137,7 +139,8 @@ public interface APIService {
     // 마이페이지 내 게시물
     @FormUrlEncoded
     @POST("/accountManage/mypost.php")
-    Observable<QnaBoardList> getMypageBoardItem(@Field("accountNo") int accountNo);
+    Observable<QnaBoardList> getMypageBoardItem(@Field("accountNo") int accountNo,
+                                                @Field("lastPostNo") int lastPostNo);
 
     // 마이페이지 유저 프로필
     @FormUrlEncoded
@@ -251,4 +254,8 @@ public interface APIService {
 
 
 
+
+    @FormUrlEncoded
+    @POST("/accountManage/myinfoUpdate.php")  // TODO: 회원탈퇴 php 주소로 수정 필요
+    Observable<SooolResponseBody> deleteAccount(@Field("accountNo") int accountNo);
 }

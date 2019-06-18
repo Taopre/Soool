@@ -46,7 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MypageFragment.getUserProfileListener, MyBoardFragment.MyPageView{
+public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MyBoardFragment.MyPageView{
 
     @BindView(R.id.tabMain)
     ViewGroup btn_tabMain;
@@ -278,14 +278,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
             }
         }
     }
-
-    // 마이페이지 프래그먼트에서 프로필 정보를 가져오는데 성공했을 때
-    @Override
-    public void getUserProfile(String accountNick, String accountEmail) {
-        myPageDrawerEmail.setText(accountEmail);
-        myPageDrawerNickname.setText(accountNick);
-    }
-
 
     // 같은 페이지 이동 막기 위해서 버튼 비활성화
     // 추가로 나중에 같은 페이지로 이동하는 버튼의 아이콘 변경

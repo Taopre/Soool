@@ -13,7 +13,6 @@ public interface MypageFmInter {
     void loadMypageData(int accountNo);
 
     public interface View{
-
         void getDataFail(boolean response, int i);
         void getUserProfileSuccess(UserProfile userProfile);
     }

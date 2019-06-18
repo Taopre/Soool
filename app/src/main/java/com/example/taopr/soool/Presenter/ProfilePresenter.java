@@ -31,6 +31,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
         this.context = context;
     }
 
+
     // 프로필 정보 가져오기
     @Override
     public void getProfileInfo(int accountNo) {
@@ -140,6 +141,35 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
                     public void onFailure(String msg) {
                         Log.i(TAG, "onFailure: msg");
                         view.getDataFail(2);
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        view.hideLoading();
+                    }
+                });
+    }
+
+    // 회원 탈퇴
+    // 회원 번호를 받아와 서버에 전달
+    // 회원 탈퇴에 대한 result 값으로 true / false 를 받아와 처리
+
+    @Override
+    public void deleteAccount(int accountNo) {
+        view.showLoading();
+        addSubscription(
+                apiService.deleteAccount(accountNo),
+                new APICallback<SooolResponseBody>() {
+                    @Override
+                    public void onSuccess(SooolResponseBody sooolResponseBody) {
+                        Log.i(TAG, "onSuccess: " + sooolResponseBody.getResult());
+                        view.deleteAccountSuccess();
+                    }
+
+                    @Override
+                    public void onFailure(String msg) {
+                        view.getDataFail(4);
 
                     }
 
