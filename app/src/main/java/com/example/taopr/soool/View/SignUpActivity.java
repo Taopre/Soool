@@ -326,6 +326,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     // 닉네임 중복 확인
     // 닉네임 중복 확인 버튼을 클릭 시 닉네임값을 입력했는지 확인 후
     // 1.입력하지 않았을 경우 값을 입력해달라는 메시지를 유저에게 표시
+    // 2.입력한 닉네임이 6자를 넘어갈 경우 6자 이내로 작성해달라는 메세지 표시
     // 2.입력했을 경우 닉네임값과 보내는 값이 닉네임인지 이메일인지를 구별 해주는 구분자 값을 서버에 전달
     // 디비에서 입력한 닉네임의 중복여부를 파악
     // 중복하는 경우 닉네임을 사용할 수 없다는 메세지를 유저에게 표시
@@ -334,25 +335,20 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     @OnClick(R.id.accountNickDup)
     void nickDupClick(){
 
-        Log.i(TAG, "nickDupClick: , 텍스트 길이 : " + accountNick.getText().length());
 
         // 이메일 값을 아무것도 입력하지 않은 경우
         if(accountNick.getText().length()==0){
-            Log.i(TAG, "emailDupClick: nick 값 입력해주세요");
             Toast.makeText(this, "닉네임을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
 
+        else if(accountNick.getText().length()>6){
+            Toast.makeText(this, "닉네임은 6자 이내로 작성해주세요", Toast.LENGTH_SHORT).show();
+        }
         else {
 
             // 보내는 값일 이메일인 경우 separator=0, 닉네임인 경우 separator=1
-//            Boolean b = signUpPresenter.clickDuplicity(1,accountNick.getText().toString());
             signUpPresenter.clickDuplicity(1,accountNick.getText().toString());
-//            Log.i(TAG, "nickDupClick: nick = " + accountNick.getText().toString() + ", 중복 여부 : " + b);
-//
-//            // 중복 false, 중복x true
-//
-//            nickEnable = b;
-//            clickNickDupBool = true;
+
         }
     }
 

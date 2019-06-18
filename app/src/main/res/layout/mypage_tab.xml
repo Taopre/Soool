@@ -17,6 +17,7 @@
                     android:layout_gravity="center"
                     android:padding="10dp"
                     android:textSize="@dimen/text_size_15dp"
+                    android:textColor="@color/grayMid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_tab_label_my_qna_board"/>
@@ -24,6 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:id="@+id/tabMyBoardBar"
+                    android:visibility="invisible"
                     android:background="@color/greenMain"
                         />
         </LinearLayout>
@@ -39,6 +41,7 @@
                     android:layout_gravity="center"
                     android:textSize="@dimen/text_size_15dp"
                     android:padding="10dp"
+                    android:textColor="@color/grayMid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_tab_label_bookmark"/>
@@ -62,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textSize="@dimen/text_size_15dp"
+                    android:textColor="@color/grayMid"
                     android:padding="10dp"
                     android:gravity="center"
                     android:id="@+id/tabCalendar"

@@ -112,6 +112,12 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
         }
     }
 
+    public void addItemList(ArrayList<QnaBoardItem> addQnaBoardItems){
+        this.qnaBoardItems = addQnaBoardItems;
+        notifyDataSetChanged();
+
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -126,9 +132,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         QnaBoardItem qnaBoardItem = qnaBoardItems.get(position);
 
-
         tagArray = new ArrayList<String>();
-
 
         // 투표 태그 추가 부분
         // qnaCate 값이 0이 투표가 있는 경우이기 때문에
@@ -176,14 +180,17 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         //timeCalculator.getDate(qnaBoardItem.getDate());
 
+        Log.i(TAG, "onBindViewHolder: " + position + qnaBoardItem.getTitle() + qnaBoardItem.getImage());
         if(qnaBoardItem.getImage() != null){
             //holder.qnaBoardImage
             String qnaImageURI= Whatisthis.serverIp + qnaBoardItem.getImage();
 
+            Log.i(TAG, "onBindViewHolder: image not null");
             Glide.with(context)
                     .load(qnaImageURI)
                     .centerCrop()
                     .into(holder.qnaBoardImage);
+            holder.qnaBoardImage.setVisibility(View.VISIBLE);
         }
         else{
             holder.qnaBoardImage.setVisibility(View.INVISIBLE);

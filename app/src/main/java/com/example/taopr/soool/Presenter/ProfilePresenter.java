@@ -150,6 +150,35 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
                 });
     }
 
+    // 회원 탈퇴
+    // 회원 번호를 받아와 서버에 전달
+    // 회원 탈퇴에 대한 result 값으로 true / false 를 받아와 처리
+
+    @Override
+    public void deleteAccount(int accountNo) {
+        view.showLoading();
+        addSubscription(
+                apiService.deleteAccount(accountNo),
+                new APICallback<SooolResponseBody>() {
+                    @Override
+                    public void onSuccess(SooolResponseBody sooolResponseBody) {
+                        Log.i(TAG, "onSuccess: " + sooolResponseBody.getResult());
+                        view.deleteAccountSuccess();
+                    }
+
+                    @Override
+                    public void onFailure(String msg) {
+                        view.getDataFail(4);
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        view.hideLoading();
+                    }
+                });
+    }
+
 
     // 이미지 uri 를 file path 로 변경
     private String getPathFromUri(Uri uri) {
