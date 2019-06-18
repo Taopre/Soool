@@ -218,6 +218,43 @@ public interface APIService {
                                          @Field("btnOnOff") int btnOnOff);
 
     @FormUrlEncoded
+    @POST("/comment/commentinsert.php")
+    Call<ResponseBody> commentRequest(@Field("postNo") int postNo,
+                                      @Field("accountNo") int accountNo,
+                                      @Field("commentContent") String commentContent);
+
+
+    @FormUrlEncoded
+    @POST("/comment/commentinsert.php")
+    Call<ResponseBody> recommentRequest(@Field("postNo") int postNo,
+                                        @Field("commentNo") int commentNo,
+                                        @Field("accountNo") int accountNo,
+                                        @Field("commentContent") String commentContent);
+
+    @FormUrlEncoded
+    @POST("/comment/commentLike.php")
+    Call<ResponseBody> commentLikeRequest(@Field("postNo") int postNo,
+                                          @Field("commentNo") int commentNo,
+                                          @Field("accountNo") int accountNo,
+                                          @Field("like_check") int like_check,
+                                          @Field("commentORrecomment") int commentORrecomment,
+                                          @Field("recommentNo") int recommentNo
+    );
+
+    @FormUrlEncoded
+    @POST("/comment/commentDelete.php")
+    Call<ResponseBody> commentDeleteRequest(@Field("postNo") int postNo,
+                                            @Field("commentNo") int commentNo
+                                            );
+
+    @FormUrlEncoded
+    @POST("/comment/commentList.php")//게시물 번호 쏴줘야됨
+    Observable<CommentListObject> getCommentItem(@Field("postNo") int postNo);
+
+
+
+
+    @FormUrlEncoded
     @POST("/accountManage/myinfoUpdate.php")  // TODO: 회원탈퇴 php 주소로 수정 필요
     Observable<SooolResponseBody> deleteAccount(@Field("accountNo") int accountNo);
 }
