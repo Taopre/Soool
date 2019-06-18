@@ -14,6 +14,7 @@ public interface ProfileInter {
     void deleteProfileImg();
     void deleteAccount(int accountNo); // 회원탈퇴
 
+
     public interface View{
         void getProfileInfoSuccess(ProfileInfo profileInfo);
         void getDataFail(int dataKind);

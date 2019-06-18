@@ -14,6 +14,7 @@ public interface MyBoardInter {
     void getItem(QnaBoardItem qnaBoardItem, Activity activity, int qnaListPosition);
     void loadData(int accountNo,int loadingKind,int lastPostNo);
 
+
     public interface View{
         void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind);
         void getDataFail(String message);

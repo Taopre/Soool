@@ -43,6 +43,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     private QnaFmPresenter qnaFmPresenter;
     private final int QNA_MOVE_TO_WRITE = 3200;
     private final int QNA_MOVE_TO_DETAIL = 3100;
+
     private SwipeRefreshLayout qnaSwipeRefreshLayout;
     private ProgressBar qnaProgress;
     private int accountNo;

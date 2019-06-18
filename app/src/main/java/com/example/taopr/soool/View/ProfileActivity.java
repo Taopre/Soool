@@ -74,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @BindView(R.id.profileProgress)
     ProgressBar profileProgress;
 
+
     private final String TAG = "마이 프로필 액티비티";
 
     private ImageView subActionBarLeftImage ;

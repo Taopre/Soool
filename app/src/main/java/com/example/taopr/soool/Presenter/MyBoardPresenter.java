@@ -49,6 +49,7 @@ public class MyBoardPresenter extends BasePresenter implements MyBoardInter {
         view.moveToPage(intent,MY_BOARD_MOVE_TO_DETAIL);
     }
 
+
     // loadingKind 가 1일 경우에는 새로고침이므로 새로고침 아이콘을 통해 로딩중을 표시하기 때문에
     // 프로그래스바는 실행하지 않도록 한다
 

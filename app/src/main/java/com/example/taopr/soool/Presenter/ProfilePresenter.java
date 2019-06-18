@@ -31,6 +31,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
         this.context = context;
     }
 
+
     // 프로필 정보 가져오기
     @Override
     public void getProfileInfo(int accountNo) {

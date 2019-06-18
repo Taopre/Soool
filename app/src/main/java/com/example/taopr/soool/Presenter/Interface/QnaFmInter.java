@@ -13,7 +13,6 @@ public interface QnaFmInter {
     void setView(QnaFmPresenter.View view);
     void getItem(QnaBoardItem qnaBoardItem, Activity activity, int qnaListPosition);
 
-
     public interface View{
         void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind);
         void getDataFail(String message);

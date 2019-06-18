@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_white"
     android:orientation="vertical"
-
     >
     <LinearLayout
         android:paddingLeft="@dimen/all_space_between_18dp"

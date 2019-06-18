@@ -58,6 +58,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     private Context context;
     private MyBoardPresenter myBoardPresenter;
     private SwipeRefreshLayout myBoardSwipeRefreshLayout;
+    private ProgressBar myBoardProgress;
 
 
     private MyPageView myPageView;
@@ -96,6 +97,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
         // 리사이클러뷰 기본 설정
         myBoardRecycler = view.findViewById(R.id.myBoardRecycler);
+        myBoardProgress = view.findViewById(R.id.myBoardProgress);
 
         myBoardRecycler.addItemDecoration(              // divider 구분선
                 new DividerItemDecoration(view.getContext(),linearLayoutManager.getOrientation()));
@@ -260,7 +262,8 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
             if (qnaAdapter == null) {
                 qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
                 myBoardRecycler.setAdapter(qnaAdapter);
-            } else {
+            }
+            else {
                 qnaAdapter.addItemList(this.qnaBoardItems);
             }
 
@@ -269,8 +272,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
         onPaging = false;
         isResponse = true;
-
-
 
         myBoardSwipeRefreshLayout.setRefreshing(false);
         myPageView.getMyBoardRes(true);
@@ -298,13 +299,14 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
     @Override
     public void showLoading() {
-
+        myBoardProgress.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        myBoardProgress.setVisibility(View.GONE);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -29,6 +29,7 @@ public class LoginSharedPreferences {
         editor.remove(key);
         editor.commit();
     }
+
     public static int getAccountNo(Context context,String key){
         int accountNo;
         String data = LoginSharedPreferences.LoginUserLoad(context,key);

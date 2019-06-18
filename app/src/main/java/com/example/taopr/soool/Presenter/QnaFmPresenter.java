@@ -53,7 +53,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
                             ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
                             view.getDataSuccess(qnaBoardItems,loadingKind);
 
-                            //  view.getDataSuccess(qnaBoardList.getQnaBoardItems());
                         }
                         else{
                             Log.i(TAG, "onSuccess: list = null");

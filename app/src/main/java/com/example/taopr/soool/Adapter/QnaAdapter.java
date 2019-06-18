@@ -190,6 +190,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
                     .load(qnaImageURI)
                     .centerCrop()
                     .into(holder.qnaBoardImage);
+
             holder.qnaBoardImage.setVisibility(View.VISIBLE);
         }
         else{

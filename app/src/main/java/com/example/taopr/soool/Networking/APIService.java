@@ -1,5 +1,6 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.CommentListObject;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
