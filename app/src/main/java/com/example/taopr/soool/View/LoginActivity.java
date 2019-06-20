@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         } else if (response.equals("nee")) {
             Toast.makeText(this, "존재하지 않는 이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
         }
+
 //        if (response == true) {
 //            Intent intent = new Intent(this, MainActivity.class);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -171,6 +172,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 startActivity(intent);
                 break;
             case R.id.accountSignup :
+                Intent intent = new Intent(this, StartingActivity.class);
                 //회원가입하기 텍뷰 리스터
                 Log.d(TAG, "onClick: 회원가입하기 클릭");
                 Toast.makeText(LoginActivity.this, "회원가입 화면으로 가기.", Toast.LENGTH_SHORT).show();
@@ -178,8 +180,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 startActivity(intent);
                 break;
             case R.id.accountAutoLoginCheck :
-                Log.d(TAG, "onClick: 체크박스 클릭");
-                Toast.makeText(LoginActivity.this, "체크박스 클릭.", Toast.LENGTH_SHORT).show();
+
                 break;
         }
     }

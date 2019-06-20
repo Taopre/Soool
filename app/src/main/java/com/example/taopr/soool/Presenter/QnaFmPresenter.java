@@ -34,15 +34,15 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
 
     }
 
-    // actionKind 가 1일 경우에는 새로고침이므로 새로고침 아이콘을 통해 로딩중을 표시하기 때문에
+    // loadingKind 가 1일 경우에는 새로고침이므로 새로고침 아이콘을 통해 로딩중을 표시하기 때문에
     // 프로그래스바는 실행하지 않도록 한다
-    public void loadData(int actionKind){
-        if (actionKind==0) {
+    public void loadData(int loadingKind,int accountNo,int lastPostNo){
+        if (loadingKind==0) {
             view.showLoading(); //로딩 화면
         }
         //데이터 로딩
         addSubscription(
-                apiService.getQnaItem(),
+                apiService.getQnaItem(accountNo,lastPostNo),
                 new APICallback<QnaBoardList>() {
 
                     @Override
@@ -51,9 +51,8 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
                         if (qnaBoardList != null) {
 
                             ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
-                            view.getDataSuccess(qnaBoardItems);
-                            Log.d(TAG, "onSuccess: "+qnaBoardItems.get(0).getPostNo());
-                            //  view.getDataSuccess(qnaBoardList.getQnaBoardItems());
+                            view.getDataSuccess(qnaBoardItems,loadingKind);
+
                         }
                         else{
                             Log.i(TAG, "onSuccess: list = null");

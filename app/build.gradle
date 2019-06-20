@@ -58,5 +58,6 @@ dependencies {
     // http 통신하는 과정을 로그를 찍어보기 위한 라이브러리
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     implementation 'com.github.prolificinteractive:material-calendarview:1.6.0'
+    implementation 'gun0912.ted:tedpermission:2.2.2'
 
 }

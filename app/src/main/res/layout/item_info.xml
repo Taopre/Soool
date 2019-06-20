@@ -99,6 +99,7 @@
         android:layout_alignRight="@id/itemInfoImage"
         android:layout_below="@id/itemInfoWriter"
         android:layout_marginTop="@dimen/all_space_between_10dp"
+        android:scrollbars="none"
         >
 
         <android.support.v7.widget.RecyclerView

@@ -12,6 +12,8 @@ public interface ProfileInter {
     void changeProfileImage(Uri uri);
     void changeProfileInfo(ProfileInfo profileInfo);
     void deleteProfileImg();
+    void deleteAccount(int accountNo); // 회원탈퇴
+
 
     public interface View{
         void getProfileInfoSuccess(ProfileInfo profileInfo);
@@ -19,6 +21,7 @@ public interface ProfileInter {
         void changeProfileImgSuccess(String accountImage);
         void changeProfileInfoSuccess(ProfileInfo profileInfo);
         void deleteProfileImgSuccess();
+        void deleteAccountSuccess();
         void showLoading();
         void hideLoading();
     }

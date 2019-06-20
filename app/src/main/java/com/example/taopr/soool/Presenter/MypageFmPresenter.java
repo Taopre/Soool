@@ -37,7 +37,6 @@ public class MypageFmPresenter extends BasePresenter implements MypageFmInter {
         this.view = view;
     }
 
-
     // 유저 프로필 정보 가져오는 부분
 
     @Override

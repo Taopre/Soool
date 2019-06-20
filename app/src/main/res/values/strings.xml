@@ -84,6 +84,8 @@
     <string name="calendar_sch_content">내용</string>
 
 
+    <!-- 권한 -->
+    <string name="permission_notice_setting_permission">[설정] > [권한]에서 권한을 허용할 수 있습니다.</string>
     <!-- all  -->
     <string name="all_button_add">추가하기</string>
     <string name="all_button_modify">수정하기</string>
@@ -96,6 +98,8 @@
     <string name="all_button_complete">완료</string>
     <string name="all_button_yes">예</string>
     <string name="all_button_no">아니요</string>
+    <string name="all_notice_no_exist_post">더 이상 게시글이 존재하지 않습니다</string>
+
 
     <!-- 다이얼로그 -->
     <string name="notice_dialog_hint_never_show">다시 보지 않기</string>

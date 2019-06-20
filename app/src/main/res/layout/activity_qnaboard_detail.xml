@@ -312,7 +312,6 @@
             android:layout_weight="1"
             android:textSize="@dimen/text_size_14dp"
             android:layout_marginStart="@dimen/all_space_between_18dp"
-            android:textSize="14dp"
             android:hint="@string/qna_detail_hint_write_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
