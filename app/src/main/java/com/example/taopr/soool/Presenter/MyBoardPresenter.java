@@ -49,15 +49,12 @@ public class MyBoardPresenter extends BasePresenter implements MyBoardInter {
         view.moveToPage(intent,MY_BOARD_MOVE_TO_DETAIL);
     }
 
-
-    // loadingKind 가 1일 경우에는 새로고침이므로 새로고침 아이콘을 통해 로딩중을 표시하기 때문에
-    // 프로그래스바는 실행하지 않도록 한다
+    // loadingKind 가 1 일때는 새로고침
+    // 새로고침을 구별한 이유는 새로고침을 경우 게시글 리스트를 포맷한 후에 새로 받아야하기 때문에
 
     @Override
     public void loadData(int accountNo, int loadingKind,int lastPostNo) {
-        if (loadingKind==0) {
-            view.showLoading(); //로딩 화면
-        }
+
         //데이터 로딩
         addSubscription(
                 apiService.getMypageBoardItem(accountNo,lastPostNo),
@@ -80,7 +77,7 @@ public class MyBoardPresenter extends BasePresenter implements MyBoardInter {
                     @Override
                     public void onFinish() {
                         Log.i(TAG, "onFinish: qna");
-                        view.hideLoading();
+                       // view.hideLoading();
                     }
                 });
     }

@@ -58,8 +58,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     private Context context;
     private MyBoardPresenter myBoardPresenter;
     private SwipeRefreshLayout myBoardSwipeRefreshLayout;
-    private ProgressBar myBoardProgress;
-
 
     private MyPageView myPageView;
 
@@ -70,8 +68,15 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     public MyBoardFragment() {
     }
 
+
+    // 서버에 요청을 보내고 응답을 받았다는 것을 마이페이지에 전달.
+    // 그 이유는 마이페이지에 부착한 프래그먼트의 로딩화면들을 마이페이지에서 통괄적으로 보여주고 있기 때문
+    // 그리고 response 를 받았을 때 마이페이지 response 결과를 보내 마이페이지에서 response 결과가 false 일 경우
+    // 서버에서 MyBoard 프래그먼트를 부착할 경우 서버에 요청을 보내고, true 일 경우에는 응답을 통해 받아왔던 게시글을 보여준다
+
     public interface MyPageView{
-        void getMyBoardRes(Boolean isMyBoardRes);
+        void startMyBoardLoading(); // 마이페이지에서 서버에 요청을 보내고 리스폰스를 기다리고 있다는 걸 마이페이지에 전달
+        void endMyBoardLoading(Boolean isMyBoardRes); // 마이페이지에서 서버로부터 응답을 받았다는 것을 상위 마이페이지에 전달
     }
 
     @Override
@@ -86,7 +91,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: ");
+
         View view = inflater.inflate(R.layout.fragment_my_board, container, false);
 
         this.context = view.getContext();
@@ -97,7 +102,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
         // 리사이클러뷰 기본 설정
         myBoardRecycler = view.findViewById(R.id.myBoardRecycler);
-        myBoardProgress = view.findViewById(R.id.myBoardProgress);
 
         myBoardRecycler.addItemDecoration(              // divider 구분선
                 new DividerItemDecoration(view.getContext(),linearLayoutManager.getOrientation()));
@@ -115,6 +119,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         if(isResponse == false) {
             myBoardPresenter = new MyBoardPresenter(context);
             myBoardPresenter.setView(this);
+            myPageView.startMyBoardLoading();
             myBoardPresenter.loadData(accountNo,0,-1);
         }
         else{
@@ -143,6 +148,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         // 서버에 리퀘스트를 보낼 때는 onPaging 값을 true 로 변경 후에 전송한다
         // 그리고 onPaging 은 서버에서 리스폰스를 성공적으로 받고 리스트 갱신 후에
         // onPaging 의 값을 false 로 변경한다
+
         myBoardRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -161,6 +167,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                         //int lastPostNo = qnaBoardItems.get(visibleItemPosition).getPostNo();
                         int lastPostNo = qnaBoardItems.get(listSize).getPostNo();
 
+                        myPageView.startMyBoardLoading();
                         myBoardPresenter.loadData(accountNo,0,lastPostNo);
                     }
                 }
@@ -274,7 +281,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         isResponse = true;
 
         myBoardSwipeRefreshLayout.setRefreshing(false);
-        myPageView.getMyBoardRes(true);
+        myPageView.endMyBoardLoading(true);
     }
 
     // response 를 전달받는데 실패 했을 경우 '페이지에 오류가 있다'라는 메세지를 유저에게 보여주고
@@ -284,9 +291,8 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
         Log.d(TAG, "getDataFail: "+message);
         Toast.makeText(context, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
-        myPageView.getMyBoardRes(false);
+        myPageView.endMyBoardLoading(false);
         isResponse =false;
-
         myBoardSwipeRefreshLayout.setRefreshing(false);
 
     }
@@ -297,15 +303,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         startActivityForResult(intent,requestCode);
     }
 
-    @Override
-    public void showLoading() {
-        myBoardProgress.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoading() {
-        myBoardProgress.setVisibility(View.GONE);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -349,7 +346,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
             }
             setMyBoardPage();
         }
-
     }
 
     // 새로고침
@@ -357,6 +353,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     // loadingKind 이 0일 때는 로딩중 이모티콘을 보여줌
     @Override
     public void onRefresh() {
+        myPageView.startMyBoardLoading();
         myBoardPresenter.loadData(accountNo,1,-1);
     }
 
@@ -375,12 +372,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                 myBoardPresenter.getItem(qnaBoardItems.get(position), getActivity(),position);
             }
         });
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "onActivityCreated: ");
     }
 
 }

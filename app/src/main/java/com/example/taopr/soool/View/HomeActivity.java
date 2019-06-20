@@ -339,8 +339,16 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         this.accountNo = accountNo;
     }
 
+    // 마이페이지의 자식 프래그먼트로 서버에 요청을 보내고, 응답을 받았다는 내용을 마이페이지에 전달한다
     @Override
-    public void getMyBoardRes(Boolean isMyBoardRes) {
-        mypageFragment.getFragmentRes(0,isMyBoardRes);
+    public void startMyBoardLoading() {
+        // 내 게시물에서 서버에 요청을 보냄
+        mypageFragment.waitChildFragmentRes();
+    }
+
+    @Override
+    public void endMyBoardLoading(Boolean isMyBoardRes) {
+        // 내 게시물에서 서버로부터 응답을 받음
+        mypageFragment.getChildFragmentRes(0,isMyBoardRes);
     }
 }

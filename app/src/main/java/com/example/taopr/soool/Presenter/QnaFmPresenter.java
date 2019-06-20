@@ -47,16 +47,8 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
 
                     @Override
                     public void onSuccess(QnaBoardList qnaBoardList) {
-
-                        if (qnaBoardList != null) {
-
-                            ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
-                            view.getDataSuccess(qnaBoardItems,loadingKind);
-
-                        }
-                        else{
-                            Log.i(TAG, "onSuccess: list = null");
-                        }
+                        ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
+                        view.getDataSuccess(qnaBoardItems,loadingKind);
                     }
 
                     @Override
@@ -69,7 +61,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
                     public void onFinish() {
                         Log.i(TAG, "onFinish: qna");
                         view.hideLoading();
-                        //dismissProgressDialog();
                     }
                 });
 
@@ -84,16 +75,12 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
     public void getItem(QnaBoardItem qnaBoardItem, Activity activity,int qnaListPosition) {
         this.activity = activity;
         Toast.makeText(activity, qnaBoardItem.getTitle(), Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
         intent.putExtra("qnaBoardItem",qnaBoardItem);
         intent.putExtra("fromActivity", 0);
         intent.putExtra("actionKind", 1);
         intent.putExtra("qnaListPosition",qnaListPosition);
-
-        //activity.startActivityForResult(intent, QNA_MOVE_TO_DETAIL);
         view.moveToPage(intent,QNA_MOVE_TO_DETAIL);
-
     }
 
     @Override
