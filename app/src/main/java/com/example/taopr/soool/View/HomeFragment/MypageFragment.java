@@ -73,9 +73,8 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     private final int BOOKMARK_INT = 1;
     private final int CALENDAR_INT = 2;
     private final String ACCOUNT_NO_EXTRA = "accountNo";
-    private int fragmentNo=0;  // 마이 페이지 첫 화면은 myBoard 프래그먼트 화면이기 때문
 
-    private int currentTab=0,previousTab=1;
+    private int currentTab=0,previousTab=1; // 현재탭, 이전탭 -> myBoard=0, bookmark=2, calendar=3
 
     private MyBoardFragment myBoardFragment = null;
     private CalendarFragment calendarFragment = null;
@@ -119,7 +118,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         View view = inflater.inflate(R.layout.fragment_home_mypage, container, false);
 
         unbinder = ButterKnife.bind(this,view);
-
         context = view.getContext();
         mypagePresenter = new MypageFmPresenter(context);
         mypagePresenter.setView(this);
@@ -146,7 +144,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     // 현재 탭의 탭바를 보여주고 , 이전 탭의 탭바를 숨겨준다
     // 그리고 현재 탭 타이틀의 글자색을 green_dark 색상으로 변경해주고, 이전 탭의 색상은 gray_mid 색상으로 변경
     private void tabSetting(){
-        Log.i(TAG, "tabSetting: 이전탭 : "+ previousTab +"현재탭 " +currentTab);
         switch (previousTab){
             case 0:
                 tabMyBoardBar.setVisibility(View.INVISIBLE);
@@ -186,34 +183,33 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
     void getUserProfile() {
 
-        String data = LoginSharedPreferences.LoginUserLoad(context, "LoginAccount");
-        Gson gson = new GsonBuilder().create();
-        // JSON 으로 변환
-        LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
-
-        accountNo = loginSessionItem.getAccountNo();
+        accountNo = LoginSharedPreferences.getAccountNo(context, "LoginAccount");
 
         showLoading();
         mypagePresenter.loadMypageData(accountNo);
     }
 
-    public void showProfileInfo(String accountImage,String accountNick){
-
-        // TODO : 바뀐 프로필 정보 보여주기
-
+    // 유저의 프로필 정보가 업데이트가 필요한 경우 서버에 request 를 보내 유저의 프로필 정보를 새로 받아와 업데이트 한다
+    public void updateProfile(){
+        Log.i(TAG, "updateProfile: update");
+        mypagePresenter.loadMypageData(accountNo);
     }
 
-    // 회원정보 페이지(ProfileAct) 에서 회원정보를 수정했을 때
-    // 마이페이지에서도 수정한 데이터를 보여줘야 하기 때문에
-    // 메서드로 따로 땜
+
+    // 회원정보 페이지에서 수정했을 때 마이페이지에서 수정한 정보 갱신해줘야 하는 뷰들만
+    // 따로 메서드로 정리함
     public void showProfileImgNick(String accountImage,String accountNick){
 
         mypageProfileNickname.setText(accountNick);
 
         // 유저가 프로필 이미지를 저장한 경우에는 저장한 이미지를
         // 그렇지 않은 경우에는 디폴트 이미지를 보여준다.
+        // 이미지가 시스템 error 로 인해 null 값인 경우에도 앱이 종료 되지 않게 예외처리
 
-        if(!accountImage.equals("soool_default")) {
+        if (accountImage ==null){
+            mypageProfileImage.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.profile_default));
+        }
+        else if(!accountImage.equals("soool_default")) {
 
             String accountImageAddress = Whatisthis.serverIp + accountImage;
 
@@ -305,14 +301,15 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 break;
 
             case 2:
+                // 캘린더 라이브러리 문제로 프래그먼트는 attach 할때마다 새로 하는 방식으로 변경
 
-               if (calendarFragment == null) {
+               //if (calendarFragment == null) {
                    calendarFragment = new CalendarFragment();
                    Bundle bundle = new Bundle();
                    bundle.putString(ACCOUNT_NO_EXTRA
                            ,String.valueOf(accountNo));
                    calendarFragment.setArguments(bundle);
-               }
+              // }
 
                 transaction.replace(R.id.fragment_container, calendarFragment );
 
@@ -431,10 +428,10 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         showLoading();
     }
 
-
     private void showLoading(){
         mypageProgress.setVisibility(View.VISIBLE);
     }
+
     private void hideLoading(){
         mypageProgress.setVisibility(View.GONE);
     }

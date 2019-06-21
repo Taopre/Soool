@@ -253,9 +253,8 @@ public interface APIService {
     Observable<CommentListObject> getCommentItem(@Field("postNo") int postNo);
 
 
-
-
+    // 회원탈퇴
     @FormUrlEncoded
-    @POST("/accountManage/myinfoUpdate.php")  // TODO: 회원탈퇴 php 주소로 수정 필요
+    @POST("/accountManage/accountDelete.php")
     Observable<SooolResponseBody> deleteAccount(@Field("accountNo") int accountNo);
 }

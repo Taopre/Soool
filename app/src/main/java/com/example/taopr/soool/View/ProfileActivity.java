@@ -99,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 
     // 권한
-    // onCreate() 에서는 권한을 묻는 다이얼로그르 띄어준다.
+    // onCreate() 에서는 권한을 묻는 다이얼로그를 띄어준다.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +203,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void getDataFail(int dataKind) {
-        // TODO: 서버로 부터 Response 받는 것에 실패 했을 때 어떻게 처리할지
+        Toast.makeText(this, getString(R.string.toast_notice_page_error), Toast.LENGTH_SHORT).show();
     }
 
     // 프로필 이미지를 서버에 성공적으로 저장했다면

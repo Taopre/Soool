@@ -8,6 +8,7 @@ import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Presenter.SignUpPresenter;
+import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -195,7 +196,7 @@ public class SignUpModel {
                                         Log.i(TAG, "Sign Up onResponse: IOException");
                                     }
                                     catch (JSONException e) {
-                                        Toast.makeText(context, " 페이지에 오류가 있습니다 ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, context.getString(R.string.toast_notice_page_error), Toast.LENGTH_SHORT).show();
                                         Log.i(TAG, "Sign Up onResponse: JSONException");
                                     }
                                 }
@@ -207,6 +208,7 @@ public class SignUpModel {
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                     signUpPresenter.signUpReqResponse(false);
                                     Log.i(TAG, "Sign Up onFailure: ");
+                                    Toast.makeText(context, context.getString(R.string.toast_notice_page_error), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

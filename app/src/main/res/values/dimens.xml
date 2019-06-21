@@ -8,7 +8,7 @@
     <dimen name="calendar_previous_next_day_size">25dp</dimen>
     <dimen name="calendar_selected_day_text_size">25dp</dimen>
     <dimen name="sub_actionbar_title_text_size">17dp</dimen>
-    <dimen name="calendar_tile_height">43dp</dimen>
+    <dimen name="calendar_tile_height">13dp</dimen>
     <dimen name="button_between_margin">5.2dp</dimen>
     
     

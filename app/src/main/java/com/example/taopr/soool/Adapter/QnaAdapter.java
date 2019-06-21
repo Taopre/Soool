@@ -102,14 +102,13 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
         return qnaBoardItems;
     }
 
-    public void addItem(QnaBoardItem qnaBoardItem){
-        qnaBoardItems.add(qnaBoardItem);
+    public ArrayList<QnaBoardItem> addItem(QnaBoardItem qnaBoardItem){
 
+       // qnaBoardItems.add(qnaBoardItem); 에러코드 해당 소스코드로 실행 시 배열의 마지막 위치에 추가가 되면서 아이템 위치들이 꼬임
+        qnaBoardItems.add(0,qnaBoardItem);
         notifyItemInserted(0);
         //notifyItemInserted(0);
-        for(int a=qnaBoardItems.size()-1; a<=0; a--){
-            Log.i(TAG, "addItem: 포지션 : " + a +"  태그값 :" + qnaBoardItems.get(a).getTag());
-        }
+        return qnaBoardItems;
     }
 
     public void addItemList(ArrayList<QnaBoardItem> addQnaBoardItems){
@@ -175,7 +174,6 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
 
         //holder.qnaBoardDate.setText(qnaBoardItem.getDate());
-        // TODO: 게시글 작성시간 데이터 폼을 정한 후에 진행.( 몇시간 전, 몇분 전 )
        holder.qnaBoardDate.setText(timeCalculator.getbeforeTime(qnaBoardItem.date));
 
         //timeCalculator.getDate(qnaBoardItem.getDate());
