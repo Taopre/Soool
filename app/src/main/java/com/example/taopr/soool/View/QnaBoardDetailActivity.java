@@ -81,7 +81,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     String TAG = "QnaBoardDetailActivity", accountNick;
     String[] tagData = new String[0];
-    int whatVoteSelect = 9999, btnOnOff = 9999, flagLike = 0, flagUnLike = 0, vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0, actionKind, qnaListPosition;
+    int whatVoteSelect = 9999, likeBtnOnOff = 9999, unLikeBtnOnOff = 9999, flagLike = 0, flagUnLike = 0, vote, voteStatus = 4, fromActivity, isSelectedPosition = 9999, isSelectedPositionImage = 9999, accountNo, postNo, voteTotalResult = 0, mySelectVoteNum = 0, actionKind, qnaListPosition;
     boolean isMyBoard = false;
 
     TextView tv_drawupReport, tv_drawupModify, tv_qnaboardLikeText, tv_qnaboardUnLikeText, tv_qnaboardTitle, tv_qnaboardWriter, tv_qnaboardContent, tv_qnaboardDate, tv_qnaboardCommentCount, tv_qnaboardViewCount, tv_qnaboardTagOne, tv_voteResultShow, tv_qnaboardLike, tv_qnaboardUnLike;
@@ -125,7 +125,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     private String commentWriter;
     QnaDetailPresenter qnaDetailPresenterComment;
     String setText;
-    private boolean commentBoolean = false;
+    private boolean commentBoolean = false, recommendResponse = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +166,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             }
             postNo = qnaItem.getPostNo();
         } else if (qnaBoardItem != null) {
+            Log.d(TAG, "onCreate: 태그값 처음"+qnaBoardItem.getTag());
             if (qnaBoardItem.getTag().contains("@##@")) {
                 tagData = qnaBoardItem.getTag().split("@##@");
                 for (int i = 0; i < tagData.length; i++) {
@@ -208,6 +209,40 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         }
                     }
 
+                    // isLike / isBad 값은 0 아니면 1.
+                    Log.d(TAG, "isLike , isBad: "+qnaBoardItem.getIsLike()+", "+qnaBoardItem.getIsBad());
+
+                    flagLike = qnaBoardItem.getIsLike();
+                    flagUnLike = qnaBoardItem.getIsBad();
+                    likeBtnOnOff = qnaBoardItem.getIsLike();
+                    unLikeBtnOnOff = qnaBoardItem.getIsBad();
+
+                    // 추천 클릭시 색깔 변함 준 부분
+                    if (flagLike % 2 == 1) {
+                        tv_qnaboardLike.setTextColor(Color.parseColor("#08883e"));
+                        tv_qnaboardLikeText.setTextColor(Color.parseColor("#08883e"));
+                        tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                        tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
+                    } else {
+                        tv_qnaboardLike.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardLikeText.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                        tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
+                    }
+
+                    // 비추천 클릭시 색깔 변함 준 부분
+                    if (flagUnLike % 2 == 1) {
+                        tv_qnaboardUnLike.setTextColor(Color.parseColor("#08883e"));
+                        tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#08883e"));
+                        tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                        tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
+                    } else {
+                        tv_qnaboardUnLike.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                        tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
+                    }
+
                     if (qnaBoardItem.getQnaCate() == 0) {
                         // 투표 O.
                         ll_voteLayout.setVisibility(View.VISIBLE);
@@ -220,9 +255,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             tv_qnaboardTagOne.setVisibility(View.VISIBLE);
                             tv_qnaboardTagOne.setText(qnaBoardItem.getTag());
                         } else if (tagData.length > 0) {
+                            tv_qnaboardTagOne.setVisibility(View.GONE);
+                            tagView.setVisibility(View.VISIBLE);
                             qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                             rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                            rc_qnaboardTagMany.addItemDecoration(new RecyclerDecoration(16));
                         }
 
                         tv_qnaboardTitle.setText(qnaBoardItem.getTitle());
@@ -254,6 +292,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             tv_qnaboardTagOne.setVisibility(View.VISIBLE);
                             tv_qnaboardTagOne.setText(qnaBoardItem.getTag());
                         } else if (tagData.length > 0) {
+                            tv_qnaboardTagOne.setVisibility(View.GONE);
+                            tagView.setVisibility(View.VISIBLE);
                             qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                             rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -282,161 +322,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     }
                 }
                 break;
-
-            case 1:
-//                if (qnaItem != null) {
-//
-//                    if (accountNo == qnaItem.getAccountNo())
-//                        isMyBoard = true;
-//                    else
-//                        isMyBoard = false;
-//
-//                    if (vote == 0) {
-//                        // 투표 O.
-//                        ll_voteLayout.setVisibility(View.VISIBLE);
-//                        tv_voteResultShow.setVisibility(View.VISIBLE);
-//                        if (voteStatus == 0) {
-//                            // 텍스트 투표
-//                            rc_recycler.setVisibility(View.VISIBLE);
-//
-//                            if (tagData.length == 0) {
-//                                tagView.setVisibility(View.GONE);
-//                                tv_qnaboardTagOne.setVisibility(View.VISIBLE);
-//                                tv_qnaboardTagOne.setText(qnaItem.getTag());
-//                            } else if (tagData.length > 0) {
-//                                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
-//                                rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
-//                                rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-//                            }
-//
-//                            tv_qnaboardTitle.setText(qnaItem.getTitle());
-////        tv_qnaboardWriter.setText(qnaBoardItem.getWriter());
-//                            tv_qnaboardWriter.setText(accountNick);
-//                            tv_qnaboardContent.setText(qnaItem.getContent());
-////        tv_qnaboardDate.setText(qnaBoardItem.getDate());
-//                            tv_qnaboardDate.setText(getTime);
-////        tv_qnaboardCommentCount.setText(qnaBoardItem.getComments());
-//                            tv_qnaboardCommentCount.setText("0");
-////        tv_qnaboardViewCount.setText(qnaBoardItem.getViews());
-//                            tv_qnaboardViewCount.setText("0");
-//
-//                            if (qnaItem.getImage() == null) {
-//                                iv_qnaboardImage.setVisibility(View.GONE);
-//                            } else {
-//                                Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaItem.getImage());
-//                                Glide.with(this)
-//                                        .load(Whatisthis.serverIp+qnaItem.getImage())
-//                                        .override(100, 100)
-//                                        .centerCrop()
-//                                        .into(iv_qnaboardImage);
-//                            }
-//
-//                            for (int i = 0; i < qnaItem.getVoteText().size(); i++) {
-//                                Log.d(TAG, "디테일 텍스트 어레이: " + qnaItem.getVoteText().get(i));
-//                            }
-//
-//                            tv_voteResultShow.setText(voteTotalResult+"");
-//
-//                            for (int i = 0; i < qnaItem.getVoteText().size(); i++) {
-//                                QnaBoardVoteItem editModel = new QnaBoardVoteItem();
-//                                editModel.setEditTextValue(qnaItem.getVoteText().get(i));
-//                                editModel.setFlag(false);
-//                                editModelArrayList.add(editModel);
-//                            }
-////
-//                            qnaBoardDetailVoteAdapter = new QnaBoardDetailVoteAdapter(this, editModelArrayList);
-//                            rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
-//                            rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-//
-//                        } else if (voteStatus == 1) {
-//                            // 이미지 투표
-//                            gv_gridview.setVisibility(View.VISIBLE);
-//
-//                            if (tagData.length == 0) {
-//                                tagView.setVisibility(View.GONE);
-//                                tv_qnaboardTagOne.setVisibility(View.VISIBLE);
-//                                tv_qnaboardTagOne.setText(qnaItem.getTag());
-//                            } else if (tagData.length > 0) {
-//                                qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
-//                                rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
-//                                rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-//                            }
-//
-//                            tv_qnaboardTitle.setText(qnaItem.getTitle());
-////        tv_qnaboardWriter.setText(qnaBoardItem.getWriter());
-//                            tv_qnaboardWriter.setText(accountNick);
-//                            tv_qnaboardContent.setText(qnaItem.getContent());
-////        tv_qnaboardDate.setText(qnaBoardItem.getDate());
-//                            tv_qnaboardDate.setText(getTime);
-////        tv_qnaboardCommentCount.setText(qnaBoardItem.getComments());
-//                            tv_qnaboardCommentCount.setText("0");
-////        tv_qnaboardViewCount.setText(qnaBoardItem.getViews());
-//                            tv_qnaboardViewCount.setText("0");
-//
-//                            if (qnaItem.getImage() == null) {
-//                                iv_qnaboardImage.setVisibility(View.GONE);
-//                            } else {
-//                                Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaItem.getImage());
-//                                Glide.with(this)
-//                                        .load(Whatisthis.serverIp+qnaItem.getImage())
-//                                        .override(100, 100)
-//                                        .centerCrop()
-//                                        .into(iv_qnaboardImage);
-//                            }
-//
-//                            Log.d(TAG, "이미지 투표 항목 수: " + qnaItem.getVoteImage().size());
-//
-//                            tv_voteResultShow.setText(voteTotalResult+"");
-//
-//                            for (int i = 0; i < qnaItem.getVoteImage().size(); i++) {
-//                                File imageFile = new File(qnaItem.getVoteImage().get(i));
-//                                Uri uriImage = Uri.fromFile(imageFile);
-//                                gridVoteItem = new GridVoteItem("", uriImage, false, false);
-//                                gridVoteItemArrayList.add(gridVoteItem);
-//                            }
-//
-//                            qnaBoardDetailImageAdapter = new QnaBoardDetailImageAdapter(this, gridVoteItemArrayList, this);
-//                            gv_gridview.setAdapter(qnaBoardDetailImageAdapter);
-//
-//                        }
-//                    } else if (vote == 1) {
-//                        // 투표 X.
-//                        if (tagData.length == 0) {
-//                            tagView.setVisibility(View.GONE);
-//                            tv_qnaboardTagOne.setVisibility(View.VISIBLE);
-//                            tv_qnaboardTagOne.setText(qnaItem.getTag());
-//                        } else if (tagData.length > 0) {
-//                            qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
-//                            rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
-//                            rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-//                        }
-//
-//                        tv_qnaboardTitle.setText(qnaItem.getTitle());
-////        tv_qnaboardWriter.setText(qnaBoardItem.getWriter());
-//                        tv_qnaboardWriter.setText(accountNick);
-//                        tv_qnaboardContent.setText(qnaItem.getContent());
-////        tv_qnaboardDate.setText(qnaBoardItem.getDate());
-//                        tv_qnaboardDate.setText(getTime);
-////        tv_qnaboardCommentCount.setText(qnaBoardItem.getComments());
-//                        tv_qnaboardCommentCount.setText("0");
-////        tv_qnaboardViewCount.setText(qnaBoardItem.getViews());
-//                        tv_qnaboardViewCount.setText("0");
-//
-//                        if (qnaItem.getImage() == null) {
-//                            iv_qnaboardImage.setVisibility(View.GONE);
-//                        } else {
-//                            Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaItem.getImage());
-//                            Glide.with(this)
-//                                    .load(Whatisthis.serverIp+qnaItem.getImage())
-//                                    .override(100, 100)
-//                                    .centerCrop()
-//                                    .into(iv_qnaboardImage);
-//                        }
-//
-//                    }
-//                }
-                break;
-
 
             case 9999:
                 break;
@@ -494,7 +379,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         rc_recycler = findViewById(R.id.recycler);
         gv_gridview = findViewById(R.id.gridview);
         rc_qnaboardTagMany = findViewById(R.id.qnaboardTagMany);
-        rc_qnaboardTagMany.addItemDecoration(new RecyclerDecoration(32));
+        rc_qnaboardTagMany.addItemDecoration(new RecyclerDecoration(16));
         tv_qnaboardTagOne = findViewById(R.id.qnaboardTagOne);
         tagView = findViewById(R.id.tagView);
         tv_voteResultShow = findViewById(R.id.voteResultShow);
@@ -533,56 +418,71 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
                 // 추천 클릭시 색깔 변함 준 부분
                 if (flagLike % 2 == 1) {
-                    btnOnOff = 1;
+                    likeBtnOnOff = 1;
                     tv_qnaboardLike.setTextColor(Color.parseColor("#08883e"));
                     tv_qnaboardLikeText.setTextColor(Color.parseColor("#08883e"));
-//                    rl_qnaboardUnLikeLayout.setClickable(false);
                     tv_qnaboardLike.setText((qnaBoardItem.getGoods()+1)+"");
                     tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
                 } else {
-                    btnOnOff = 0;
+                    likeBtnOnOff = 0;
                     tv_qnaboardLike.setTextColor(Color.parseColor("#9d9d97"));
                     tv_qnaboardLikeText.setTextColor(Color.parseColor("#9d9d97"));
-//                    rl_qnaboardUnLikeLayout.setClickable(true);
                     tv_qnaboardLike.setText((qnaBoardItem.getGoods()-1)+"");
                     tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
                 }
 
-                Toast.makeText(view.getContext(), "추천 상태 : "+btnOnOff+"", Toast.LENGTH_SHORT).show();
-
                 // 이 게시물의 추천 수를 올리기 위한 통신을 구현해야함. 보내야 할 값 아마도 게시물 번호, 회원 번호 정도?
 
-                qnaDetailPresenter.recommendOnOffReq(accountNo, postNo, 0, btnOnOff);
+                qnaDetailPresenter.recommendOnOffReq(accountNo, postNo, 0, likeBtnOnOff);
                 break;
             case R.id.qnaboardUnLikeLayout:
                 flagUnLike++;
                 // 비추천 클릭시 색깔 변함 준 부분
                 if (flagUnLike % 2 == 1) {
-                    btnOnOff = 1;
+                    unLikeBtnOnOff = 1;
                     tv_qnaboardUnLike.setTextColor(Color.parseColor("#08883e"));
                     tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#08883e"));
-//                    rl_qnaboardLikeLayout.setClickable(false);
                     tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
                     tv_qnaboardUnLike.setText((qnaBoardItem.getBads()+1)+"");
                 } else {
-                    btnOnOff = 0;
+                    unLikeBtnOnOff = 0;
                     tv_qnaboardUnLike.setTextColor(Color.parseColor("#9d9d97"));
                     tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#9d9d97"));
-//                    rl_qnaboardLikeLayout.setClickable(true);
                     tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
                     tv_qnaboardUnLike.setText((qnaBoardItem.getBads()-1)+"");
                 }
 
-                Toast.makeText(view.getContext(), "비추천 상태 : "+btnOnOff+"", Toast.LENGTH_SHORT).show();
-
                 // 이 게시물의 비추천 수를 올리기 위한 통신을 구현해야함. 보내야 할 값 아마도 게시물 번호, 회원 번호 정도?
 
-                qnaDetailPresenter.recommendOnOffReq(accountNo, postNo, 1, btnOnOff);
+                qnaDetailPresenter.recommendOnOffReq(accountNo, postNo, 1, unLikeBtnOnOff);
                 break;
             case R.id.qnadetailLayout:
                 hideKeyboard();
                 break;
             case R.id.drawupBack:
+                Intent intentActionKind;
+
+                if (commentBoolean)
+                {
+                    intentActionKind = new Intent();
+                    intentActionKind.putExtra("qnaBoardItem", qnaBoardItem);
+                    intentActionKind.putExtra("actionKind", 1);
+                    intentActionKind.putExtra("qnaListPosition", qnaListPosition);
+                    intentActionKind.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    setResult(RESULT_OK, intentActionKind);
+                }
+
+                if (recommendResponse) {
+                    Log.d(TAG, "isLike, isBads 하이 인텐트 엑션카이드"+qnaBoardItem.getIsLike()+", "+qnaBoardItem.getIsBad());
+                    intentActionKind = new Intent();
+                    intentActionKind.putExtra("qnaBoardItem", qnaBoardItem);
+                    intentActionKind.putExtra("actionKind", 1);
+                    intentActionKind.putExtra("qnaListPosition", qnaListPosition);
+                    intentActionKind.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    setResult(RESULT_OK, intentActionKind);
+
+                    recommendResponse = false;
+                }
                 finish();
                 break;
             case R.id.drawupEnroll:
@@ -652,8 +552,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         qnaBoardDetailImageAdapter.notifyDataSetChanged();
                         break;
                 }
-
-
+                
                 break;
             case R.id.drawupModify:
                 Intent intent = new Intent(this, QnaBoardActivity.class);
@@ -916,9 +815,24 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     @Override
     public void recommendComplete(boolean response, BoardRecommend boardRecommend) {
         if (response) {
-            qnaBoardItem.goods = boardRecommend.getLikeCount();
-            qnaBoardItem.bads = boardRecommend.getBadCount();
+            qnaBoardItem.setGoods(boardRecommend.getLikeCount());
+            qnaBoardItem.setBads(boardRecommend.getBadCount());
+
+            Log.d(TAG, "recommendComplete: isLike, isBad" +likeBtnOnOff+", "+unLikeBtnOnOff);
+
+            if (likeBtnOnOff > 0)
+                qnaBoardItem.setIsLike(1);
+            else
+                qnaBoardItem.setIsLike(0);
+
+            if (unLikeBtnOnOff > 0)
+                qnaBoardItem.setIsBad(1);
+            else
+                qnaBoardItem.setIsBad(0);
+
             Log.d(TAG, "recommendComplete: 추천 결과 제대로왔다. "+qnaBoardItem.getGoods() +"//"+ qnaBoardItem.getBads());
+
+            recommendResponse = true;
         } else {
 
         }
@@ -1124,9 +1038,10 @@ public void EditText_commentWirte_tag()
     @Override
     public void onBackPressed()
     {
+        Intent intent;
         if (commentBoolean)
         {
-            Intent intent = new Intent();
+            intent = new Intent();
             intent.putExtra("qnaBoardItem", qnaBoardItem);
             intent.putExtra("actionKind", 1);
             intent.putExtra("qnaListPosition", qnaListPosition);
@@ -1134,6 +1049,17 @@ public void EditText_commentWirte_tag()
             setResult(RESULT_OK, intent);
         }
 
+        if (recommendResponse) {
+            Log.d(TAG, "isLike, isBads 하이 인텐트 엑션카이드"+qnaBoardItem.getIsLike()+", "+qnaBoardItem.getIsBad());
+            intent = new Intent();
+            intent.putExtra("qnaBoardItem", qnaBoardItem);
+            intent.putExtra("actionKind", 1);
+            intent.putExtra("qnaListPosition", qnaListPosition);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            setResult(RESULT_OK, intent);
+
+            recommendResponse = false;
+        }
 
         finish();
     }

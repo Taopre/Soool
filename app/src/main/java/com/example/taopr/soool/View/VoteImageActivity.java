@@ -5,25 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.R;
-import com.example.taopr.soool.View.VoteImageFragment.FifthImage;
-import com.example.taopr.soool.View.VoteImageFragment.FirstImage;
-import com.example.taopr.soool.View.VoteImageFragment.FourthImage;
-import com.example.taopr.soool.View.VoteImageFragment.SecondImage;
-import com.example.taopr.soool.View.VoteImageFragment.SixthImage;
-import com.example.taopr.soool.View.VoteImageFragment.ThirdImage;
+import com.example.taopr.soool.View.VoteImageFragment.ImageDetail;
 
 import java.util.ArrayList;
 
@@ -112,17 +101,17 @@ public class VoteImageActivity  extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return FirstImage.newInstance(0, imageItems.get(position));
+                    return ImageDetail.newInstance(0, imageItems.get(position));
                 case 1:
-                    return SecondImage.newInstance(1, imageItems.get(position));
+                    return ImageDetail.newInstance(1, imageItems.get(position));
                 case 2:
-                    return ThirdImage.newInstance(2, imageItems.get(position));
+                    return ImageDetail.newInstance(2, imageItems.get(position));
                 case 3:
-                    return FourthImage.newInstance(3, imageItems.get(position));
+                    return ImageDetail.newInstance(3, imageItems.get(position));
                 case 4:
-                    return FifthImage.newInstance(4, imageItems.get(position));
+                    return ImageDetail.newInstance(4, imageItems.get(position));
                 case 5:
-                    return SixthImage.newInstance(5, imageItems.get(position));
+                    return ImageDetail.newInstance(5, imageItems.get(position));
                 default:
                     return null;
             }
