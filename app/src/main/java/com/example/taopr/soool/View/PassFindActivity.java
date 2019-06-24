@@ -1,12 +1,15 @@
 package com.example.taopr.soool.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.taopr.soool.HideKeyboard;
 import com.example.taopr.soool.Object.LoginItem;
 import com.example.taopr.soool.Object.PassFIndResponse;
 import com.example.taopr.soool.Presenter.PassFindPresenter;
@@ -24,6 +27,7 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
     EditText et_password;
 
     PassFindPresenter passFindPresenter;
+    HideKeyboard hideKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,7 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
         passFindPresenter = new PassFindPresenter(this);
         passFindPresenter.setView(this);
 
+        hideKeyboard = new HideKeyboard(this);
     }
 
     @OnClick({R.id.receiveMail,R.id.login})
@@ -44,6 +49,7 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
 
                 if (et_email.getText().length() > 0) {
                     passFindPresenter.EmailCheckReq(et_email.getText().toString());
+                    hideKeyboard.hideKeyboard(et_email);
                 } else {
                     Toast.makeText(view.getContext(), "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -67,7 +73,8 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
         switch (passFIndResponse.getEmailExist()) {
             case "true" :
                 if (passFIndResponse.getResult().equals("true")) {
-                    Toast.makeText(this, "임시 비밀번호를 확인 후 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    et_password.setText(passFIndResponse.getFakePwd());
+//                    Toast.makeText(this, "임시 비밀번호를 확인 후 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "메일 확인 절차를 다시 한번 부탁드립니다.", Toast.LENGTH_SHORT).show();
                 }

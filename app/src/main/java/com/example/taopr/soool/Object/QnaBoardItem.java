@@ -38,11 +38,15 @@ public class QnaBoardItem implements Parcelable{
     public int comments;
     @SerializedName("views")
     public int views;
+    @SerializedName("isLike")
+    public int isLike;
+    @SerializedName("isBad")
+    public int isBad;
 
     public QnaBoardItem(){}
 
     public QnaBoardItem(int postNo, String tag, int qnaCate, int accountNo, String writer, String date,
-                        String title, String content, String image, int goods, int bads, int comments, int views) {
+                        String title, String content, String image, int goods, int bads, int comments, int views, int isLike, int isBad) {
         this.postNo = postNo;
         this.tag = tag;
         this.qnaCate = qnaCate;
@@ -56,6 +60,8 @@ public class QnaBoardItem implements Parcelable{
         this.bads = bads;
         this.comments = comments;
         this.views = views;
+        this.isLike = isLike;
+        this.isBad = isBad;
     }
     protected QnaBoardItem(Parcel in) {
         postNo = in.readInt();
@@ -71,6 +77,8 @@ public class QnaBoardItem implements Parcelable{
         bads = in.readInt();
         comments = in.readInt();
         views = in.readInt();
+        isLike = in.readInt();
+        isBad = in.readInt();
     }
 
     public static final Creator<QnaBoardItem> CREATOR = new Creator<QnaBoardItem>() {
@@ -105,6 +113,8 @@ public class QnaBoardItem implements Parcelable{
         dest.writeInt(bads);
         dest.writeInt(comments);
         dest.writeInt(views);
+        dest.writeInt(isLike);
+        dest.writeInt(isBad);
     }
 
     public int getPostNo() {
@@ -209,5 +219,21 @@ public class QnaBoardItem implements Parcelable{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(int isLike) {
+        this.isLike = isLike;
+    }
+
+    public int getIsBad() {
+        return isBad;
+    }
+
+    public void setIsBad(int isBad) {
+        this.isBad = isBad;
     }
 }

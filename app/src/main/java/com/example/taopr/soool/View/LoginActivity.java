@@ -172,7 +172,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 startActivity(intent);
                 break;
             case R.id.accountSignup :
-                Intent intent = new Intent(this, StartingActivity.class);
                 //회원가입하기 텍뷰 리스터
                 Log.d(TAG, "onClick: 회원가입하기 클릭");
                 Toast.makeText(LoginActivity.this, "회원가입 화면으로 가기.", Toast.LENGTH_SHORT).show();

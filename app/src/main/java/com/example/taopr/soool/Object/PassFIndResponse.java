@@ -4,10 +4,12 @@ public class PassFIndResponse {
 
     String result;
     String emailExist;
+    String fakePwd;
 
-    public PassFIndResponse (String result, String emailExist) {
+    public PassFIndResponse (String result, String emailExist, String fakePwd) {
         this.emailExist = emailExist;
         this.result = result;
+        this.fakePwd = fakePwd;
     }
 
     public String getResult() {
@@ -24,5 +26,13 @@ public class PassFIndResponse {
 
     public void setEmailExist(String emailExist) {
         this.emailExist = emailExist;
+    }
+
+    public String getFakePwd() {
+        return fakePwd;
+    }
+
+    public void setFakePwd(String fakePwd) {
+        this.fakePwd = fakePwd;
     }
 }

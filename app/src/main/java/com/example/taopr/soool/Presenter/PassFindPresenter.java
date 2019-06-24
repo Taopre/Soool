@@ -80,7 +80,7 @@ public class PassFindPresenter extends BasePresenter implements PassFindInter {
                                         String message = response.body().string();
                                         message = message.substring(message.indexOf("StartJsonData"), message.indexOf("EndJsonData"));
                                         message = message.substring(13);
-//                                        Log.d(TAG, "passFIndResponse: "+message);
+                                        Log.d(TAG, "passFIndResponse: "+message);
 
                                         passFIndResponse = gson.fromJson(message, PassFIndResponse.class);
                                         view.EmailCheckResp(passFIndResponse);
