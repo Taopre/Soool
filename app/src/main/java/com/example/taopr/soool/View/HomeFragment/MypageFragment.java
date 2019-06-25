@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -16,14 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.taopr.soool.Object.CalendarItem;
-import com.example.taopr.soool.Object.CalendarItemMap;
-import com.example.taopr.soool.Object.InfoOfSoool;
 import com.example.taopr.soool.Object.LoginSessionItem;
-import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.UserProfile;
 import com.example.taopr.soool.Presenter.MypageFmPresenter;
 import com.example.taopr.soool.R;
@@ -31,11 +25,9 @@ import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.View.MyPageFragment.BookmarkFragment;
 import com.example.taopr.soool.View.MyPageFragment.CalendarFragment;
 import com.example.taopr.soool.View.MyPageFragment.MyBoardFragment;
-import com.example.taopr.soool.Whatisthis;
+import com.example.taopr.soool.Util.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

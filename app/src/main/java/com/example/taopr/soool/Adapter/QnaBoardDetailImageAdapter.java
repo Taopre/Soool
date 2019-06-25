@@ -2,7 +2,6 @@ package com.example.taopr.soool.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.View.VoteImageActivity;
-import com.example.taopr.soool.Whatisthis;
+import com.example.taopr.soool.Util.Whatisthis;
 
 import java.util.ArrayList;
 
