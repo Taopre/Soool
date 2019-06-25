@@ -1,6 +1,6 @@
 package com.example.taopr.soool.Networking;
 
-import com.example.taopr.soool.Whatisthis;
+import com.example.taopr.soool.Util.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

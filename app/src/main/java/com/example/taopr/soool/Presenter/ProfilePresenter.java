@@ -38,6 +38,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
         this.accountNo = accountNo;
 
         view.showLoading();
+
         addSubscription(
                 apiService.getProfileInfo(accountNo ),
                 new APICallback<ProfileInfo>() {

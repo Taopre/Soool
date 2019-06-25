@@ -30,12 +30,13 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="26dp"
+                    android:gravity="center"
                     android:layout_marginStart="@dimen/all_space_between_18dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_alignTop="@+id/qnaboardAddTag"
                     android:layout_marginBottom="16dp"
                     android:hint="@string/qna_board_hint_of_choice_tag"
-                    android:textSize="@dimen/text_size_18dp"
+                    android:textSize="14dp"
                     android:textColor="@color/grayMain"
                     android:id="@+id/qnaboardBeforeTag"
                     android:visibility="visible"/>
@@ -46,14 +47,15 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_width="300dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="26dp">
 
                     <android.support.v7.widget.RecyclerView
                         android:layout_alignTop="@+id/qnaboardBeforeTag"
                         android:layout_alignBottom="@+id/qnaboardBeforeTag"
+                        android:layout_gravity="center|start"
                         android:layout_marginStart="@dimen/all_space_between_18dp"
                         android:layout_width="300dp"
-                        android:layout_height="26dp"
+                        android:layout_height="wrap_content"
                         android:id="@+id/qnaboardTag"/>
                 </HorizontalScrollView>
 
@@ -64,7 +66,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:text="+"
                     android:src="@drawable/qna_post_add_tag"
                     android:id="@+id/qnaboardAddTag"/>
             </RelativeLayout>
@@ -86,7 +87,7 @@
                     android:layout_marginEnd="@dimen/all_space_between_16dp"
                     android:hint="@string/qna_board_hint_of_write_title"
                     android:background="@android:color/transparent"
-                    android:textSize="@dimen/text_size_18dp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -104,7 +105,7 @@
                     android:layout_marginEnd="@dimen/all_space_between_16dp"
                     android:layout_marginTop="16dp"
                     android:hint="@string/qna_board_hint_of_write_content"
-                    android:textSize="@dimen/text_size_18dp"
+                    android:textSize="@dimen/text_size_14dp"
                     android:inputType="textMultiLine"
                     android:background="@android:color/transparent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,7 +156,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/grayLight">
+                            android:background="#339d9d97">
 
                             <TextView
                                 android:id="@+id/textView"

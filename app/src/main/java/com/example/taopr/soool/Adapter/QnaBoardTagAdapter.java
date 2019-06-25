@@ -27,7 +27,7 @@ public class QnaBoardTagAdapter extends RecyclerView.Adapter<QnaBoardTagAdapter.
     // ArrayList<String> data 와 ClickListeners 가 static 변수로 되어있었음.
     // 해당 부분을 static 를 해제해서 태그 동기화 문제를 해결할 수 있었는데, 정확한 이유는 모르겠음.
 
-    private ArrayList<String> data;
+    public ArrayList<String> data;
     private int whatActivity = 9998;
     private final String TAG = "큐앤에이 태그 어댑터 ";
     private Context context;

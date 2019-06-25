@@ -58,8 +58,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     private Context context;
     private MyBoardPresenter myBoardPresenter;
     private SwipeRefreshLayout myBoardSwipeRefreshLayout;
-    private ProgressBar myBoardProgress;
-
 
     private MyPageView myPageView;
 
@@ -70,8 +68,16 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     public MyBoardFragment() {
     }
 
+
+    // 서버에 요청을 보내고 응답을 받았다는 것을 마이페이지에 전달.
+    // 그 이유는 마이페이지에 부착한 프래그먼트의 로딩화면들을 마이페이지에서 통괄적으로 보여주고 있기 때문
+    // 그리고 response 를 받았을 때 마이페이지 response 결과를 보내 마이페이지에서 response 결과가 false 일 경우
+    // 서버에서 MyBoard 프래그먼트를 부착할 경우 서버에 요청을 보내고, true 일 경우에는 응답을 통해 받아왔던 게시글을 보여준다
+
     public interface MyPageView{
-        void getMyBoardRes(Boolean isMyBoardRes);
+        void startMyBoardLoading(); // 마이페이지에서 서버에 요청을 보내고 리스폰스를 기다리고 있다는 걸 마이페이지에 전달
+        void endMyBoardLoading(Boolean isMyBoardRes); // 마이페이지에서 서버로부터 응답을 받았다는 것을 상위 마이페이지에 전달
+        void updateProfileForMyBoard(); // 유저의 '내 게시글' , '내 포인트' 의 값이 변화 했을경우 Home 액티비티를 거쳐 마이페이지 프래그먼트에 알려준다
     }
 
     @Override
@@ -86,7 +92,8 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: ");
+
+
         View view = inflater.inflate(R.layout.fragment_my_board, container, false);
 
         this.context = view.getContext();
@@ -96,13 +103,13 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         linearLayoutManager = new LinearLayoutManager(view.getContext());
 
         // 리사이클러뷰 기본 설정
+
         myBoardRecycler = view.findViewById(R.id.myBoardRecycler);
-        myBoardProgress = view.findViewById(R.id.myBoardProgress);
 
         myBoardRecycler.addItemDecoration(              // divider 구분선
                 new DividerItemDecoration(view.getContext(),linearLayoutManager.getOrientation()));
         myBoardRecycler.setLayoutManager(linearLayoutManager);
-        myBoardRecycler.addOnItemTouchListener(selectItemOnmyBoardRecycler(view));
+        myBoardRecycler.addOnItemTouchListener(selectItemOnMyBoardRecycler(view));
 
         myBoardMoveToWriteBoard = view.findViewById(R.id.myBoardMoveToWriteBoard);
         myBoardMoveToWriteBoard.setOnClickListener(this);
@@ -115,13 +122,14 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         if(isResponse == false) {
             myBoardPresenter = new MyBoardPresenter(context);
             myBoardPresenter.setView(this);
+            myPageView.startMyBoardLoading();
             myBoardPresenter.loadData(accountNo,0,-1);
         }
         else{
-            Log.i(TAG, "onCreateView: ture / size :" + qnaBoardItems.size() );
             qnaAdapter = new QnaAdapter(this.qnaBoardItems,context);
             myBoardRecycler.setAdapter(qnaAdapter);
         }
+
         myBoardSwipeRefreshLayout = view.findViewById(R.id.myBoardSwipeRefreshLayout);
 
         // 당겨서 새로고침 리스너 , 색상 설정
@@ -143,6 +151,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         // 서버에 리퀘스트를 보낼 때는 onPaging 값을 true 로 변경 후에 전송한다
         // 그리고 onPaging 은 서버에서 리스폰스를 성공적으로 받고 리스트 갱신 후에
         // onPaging 의 값을 false 로 변경한다
+
         myBoardRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -161,6 +170,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                         //int lastPostNo = qnaBoardItems.get(visibleItemPosition).getPostNo();
                         int lastPostNo = qnaBoardItems.get(listSize).getPostNo();
 
+                        myPageView.startMyBoardLoading();
                         myBoardPresenter.loadData(accountNo,0,lastPostNo);
                     }
                 }
@@ -203,7 +213,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(TAG, "onAttach: ");
         if (context instanceof MyPageView) {
             myPageView = (MyPageView) context;
         } else {
@@ -215,7 +224,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i(TAG, "onDetach: ");
         if (myPageView!=null){
             myPageView = null;
         }
@@ -247,7 +255,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind) {
         if (qnaBoardItems.size() == 0) {
-            Toast.makeText(getContext(), getString(R.string.all_notice_no_exist_post), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
         }
         else {
             switch (loadingKind) {
@@ -274,7 +282,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         isResponse = true;
 
         myBoardSwipeRefreshLayout.setRefreshing(false);
-        myPageView.getMyBoardRes(true);
+        myPageView.endMyBoardLoading(true);
     }
 
     // response 를 전달받는데 실패 했을 경우 '페이지에 오류가 있다'라는 메세지를 유저에게 보여주고
@@ -284,9 +292,8 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
         Log.d(TAG, "getDataFail: "+message);
         Toast.makeText(context, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
-        myPageView.getMyBoardRes(false);
+        myPageView.endMyBoardLoading(false);
         isResponse =false;
-
         myBoardSwipeRefreshLayout.setRefreshing(false);
 
     }
@@ -297,15 +304,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         startActivityForResult(intent,requestCode);
     }
 
-    @Override
-    public void showLoading() {
-        myBoardProgress.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoading() {
-        myBoardProgress.setVisibility(View.GONE);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -321,7 +319,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
             // 수정 --> actionKind = 1
             // 삭제 --> actionKind = 2
 
-            // TODO:::::::::::::
             // 추가와 삭제인 경우에는 프로필에서 '내 게시물 수' 값을 동기화 해줘야 하기 때문에
             // 이 경우에는 인터페이스를 통해 마이페이지 프래그먼트에 추가인지 삭제인지에 대한 값을 전달한다
 
@@ -340,16 +337,23 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                     qnaBoardItems.add(qnaBoardItem);
                     myBoardRecycler.smoothScrollToPosition(0);
                 case 1:
-
                     qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
                     break;
                 case 2:
                     qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
                     break;
             }
+
+            // TODO: 포인트 정책 회의 후 댓글 작성 시에는 포인트 지급이 되지 않는다면 actionKind 값이 1일 때는 예외 처리
+
+            // 게시글이 작성, 삭제 , 혹은 댓글 추가, 삭제할 경우 마이페이지에서 '내 게시글' , '내 포인트' 값을 갱신해야 한다
+            // 게시글 작성 actionKind = 1, 게시글 삭제 actionKind = 2, 댓글 작성/삭제 actionKind = 3
+            // 위 경우 발생시 HomeActivity 을 통해 MyPage 프래그먼트에 알림을 보낸다
+            // MyPage 프래그먼트에서 알림을 받을 경우 '내 게시글' 과 '내 포인트' 값을 갱신한다
+            myPageView.updateProfileForMyBoard();
+
             setMyBoardPage();
         }
-
     }
 
     // 새로고침
@@ -357,13 +361,13 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     // loadingKind 이 0일 때는 로딩중 이모티콘을 보여줌
     @Override
     public void onRefresh() {
+        //myPageView.startMyBoardLoading();
         myBoardPresenter.loadData(accountNo,1,-1);
     }
 
-
     // 리사이클러뷰 클릭 이벤트
     // click과 Longclick 둘 다 해당 리스트 상세보기로 넘어가는게 설정
-    private RecyclerItemClickListener selectItemOnmyBoardRecycler(View view) {
+    private RecyclerItemClickListener selectItemOnMyBoardRecycler(View view) {
         return new RecyclerItemClickListener(view.getContext(), myBoardRecycler, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -375,12 +379,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                 myBoardPresenter.getItem(qnaBoardItems.get(position), getActivity(),position);
             }
         });
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "onActivityCreated: ");
     }
 
 }

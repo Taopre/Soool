@@ -115,10 +115,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     }
 
     private void viewBinding() {
-        btn_tabMain = findViewById(R.id.tabMain);
-        btn_tabInfo = findViewById(R.id.tabInfo);
-        btn_tabQna = findViewById(R.id.tabQna);
-        btn_tabMypage = findViewById(R.id.tabMypage);
         tabMainImage = findViewById(R.id.tabMainImage);
         tabMainText = findViewById(R.id.tabMainText);
         tabInfoImage = findViewById(R.id.tabInfoImage);
@@ -272,8 +268,9 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
                     myPageDrawerNickname.setText(profileInfo.getAccountNick());
                     myPageDrawerEmail.setText(profileInfo.getAccountEmail());
 
+
                     // 마이페이지 프래그먼트에 변경된 프로필 내용으로 보여주기
-                    mypageFragment.showProfileInfo(profileInfo.getAccountImage(),profileInfo.getAccountNick());
+                    mypageFragment.showProfileImgNick(profileInfo.getAccountImage(),profileInfo.getAccountNick());
                     break;
             }
         }
@@ -339,8 +336,29 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         this.accountNo = accountNo;
     }
 
+    // 마이페이지의 자식 프래그먼트로 서버에 요청을 보내고, 응답을 받았다는 내용을 마이페이지에 전달한다
     @Override
-    public void getMyBoardRes(Boolean isMyBoardRes) {
-        mypageFragment.getFragmentRes(0,isMyBoardRes);
+    public void startMyBoardLoading() {
+        // 내 게시물에서 서버에 요청을 보냄
+        mypageFragment.waitChildFragmentRes();
     }
+
+    @Override
+    public void endMyBoardLoading(Boolean isMyBoardRes) {
+        // 내 게시물에서 서버로부터 응답을 받음
+        mypageFragment.getChildFragmentRes(0,isMyBoardRes);
+    }
+
+
+    // MyBoard 프래그먼트에서 마이페이그 프래그먼트 view 에서 '내 게시글' ,'내 포인트' 값의 갱신이 필요하다는 알림을 보내는 메서드
+    // Home 액티비티에서는 MyBoard 프래그먼트에서 알림을 받으면 마이페이지 프래그먼트에 전달한다
+    @Override
+    public void updateProfileForMyBoard() {
+        Log.i(TAG, "updateProfileForMyBoard: ");
+        if (mypageFragment != null){
+            mypageFragment.updateProfile();
+        }
+    }
+
+
 }

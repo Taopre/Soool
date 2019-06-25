@@ -1,5 +1,7 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.PassFIndResponse;
+import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.CommentListObject;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.QnaBoardItem;
@@ -219,6 +221,11 @@ public interface APIService {
                                          @Field("btnOnOff") int btnOnOff);
 
     @FormUrlEncoded
+    @POST("/passFind/passFind.php")
+    Call<ResponseBody> checkEmailInPassFind(@Field("email") String email);
+
+
+    @FormUrlEncoded
     @POST("/comment/commentinsert.php")
     Call<ResponseBody> commentRequest(@Field("postNo") int postNo,
                                       @Field("accountNo") int accountNo,
@@ -253,9 +260,19 @@ public interface APIService {
     Observable<CommentListObject> getCommentItem(@Field("postNo") int postNo);
 
 
-
-
+    // 회원탈퇴
     @FormUrlEncoded
-    @POST("/accountManage/myinfoUpdate.php")  // TODO: 회원탈퇴 php 주소로 수정 필요
+    @POST("/accountManage/accountDelete.php")
     Observable<SooolResponseBody> deleteAccount(@Field("accountNo") int accountNo);
+
+    // Main 프래그먼트 Qna 리스트 아이템 받아오기
+    @FormUrlEncoded
+    @POST("/mainPost/mainPostQna.php")
+    Observable<QnaBoardList> MainGetQnaItem(@Field("accountNo") int accountNo);
+
+    // Main 프래그먼트 info 리스트 아이템 받아오기
+    @FormUrlEncoded
+    @POST("/qnapost/QnaList.php")
+    Observable<QnaBoardList> MainGetInfoItem(@Field("accountNo") int accountNo,
+                                            @Field("lastPostNo") int lastPostNo);
 }

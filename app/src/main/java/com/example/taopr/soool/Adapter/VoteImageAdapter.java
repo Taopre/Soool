@@ -1,20 +1,15 @@
 package com.example.taopr.soool.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.R;
-import com.example.taopr.soool.Whatisthis;
 
 import java.util.ArrayList;
 

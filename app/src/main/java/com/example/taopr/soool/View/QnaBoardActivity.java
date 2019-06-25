@@ -14,24 +14,18 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,11 +35,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
-import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
 import com.example.taopr.soool.Adapter.VoteImageAdapter;
+import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.BottomSheetDialogVoteSelect;
-import com.example.taopr.soool.ExifUtils;
+import com.example.taopr.soool.Util.ExifUtils;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
@@ -55,7 +49,7 @@ import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
-import com.example.taopr.soool.Whatisthis;
+import com.example.taopr.soool.Util.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sangcomz.fishbun.FishBun;
@@ -148,6 +142,9 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 } else {
                     tagArray.add((receiveQnaBoardItem.getTag()));
                 }
+
+                tag = receiveQnaBoardItem.getTag();
+
                 qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 0, new QnaBoardTagAdapter.ClickListener() {
                     @Override
                     public void ListClick(int position, View view) {
@@ -232,6 +229,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         tv_qnaboardBeforeTag = findViewById(R.id.qnaboardBeforeTag);
         iv_qnaboardAddTag = findViewById(R.id.qnaboardAddTag);
         rc_qnaboardTag = findViewById(R.id.qnaboardTag);
+        rc_qnaboardTag.addItemDecoration(new RecyclerDecoration(16));
         h_scrollView = findViewById(R.id.h_scrollView);
         imageLayout = findViewById(R.id.imageLayout);
         iv_qnaTextVoteRemove = findViewById(R.id.qnaTextVoteRemove);
@@ -416,7 +414,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 // 객체 tag 변수를 ArrayList<String>으로 변경해야함을 회의해야한다.
 
                 if (actionKind == 0) {
-                    if (tag.equals(null)) {
+                    if (tag.equals("")) {
                         Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
                     } else if (et_qnaboardTitle.getText().length() == 0) {
                         Log.d(TAG, "onClick: 제목을 입력해주세요.");
@@ -620,13 +618,13 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     bottomSheetDialog.setDialogListener(new BottomSheetDialog.BottomSheetDialoggListener() {
                         @Override
                         public void onPositiveClicked(ArrayList<String> arrayList) {
-                            for (int i = 0; i < arrayList.size(); i++) {
-                                Log.d("main!!!!!!!!!!!", "onPositiveClicked: " + arrayList.get(i));
+                            if (arrayList.size() == 0) {
+                                tv_qnaboardBeforeTag.setVisibility(View.VISIBLE);
+                                h_scrollView.setVisibility(View.GONE);
+                            } else {
+                                tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                                h_scrollView.setVisibility(View.VISIBLE);
                             }
-
-                            tv_qnaboardBeforeTag.setVisibility(View.GONE);
-                            h_scrollView.setVisibility(View.VISIBLE);
-
 
                             qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0, new QnaBoardTagAdapter.ClickListener(){
                                 @Override
@@ -661,24 +659,20 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     bottomSheetDialog.setDialogListener(new BottomSheetDialog.BottomSheetDialoggListener() {
                         @Override
                         public void onPositiveClicked(ArrayList<String> arrayList) {
-                            for (int i = 0; i < arrayList.size(); i++) {
-                                Log.d("main!!!!!!!!!!!", "onPositiveClicked: " + arrayList.get(i));
+                            if (arrayList.size() == 0) {
+                                tv_qnaboardBeforeTag.setVisibility(View.VISIBLE);
+                                h_scrollView.setVisibility(View.GONE);
+                            } else {
+                                tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                                h_scrollView.setVisibility(View.VISIBLE);
                             }
 
-                            tv_qnaboardBeforeTag.setVisibility(View.GONE);
-                            h_scrollView.setVisibility(View.VISIBLE);
-
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0, new QnaBoardTagAdapter.ClickListener() {
-                                @Override
-                                public void ListClick(int position, View view) {
-                                    tagArray.remove(position);
-                                    qnaBoardTagAdapter.notifyDataSetChanged();
-                                }
-                            });
-                            rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
-                            rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-
+                            qnaBoardTagAdapter.data = arrayList;
+                            qnaBoardTagAdapter.notifyDataSetChanged();
                             tagArray = arrayList;
+
+                            if (!tag.equals(""))
+                                tag = "";
 
                             for (int i = 0; i < arrayList.size(); i++) {
                                 if (i == arrayList.size() - 1)

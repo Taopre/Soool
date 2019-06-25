@@ -70,7 +70,6 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_home_qna, container, false);
 
         context = view.getContext();
@@ -129,6 +128,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
         // 서버에 리퀘스트를 보낼 때는 onPaging 값을 true 로 변경 후에 전송한다
         // 그리고 onPaging 은 서버에서 리스폰스를 성공적으로 받고 리스트 갱신 후에
         // onPaging 의 값을 false 로 변경한다
+
         qnaRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -160,20 +160,18 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(TAG, "onAttach: ");
 
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i(TAG, "onDetach: ");
+
        // mListener = null;
     }
 
     @OnClick({R.id.fab_default})
     void OnClickButton(View view){
-        Log.i(TAG, "OnClickButton: ");
         switch (view.getId()){
             case R.id.fab_default:
                 Intent intent = new Intent(getActivity(), QnaBoardActivity.class);
@@ -196,6 +194,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
             public void onLongItemClick(View view, int position) {
                 qnaFmPresenter.getItem(qnaBoardItems.get(position), getActivity(),position);
             }
+
         });
     }
 
@@ -217,7 +216,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind) {
         if (qnaBoardItems.size() == 0) {
-            Toast.makeText(getContext(), getString(R.string.all_notice_no_exist_post), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
         }
         else {
             switch (loadingKind) {
@@ -245,7 +244,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void getDataFail(String message) {
         qnaSwipeRefreshLayout.setRefreshing(false);
-        Log.d(TAG, "getDataFail: "+message);
+        Log.d(TAG, " 리퀘스트 실패 ");
         Toast.makeText(context, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
         isResponse =false;
         onPaging = true;
@@ -272,7 +271,6 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult:  " +resultCode);
         if (resultCode == RESULT_OK) {
 
             // 리스트 수정, 삭제
@@ -282,7 +280,6 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
             // 수정 --> actionKind = 1
             // 삭제 --> actionKind = 2
 
-            Log.i(TAG, "onActivityResult: RESULT_OK");
             QnaBoardItem qnaBoardItem = null;
             if (data != null && data.getParcelableExtra("qnaBoardItem") != null) {
                 qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
@@ -291,12 +288,9 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
             int qnaListPosition = data.getIntExtra("qnaListPosition",0);
             int actionKind = data.getIntExtra("actionKind",99);
 
-            Log.i(TAG, "onActivityResult: actionKind : " + actionKind);
-
             switch (actionKind){
                 case 0:
-                    qnaAdapter.addItem(qnaBoardItem);
-                    qnaBoardItems.add(qnaBoardItem);
+                    qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
                     qnaRecycler.smoothScrollToPosition(0);
                 case 1:
                     qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
