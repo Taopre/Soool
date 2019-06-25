@@ -33,7 +33,7 @@ public interface QnaDetailInter {
     //답글작성할때에 (어댑터에서 액티비티로 값넘길때)
     void CommentOrRecomment(int commentNo);
     //댓글 삭제
-    void commentDeleteRequest(int post,int commentNo);
+    void commentDeleteRequest(int post,int commentNo,int recommentNo);
     void commentDeleteResponss(int response,int commentCount);
 
     public interface View

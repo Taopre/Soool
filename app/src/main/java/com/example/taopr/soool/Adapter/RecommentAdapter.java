@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.CommentItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
@@ -37,10 +40,13 @@ private RecommentItem recommentitem;
             int postNo;
             int commentNo;
 
-private int accountNo;
-private TimeCalculator timeCalculator;
+            private int accountNo;
+            private TimeCalculator timeCalculator;
+            private NoticeDialog noticeDialog;
+            int recommentPosition;
 
-public RecommentAdapter(Context context, ArrayList<RecommentItem> recommentitems,Activity activity,int postNo,int commentNo)
+
+public RecommentAdapter(Context context, ArrayList<RecommentItem> recommentitems,Activity activity,int postNo,int commentNo,int accountNo)
         {
         this.activity = activity;
         this.context = context;
@@ -48,7 +54,7 @@ public RecommentAdapter(Context context, ArrayList<RecommentItem> recommentitems
         timeCalculator = new TimeCalculator();
         this.postNo = postNo;
         this.commentNo = commentNo;
-        //this.accountNo = accountNo;
+        this.accountNo = accountNo;
         }
 public RecommentAdapter(Context context,RecommentItem recommentitem)
         {
@@ -70,7 +76,7 @@ public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 
 
 
-            class ViewHolder extends RecyclerView.ViewHolder
+class ViewHolder extends RecyclerView.ViewHolder
 {
     //TextView recommentNo;
     //TextView accountNo;
@@ -78,7 +84,7 @@ public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     TextView recommentWriter;
     TextView recommentContent;
     TextView recommentLike;
-
+    LinearLayout recomment_row;
 
     public ViewHolder(View v)
     {
@@ -91,6 +97,8 @@ public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         recommentWriter = v.findViewById(R.id.recommentWriter);
         recommentContent = v.findViewById(R.id.recommentContent);
         recommentLike  = v.findViewById(R.id.recommentLike);
+        recomment_row = v.findViewById(R.id.recomment_row);
+
     }
 }
 
@@ -200,6 +208,68 @@ public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         });
 
 
+
+
+
+
+
+        //holder.comment_rowBG.setVisibility(View.GONE);
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+
+                if (recommentitem.getAccountNo() == accountNo)
+                {
+
+                    recommentPosition = i;
+                    qnaDetailPresenter.commentDeleteRequest(postNo,commentNo,recommentitem.recommentNo);
+                    Log.d(TAG, "onClick: recommentDelete");
+                    Log.d(TAG, "onClick: recommentDelete" + String.valueOf(recommentitem.recommentNo));
+                    Log.d(TAG, "onClick: recommentDelete" + String.valueOf(commentNo));
+                }
+                else
+                {
+                    Toast.makeText(context,"본인 댓글만 삭제 하실 수 있습니다",Toast.LENGTH_LONG).show();
+                }
+                noticeDialog.dismiss();
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                noticeDialog.dismiss();
+            }
+        };
+
+        //viewHolder.recomment_row.setAlpha(0.01f);
+        viewHolder.recomment_row.setLongClickable(true);
+        viewHolder.recomment_row.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                noticeDialog = new NoticeDialog(context,
+                        "답글을 삭제하시겠습니까?", false, "예",
+                        "아니요", positiveListener, negativeListener);
+                noticeDialog.show();
+
+                return false;
+            }
+        });
+
+
+
+
+
+
+
+
+
+
         Log.d(TAG,String.valueOf(recommentitem.getRecommentNo()));
     }
 
@@ -266,7 +336,9 @@ public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
             }
 
             @Override
-            public void commentDeleteGoResponse(int response,int commentCount) {
-
+            public void commentDeleteGoResponse(int response,int commentCount)
+            {
+                recommentitems.remove(recommentPosition);
+                notifyDataSetChanged();
             }
         }

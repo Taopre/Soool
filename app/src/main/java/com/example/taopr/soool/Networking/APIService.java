@@ -252,7 +252,8 @@ public interface APIService {
     @FormUrlEncoded
     @POST("/comment/commentDelete.php")
     Call<ResponseBody> commentDeleteRequest(@Field("postNo") int postNo,
-                                            @Field("commentNo") int commentNo
+                                            @Field("commentNo") int commentNo,
+                                            @Field("recommentNo") int recommentNo
                                             );
 
     @FormUrlEncoded

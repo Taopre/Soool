@@ -1,11 +1,20 @@
-<LinearLayout
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/comment_row"
+    >
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="horizontal"
     >
 
     <LinearLayout
+
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="18.4dp">
+            android:paddingTop="18.4dp"
+            android:paddingBottom="@dimen/all_space_between_10dp"
+            >
 
             <TextView
                 android:paddingLeft="@dimen/all_space_between_18dp"
@@ -61,18 +72,45 @@
                 android:textColor="@color/grayMain"
                 android:textSize="@dimen/text_size_12dp"
                 />
-
         </RelativeLayout>
-        <TextView
-            android:paddingTop="10dp"
-            android:paddingLeft="@dimen/all_space_between_18dp"
-            android:id="@+id/commentContent"
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_14dp"
-            android:textColor="@color/black"
-            android:lineSpacingExtra="7.2dp"
-            />
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/all_space_between_16dp"
+            >
+
+            <ImageView
+                android:id="@+id/comment_delete_img"
+
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="3dp"
+
+                android:src="@drawable/comment_deleted"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+
+                android:visibility="gone"
+                />
+            <TextView
+                android:layout_toRightOf="@+id/comment_delete_img"
+                android:id="@+id/commentContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_14dp"
+                android:textColor="@color/black"
+                android:lineSpacingExtra="7.2dp"
+
+                android:paddingRight="@dimen/all_space_between_18dp"
+                />
+        </RelativeLayout>
+
        <!---->
         <!--<TextView-->
             <!--android:id="@+id/commentContent"-->
@@ -80,13 +118,15 @@
             <!--android:layout_height="wrap_content"-->
             <!--/>-->
         <RelativeLayout
-            android:paddingTop="10dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+            android:paddingTop="10dp"
             android:paddingBottom="18.4dp"
             >
                 <TextView
+
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:paddingLeft="@dimen/all_space_between_18dp"
@@ -138,3 +178,5 @@
             />
     </LinearLayout>
 </LinearLayout>
+
+</RelativeLayout>
