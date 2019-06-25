@@ -9,51 +9,6 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string-array name="custom_months">
-        <item>Jan</item>
-        <item>Feb</item>
-        <item>Mar</item>
-        <item>Apr</item>
-        <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
-        <item>Aug</item>
-        <item>Sep</item>
-        <item>Oct</item>
-        <item>Nov</item>
-        <item>Dec</item>
-    </string-array>
-
-    <string-array name="capacity_array">
-        <item>항목을 선택해주세요</item>
-        <item>유종현</item>
-        <item>소주 1잔</item>
-        <item>소주 1병</item>
-        <item>소주 2병</item>
-        <item>소주 3병</item>
-        <item>김병구</item>
-    </string-array>
-
-    <string-array name="favorite_array">
-        <item>항목을 선택해주세요</item>
-        <item>맥주</item>
-        <item>소주</item>
-        <item>고량주</item>
-        <item>데킬라</item>
-        <item>칵테일</item>
-        <item>김병구</item>
-    </string-array>
-
-    <string-array name="reason_array">
-        <item>항목을 선택해주세요</item>
-        <item>술이 좋아서</item>
-        <item>술자리가 좋아서</item>
-        <item>취하고 싶어서</item>
-        <item>이성과의 만남</item>
-        <item>다른 이유3</item>
-        <item>김병구</item>
-    </string-array>
-
 
     <!-- Home -->
     <string name="home_label_home_tab">홈</string>
@@ -86,6 +41,7 @@
 
     <!-- 권한 -->
     <string name="permission_notice_setting_permission">[설정] > [권한]에서 권한을 허용할 수 있습니다.</string>
+
     <!-- all  -->
     <string name="all_button_add">추가하기</string>
     <string name="all_button_modify">수정하기</string>
@@ -98,7 +54,12 @@
     <string name="all_button_complete">완료</string>
     <string name="all_button_yes">예</string>
     <string name="all_button_no">아니요</string>
-    <string name="all_notice_no_exist_post">더 이상 게시글이 존재하지 않습니다</string>
+
+    <!-- Toast 메세지 -->
+
+    <string name="toast_notice_no_exist_post">더 이상 게시글이 존재하지 않습니다</string>
+    <string name="toast_notice_page_error">페이지에 오류가 있습니다</string>
+    <string name="toast_notice_one_more">다시 시도해주세요</string>
 
 
     <!-- 다이얼로그 -->
@@ -194,5 +155,76 @@
     <string name="login_button_login">로그인하기</string>
     <string name="login_button_find_password">비밀번호 찾기</string>
     <string name="login_button_sign_up">회원가입하기</string>
+
+
+    <string-array name="custom_months">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+
+    <string-array name="custom_month_2">
+        <item>1월</item>
+        <item>2월</item>
+        <item>3월</item>
+        <item>4월</item>
+        <item>5월</item>
+        <item>6월</item>
+        <item>7월</item>
+        <item>8월</item>
+        <item>9월</item>
+        <item>10월</item>
+        <item>11월</item>
+        <item>12월</item>
+    </string-array>
+
+    <string-array name="custom_weekdays">
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+        <item>일</item>
+    </string-array>
+
+    <string-array name="capacity_array">
+        <item>항목을 선택해주세요</item>
+        <item>유종현</item>
+        <item>소주 1잔</item>
+        <item>소주 1병</item>
+        <item>소주 2병</item>
+        <item>소주 3병</item>
+        <item>김병구</item>
+    </string-array>
+
+    <string-array name="favorite_array">
+        <item>항목을 선택해주세요</item>
+        <item>맥주</item>
+        <item>소주</item>
+        <item>고량주</item>
+        <item>데킬라</item>
+        <item>칵테일</item>
+        <item>김병구</item>
+    </string-array>
+
+    <string-array name="reason_array">
+        <item>항목을 선택해주세요</item>
+        <item>술이 좋아서</item>
+        <item>술자리가 좋아서</item>
+        <item>취하고 싶어서</item>
+        <item>이성과의 만남</item>
+        <item>다른 이유3</item>
+        <item>김병구</item>
+    </string-array>
 
 </resources>

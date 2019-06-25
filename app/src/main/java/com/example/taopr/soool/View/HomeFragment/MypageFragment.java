@@ -65,9 +65,8 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     private final int BOOKMARK_INT = 1;
     private final int CALENDAR_INT = 2;
     private final String ACCOUNT_NO_EXTRA = "accountNo";
-    private int fragmentNo=0;  // 마이 페이지 첫 화면은 myBoard 프래그먼트 화면이기 때문
 
-    private int currentTab=0,previousTab=1;
+    private int currentTab=0,previousTab=1; // 현재탭, 이전탭 -> myBoard=0, bookmark=2, calendar=3
 
     private MyBoardFragment myBoardFragment = null;
     private CalendarFragment calendarFragment = null;
@@ -108,11 +107,9 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.i(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_home_mypage, container, false);
 
         unbinder = ButterKnife.bind(this,view);
-
         context = view.getContext();
         mypagePresenter = new MypageFmPresenter(context);
         mypagePresenter.setView(this);
@@ -139,7 +136,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     // 현재 탭의 탭바를 보여주고 , 이전 탭의 탭바를 숨겨준다
     // 그리고 현재 탭 타이틀의 글자색을 green_dark 색상으로 변경해주고, 이전 탭의 색상은 gray_mid 색상으로 변경
     private void tabSetting(){
-        Log.i(TAG, "tabSetting: 이전탭 : "+ previousTab +"현재탭 " +currentTab);
         switch (previousTab){
             case 0:
                 tabMyBoardBar.setVisibility(View.INVISIBLE);
@@ -179,34 +175,33 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
     void getUserProfile() {
 
-        String data = LoginSharedPreferences.LoginUserLoad(context, "LoginAccount");
-        Gson gson = new GsonBuilder().create();
-        // JSON 으로 변환
-        LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
-
-        accountNo = loginSessionItem.getAccountNo();
+        accountNo = LoginSharedPreferences.getAccountNo(context, "LoginAccount");
 
         showLoading();
         mypagePresenter.loadMypageData(accountNo);
     }
 
-    public void showProfileInfo(String accountImage,String accountNick){
-
-        // TODO : 바뀐 프로필 정보 보여주기
-
+    // 유저의 프로필 정보가 업데이트가 필요한 경우 서버에 request 를 보내 유저의 프로필 정보를 새로 받아와 업데이트 한다
+    public void updateProfile(){
+        Log.i(TAG, "updateProfile: update");
+        mypagePresenter.loadMypageData(accountNo);
     }
 
-    // 회원정보 페이지(ProfileAct) 에서 회원정보를 수정했을 때
-    // 마이페이지에서도 수정한 데이터를 보여줘야 하기 때문에
-    // 메서드로 따로 땜
+
+    // 회원정보 페이지에서 수정했을 때 마이페이지에서 수정한 정보 갱신해줘야 하는 뷰들만
+    // 따로 메서드로 정리함
     public void showProfileImgNick(String accountImage,String accountNick){
 
         mypageProfileNickname.setText(accountNick);
 
         // 유저가 프로필 이미지를 저장한 경우에는 저장한 이미지를
         // 그렇지 않은 경우에는 디폴트 이미지를 보여준다.
+        // 이미지가 시스템 error 로 인해 null 값인 경우에도 앱이 종료 되지 않게 예외처리
 
-        if(!accountImage.equals("soool_default")) {
+        if (accountImage ==null){
+            mypageProfileImage.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.profile_default));
+        }
+        else if(!accountImage.equals("soool_default")) {
 
             String accountImageAddress = Whatisthis.serverIp + accountImage;
 
@@ -298,14 +293,15 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 break;
 
             case 2:
+                // 캘린더 라이브러리 문제로 프래그먼트는 attach 할때마다 새로 하는 방식으로 변경
 
-               if (calendarFragment == null) {
+               //if (calendarFragment == null) {
                    calendarFragment = new CalendarFragment();
                    Bundle bundle = new Bundle();
                    bundle.putString(ACCOUNT_NO_EXTRA
                            ,String.valueOf(accountNo));
                    calendarFragment.setArguments(bundle);
-               }
+              // }
 
                 transaction.replace(R.id.fragment_container, calendarFragment );
 
@@ -375,16 +371,25 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     }
 
     // 로딩 화면
+
+    // 마이페이지의 Child 프래그먼트의 로딩과정도 마이페이지 프래그먼트에서 보여준다.
+    // child 프래그먼트에서 서버에 request 를 보냈을 때 로딩화면을 보여주고
+    // child 프래그먼튼에서 서버로부터 response 를 받았다면 로딩화면을 사라지게 한다.
+
+    // 마이페이지가 처음 OnCreate() 시에는 child 프래그먼트인 내 게시물 프래그먼트에서
+    // response 받는 것 이외에도 프로필 정보도 받아야한다
+
     // 내 게시물 프래그먼트에서 내 게시물 데이터를 서버에 요청한 응답이 도착했을 때
     // 유저의 프로필 정보를 서버에 요청한 응답도 도착이 했을 경우 페이지의 로딩화면을 숨긴다
-    // 그리고 isFragment 의 값을 true 로 변경하여 프로필에 대한 응답이 오지 않을 경우
+    // 그리고 isFragmentRes 의 값을 true 로 변경하여 프로필에 대한 응답이 오지 않을 경우
+    // ( isFragment 는 현재 마이페이지에 부착한 자식 프레그먼트에서 response 를 받았는지 구별하는 값 )
     // 프로필에 대한 응답이 왔을 경우 isFragment 값이 true 일때 로딩화면을 숨기게 한다
 
     // 내 게시물 요청에 대한 응답을 제대로 가져오지 못했을 경우
     // myBoardFragment 를 null 값으로 변경하여 myBoardFragment 를 다시 부착할 때
     // 서버에 내 게시물 요청을 다시끔 하게 한다
 
-    public void getFragmentRes(int fragmentNo,boolean isResponse){
+    public void getChildFragmentRes(int fragmentNo,boolean isResponse){
         isFragmentRes =true;
         if(isProfileRes) hideLoading();
 
@@ -403,10 +408,22 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         }
     }
 
+    // 마이페이지의 자식 프래그먼트에서 서버에 요청을 했을 경우 마이페이지에서 로딩화면을 보여준다
+    // 자식 프래그먼트에서 서버에 request 를 전송했을 경우 마이페이지에 전송했다는 것을 알려주고
+    // 마이페이지는 그걸 수신하면 로딩화면을 보여준다. 그리고 isFragmentRes 의 값을 false 로 변경하여
+    // 아직 자식 프래그먼트로 부터 response 를 받지 못했다는 값을 가지고 있는다
+    // 이후에 자식 프래그먼트로부터 response 를 받았다는 알림을 받았을 때
+    // 프로필 데이터에 대한 response 도 받았을 경우 로딩화면을 사라지게 한다
+
+    public void waitChildFragmentRes(){
+        isFragmentRes = false;
+        showLoading();
+    }
 
     private void showLoading(){
         mypageProgress.setVisibility(View.VISIBLE);
     }
+
     private void hideLoading(){
         mypageProgress.setVisibility(View.GONE);
     }

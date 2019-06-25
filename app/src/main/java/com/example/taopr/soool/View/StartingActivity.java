@@ -161,7 +161,7 @@ public class StartingActivity extends AppCompatActivity {
             }
         }
         catch (NullPointerException ex){
-            ex.printStackTrace();
+            Log.i(TAG, "checkAutoLogin: 자동로그인 설정x");
         }
     }
 

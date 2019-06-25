@@ -49,7 +49,6 @@ public class MypageFmPresenter extends BasePresenter implements MypageFmInter {
                     @Override
                     public void onSuccess(UserProfile userProfile) {
                         if (userProfile != null) {
-                            Log.i(TAG, "onSuccess: 유저 프로필 정보 " + userProfile.getAccountImage());
                             view.getUserProfileSuccess(userProfile);
                         }
                         else{
@@ -59,7 +58,7 @@ public class MypageFmPresenter extends BasePresenter implements MypageFmInter {
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: mypage" + msg);
+                        Log.i(TAG, "onFailure: " );
                         view.getDataFail(true, 2);
                     }
 

@@ -52,12 +52,12 @@ public class NoticeDialog extends Dialog{
         noticeDialogNegative.setOnClickListener(mNegativeListener);
         noticeDialogPositive.setOnClickListener(mPositiveListener);
 
-        // title
-        try{
+        // 다이얼로그에 제목이 있는 경우가 있고 없는 경우가 있기 때문에
+        // null 값인지 아닌지로 구분하여 Title 에 text 값을 부여한다
+
+        if (noticeDialogTitle != null) {
             noticeDialogTitle.setVisibility(View.GONE);
             noticeDialogTitle.setText(dialogTitle);
-        }catch (NullPointerException ex){
-            ex.printStackTrace();
         }
 
         noticeDialogContent.setText(dialogContent);

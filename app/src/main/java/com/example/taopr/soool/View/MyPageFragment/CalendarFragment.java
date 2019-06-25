@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -49,12 +50,11 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class CalendarFragment extends Fragment implements CalendarFmPresenter.View,
-        OnMonthChangedListener,OnDateSelectedListener {
+        OnDateSelectedListener {
 
-    private  OnFragmentInteractionListener mListener;
     private  Collection<CalendarDay> eventDates = new HashSet<>();  // 캘린더에 event 표시를 해줘야하는 날짜 리스트
     private  HashMap<String,CalendarItem> calendarItemMap= new HashMap<String,CalendarItem>();
-    private  MaterialCalendarView mcv;
+    private  MaterialCalendarView mcv=null;
     private  SooolCalendar sooolCalendar = new SooolCalendar();
     private  View view;
     private  String TAG = "마이페이지 캘린더 프래그먼트";
@@ -77,9 +77,8 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
-
+    
     // 뷰 바인딩과 intent 받는 부분
     // intent 로 회원번호를 받은 뒤 캘린더 DB 에서 작성했던 내용들을 가져온다
 
@@ -91,45 +90,37 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         unbinder = ButterKnife.bind(this, view);
         context = view.getContext();
         this.view = view;
 
+        selectedDay = CalendarDay.today().getDate();
+
         mcv = view.findViewById(R.id.mcCalendarView);
 
-        selectedDay = CalendarDay.today().getDate();
         // 날짜 선택, 월 변경 리스너 등록
         mcv.setOnDateChangedListener(this);
-        mcv.setOnMonthChangedListener(this);
 
-
-        // 달력 타이틀에서 월 표시 폼 변경 메서드
-        mcv.setTitleFormatter(new MonthArrayTitleFormatter(getResources().getTextArray(R.array.custom_months)));
-
-        // '월/년' 타이틀 애니메이션 위아래, 좌우 선택 -> 1이 좌우
-        mcv.setTitleAnimationOrientation(1);
-        mcv.setSelectionColor(ContextCompat.getColor(context,R.color.greenMain));
         mcv.state().edit()
-                .setFirstDayOfWeek(Calendar.SUNDAY)  // week 시작하는 날짜 mon / sun
-                .setMinimumDate(CalendarDay.from(1916, 4, 3))  // 달력의 범위 min
-                .setMaximumDate(CalendarDay.from(2116, 5, 12)) // 달력의 범위 max
-                .setCalendarDisplayMode(CalendarMode.MONTHS) // 달력 보여주는 단위
-                // .setSaveCurrentPosition(true)
+                .setMinimumDate(CalendarDay.from(1950, 4, 3))  // 달력의 범위 min
+                .setMaximumDate(CalendarDay.from(2050, 5, 12)) // 달력의 범위 max
                 .commit();
+
 
         // 캘린더 이벤트 날짜, 유저 닉네임을 bundle 객체로 받아오기
         // 작성한 데이터 없을 경우 예외처리
-
-        accountNo = getArguments().getString(ACCOUNT_NO_EXTRA);
-        Log.i(TAG, "onCreateView: 닉네임 " + accountNo);
-
+        if (accountNo == null) {
+            accountNo = getArguments().getString(ACCOUNT_NO_EXTRA);
+        }
 
         //수정
-        calendarFmPresenter = new CalendarFmPresenter();
-        calendarFmPresenter.setView(this);
-        calendarFmPresenter.getCalendarItem(getActivity(),accountNo);
-
+        if (calendarFmPresenter == null) {
+            calendarFmPresenter = new CalendarFmPresenter();
+            calendarFmPresenter.setView(this);
+            calendarFmPresenter.getCalendarItem(getActivity(), accountNo);
+        }
 
         return view;
     }
@@ -164,24 +155,6 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
     }
 
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
 
@@ -189,10 +162,6 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
         moveToCalendarSch(0);
     }
 
-    @Override
-    public void onMonthChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
-        Log.i(TAG, "onMonthChanged: ");
-    }
 
     // 캘린더에서 작성한 내용들을 가져오면 달력 해당 날짜들을 표시해준다
 
@@ -205,12 +174,6 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
     @Override
     public void getDataFail(boolean response, int i) {
 
-    }
-
-
-    public interface OnFragmentInteractionListener {
-
-        void onFragmentInteraction(Uri uri);
     }
 
     @OnClick({R.id.myPageAddEvent})
@@ -235,12 +198,9 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
         switch (pageKind) {
             case 0:
                 intent = new Intent(context, CalendarSchActivity.class);
-               // intent.putExtra(DATE_EXTRA, selectDate.getTime());
                 intent.putExtra(DATE_EXTRA, selectedDay.getTime());
                 intent.putExtra(ACCOUNT_NO_EXTRA,accountNo);
                 intent.putExtra(CALENDAR_LIST_EXTRA,(Serializable) calendarItemMap);
-                Log.i(TAG, "moveToCalendar: calendaritemMap 사이즈 :" + calendarItemMap.size());
-
                 startActivityForResult(intent, CALENDAR_ADD_INT);
                 break;
             case 1:
@@ -257,14 +217,12 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult: " + requestCode + " // " + resultCode);
         if (resultCode == RESULT_OK){
             switch (requestCode){
                 case CALENDAR_ADD_INT:
                     String selectedDate = data.getStringExtra(DATE_EXTRA);
                     selectedDay = sooolCalendar.getDate(selectedDate);
                     calendarItemMap = (HashMap<String,CalendarItem>) data.getSerializableExtra(CALENDAR_LIST_EXTRA);
-                    Log.i(TAG, "onActivityResult: 사이즈" + calendarItemMap.size());
                     showEventDate();
             }
 
@@ -276,6 +234,5 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
     public void onDestroyView() {
         super.onDestroyView();
         if(unbinder!=null) unbinder.unbind();
-
     }
 }

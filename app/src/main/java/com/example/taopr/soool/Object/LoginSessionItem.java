@@ -1,7 +1,7 @@
 package com.example.taopr.soool.Object;
 
 public class LoginSessionItem {
-    private String accountNick, accountImage;
+    public String accountNick, accountImage;
     private int accountNo, accountPoint, accountBc, accountCc;
     private boolean accountAutoLogin;
 
@@ -44,4 +44,7 @@ public class LoginSessionItem {
         return accountAutoLogin;
     }
 
+    public void setAccountNick(String accountNick) {
+        this.accountNick = accountNick;
+    }
 }
