@@ -128,6 +128,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
         // 서버에 리퀘스트를 보낼 때는 onPaging 값을 true 로 변경 후에 전송한다
         // 그리고 onPaging 은 서버에서 리스폰스를 성공적으로 받고 리스트 갱신 후에
         // onPaging 의 값을 false 로 변경한다
+
         qnaRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override

@@ -113,9 +113,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
     public void addItemList(ArrayList<QnaBoardItem> addQnaBoardItems){
         this.qnaBoardItems = addQnaBoardItems;
         notifyDataSetChanged();
-
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -146,7 +144,6 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
                 for (int i = 0; i < tagData.length; i++) {
                     tagArray.add(tagData[i]);
                 }
-
             }
             else{
                 tagArray.add(qnaBoardItem.getTag());
@@ -169,7 +166,7 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
         holder.qnaBoardComments.setText(String.valueOf(qnaBoardItem.getComments()));
         holder.qnaBoardWriter.setText(qnaBoardItem.getWriter());
 
-        holder.qnaBoardViews.setText(String.valueOf(position));
+        holder.qnaBoardViews.setText(String.valueOf(qnaBoardItem.getViews()));
 
 
         //holder.qnaBoardDate.setText(qnaBoardItem.getDate());
@@ -194,5 +191,9 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
             holder.qnaBoardImage.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    public QnaBoardItem getQnaBoardItem(int position){
+        return qnaBoardItems.get(position);
     }
 }

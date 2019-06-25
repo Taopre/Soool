@@ -36,7 +36,8 @@ import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Presenter.ProfilePresenter;
 import com.example.taopr.soool.R;
-import com.example.taopr.soool.Whatisthis;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.Whatisthis;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sangcomz.fishbun.FishBun;
@@ -224,15 +225,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void changeProfileInfoSuccess(ProfileInfo changedProfileInfo) {
         isChangeProfile = true;
         this.profileInfo = changedProfileInfo;
+
+        LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
+        loginSharedPreferences.UpdateUserNickname(this,changedProfileInfo.getAccountNick());
         Toast.makeText(this, "저장완료", Toast.LENGTH_SHORT).show();
+
         activateSaveButton(0);
     }
 
+
+    // 프로필 이미지를 설정 안한 경우에는 디폴트 값으로 'soool_default' 값 설정
     @Override
     public void deleteProfileImgSuccess() {
         isChangeProfile = true;
         profileInfo.setAccountImage("soool_default");
-        showProfileImage("soool_default");
+        showProfileImage(profileInfo.getAccountImage());
     }
 
     // 회원 탈퇴 성공

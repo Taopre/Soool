@@ -12,6 +12,7 @@ import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Presenter.Interface.QnaFmInter;
+import com.example.taopr.soool.View.QnaBoardActivity;
 import com.example.taopr.soool.View.QnaBoardDetailActivity;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
     public QnaFmPresenter(Context context){
         this.context = context;
         this.apiService = APIClient.getClient1().create(APIService.class);
-
     }
 
     // loadingKind 가 1일 경우에는 새로고침이므로 새로고침 아이콘을 통해 로딩중을 표시하기 때문에
@@ -74,7 +74,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
     @Override
     public void getItem(QnaBoardItem qnaBoardItem, Activity activity,int qnaListPosition) {
         this.activity = activity;
-        Toast.makeText(activity, qnaBoardItem.getTitle(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
         intent.putExtra("qnaBoardItem",qnaBoardItem);
         intent.putExtra("fromActivity", 0);
