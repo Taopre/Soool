@@ -3,77 +3,80 @@ package com.example.taopr.soool.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.example.taopr.soool.Object.InfoOfSoool;
+import com.bumptech.glide.Glide;
+import com.example.taopr.soool.Decorater.RecyclerDecoration;
+import com.example.taopr.soool.Object.InfoItem;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.TimeCalculator;
+import com.example.taopr.soool.Util.Whatisthis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
     private Activity activity;
-    private List<InfoOfSoool> infoOfSoools;
+    private ArrayList<InfoItem> infoItems;
+    private TimeCalculator timeCalculator;
     private Context context;
     private final String TAG ="정보_adapter";
+    private  String[] tags = new String[0];
+    private ArrayList<String> tagArray = new ArrayList<>();
 
-    public InfoAdapter(Activity activity, List<InfoOfSoool> info, Context context) {
+    public InfoAdapter(Activity activity, ArrayList<InfoItem> infoItems, Context context) {
         this.activity = activity;
         this.context = context;
-        this.infoOfSoools = info;
+        this.infoItems = infoItems;
+    }
+
+    public InfoAdapter(ArrayList<InfoItem> infoItems, Context context){
+        this.context = context;
+        this.infoItems = infoItems;
+        timeCalculator = new TimeCalculator();
     }
 
     @Override
     public int getItemCount() {
-        return infoOfSoools.size();
+        return infoItems.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView infoDate;
-
-        ImageView infoImage;
-
-        TextView infoScraps;
-
         TextView infoTitle;
-
+        ImageView infoCover;
+        TextView infoDate;
         TextView infoViews;
+        TextView infoWriter;
+        TextView infoComments;
+        HorizontalScrollView infoScrollView; // tag 담아둔 scrollView
+        RecyclerView infoTagView; // scrollView에 들어가는 tag-recyclerView
+
 
 
         public ViewHolder(View v) {
             super(v);
 
-            infoTitle = v.findViewById(R.id.infoTitle);
-            infoImage = v.findViewById(R.id.infoImage);
-            infoDate = v.findViewById(R.id.infoDate);
-            infoViews = v.findViewById(R.id.infoViews);
-            infoScraps = v.findViewById(R.id.infoScraps);
+            infoTitle = v.findViewById(R.id.itemInfoTitle); // info_of_soool.xml 지우고 나면 R.id.itemInfo(*) -> item(*)로 변경
+            infoCover = v.findViewById(R.id.itemInfoCover);
+            infoDate = v.findViewById(R.id.itemInfoDate);
+            infoViews = v.findViewById(R.id.itemInfoViews);
+            infoWriter = v.findViewById(R.id.itemInfoWriter);
+            infoComments = v.findViewById(R.id.itemInfoComments);
+            infoScrollView = v.findViewById(R.id.itemInfoTagSV);
+            infoTagView = v.findViewById(R.id.itemInfoTagList);
+            infoTagView.addItemDecoration(new RecyclerDecoration(32));
 
-            /*itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(activity, "click " +
-                            infoOfSoools.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    Toast.makeText(activity, "remove " +
-                           infoOfSoools.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
-                    removeItemView(getAdapterPosition());
-                    return false;
-                }
-            });*/
         }
     }
 
@@ -82,7 +85,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
        // View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.info, parent, false);
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_of_soool,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_info,viewGroup,false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -91,22 +94,81 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.i(TAG, "onBindViewHolder: ");
-        InfoOfSoool infoOfSoool = infoOfSoools.get(position);
 
-        // 데이터 결합
-       // holder.name.setText(data.getTitle());
-       // holder.number.setText(data.getNumber());
+        InfoItem infoItem = infoItems.get(position);
 
-        holder.infoTitle.setText(infoOfSoool.getTitle());
-        holder.infoDate.setText(infoOfSoool.getDate());
-        holder.infoViews.setText(String.valueOf(infoOfSoool.getViews()));
-        holder.infoScraps.setText(String.valueOf(infoOfSoool.getScraps()));
+        // 태그 받아서 배열에 담고 TagAdapter에 연결하기
+        tagArray = new ArrayList<String>();
+        Log.e(TAG, "onBindViewHolder: infoItem.getPostTag().length"+tagArray);
+        if(infoItem.getPostTag().length() > 0) {
+
+            // 태그 여러개일 때 정규표현식으로 분리하기
+            if (infoItem.getPostTag().contains("@##@")) {
+                tags = infoItem.getPostTag().split("@##@");
+                for (int i = 0; i < tags.length; i++) {
+                    tagArray.add(tags[i]);
+                }
+
+            }
+            else{
+                tagArray.add(infoItem.getPostTag());
+            }
+
+            // 기존에 만들어둔 qnaBoardTagAdapter 재활용
+            QnaBoardTagAdapter tagAdapter = new QnaBoardTagAdapter(context, tagArray, 1);
+            holder.infoTagView.setAdapter(tagAdapter);
+            holder.infoTagView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        }
+
+
+        holder.infoTitle.setText(infoItem.getTitle());
+        holder.infoComments.setText(String.valueOf(infoItem.getComments()));
+        holder.infoWriter.setText(infoItem.getWriter());
+        holder.infoViews.setText(String.valueOf(position));
+
+
+
+        // 작성시간 '몇 분 전' 으로 표기하기
+        holder.infoDate.setText(timeCalculator.getbeforeTime(infoItem.date));
+
+
+        // 이미지 glide로 띄우기
+        String infoCoverURI= Whatisthis.serverIp + infoItem.getCover();
+        //String infoCoverURI= Whatisthis.serverIp + "/infoImage/"+ infoItem.getCover();
+        Glide.with(context)
+                .load(infoCoverURI)
+                .centerCrop()
+                .into(holder.infoCover);
+
 
     }
 
-    private void removeItemView(int position) {
-        infoOfSoools.remove(position);
+    // 정보 fragment에서는 필요없지만 북마크 fragment에서는 추가, 삭제 필요
+    public ArrayList<InfoItem> removeItem(int position){
+
+        // removing a single item from the list
+        infoItems.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, infoOfSoools.size()); // 지워진 만큼 다시 채워넣기.
+        return infoItems;
+
     }
+
+
+    public ArrayList<InfoItem> addItem(InfoItem infoItem) {
+
+        // adding a single item to the list
+        infoItems.add(0, infoItem);
+        notifyItemInserted(0);
+        return infoItems;
+
+    }
+
+    public void addList(ArrayList<InfoItem> addListOfItems){
+
+        // adding a list of items into the list
+        this.infoItems = addListOfItems;
+        notifyDataSetChanged();
+
+    }
+
 }

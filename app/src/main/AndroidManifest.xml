@@ -40,10 +40,7 @@
             android:theme="@style/NoTitle" />
         <activity
             android:name=".View.LoginActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".View.QnaBoardDetailActivity"
             android:screenOrientation="portrait"
@@ -52,9 +49,7 @@
         <activity android:name=".View.CalendarAddSchActivity" />
         <activity
             android:name=".View.HomeActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".View.VoteImageActivity"
             android:screenOrientation="portrait"
@@ -62,6 +57,7 @@
         <activity
             android:name=".View.ProfileActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".View.InfoDetailActivity"></activity>
         <activity
             android:name=".View.PassFindActivity"
             android:screenOrientation="portrait"

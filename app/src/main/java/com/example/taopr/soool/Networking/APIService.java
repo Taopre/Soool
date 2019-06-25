@@ -3,6 +3,9 @@ package com.example.taopr.soool.Networking;
 import com.example.taopr.soool.Object.PassFIndResponse;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.CommentListObject;
+import com.example.taopr.soool.Object.InfoBookmark;
+import com.example.taopr.soool.Object.InfoContent;
+import com.example.taopr.soool.Object.InfoList;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
@@ -219,6 +222,36 @@ public interface APIService {
                                          @Field("accountNo") int accountNo,
                                          @Field("likeType") int likeType,
                                          @Field("btnOnOff") int btnOnOff);
+
+    // 정보 게시물 리스트 아이템 받아오기(infoRecyclerView)
+    @FormUrlEncoded
+    @POST("/infoPost/infoList.php")
+    Observable<InfoList> getInfoItem(@Field("accountNo") int accountNo,
+                                     @Field("lastPostNo") int lastPostNo);
+
+
+    // 정보 게시물 상세보기
+    @FormUrlEncoded
+    @POST("/infoPost/infoDetail.php")
+    Observable<InfoContent> getInfoText(@Field("postNo") int postNo,
+                                        @Field("accountNo") int accountNo);
+
+
+    // 북마크 누를 때
+    @FormUrlEncoded
+    @POST("/infoPost/infoBookmark.php")
+    Observable<InfoBookmark> updateBookmark(@Field("postNo") int postNo,
+                                            @Field("accountNo") int accountNo);
+
+
+
+    // 내 북마크 목록 받아오기
+    @FormUrlEncoded
+    @POST("/accountManage/myBookmark.php")
+    Observable<InfoList> getMyBookmarkItem(@Field("accountNo") int accountNo);
+
+
+
 
     @FormUrlEncoded
     @POST("/passFind/passFind.php")

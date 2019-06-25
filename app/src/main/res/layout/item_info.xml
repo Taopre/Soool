@@ -3,26 +3,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android" 
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="18dp">
     
     <ImageView
-        android:layout_width="324dp"
-        android:layout_height="98dp"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
         android:layout_marginTop="@dimen/all_space_between_18dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/itemInfoImage"
+        android:id="@+id/itemInfoCover"
         android:src="@drawable/starting_soool"
         android:scaleType="fitXY"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/itemInfoTitle"
-        android:layout_below="@id/itemInfoImage"
+        android:layout_below="@id/itemInfoCover"
         android:textSize="@dimen/text_size_15dp"
         android:textColor="@color/black"
         tools:text="글의 제목입니다"
-        android:layout_alignLeft="@id/itemInfoImage"
+        android:layout_alignLeft="@id/itemInfoCover"
         android:layout_marginTop="13dp"
         />
     <TextView
@@ -95,11 +96,12 @@
         android:id="@+id/itemInfoTagSV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/itemInfoImage"
-        android:layout_alignRight="@id/itemInfoImage"
+        android:layout_alignLeft="@id/itemInfoCover"
+        android:layout_alignRight="@id/itemInfoCover"
         android:layout_below="@id/itemInfoWriter"
         android:layout_marginTop="@dimen/all_space_between_10dp"
         android:scrollbars="none"
+        android:layout_marginBottom="@dimen/all_space_between_16dp"
         >
 
         <android.support.v7.widget.RecyclerView
@@ -108,13 +110,6 @@
             android:id="@+id/itemInfoTagList"/>
 
     </HorizontalScrollView>
-    
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grayLight_a50"
-        android:layout_below="@id/itemInfoTagSV"
-        android:layout_marginTop="@dimen/all_space_between_16dp"
-        />
+
 
 </RelativeLayout>

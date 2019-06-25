@@ -1,23 +1,13 @@
 package com.example.taopr.soool.Presenter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.taopr.soool.Calendar.CalendarDB;
 import com.example.taopr.soool.Networking.APICallback;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
-import com.example.taopr.soool.Object.CalendarItem;
-import com.example.taopr.soool.Object.CalendarItemMap;
-import com.example.taopr.soool.Object.InfoOfSoool;
-import com.example.taopr.soool.Object.InfoOfSooolList;
-import com.example.taopr.soool.Object.QnaBoardItem;
-import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Object.UserProfile;
 import com.example.taopr.soool.Presenter.Interface.MypageFmInter;
-
-import java.util.ArrayList;
 
 public class MypageFmPresenter extends BasePresenter implements MypageFmInter {
 
