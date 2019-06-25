@@ -1,15 +1,13 @@
 package com.example.taopr.soool.View;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.taopr.soool.HideKeyboard;
+import com.example.taopr.soool.Util.HideKeyboard;
 import com.example.taopr.soool.Object.LoginItem;
 import com.example.taopr.soool.Object.PassFIndResponse;
 import com.example.taopr.soool.Presenter.PassFindPresenter;
@@ -60,7 +58,7 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
                 LoginItem loginItem = new LoginItem();
                 loginItem.setId(et_email.getText().toString());
                 loginItem.setPwd(et_password.getText().toString());
-                loginItem.setAutologinStatus(false);
+                loginItem.setAutologinStatus(true);
                 passFindPresenter.login(loginItem);
 
                 break;
