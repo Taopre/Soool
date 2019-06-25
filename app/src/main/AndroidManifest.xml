@@ -62,6 +62,10 @@
         <activity
             android:name=".View.ProfileActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.PassFindActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" />
 
     </application>
 

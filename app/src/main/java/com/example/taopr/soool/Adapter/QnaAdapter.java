@@ -18,10 +18,9 @@ import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.TimeCalculator;
-import com.example.taopr.soool.Whatisthis;
+import com.example.taopr.soool.Util.Whatisthis;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 

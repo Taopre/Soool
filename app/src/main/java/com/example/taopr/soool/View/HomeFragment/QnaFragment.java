@@ -193,6 +193,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
             public void onLongItemClick(View view, int position) {
                 qnaFmPresenter.getItem(qnaBoardItems.get(position), getActivity(),position);
             }
+
         });
     }
 

@@ -38,34 +38,15 @@ public class QnaBoardItem implements Parcelable{
     public int comments;
     @SerializedName("views")
     public int views;
-    @SerializedName("isBad")
-    public int isBad;
     @SerializedName("isLike")
     public int isLike;
-
-    public QnaBoardItem(int postNo, String tag, int qnaCate, int accountNo, String writer, String date,
-                        String title, String content, String image, int goods, int bads, int comments, int views, int isBad, int isLike) {
-        this.postNo = postNo;
-        this.tag = tag;
-        this.qnaCate = qnaCate;
-        this.accountNo = accountNo;
-        this.writer = writer;
-        this.date = date;
-        this.title = title;
-        this.content = content;
-        this.image = image;
-        this.goods = goods;
-        this.bads = bads;
-        this.comments = comments;
-        this.views = views;
-        this.isBad = isBad;
-        this.isLike = isLike;
-    }
+    @SerializedName("isBad")
+    public int isBad;
 
     public QnaBoardItem(){}
 
     public QnaBoardItem(int postNo, String tag, int qnaCate, int accountNo, String writer, String date,
-                        String title, String content, String image, int goods, int bads, int comments, int views) {
+                        String title, String content, String image, int goods, int bads, int comments, int views, int isLike, int isBad) {
         this.postNo = postNo;
         this.tag = tag;
         this.qnaCate = qnaCate;
@@ -79,6 +60,8 @@ public class QnaBoardItem implements Parcelable{
         this.bads = bads;
         this.comments = comments;
         this.views = views;
+        this.isLike = isLike;
+        this.isBad = isBad;
     }
     protected QnaBoardItem(Parcel in) {
         postNo = in.readInt();
@@ -94,8 +77,8 @@ public class QnaBoardItem implements Parcelable{
         bads = in.readInt();
         comments = in.readInt();
         views = in.readInt();
-        isBad = in.readInt();
         isLike = in.readInt();
+        isBad = in.readInt();
     }
 
     public static final Creator<QnaBoardItem> CREATOR = new Creator<QnaBoardItem>() {
@@ -238,19 +221,19 @@ public class QnaBoardItem implements Parcelable{
         this.content = content;
     }
 
-    public int getIsBad() {
-        return isBad;
-    }
-
-    public void setIsBad(int isBad) {
-        this.isBad = isBad;
-    }
-
     public int getIsLike() {
         return isLike;
     }
 
     public void setIsLike(int isLike) {
         this.isLike = isLike;
+    }
+
+    public int getIsBad() {
+        return isBad;
+    }
+
+    public void setIsBad(int isBad) {
+        this.isBad = isBad;
     }
 }

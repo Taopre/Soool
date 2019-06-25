@@ -1,5 +1,7 @@
 package com.example.taopr.soool.Networking;
 
+import com.example.taopr.soool.Object.PassFIndResponse;
+import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.CommentListObject;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Object.QnaBoardItem;
@@ -217,6 +219,11 @@ public interface APIService {
                                          @Field("accountNo") int accountNo,
                                          @Field("likeType") int likeType,
                                          @Field("btnOnOff") int btnOnOff);
+
+    @FormUrlEncoded
+    @POST("/passFind/passFind.php")
+    Call<ResponseBody> checkEmailInPassFind(@Field("email") String email);
+
 
     @FormUrlEncoded
     @POST("/comment/commentinsert.php")
