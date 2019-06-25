@@ -27,6 +27,23 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".View.StartingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".View.QnaBoardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle"/>
+        <activity
+            android:name=".View.LoginActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".View.QnaBoardDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle"/>
+        <activity android:name=".View.CalendarSchActivity" />
+        <activity android:name=".View.CalendarAddSchActivity" />
+        <activity
+            android:name=".View.HomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,35 +51,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".View.QnaBoardActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoTitle" />
-        <activity
-            android:name=".View.LoginActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity
-            android:name=".View.QnaBoardDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoTitle" />
-        <activity android:name=".View.CalendarSchActivity" />
-        <activity android:name=".View.CalendarAddSchActivity" />
-        <activity
-            android:name=".View.HomeActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".View.VoteImageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoTitle" />
-        <activity
-            android:name=".View.ProfileActivity"
-            android:screenOrientation="portrait" />
-
+        <activity android:name=".View.VoteImageActivity" android:screenOrientation="portrait"  android:theme="@style/NoTitle"/>
     </application>
 
 </manifest>
