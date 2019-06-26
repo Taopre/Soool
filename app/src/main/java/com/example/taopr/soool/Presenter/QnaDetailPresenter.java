@@ -414,15 +414,14 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
         commentModel.commentLikeRequest(postNo,commentNo,accountNo,like_check,commentORrecomment,recommentNo);
     }
     @Override
-    public void commentDeleteRequest(int post, int commentNo)
+    public void commentDeleteRequest(int post, int commentNo,int recommentNo)
     {
-        commentModel.commentDeleteRequest(post,commentNo);
+        commentModel.commentDeleteRequest(post,commentNo,recommentNo);
     }
 
     @Override
     public void commentDeleteResponss(int response,int commentCount)
     {
-        Log.d(TAG, "닌불려지냐?");
         view.commentDeleteGoResponse(response,commentCount);
     }
 

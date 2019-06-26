@@ -332,7 +332,7 @@ public class CommentModel
                     }
                 });
     }
-    public void commentDeleteRequest(int postNo,int commentNo)
+    public void commentDeleteRequest(int postNo,int commentNo,int recommentNo)
     {
         Observable.just("")
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -348,7 +348,7 @@ public class CommentModel
                                         {
 
                                             service = APIClient.getClient1().create(APIService.class);
-                                            final Call<ResponseBody> reqeust = service.commentDeleteRequest(postNo,commentNo);
+                                            final Call<ResponseBody> reqeust = service.commentDeleteRequest(postNo,commentNo,recommentNo);
 
                                             reqeust.enqueue(new Callback<ResponseBody>()
                                             {
@@ -380,7 +380,6 @@ public class CommentModel
                                                                 qnaDetailPresenter.commentDeleteResponss(1,commentCount);
                                                                 Log.d(TAG,"off");
                                                             }
-
                                                         }
                                                     }
                                                     catch (Exception e)

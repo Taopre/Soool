@@ -9,11 +9,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
+import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.CommentItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
@@ -21,7 +28,10 @@ import com.example.taopr.soool.Object.RecommentItem;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.TimeCalculator;
+import com.example.taopr.soool.View.ProfileActivity;
 import com.google.gson.Gson;
+import com.nikhilpanju.recyclerviewenhanced.OnActivityTouchListener;
+import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +60,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     private QnaDetailPresenter qnaDetailPresenter;
 
+    //
 
     int postNo;
     int accountNo;//좋아요기능시 필요
@@ -61,6 +72,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private int position;
 
     private TimeCalculator timeCalculator;
+    private NoticeDialog noticeDialog;
 
 
     public interface toss_commentNo_interface
@@ -85,16 +97,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         this.postNo = postNo;
         this.accountNo = accountNo;
         timeCalculator = new TimeCalculator();
-        //this.accountNo = accountNo;//좋아요 기능시 필요
     }
-
-    public CommentAdapter(Activity activity, Context contex)
-    {
-        this.activity = activity;
-        this.context = context;
-        //this.commentNopresenter = commentNopresenter;
-    }
-
 
     @Override
     public int getItemCount()
@@ -134,17 +137,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         TextView commentDelete; //댓삭제 버튼
 
+
+        LinearLayout comment_row;
+        ImageView comment_delete_img;
+
         public ViewHolder(View v)
         {
             super(v);
 
-            commentNo = v.findViewById(R.id.commentNo);
+            //commentNo = v.findViewById(R.id.commentNo);
             //accountNo = v.findViewById(R.id.accountNo);
             commentWriter = v.findViewById(R.id.commentWriter);
             date = v.findViewById(R.id.date);
             commentContent = v.findViewById(R.id.commentContent);
             commentLike = v.findViewById(R.id.commentLike);
             recommentCount = v.findViewById(R.id.recommentCount);
+            comment_delete_img = v.findViewById(R.id.comment_delete_img);
             //recomment = v.findViewById(R.id.recomment);
 
 
@@ -152,7 +160,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             //recommentHide = v.findViewById(R.id.recommentHide);
             recommentList = v.findViewById(R.id.recommentList);
             recomment_insert = v.findViewById(R.id.recomment_insert);
+
+
             commentDelete = v.findViewById(R.id.commentDelete);
+
+            comment_row = v.findViewById(R.id.comment_row);
 //            likeButton = v.findViewById(R.id.likeButton);
 //            like_confirm = v.findViewById(R.id.like_confirm);
         }
@@ -166,7 +178,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         final CommentItem commentitem = commentitems.get(position);
 
 
-        holder.commentNo.setText(String.valueOf(commentitem.getCommentNo()));
+
         //holder.accountNo.setText(String.valueOf(commentitem.getAccountNo()));
 
 
@@ -238,14 +250,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 //                }
                 if (CommentOrRecomment == false)
                 {
-
                     CommentOrRecomment = true;
                     toss_commentNo_interface.toss_commentNo_atActivity(commentitem.getCommentNo(),commentitem.getCommentWriter());
-
                 }
                 else if(CommentOrRecomment == true)
                 {
-
 
                     CommentOrRecomment = false;
                     holder.recomment_insert.setText("답글달기");
@@ -257,10 +266,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
         });
 
-
-
-
-        //
         //interface에선 댓글번호를 넘겨받으면 메소드가 호출되며
         //해당 메소드는 commentActivity에 댓글번호를 넘겨주는 메소드 호출
         //
@@ -274,8 +279,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         //5월 30일 까지 답글쓰고 불러오는거까지 붙이고 파일 정리 mvp적용후
         //본 프로젝트에 붙이고 좋아요와 수정삭제가 제플린에없네? ㅇㅋ 건너띔 ㅅㄱ 해도 삭제만하자..
         //좋아요는 바로아래있음
-
-
 
 
         ///// 댓글 좋아요 기능 ////
@@ -303,10 +306,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             commentitem.setAccountNo(accountNo + 0);
         }
 
-        //Log.d(TAG,String.valueOf(likeList[0]));
-        //int accountNo = accountNo;
 
-        //final int SearchCount = Arrays.binarySearch(likeList,22);//임의의 회원번호값
         qnaDetailPresenter = new QnaDetailPresenter(activity,context);
         qnaDetailPresenter.setView(this);
         //해당 댓글에 좋아요를 누르지 않은 회원
@@ -416,9 +416,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                                 Log.d(TAG,String.valueOf(jsonObject));
                                 recommentitems.add(recommentitem);
 
-                                RecommentAdapter recommentAdapter = new RecommentAdapter(context,recommentitems,activity,postNo,commentitem.getCommentNo());
-                                //recommentAdapter recommentAdapter = new recommentAdapter(context,recommnetitems,accountNo);
-
+                                RecommentAdapter recommentAdapter = new RecommentAdapter(context,recommentitems,activity,postNo,commentitem.getCommentNo(),accountNo);
                                 LinearLayoutManager manager = new LinearLayoutManager(context);
                                 holder.recommentList.setAdapter(recommentAdapter);
                                 holder.recommentList.setLayoutManager(manager);
@@ -441,8 +439,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     }
                     else if (recommentViewOrHide == true)
                     {
-
-
                         holder.recommentList.setVisibility(View.GONE);
                         recommentitems.clear();
                         holder.recommentView.setText("답글보기");
@@ -454,54 +450,68 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             });
         }
 
+
+
+
+
         //댓글 삭제
-        if (commentitem.getAccountNo() == accountNo)
+        View.OnClickListener positiveListener = new View.OnClickListener()
         {
-            holder.commentDelete.setText("댓글삭제");
-            holder.commentDelete.setOnClickListener(new View.OnClickListener()
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
+
+                if (commentitem.getAccountNo() == accountNo)
                 {
-
-
-                    if (commentitem.getRecommentCount() == 0)
-                    {
-                        toss_commentNo_interface.toss_commentCount_actiivity(commentitem.getCommentNo());
-                        //commentitems.remove(position);
-                        //notifyItemRemoved(position);
-                        notifyDataSetChanged();
-                    }
-                    else
-                    {
-                        holder.commentContent.setText("삭제된 댓글입니다.");
-                        notifyDataSetChanged();
-                    }
-
+                    toss_commentNo_interface.toss_commentCount_actiivity(commentitem.getCommentNo());
                 }
-            });
+                else
+                {
+                    Toast.makeText(context,"본인 댓글만 삭제 하실 수 있습니다",Toast.LENGTH_LONG).show();
+                }
+                noticeDialog.dismiss();
 
+            }
+        };
 
-        }
-        else
+        View.OnClickListener negativeListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                noticeDialog.dismiss();
+            }
+        };
+
+        holder.comment_row.setLongClickable(true);
+        holder.comment_row.setOnLongClickListener(new View.OnLongClickListener()
         {
-            holder.commentDelete.setVisibility(View.GONE);
-        }
+            @Override
+            public boolean onLongClick(View v)
+            {
+                noticeDialog = new NoticeDialog(context,
+                        "댓글을 삭제하시겠습니까?", false, "예",
+                        "아니요", positiveListener, negativeListener);
+                noticeDialog.show();
+
+                return false;
+            }
+        });
+
+
 
         if (commentitem.getCommentContent().equals("삭제된 댓글입니다."))
         {
             holder.commentDelete.setVisibility(View.GONE);
             holder.commentLike.setVisibility(View.GONE);
             holder.recomment_insert.setVisibility(View.GONE);
+            holder.comment_delete_img.setVisibility(View.VISIBLE);
 
             int recommentCountPadding = (int) context.getResources().getDimension(R.dimen.all_space_between_18dp);
+            holder.commentContent.setTextColor(context.getResources().getColor(R.color.grayMain));
             holder.recommentCount.setPadding(recommentCountPadding,0,0,0);
-
         }
 
-
-
     }
+
+
 
     @Override
     public void getDataSuccess(QnaVoteItem qnaVoteItem)
@@ -554,14 +564,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void likeGoResponse(int response)
     {
-//        if (response == 0)
-//        {
-//            like_confirm = true;
-//        }
-//        else if (response == 1)
-//        {
-//            like_confirm = false;//이미 좋아요를 누른 댓글
-//        }
+
     }
 
     @Override
@@ -573,18 +576,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void commentDeleteGoResponse(int response,int commentCount)
     {
-
+        notifyDataSetChanged();
     }
-
-
-//////아이템 스와이프 드래그
-    public void onItemRemove(int position)
-    {
-
-
-    }
-
-
 
 }
 

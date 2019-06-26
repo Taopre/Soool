@@ -301,7 +301,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/linearLayout2"
-                layout="@layout/commentlayout" />
+                layout="@layout/comment_layout" />
         </RelativeLayout>
 
     </ScrollView>
