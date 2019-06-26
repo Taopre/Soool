@@ -1000,10 +1000,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
         });
 
-
-
-
-
     }
 
 public void EditText_commentWirte_tag()

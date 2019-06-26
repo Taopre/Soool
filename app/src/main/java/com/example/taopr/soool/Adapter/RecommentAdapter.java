@@ -262,14 +262,6 @@ class ViewHolder extends RecyclerView.ViewHolder
         });
 
 
-
-
-
-
-
-
-
-
         Log.d(TAG,String.valueOf(recommentitem.getRecommentNo()));
     }
 

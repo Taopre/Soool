@@ -422,7 +422,6 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
     @Override
     public void commentDeleteResponss(int response,int commentCount)
     {
-        Log.d(TAG, "닌불려지냐?");
         view.commentDeleteGoResponse(response,commentCount);
     }
 

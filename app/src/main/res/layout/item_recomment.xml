@@ -7,7 +7,6 @@
     android:background="#1A9D9D97"
     android:id="@+id/recomment_row"
     >
-
     <TextView
         android:id="@+id/recommentWriter"
         android:paddingTop="18dp"
@@ -17,8 +16,6 @@
         android:textSize="@dimen/text_size_12dp"
         android:textColor="@color/grayMain"
         />
-
-
     <TextView
         android:id="@+id/recommentContent"
         android:paddingRight="18dp"

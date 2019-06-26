@@ -253,8 +253,7 @@ public interface APIService {
     @POST("/comment/commentDelete.php")
     Call<ResponseBody> commentDeleteRequest(@Field("postNo") int postNo,
                                             @Field("commentNo") int commentNo,
-                                            @Field("recommentNo") int recommentNo
-                                            );
+                                            @Field("recommentNo") int recommentNo);
 
     @FormUrlEncoded
     @POST("/comment/commentList.php")//게시물 번호 쏴줘야됨

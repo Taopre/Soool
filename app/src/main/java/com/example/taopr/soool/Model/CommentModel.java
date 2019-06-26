@@ -380,7 +380,6 @@ public class CommentModel
                                                                 qnaDetailPresenter.commentDeleteResponss(1,commentCount);
                                                                 Log.d(TAG,"off");
                                                             }
-
                                                         }
                                                     }
                                                     catch (Exception e)

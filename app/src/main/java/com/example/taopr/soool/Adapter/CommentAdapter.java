@@ -60,6 +60,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     private QnaDetailPresenter qnaDetailPresenter;
 
+    //
 
     int postNo;
     int accountNo;//좋아요기능시 필요
@@ -135,15 +136,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
          //TextView like_confirm;
 
         TextView commentDelete; //댓삭제 버튼
-        LinearLayout comment_rowBG;
-        RelativeLayout comment_row;
+
+
+        LinearLayout comment_row;
         ImageView comment_delete_img;
 
         public ViewHolder(View v)
         {
             super(v);
 
-            commentNo = v.findViewById(R.id.commentNo);
+            //commentNo = v.findViewById(R.id.commentNo);
             //accountNo = v.findViewById(R.id.accountNo);
             commentWriter = v.findViewById(R.id.commentWriter);
             date = v.findViewById(R.id.date);
@@ -176,7 +178,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         final CommentItem commentitem = commentitems.get(position);
 
 
-        holder.commentNo.setText(String.valueOf(commentitem.getCommentNo()));
+
         //holder.accountNo.setText(String.valueOf(commentitem.getAccountNo()));
 
 
