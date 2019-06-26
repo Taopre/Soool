@@ -28,7 +28,6 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
     private final int QNA_MOVE_TO_DETAIL= 3100;
     private final int QNA_MOVE_TO_WRITE = 3200;
 
-
     public QnaFmPresenter(Context context){
         this.context = context;
         this.apiService = APIClient.getClient1().create(APIService.class);

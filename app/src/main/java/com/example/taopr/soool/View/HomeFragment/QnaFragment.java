@@ -241,6 +241,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
 
     // response 를 전달받는데 실패 했을 경우 '페이지에 오류가 있다'라는 메세지를 유저에게 보여주고
     // isResponse 값을 false 로 변경
+
     @Override
     public void getDataFail(String message) {
         qnaSwipeRefreshLayout.setRefreshing(false);

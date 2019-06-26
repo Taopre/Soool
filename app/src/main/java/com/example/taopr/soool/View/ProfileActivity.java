@@ -96,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private NoticeDialog noticeDialog;
 
     private PermissionListener permissionlistener;
+    private LoginSharedPreferences loginSharedPreferences;
     int accountNo;
 
 
@@ -107,6 +108,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+
+        loginSharedPreferences = new LoginSharedPreferences();
 
         permissionlistener = new PermissionListener() {
             @Override
@@ -226,7 +229,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         isChangeProfile = true;
         this.profileInfo = changedProfileInfo;
 
-        LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
+
         loginSharedPreferences.UpdateUserNickname(this,changedProfileInfo.getAccountNick());
         Toast.makeText(this, "저장완료", Toast.LENGTH_SHORT).show();
 
@@ -243,11 +246,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     // 회원 탈퇴 성공
-    // 회원 탈퇴 성공 시 탈퇴가 성공했다는 Toast 메시지를 보여주고
+    // 회원 탈퇴 성공 시 쉐어드에 저장된 회원정보를 리셋 후
+    // 탈퇴가 성공했다는 Toast 메시지를 보여주고
     // Starting 페이지로 이동하면서 스택 초기화
 
     @Override
     public void deleteAccountSuccess() {
+
+        LoginSharedPreferences.LoginUserDelete(ProfileActivity.this,"LoginAccount");
 
         Toast.makeText(this, "탈퇴 ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(ProfileActivity.this,StartingActivity.class);
