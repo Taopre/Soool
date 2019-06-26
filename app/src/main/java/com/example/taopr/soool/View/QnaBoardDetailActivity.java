@@ -46,6 +46,7 @@ import com.example.taopr.soool.Util.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,7 +100,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     private String commentWriter;
     QnaDetailPresenter qnaDetailPresenterComment;
     String setText;
-    private boolean commentBoolean = false, recommendResponse = false;
+    private boolean commentBoolean = false;
+
+    private boolean commentDeleteBoolean = false;
+    int Delete_item_position;
+
+    private boolean  recommendResponse = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -521,7 +527,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         qnaBoardDetailImageAdapter.notifyDataSetChanged();
                         break;
                 }
-                
+
                 break;
             case R.id.drawupModify:
                 Intent intent = new Intent(this, QnaBoardActivity.class);

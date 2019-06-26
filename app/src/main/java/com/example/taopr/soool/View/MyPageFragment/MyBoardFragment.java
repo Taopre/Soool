@@ -68,15 +68,14 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     public MyBoardFragment() {
     }
 
-
     // 서버에 요청을 보내고 응답을 받았다는 것을 마이페이지에 전달.
     // 그 이유는 마이페이지에 부착한 프래그먼트의 로딩화면들을 마이페이지에서 통괄적으로 보여주고 있기 때문
     // 그리고 response 를 받았을 때 마이페이지 response 결과를 보내 마이페이지에서 response 결과가 false 일 경우
     // 서버에서 MyBoard 프래그먼트를 부착할 경우 서버에 요청을 보내고, true 일 경우에는 응답을 통해 받아왔던 게시글을 보여준다
 
     public interface MyPageView{
-        void startMyBoardLoading(); // 마이페이지에서 서버에 요청을 보내고 리스폰스를 기다리고 있다는 걸 마이페이지에 전달
-        void endMyBoardLoading(Boolean isMyBoardRes); // 마이페이지에서 서버로부터 응답을 받았다는 것을 상위 마이페이지에 전달
+        void startMyBoardLoading(); // 마이보드에서 서버에 요청을 보내고 리스폰스를 기다리고 있다는 걸 (Home 액티비티를 통해) 마이페이지에 전달
+        void endMyBoardLoading(Boolean isMyBoardRes); // 마이보드에서 서버로부터 응답을 받았다는 것을 (Home 액티비티를 통해) 마이페이지에 전달
         void updateProfileForMyBoard(); // 유저의 '내 게시글' , '내 포인트' 의 값이 변화 했을경우 Home 액티비티를 거쳐 마이페이지 프래그먼트에 알려준다
     }
 
@@ -161,10 +160,13 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                 int listSize = qnaBoardItems.size()-1;
                 int visibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-                if (listSize == visibleItemPosition){
-                    if (!onPaging && qnaBoardItems.size()>0){
-                        onPaging = true;
 
+                // 내 게시글의 경우에는 게시글 수가 4개 이상인 경우에만 페이징
+                // 5개로 한 이유는 한 페이지에 최대로 들어가는 게시글 수가 4개이기 때문
+                // 이 조건이 없을 시에 작성한 글이 1개일 경우 서버에서 받아왔을 때는 스크롤을 하지 않아도 페이징이 되어버림
+                if (listSize == visibleItemPosition && qnaBoardItems.size()>=4){
+                    if (!onPaging ){
+                        onPaging = true;
                         // visibleItemPosition 대신 listSize 변수로 한 이유는
                         // onScrolled() 함수를 들어와 서버에 리퀘스트를 보내는 시간 사이에 값이 변하지 않는 변수로 하기 위해서
                         //int lastPostNo = qnaBoardItems.get(visibleItemPosition).getPostNo();
@@ -254,7 +256,9 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind) {
-        if (qnaBoardItems.size() == 0) {
+        if (qnaBoardItems.size() == 0 && this.qnaBoardItems.size() > 0) {
+
+            Log.i(TAG, "getDataSuccess: " + qnaBoardItems.size());
             Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
         }
         else {
@@ -333,9 +337,17 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
             switch (actionKind) {
                 case 0:
-                    qnaAdapter.addItem(qnaBoardItem);
-                    qnaBoardItems.add(qnaBoardItem);
-                    myBoardRecycler.smoothScrollToPosition(0);
+                    if (qnaAdapter == null) {
+                        qnaBoardItems.add(qnaBoardItem);
+                        qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
+                        myBoardRecycler.setAdapter(qnaAdapter);
+                    }
+                    else {
+                        qnaAdapter.addItem(qnaBoardItem);
+                        qnaBoardItems.add(qnaBoardItem);
+                        myBoardRecycler.smoothScrollToPosition(0);
+                    }
+
                 case 1:
                     qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
                     break;

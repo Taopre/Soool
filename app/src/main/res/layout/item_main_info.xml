@@ -2,26 +2,26 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="240dp"
         android:src="@drawable/ic_add_a_photo_gray_100dp"
         android:scaleType="fitXY"
-        android:id="@+id/itemHomeInfoImage"
+        android:id="@+id/mainInfoImage"
         />
 
     <HorizontalScrollView
-        android:id="@+id/h_scrollView"
+        android:id="@+id/mainInfoTagSV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/all_space_between_18dp"
         android:layout_marginRight="@dimen/all_space_between_18dp"
         android:layout_marginTop="@dimen/all_space_between_16dp"
-        android:layout_above="@id/qnaInfoLay"
+        android:layout_above="@id/mainInfoLay"
         android:layout_marginBottom="@dimen/all_space_between_10dp"
         android:scrollbars="none"
         >
@@ -29,15 +29,15 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/qnaboardTagView"/>
+            android:id="@+id/mainInfoTagView"/>
     </HorizontalScrollView>
 
     <RelativeLayout
         android:layout_width="230dp"
         android:layout_height="wrap_content"
-        android:id="@+id/qnaInfoLay"
-        android:layout_alignLeft="@id/h_scrollView"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/mainInfoLay"
+        android:layout_alignLeft="@id/mainInfoTagSV"
+        android:layout_alignBottom="@id/mainInfoImage"
         android:layout_marginBottom="14dp"
         >
         <TextView
@@ -46,69 +46,69 @@
             tools:text="글의 제목입니다"
             android:textColor="@color/background_white"
             android:textSize="@dimen/text_size_20dp"
-            android:id="@+id/qnaBoardTitle"/>
+            android:id="@+id/mainInfoTitle"/>
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/qnaBoardWriter"
+            android:id="@+id/mainInfoWriter"
             tools:text="작성자"
             style="@style/grayLightSize12TextView"
-            android:layout_below="@id/qnaBoardTitle"
+            android:layout_below="@id/mainInfoTitle"
             android:layout_marginTop="5dp"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/qnaBoardDate"
+            android:id="@+id/mainInfoDate"
             tools:text="작성시간"
             style="@style/grayLightSize12TextView"
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
-            android:layout_toRightOf="@id/qnaBoardWriter"
-            android:layout_alignTop="@id/qnaBoardWriter"/>
+            android:layout_toRightOf="@id/mainInfoWriter"
+            android:layout_alignTop="@id/mainInfoWriter"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/qnaBoardViewsTV"
+            android:id="@+id/mainInfoViewsTV"
 
             style="@style/grayLightSize12TextView"
             android:text="조회수"
-            android:layout_toRightOf="@id/qnaBoardDate"
-            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_toRightOf="@id/mainInfoDate"
+            android:layout_alignTop="@id/mainInfoWriter"
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/qnaBoardViews"
+            android:id="@+id/mainInfoViews"
 
             style="@style/grayLightSize12TextView"
             tools:text="5"
-            android:layout_toRightOf="@id/qnaBoardViewsTV"
-            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_toRightOf="@id/mainInfoViewsTV"
+            android:layout_alignTop="@id/mainInfoWriter"
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
 
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/qnaBoardCommentsTV"
+            android:id="@+id/mainInfoCommentsTV"
             android:text="댓글수"
 
             style="@style/grayLightSize12TextView"
-            android:layout_toRightOf="@id/qnaBoardViews"
-            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_toRightOf="@id/mainInfoViews"
+            android:layout_alignTop="@id/mainInfoWriter"
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/qnaBoardComments"
+            android:id="@+id/mainInfoComments"
             tools:text="12"
             style="@style/grayLightSize12TextView"
-            android:layout_toRightOf="@id/qnaBoardCommentsTV"
-            android:layout_alignTop="@id/qnaBoardWriter"
+            android:layout_toRightOf="@id/mainInfoCommentsTV"
+            android:layout_alignTop="@id/mainInfoWriter"
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
     </RelativeLayout>
 
