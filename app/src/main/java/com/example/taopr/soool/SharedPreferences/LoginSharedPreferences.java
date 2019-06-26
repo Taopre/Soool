@@ -9,8 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class LoginSharedPreferences {
-    private String sharedName = "LoginUser";
-    private String sharedKey = "LoginAccount";
+    private String nameOfShared = "LoginUser";
+    private String keyOfShared = "LoginAccount";
     private String TAG = "쉐어드";
     public static void LoginUserSave(Context context, String key, String Value){
         SharedPreferences pref = context.getSharedPreferences("LoginUser", Context.MODE_PRIVATE);
@@ -46,7 +46,7 @@ public class LoginSharedPreferences {
     // 쉐어드에 저장한 유저정보인 loginSessionItem 객체를 가져와서 닉네임만 변경 후 다시 객체를 json 화 해서
     // 쉐어드에 저장
     public void UpdateUserNickname(Context context,String userNickname){
-        String data = LoginSharedPreferences.LoginUserLoad(context,this.sharedKey);
+        String data = LoginSharedPreferences.LoginUserLoad(context,this.keyOfShared);
         Gson gson = new GsonBuilder().create();
         // JSON 으로 변환
 
@@ -57,16 +57,17 @@ public class LoginSharedPreferences {
         String loginSessionItemSt = gson.toJson(loginSessionItem, LoginSessionItem.class);
 
         //쉐어드에 객체 저장
-        LoginSharedPreferences.LoginUserSave(context, this.sharedKey, loginSessionItemSt);
+        LoginSharedPreferences.LoginUserSave(context, this.keyOfShared, loginSessionItemSt);
     }
 
     public String getAccountNick(Context context){
         String accountNick;
-        String data = LoginSharedPreferences.LoginUserLoad(context,this.sharedKey);
+        String data = LoginSharedPreferences.LoginUserLoad(context,this.keyOfShared);
         Gson gson = new GsonBuilder().create();
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNick = loginSessionItem.getAccountNick();
         return accountNick;
     }
+
 }

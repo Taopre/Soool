@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.example.taopr.soool.Adapter.MainInfoAdapter;
 import com.example.taopr.soool.Adapter.QnaAdapter;
 import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
 import com.example.taopr.soool.Object.QnaBoardItem;
@@ -28,22 +31,24 @@ import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MainFragment extends BaseFragment  implements MainFmInter.View{
+public class MainFragment extends BaseFragment  implements MainFmInter.View{//},MainInfoAdapter.OnItemClick{
 
     @BindView(R.id.mainProgress)
     ProgressBar mainProgress;
     @BindView(R.id.mainQnaRecycler)
     RecyclerView mainQnaRecycler;
+    @BindView(R.id.mainInfoViewPager)
+    ViewPager mainInfoViewPager;
 
     String TAG = "홈 메인 프래그먼트";
     private LinearLayoutManager linearLayoutManager;
     private MainFmPresenter mainFmPresenter;
     private QnaAdapter qnaAdapter;
+    private MainInfoAdapter mainInfoAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     // qna , info 글 리스트를 받아왔는지 확인을 하고 못 받은 글 리스트에 대해서 서버에 요청한다
@@ -53,6 +58,14 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_main, container, false);
         unbinder = ButterKnife.bind(this,view);
+
+        mainInfoAdapter = new MainInfoAdapter(getContext(), new MainInfoAdapter.OnItemClick() {
+            @Override
+            public void onItemClick(int position) {
+                Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+            }
+        });
+        mainInfoViewPager.setAdapter(mainInfoAdapter);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         mainQnaRecycler.addItemDecoration(              // divider 구분선
@@ -183,4 +196,8 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     @Override
     public void hideLoading() { mainProgress.setVisibility(View.GONE);}
 
+    /*@Override
+    public void onItemClick(int position) {
+
+    }*/
 }
