@@ -301,11 +301,11 @@ public interface APIService {
     // Main 프래그먼트 Qna 리스트 아이템 받아오기
     @FormUrlEncoded
     @POST("/mainPost/mainPostQna.php")
-    Observable<QnaBoardList> MainGetQnaItem(@Field("accountNo") int accountNo);
+    Observable<QnaBoardList> mainGetQnaItem(@Field("accountNo") int accountNo);
 
     // Main 프래그먼트 info 리스트 아이템 받아오기
     @FormUrlEncoded
-    @POST("/qnapost/QnaList.php")
-    Observable<QnaBoardList> MainGetInfoItem(@Field("accountNo") int accountNo,
-                                            @Field("lastPostNo") int lastPostNo);
+    @POST("/mainPost/mainPostInfo.php")
+    Observable<InfoList> mainGetInfoItem(@Field("accountNo") int accountNo);
+
 }
