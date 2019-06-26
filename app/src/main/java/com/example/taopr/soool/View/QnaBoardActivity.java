@@ -101,7 +101,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
     String tag = "";
     String UploadImgPath, boardImagePath, accountNick;
     String[] tagData = new String[0];
-    int voteFlag = 1, actionKind = 9999, qnaListPosition, count = 2, accountNo, voteSelect = 2;
+    int maybeDeletePosition = 999, voteFlag = 1, actionKind = 9999, qnaListPosition, count = 2, accountNo, voteSelect = 2;
     boolean boardImageSelect = false, reSelectVoteImage = false;
 
     @Override
@@ -186,16 +186,17 @@ public class QnaBoardActivity extends AppCompatActivity implements
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.drawupBack:
-                finish();
-                return true;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    // 얘 머지?;;;;
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.drawupBack:
+//                finish();
+//                return true;
+//
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private ArrayList<QnaBoardVoteItem> populateList(){
 
@@ -328,6 +329,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     voteImageAdapter.notifyDataSetChanged();
 
                     voteImage.clear();
+
+                    Log.d(TAG, "이미지 투표 초기화?: "+gridVoteItemArrayList.size() + "// " + voteImage.size());
                 } catch (NullPointerException e) {
                     Log.d(TAG, "onClick: "+e);
                 }
@@ -392,6 +395,14 @@ public class QnaBoardActivity extends AppCompatActivity implements
             case R.id.drawupBack:
                 Toast.makeText(this, "뒤로가기 클릭", Toast.LENGTH_SHORT).show();
                 //이전 액티비티로 인탠트 사용해줘야할 부분.
+//                if (actionKind == 1) {
+//                    Intent intent = new Intent(this, QnaBoardDetailActivity.class);
+////                    intent.putExtra("qnaBoardItem", receiveQnaBoardItem);
+////                    intent.putExtra("fromActivity", 0);
+////                    intent.putExtra("qnaListPosition", qnaListPosition);
+//                    startActivity(intent);
+//                    finish();
+//                }
                 finish();
                 break;
             case R.id.drawupEnroll:
@@ -714,7 +725,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     // you can get an image path(ArrayList<String>) on <0.6.2
 
                     path = data.getParcelableArrayListExtra(Define.INTENT_PATH);
-
                     if (boardImageSelect == false) {
                         if (reSelectVoteImage == false) {
 
@@ -736,49 +746,89 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 File file = new File(voteImage.get(i));
                                 Uri test = Uri.fromFile(file);
 
-                                gridVoteItem = new GridVoteItem(false, "", test);
+                                gridVoteItem = new GridVoteItem(false, "", test, 0);
                                 gridVoteItemArrayList.add(gridVoteItem);
                             }
 
                             if (path.size() < 6) {
                                 Uri uriTest = Uri.parse("");
 
-                                gridVoteItem = new GridVoteItem(false, "항목추가", uriTest);
+                                gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
                                 gridVoteItemArrayList.add(gridVoteItem);
                             }
 
                             voteImageAdapter = new VoteImageAdapter(this, gridVoteItemArrayList, this);
                             gridView.setAdapter(voteImageAdapter);
                         } else {
-                            for (int i = 0; i < path.size(); i++) {
-                                Uri imageUri = path.get(i);
-                                String[] filePath = { MediaStore.Images.Media.DATA };
-                                Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
-                                cursor.moveToFirst();
-                                String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+                            // 이미지 path + grid 합쳐서 6이면 항목추가 항목 삭제하기
+                            // 6보다 작으면 먼저 항목추가 아이템 삭제 후, 이미지 추가작업 후에 마지막 아이템에 항목추가 추가하기
 
-                                BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                                Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);
-                                bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+                            // 이미지가 최대인 6장일 경우
+                            if (path.size() + gridVoteItemArrayList.size() == 6) {
+                                if (maybeDeletePosition != 999) {
+                                    gridVoteItemArrayList.remove(maybeDeletePosition);
+                                }
 
-                                voteImage.add(imagePath);
+                                for (int i = 0; i < path.size(); i++) {
+                                    Uri imageUri = path.get(i);
+                                    String[] filePath = {MediaStore.Images.Media.DATA};
+                                    Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
+                                    cursor.moveToFirst();
+                                    String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                                File file = new File(voteImage.get(voteImage.size() - 1));
-                                Uri test = Uri.fromFile(file);
+                                    BitmapFactory.Options options = new BitmapFactory.Options();
+                                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+                                    bitmap = ExifUtils.rotateBitmap(imagePath, bitmap);
 
-                                gridVoteItem = new GridVoteItem(false, "a", test);
-                                gridVoteItemArrayList.add(gridVoteItem);
+                                    voteImage.add(imagePath);
+
+                                    File file = new File(voteImage.get(voteImage.size() - 1));
+                                    Uri test = Uri.fromFile(file);
+
+                                    gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                    gridVoteItemArrayList.add(gridVoteItem);
+                                }
+
+                                maybeDeletePosition = 999;
                             }
+                            // 이미지가 6장보다 작을 경우.
+                            else {
+                                if (maybeDeletePosition != 999) {
+                                    gridVoteItemArrayList.remove(maybeDeletePosition);
+                                }
 
-                            if (voteImage.size() < 6) {
+                                for (int i = 0; i < path.size(); i++) {
+                                    Uri imageUri = path.get(i);
+                                    String[] filePath = {MediaStore.Images.Media.DATA};
+                                    Cursor cursor = getContentResolver().query(imageUri, filePath, null, null, null);
+                                    cursor.moveToFirst();
+                                    String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+
+                                    BitmapFactory.Options options = new BitmapFactory.Options();
+                                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+                                    bitmap = ExifUtils.rotateBitmap(imagePath, bitmap);
+
+                                    voteImage.add(imagePath);
+
+                                    File file = new File(voteImage.get(voteImage.size() - 1));
+                                    Uri test = Uri.fromFile(file);
+
+                                    gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                    gridVoteItemArrayList.add(gridVoteItem);
+                                }
+
+                                Log.d(TAG, "onActivityResult: 조건문 안녕 제대로 추가안한거 맞아 여긴");
                                 Uri uriTest = Uri.parse("");
-                                gridVoteItem = new GridVoteItem(false, "항목추가", uriTest);
+                                gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
                                 gridVoteItemArrayList.add(gridVoteItem);
+
+                                maybeDeletePosition = 999;
                             }
 
                             voteImageAdapter.notifyDataSetChanged();
-                            gridView.setAdapter(voteImageAdapter);
+//                            gridView.setAdapter(voteImageAdapter);
 
                             reSelectVoteImage = false;
                         }
@@ -898,19 +948,28 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        reSelectVoteImage = true;
-        gridVoteItemArrayList.remove(position);
-        voteImageAdapter.notifyDataSetChanged();
-        FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
+
     }
 
     @Override
-    public void onListTextClick(int position) {
-        Toast.makeText(this, gridVoteItemArrayList.get(position).getStatus(), Toast.LENGTH_SHORT).show();
+    public void onListImageBtnClick(int position) {
         // 그리드 뷰 버튼 클릭 리스너
         // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
+        voteImage.remove(position);
         gridVoteItemArrayList.remove(position);
         voteImageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onListLayoutClick(int position) {
+        Log.d(TAG, "아이템체크: "+gridVoteItemArrayList.get(position).getImageIden()+"//"+gridVoteItemArrayList.get(position).getStatus());
+        if (gridVoteItemArrayList.get(position).getImageIden() == 1) {
+            reSelectVoteImage = true;
+            maybeDeletePosition = position;
+//            gridVoteItemArrayList.remove(position);
+//            voteImageAdapter.notifyDataSetChanged();
+            FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
+        }
     }
 
 }

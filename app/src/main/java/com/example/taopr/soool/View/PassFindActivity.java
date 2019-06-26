@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.taopr.soool.Util.HideKeyboard;
+import com.example.taopr.soool.Util.Keyboard;
 import com.example.taopr.soool.Object.LoginItem;
 import com.example.taopr.soool.Object.PassFIndResponse;
 import com.example.taopr.soool.Presenter.PassFindPresenter;
@@ -25,7 +25,7 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
     EditText et_password;
 
     PassFindPresenter passFindPresenter;
-    HideKeyboard hideKeyboard;
+    Keyboard keyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,10 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
         passFindPresenter = new PassFindPresenter(this);
         passFindPresenter.setView(this);
 
-        hideKeyboard = new HideKeyboard(this);
+        keyboard = new Keyboard(this);
+
+        et_email.requestFocus();
+        keyboard.showKeyboard(et_email);
     }
 
     @OnClick({R.id.receiveMail,R.id.login})
@@ -47,7 +50,7 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
 
                 if (et_email.getText().length() > 0) {
                     passFindPresenter.EmailCheckReq(et_email.getText().toString());
-                    hideKeyboard.hideKeyboard(et_email);
+                    keyboard.hideKeyboard(et_email);
                 } else {
                     Toast.makeText(view.getContext(), "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class GridVoteItem {
 
+    private int imageIden;
     private String status;
     private Uri image;
     private String strImage;
@@ -17,10 +18,11 @@ public class GridVoteItem {
         this.status = status;
     };
 
-    public GridVoteItem (boolean isStringOrUri, String status, Uri image) {
+    public GridVoteItem (boolean isStringOrUri, String status, Uri image, int imageIden) {
         this.isStringOrUri = isStringOrUri;
         this.status = status;
         this.image = image;
+        this.imageIden = imageIden;
 
     }
 
@@ -58,6 +60,14 @@ public class GridVoteItem {
         this.strImage = strImage;
         this.vote = vote;
         this.isStringOrUri = isStringOrUri;
+    }
+
+    public int getImageIden() {
+        return imageIden;
+    }
+
+    public void setImageIden(int imageIden) {
+        this.imageIden = imageIden;
     }
 
     public boolean isStringOrUri() {
