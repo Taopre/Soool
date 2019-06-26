@@ -5,7 +5,8 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutView">
 
         <ImageView
             android:id="@+id/grid_image"
@@ -14,8 +15,7 @@
             android:layout_height="103dp"
             android:scaleType="fitXY"
             android:paddingBottom="6dp"
-            android:paddingVertical="6dp">
-        </ImageView>
+            android:paddingVertical="6dp" />
 
         <TextView
             android:id="@+id/grid_text"
@@ -23,8 +23,7 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp" >
-        </TextView>
+            android:textSize="14dp" />
 
         <ImageView
             android:id="@+id/grid_btn"
