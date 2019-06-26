@@ -65,7 +65,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     @BindView(R.id.myPageDrawerNickname)
     TextView myPageDrawerNickname;
 
-
     private String TAG = "홈 액티비티 ";
     // 현재 탭, 이전 탭
     // 0 -> main , 1 -> info

@@ -8,10 +8,13 @@ import android.util.Log;
 import com.example.taopr.soool.Networking.APICallback;
 import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
+import com.example.taopr.soool.Object.InfoItem;
+import com.example.taopr.soool.Object.InfoList;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardList;
 import com.example.taopr.soool.Presenter.Interface.MainFmInter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.View.InfoDetailActivity;
 import com.example.taopr.soool.View.QnaBoardDetailActivity;
 
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
     private final int MAIN_MOVE_TO_QNA = 1100;
     private final int MAIN_MOVE_TO_INFO = 1200;
     private MainFmPresenter.View view;
-    public ArrayList<QnaBoardItem> qnaBoardItems;
+
     private int accountNo;
     private boolean isQnaBoardRes,isInfoRes; // 로딩화면을 위해 response 를 받았는지 안받은지에 대한 상태변수
     public boolean qnaBoardResSuccess, infoResSuccess; // qna,info 글 리스트를 서버로부터 성공적으로 받아 왔는지에 대한 상태변수
@@ -45,13 +48,23 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
     }
 
     @Override
-    public void getIntent(Activity activity, int qnaListPosition ,QnaBoardItem qnaBoardItem) {
+    public void getIntentMoveQna(Activity activity, int qnaListPosition ,QnaBoardItem qnaBoardItem) {
         Intent intent = new Intent(activity, QnaBoardDetailActivity.class);
         intent.putExtra("qnaBoardItem",qnaBoardItem);
         intent.putExtra("fromActivity", 0);
         intent.putExtra("actionKind", 1);
         intent.putExtra("qnaListPosition",qnaListPosition);
         view.moveToPage(intent,MAIN_MOVE_TO_QNA);
+    }
+
+    @Override
+    public void getIntentMoveInfo(Activity activity, int infoListPosition, InfoItem infoItem) {
+        Intent intent = new Intent(activity, InfoDetailActivity.class);
+        intent.putExtra("infoItem",infoItem);
+        intent.putExtra("fromActivity", 0);
+        intent.putExtra("actionKind", 1);
+        intent.putExtra("infoPosition",infoListPosition);
+        view.moveToPage(intent,MAIN_MOVE_TO_INFO);
     }
 
     // qna 게시글 서버에 요청하고 받아오는 부분 ( info 도 일치 )
@@ -67,7 +80,7 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
         view.showLoading();
 
         addSubscription(
-                apiService.MainGetQnaItem(accountNo),
+                apiService.mainGetQnaItem(accountNo),
                 new APICallback<QnaBoardList>() {
                     @Override
                     public void onSuccess(QnaBoardList qnaBoardList) {
@@ -82,14 +95,12 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
                     public void onFailure(String msg) {
                         Log.i(TAG, "onFailure: qna");
                         qnaBoardResSuccess = false;
-                        view.getDataFail(0); // dataType 값이 0 -> info / 1 -> qna
+                        view.getDataFail(1); // dataType 값이 0 -> info / 1 -> qna
                     }
 
                     @Override
                     public void onFinish() {
                         isQnaBoardRes = true;
-                        //TODO: info 받아오는 코드가 없어서 임시코딩해논 부분 나중에 삭제
-                        isInfoRes = true;
 
                         checkLoading();
                     }
@@ -101,6 +112,37 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
     public void loadInfoList() {
         isInfoRes = false;
         view.showLoading();
+
+        // 데이터 로딩
+        addSubscription(
+                apiService.mainGetInfoItem(accountNo),
+                new APICallback<InfoList>() {
+                    @Override
+                    public void onSuccess(InfoList infoList) {
+
+                        Log.i(TAG, "onSuccess: ");
+                        ArrayList<InfoItem> infoItems = new ArrayList(infoList.getInfoItems());
+                        view.getInfoSuccess(infoItems);
+                        infoResSuccess = true;
+
+                    }
+
+                    @Override
+                    public void onFailure(String msg) {
+                        Log.i(TAG, "onFailure: qna");
+                        qnaBoardResSuccess = false;
+                        view.getDataFail(0); // dataType 값이 0 -> info / 1 -> qna
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        isInfoRes = true;
+                        checkLoading();
+
+                    }
+                }
+        );
+
     }
 
     // qna 게시글과 info 게시글을 전부 가져왔을 경우에 로딩화면을 제거

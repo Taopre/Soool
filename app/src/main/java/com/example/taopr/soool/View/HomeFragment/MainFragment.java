@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.taopr.soool.Adapter.MainInfoAdapter;
 import com.example.taopr.soool.Adapter.QnaAdapter;
 import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
+import com.example.taopr.soool.Object.InfoItem;
 import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Presenter.Interface.MainFmInter;
 import com.example.taopr.soool.Presenter.MainFmPresenter;
@@ -59,37 +60,32 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{//},
         View view = inflater.inflate(R.layout.fragment_home_main, container, false);
         unbinder = ButterKnife.bind(this,view);
 
-        mainInfoAdapter = new MainInfoAdapter(getContext(), new MainInfoAdapter.OnItemClick() {
-            @Override
-            public void onItemClick(int position) {
-                Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
-            }
-        });
-        mainInfoViewPager.setAdapter(mainInfoAdapter);
-
         linearLayoutManager = new LinearLayoutManager(getContext());
         mainQnaRecycler.addItemDecoration(              // divider 구분선
                 new DividerItemDecoration(getContext(),linearLayoutManager.getOrientation()));
         mainQnaRecycler.setLayoutManager(linearLayoutManager);
         mainQnaRecycler.addOnItemTouchListener(selectItemOnqnaRecycler());
 
+        if (mainFmPresenter == null){
+            mainFmPresenter = new MainFmPresenter(getContext());
+            mainFmPresenter.setView(this);
+        }
+
         infoList(); // info 글 리스트 관련
-        qnaBoardList();
+        qnaBoardList(); // qna 글 리스트 관련
 
         return view;
     }
 
     private void infoList() {
-        if (mainFmPresenter == null){
-            mainFmPresenter = new MainFmPresenter(getContext());
-            mainFmPresenter.setView(this);
-        }
+
         // info response 를 받지 못했다면
         if (!mainFmPresenter.infoResSuccess){
-
+            mainFmPresenter.loadInfoList();
         }
         else{
             // info 글 뷰로 보여주는 부분
+            mainInfoViewPager.setAdapter(mainInfoAdapter);
         }
     }
 
@@ -100,13 +96,9 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{//},
         }
         else{
             // qna 글 리스트 뷰로 보여주는 부분
-            if (qnaAdapter == null) {
-                qnaAdapter = new QnaAdapter(mainFmPresenter.qnaBoardItems,getContext());
-            }
             mainQnaRecycler.setAdapter(qnaAdapter);
         }
     }
-
 
     // qna 게시글을 가져오는데 성공했을 경우 받아온 게시글을 게시글 리사이클러뷰의 어댑터에 전달
     @Override
@@ -118,13 +110,32 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{//},
     }
 
     @Override
-    public void getInfoSuccess() {
+    public void getInfoSuccess(ArrayList<InfoItem> infoItems) {
+        if( mainInfoAdapter == null){
+            mainInfoAdapter = new MainInfoAdapter(getContext(),infoItems,new MainInfoAdapter.OnItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    InfoItem clickInfoItem = mainInfoAdapter.getClickInfoItem(position);
+                    Toast.makeText(getContext(), clickInfoItem.getTitle(), Toast.LENGTH_SHORT).show();
+                    // TODO: InfoDetail 액티비티 완성 시 밑에 주석 제거
+                   // mainFmPresenter.getIntentMoveInfo(getActivity(),position,clickInfoItem);
+                }
+            });
+            mainInfoViewPager.setAdapter(mainInfoAdapter);
+        }
 
     }
 
+    // 서버로부터 리스폰스를 받는데 실패 했을 경우
+    // 0 -> info 리스트 , 1 -> qna 리스트
     @Override
     public void getDataFail(int dataType) {
-
+        switch (dataType){
+            case 0:
+                break;
+            case 1:
+                break;
+        }
     }
 
     // 메인 페이지에서는 게시글을 추가하는 경우는 없다
@@ -174,13 +185,13 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{//},
             @Override
             public void onItemClick(View view, int position) {
                 QnaBoardItem qnaBoardItem = qnaAdapter.getQnaBoardItem(position);
-                mainFmPresenter.getIntent(getActivity(),position,qnaBoardItem);
+                mainFmPresenter.getIntentMoveQna(getActivity(),position,qnaBoardItem);
             }
 
             @Override
             public void onLongItemClick(View view, int position) {
                 QnaBoardItem qnaBoardItem = qnaAdapter.getQnaBoardItem(position);
-                mainFmPresenter.getIntent(getActivity(),position,qnaBoardItem);
+                mainFmPresenter.getIntentMoveQna(getActivity(),position,qnaBoardItem);
             }
         });
     }
