@@ -254,7 +254,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void deleteAccountSuccess() {
 
         LoginSharedPreferences.LoginUserDelete(ProfileActivity.this,"LoginAccount");
-
         Toast.makeText(this, "탈퇴 ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(ProfileActivity.this,StartingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

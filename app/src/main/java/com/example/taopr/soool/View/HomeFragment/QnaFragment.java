@@ -138,6 +138,8 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
                 int listSize = qnaBoardItems.size()-1;
                 int visibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
+                Log.i(TAG, "onScrolled: 스크롤 " + dy + " "+dx);
+
                 if (listSize == visibleItemPosition){
                     if (!onPaging && qnaBoardItems.size()>0){
                         onPaging = true;
