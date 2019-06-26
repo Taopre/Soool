@@ -57,7 +57,7 @@
 
     <!-- Toast 메세지 -->
 
-    <string name="toast_notice_no_exist_post">더 이상 게시글이 존재하지 않습니다</string>
+    <string name="toast_notice_no_exist_post">마지막 게시물입니다</string>
     <string name="toast_notice_page_error">페이지에 오류가 있습니다</string>
     <string name="toast_notice_one_more">다시 시도해주세요</string>
 

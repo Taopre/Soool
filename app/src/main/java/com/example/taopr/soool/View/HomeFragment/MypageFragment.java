@@ -233,15 +233,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 break;
             case R.id.tabBookmark:
                 currentTab = BOOKMARK_INT;
-                // '버튼2' 클릭 시 '프래그먼트2' 호출
-                if(bookmarkFragment ==null){
-                    // TODO: 나중에 지워줘야 하는 부분
-                    callFragment();
-
-                }
-                else {
-                    callFragment();
-                }
+                callFragment();
                 break;
 
             case R.id.tabCalendar:
@@ -289,6 +281,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
             case 1:
                 bookmarkFragment = new BookmarkFragment();
                 transaction.replace(R.id.fragment_container, bookmarkFragment);
+                //TODO : mypageFragment에서 bookmarkFragment로 보내줘야하는 부분 작성
 
                 break;
 
