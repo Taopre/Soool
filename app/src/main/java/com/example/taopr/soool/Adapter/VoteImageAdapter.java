@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +21,8 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
     private GridviewItemClickListner gridviewItemClickListner;
 
     public interface GridviewItemClickListner {
-        void onListTextClick(int position) ;
+        void onListImageBtnClick(int position) ;
+        void onListLayoutClick(int position) ;
     }
 
 
@@ -62,8 +64,9 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
             TextView textView = convertView.findViewById(R.id.grid_text);
             ImageView imageView = convertView.findViewById(R.id.grid_image);
             ImageView button = convertView.findViewById(R.id.grid_btn);
+            FrameLayout layoutView = convertView.findViewById(R.id.layoutView);
 
-            viewHolder = new ViewHolder(textView, imageView, button);
+            viewHolder = new ViewHolder(textView, imageView, button, layoutView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -71,6 +74,7 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
         viewHolder.button.setTag(position);
         viewHolder.textView.setTag(position);
         viewHolder.imageView.setTag(position);
+        viewHolder.layoutView.setTag(position);
 
         viewHolder.textView.setText(item.get(position).getStatus());
         viewHolder.imageView.setImageURI(item.get(position).getImage());
@@ -83,6 +87,7 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
 
         viewHolder.button.setOnClickListener(this);
         viewHolder.textView.setOnClickListener(this);
+        viewHolder.layoutView.setOnClickListener(this);
 
         if (item.get(position).getStatus().equals("항목추가")) {
             viewHolder.button.setVisibility(View.GONE);
@@ -95,11 +100,13 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
         private TextView textView;
         private ImageView imageView;
         private ImageView button;
+        private FrameLayout layoutView;
 
-        public ViewHolder(TextView textView, ImageView imageView, ImageView button) {
+        public ViewHolder(TextView textView, ImageView imageView, ImageView button, FrameLayout layoutView) {
             this.textView = textView;
             this.imageView = imageView;
             this.button = button;
+            this.layoutView = layoutView;
         }
     }
 
@@ -108,7 +115,12 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
         switch (v.getId()) {
             case R.id.grid_btn:
                 if (this.gridviewItemClickListner != null) {
-                    this.gridviewItemClickListner.onListTextClick((int)v.getTag()) ;
+                    this.gridviewItemClickListner.onListImageBtnClick((int)v.getTag()) ;
+                }
+                break;
+            case R.id.layoutView:
+                if (this.gridviewItemClickListner != null) {
+                    this.gridviewItemClickListner.onListLayoutClick((int)v.getTag()) ;
                 }
                 break;
         }
