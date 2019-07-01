@@ -238,6 +238,7 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
 
     }
 
+
     // 상세보기 페이지로 이동
     @Override
     public void showInfoDetail(Intent intent, int requestCode) {
