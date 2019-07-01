@@ -246,13 +246,19 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         if(accountPW.getText().length() >0 && confirmPW.getText().length()>0) {
             if (accountPW.getText().toString().equals(confirmPW.getText().toString())) {
                 Log.i(TAG, "editConfirmPW: 일치");
-                signUpNoticeEnablePw.setVisibility(View.GONE);
+                signUpNoticeEnablePw.setText(getString(R.string.sign_up_match_password));
+                signUpNoticeEnablePw.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));
+                signUpNoticeEnablePw.setVisibility(View.VISIBLE);
                 pwEnable = true;
             } else {
                 Log.i(TAG, "editConfirmPW: 불일치");
+                signUpNoticeEnablePw.setText(getString(R.string.sign_up_not_match_password));
+                signUpNoticeEnablePw.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.redMain));
                 signUpNoticeEnablePw.setVisibility(View.VISIBLE);
                 pwEnable = false;
             }
+        }else{
+            signUpNoticeEnablePw.setVisibility(View.GONE);
         }
     }
 

@@ -1,7 +1,9 @@
 package com.example.taopr.soool.Adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.InfoItem;
 import com.example.taopr.soool.R;
@@ -108,7 +114,6 @@ public class MainInfoAdapter extends PagerAdapter{
             mainInfoViews.setText(String.valueOf(position));
 
 
-
             // 작성시간 '몇 분 전' 으로 표기하기
             mainInfoDate.setText(timeCalculator.getbeforeTime(infoItem.date));
 
@@ -118,7 +123,24 @@ public class MainInfoAdapter extends PagerAdapter{
             Glide.with(context)
                     .load(infoCoverURI)
                     .centerCrop()
+                    .addListener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            // 이미지 로드에 실패 했을 경우
+                            // reload 를 진행할 것인지, reload 를 진행한다면 회수를 정해야 함
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            // 이미지 로드 완료 했을 때
+                            // 투명도 설정, 투명도를 준 이유 이미지안의 글씨들이 좀 더 선명하게 보이게 하기 위해서
+                            return false;
+                        }
+                    })
+                    .thumbnail(0.1f)
                     .into(mainInfoImage);
+
         }
 
         // 뷰페이저에 추가.
@@ -126,6 +148,21 @@ public class MainInfoAdapter extends PagerAdapter{
 
         return view ;
     }
+
+/*
+    private RequestListener<String, Drawable> requestListener = new RequestListener<String, GlideDrawable>() {
+        @Override
+        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+// 예외사항 처리
+            return false;
+        }
+        @Override
+        public boolean onResourceReady(GlideDrawable resouorce, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+// 이미지 로드 완료됬을 때 처리
+            return false;
+        }
+    }
+*/
 
     @Override
     public int getCount() {
