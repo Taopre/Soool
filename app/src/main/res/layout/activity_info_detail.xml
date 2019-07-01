@@ -13,14 +13,24 @@
         layout="@layout/sub_actionbar"
         android:id="@+id/actionbar"/> -->
 
+    <ProgressBar
+        android:id="@+id/infoDetailProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
     <!-- 본문(전체 스크롤) : 제목, 게시물 설명, 글 내용 모두 포함 -->
     <ScrollView
         android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/actionbar">
+        android:layout_below="@+id/actionbar"
+        android:layout_above="@+id/infoCommentContainer">
 
         <RelativeLayout
+            android:id="@+id/bodyRelative"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -31,7 +41,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/all_space_between_18dp"
-                android:layout_marginTop="@dimen/all_space_between_16dp"
                 android:orientation="vertical">
 
                 <!-- 태그 (가로 스크롤) -->
@@ -40,7 +49,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/all_space_between_10dp"
-                    android:layout_marginBottom="@dimen/all_space_between_16dp"
                     android:scrollbars="none">
 
                     <android.support.v7.widget.RecyclerView
@@ -57,7 +65,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/all_space_between_12dp"
-                    android:textSize="@dimen/text_size_15dp"
+                    android:layout_marginBottom="2dp"
+                    android:textSize="@dimen/text_size_18dp"
                     android:textColor="@color/black"
                     tools:text="제목"/>
 
@@ -66,6 +75,7 @@
                     android:id="@+id/infoDetailInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/all_space_between_18dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -126,6 +136,7 @@
                 android:layout_height="45dp"
                 android:layout_below="@id/infoDetailContent"
                 android:layout_marginHorizontal="@dimen/all_space_between_18dp"
+                android:layout_marginBottom="@dimen/all_space_between_20dp"
                 android:background="@drawable/border_all">
 
                 <RelativeLayout
@@ -199,33 +210,46 @@
     </ScrollView>
 
     <!-- 댓글작성창 -->
-    <LinearLayout
+
+    <RelativeLayout
         android:id="@+id/infoCommentContainer"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:background="@color/background_white">
+
+        <View
+            android:id="@+id/infoCommentBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/all_line_1dp"
+            android:background="@color/grayLight_a50"
+            android:layout_alignTop="@id/infoCommentButton"
+            android:layout_alignParentStart="true"/>
 
         <EditText
             android:id="@+id/infoCommentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:hint="@string/qna_detail_hint_write_comment"
             android:textColor="@color/grayMain"
             android:textSize="@dimen/text_size_14dp"
             android:background="@color/background_white"
-            android:layout_marginHorizontal="@dimen/all_space_between_18dp"/>
+            android:layout_toLeftOf="@id/infoCommentButton"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/all_space_between_18dp"
+            />
 
         <Button
             android:id="@+id/infoCommentButton"
             android:layout_width="70dp"
-            android:layout_height="51dp"
+            android:layout_height="match_parent"
             android:background="@color/greenMain"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:textSize="@dimen/text_size_14dp"
             android:textColor="@color/background_white"
             android:text="등록"/>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

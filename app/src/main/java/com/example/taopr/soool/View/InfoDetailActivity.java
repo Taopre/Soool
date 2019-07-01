@@ -1,7 +1,12 @@
 package com.example.taopr.soool.View;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,16 +26,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.InfoContentText;
 import com.example.taopr.soool.Object.InfoItem;
 import com.example.taopr.soool.Presenter.InfoDetailPresenter;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.View.LayoutInflater.InflateBody;
 import com.example.taopr.soool.View.LayoutInflater.InflateImage;
 import com.example.taopr.soool.View.LayoutInflater.InflateSubtitle;
@@ -54,6 +65,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
     // Bookmark related Variables
     boolean hasBookmarked = false;
+    boolean bookmarkChanged = false;
     int bookmarkNo;
 
     // Views
@@ -89,7 +101,8 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     @BindView(R.id.infoCommentButton)
     Button infoCommentButton;
 
-
+    @BindView(R.id.bodyRelative)
+    RelativeLayout bodyRelative;
 
     //(ACTION BAR)
     TextView subActionBarRight, subActionBarLeft;
@@ -115,12 +128,9 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_info_detail);
         ButterKnife.bind(this);
 
-        infoProgress = findViewById(R.id.infoProgress);
+        infoProgress = findViewById(R.id.infoDetailProgress);
         infoDetailPresenter = new InfoDetailPresenter(this);
         infoDetailPresenter.setView(this);
-
-        // Keyboard(INPUT)
-        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE); // dealing with keyboards (i guess)
 
         // getData sent from InfoFragment & sharedPreference
         getIntentInfo();
@@ -128,6 +138,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
         // loadAdditionalData
         infoDetailPresenter.getAdditionalData(accountNo, postNo);
+        Log.e(TAG, "onCreate: send accnoutNo: " + accountNo + " , postNo: " + postNo);
 
     }
 
@@ -139,7 +150,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.subActionBarLeftImage:
                 // TODO : forResult로 무언가 보내줘야하는 거 같음 (지금 앱 터짐)
                 // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.app.Activity.finish()' on a null object reference
-                mActivity.finish();
+                backToFragments();
                 break;
             case R.id.infoDetailBookmark:
                 updateBookmarkView(hasBookmarked, bookmarkNo);
@@ -201,56 +212,55 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         this.bookmarkNo = bookmarkNo;
         this.hasBookmarked = hasBookmarked;
 
-        Log.e(TAG, "getDataSuccess: BOOKMARK!!" + bookmarkNo + " | " + hasBookmarked );
-        Log.d(TAG, "getDataSuccess: " + infoText.get(0).getText());
+        // 조회수 업데이트하기
+        int updateViews = infoItem.getViews() + 1;
+        infoItem.setViews(updateViews);
+        infoDetailView.setText(String.valueOf(infoItem.getViews()));
 
-
-        //View subtitle, body, image;
-        //LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //bodyInflater.inflate(R.layout.inflate_body, this, true);
+        // View 여러개 생성해두기
+        TextView texts[] = new TextView[infoText.size()];
+        ImageView ivs[] = new ImageView[infoText.size()];
 
         // Type: 부제목 0, 내용 1, 이미지 2
         for (int i = 0; i < infoText.size(); i++) {
 
-            TextView subtitle, body;
-            ImageView image;
             int type = infoText.get(i).getType();
             switch (type) {
                 case 0:
-                    Log.d(TAG, "getText: " + infoText.get(i).getText());
-                    //InflateSubtitle inflateSubtitle = new InflateSubtitle(getApplicationContext());
-                    //subtitle = inflateSubtitle(getApplicationContext(), infoText.get(i).getText());
-                    infoDetailContent.addView(inflateSubtitle(getApplicationContext(), infoText.get(i).getText()));
-                    /*
-                    subtitle = inflater.inflate(R.layout.inflate_subtitle, null);
-                    infoDetailContent.addView(subtitle);
-                    TextView subtitle_tv = (TextView)findViewById(R.id.subtitle_tv);
-                    subtitle_tv.setText(infoText.get(i).getText());*/
+                    Log.d(TAG, "getText: 0 " + infoText.get(i).getText());
+                    InflateSubtitle inflateSubtitle = new InflateSubtitle(getApplicationContext());
+                    infoDetailContent.addView(inflateSubtitle);
+                    texts[i] = inflateSubtitle.findViewById(R.id.subtitle_tv);
+                    texts[i].setText(infoText.get(i).getText());
                     break;
                 case 1:
-                    Log.d(TAG, "getText: " + infoText.get(i).getText());
-                    body = inflateBody(getApplicationContext(), infoText.get(i).getText());
-                    infoDetailContent.addView(body);
-                    /*
-                    body = inflater.inflate(R.layout.inflate_body, null);
-                    infoDetailContent.addView(body);
-                    TextView body_tv = (TextView)findViewById(R.id.body_tv);
-                    body_tv.setText(infoText.get(i).getText());*/
+                    Log.d(TAG, "getText: 1 " +  infoText.get(i).getText());
+                    InflateBody inflateBody = new InflateBody(getApplicationContext());
+                    infoDetailContent.addView(inflateBody);
+                    texts[i] = inflateBody.findViewById(R.id.body_tv);
+                    texts[i].setText(infoText.get(i).getText());
                     break;
                 case 2:
-                    Log.d(TAG, "getText: " + infoText.get(i).getText());
-                    image = inflateImage(getApplicationContext(), infoText.get(i).getText());
-                    infoDetailContent.addView(image);
-                    //InflateImage inflateImage = new InflateImage(getApplicationContext());
-                    /*
-                    image = inflater.inflate(R.layout.inflate_image, null);
-                    infoDetailContent.addView(image);
-                    ImageView imageView = (ImageView)findViewById(R.id.image_iv);
-                    Glide.with(this)
+                    Log.d(TAG, "getText: 2 " + infoText.get(i).getText());
+                    InflateImage inflateImage = new InflateImage(getApplicationContext());
+                    infoDetailContent.addView(inflateImage);
+                    ivs[i] = inflateImage.findViewById(R.id.image_iv);
+                    /* 이미지뷰 width랑 height를 match_parent -> wrap_content로 변경하니 glide에 이미지가 나옴*/
+                    Glide.with(inflateImage)
                             .load(Whatisthis.serverIp+infoText.get(i).getText())
-                            .into(imageView);
-
-                    */
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    Log.e(TAG, "onLoadFailed: " );
+                                    return false;
+                                }
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    Log.e(TAG, "onResourceReady:" );
+                                    return false;
+                                }
+                            })
+                            .into(ivs[i]);
             }
         }
 
@@ -265,39 +275,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         // 북마크 수 + 사용자의 북마크 여부 확인
         infoDetailBookmarkCount.setText(String.valueOf(bookmarkNo));
         infoDetailBookmark.setOnClickListener(this);
-        // TODO: 레이아웃 이상하게 나온다. 북마크랑 숫자랑 겹쳐서 나오고, 공유하기 버튼도 안나온다.
-
-    }
-
-    public TextView inflateBody (Context context, String text){
-
-        LayoutInflater bodyInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        bodyInflater.inflate(R.layout.inflate_body, infoDetailContent, true);
-        TextView body = (TextView) findViewById(R.id.body_tv);
-        body.setText(text);
-
-        return body;
-
-    }
-
-    public TextView inflateSubtitle (Context context, String text) {
-        LayoutInflater subtitleInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        subtitleInflater.inflate(R.layout.inflate_subtitle, infoDetailContent, true);
-        TextView subtitle = (TextView) findViewById(R.id.subtitle_tv);
-        subtitle.setText(text);
-
-        return subtitle;
-    }
-
-    public ImageView inflateImage (Context context, String text) {
-        LayoutInflater imageInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        imageInflater.inflate(R.layout.inflate_image, infoDetailContent, true);
-        ImageView imageView = (ImageView) findViewById(R.id.image_iv);
-        Glide.with(this)
-                .load(Whatisthis.serverIp+text)
-                .into(imageView);
-
-        return  imageView;
 
     }
 
@@ -307,7 +284,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void updateBookmarkView(boolean flag, int bookmarkCount) {
+    public boolean updateBookmarkView(boolean flag, int bookmarkCount) {
 
         hasBookmarked = flag;
         bookmarkNo = bookmarkCount;
@@ -340,7 +317,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         Log.e(TAG, "getDataSuccess: bookmarkStatus submit" + hasBookmarked + " bookmarkNo " + bookmarkNo);
         infoDetailPresenter.updateBookmarkStatus();
 
+        bookmarkChanged = true;
+        return bookmarkChanged;
+
     }
+
 
     @Override
     public void getSessionData(int accountNo, String formattedTime) {
@@ -359,6 +340,8 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+
+    // 로딩 관련
     @Override
     public void showLoading() {
         infoProgress.setVisibility(View.VISIBLE);
@@ -369,12 +352,14 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         infoProgress.setVisibility(View.GONE);
     }
 
+
+    // 백버튼 처리
     @Override
     public void onBackPressed(){
-        //TODO : if there has been changes in Bookmark Status or Comments, send an intent back to infoFragment with results
-        finish();
+        backToFragments();
     }
 
+    // 인포 프래그먼트에서 넘겨준 값 받아오기
     public void getIntentInfo(){
 
         infoItem = getIntent().getParcelableExtra("infoItem");
@@ -407,7 +392,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         // 게시물 정보 표시
         infoDetailTitle.setText(infoItem.getTitle());
         infoDetailWriter.setText(infoItem.getWriter());
-        infoDetailView.setText(String.valueOf(infoItem.getViews()));
 
         String[] splitDate = infoItem.getDate().split("\\s");
         String newDate = splitDate[0].replace("-", ".");
@@ -418,4 +402,30 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         postNo = infoItem.getPostNo();
 
     }
+
+
+    public void backToFragments() {
+        // 인포 프래그먼트로 보내는 경우
+        // 마이페이지 북마크로 보내는 경우
+
+        Intent intent = new Intent();
+        intent.putExtra("infoItem", infoItem);
+        if (bookmarkChanged){
+            // 북마크 변경사항이 생긴 경우
+            if (!hasBookmarked) {
+                // 북마크 O -> 북마크 X : 삭제(1)
+                // 이건 마이페이지 북마크에서만 적용됨
+                intent.putExtra("actionKind", 1);
+            } else {
+                // 북마크 X -> 북마크 O : 아이템 업데이트(2)
+                // TODO : 댓글수 변경 시??
+                intent.putExtra("actionKind", 2);
+            }
+        }
+        intent.putExtra("infoPosition", infoPosition);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
 }

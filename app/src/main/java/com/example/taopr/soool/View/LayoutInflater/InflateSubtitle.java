@@ -11,12 +11,10 @@ import com.example.taopr.soool.R;
 
 public class InflateSubtitle extends LinearLayout {
 
-
     public InflateSubtitle(Context context) {
         super(context);
         inflateSubtitle(context);
     }
-
 
     public InflateSubtitle(Context context, AttributeSet attrs) {
         super(context, attrs);

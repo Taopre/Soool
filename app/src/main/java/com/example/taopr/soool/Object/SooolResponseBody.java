@@ -3,7 +3,7 @@ package com.example.taopr.soool.Object;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SooolResponseBody implements Parcelable{
+public class  SooolResponseBody implements Parcelable{
 
     String result;
 
