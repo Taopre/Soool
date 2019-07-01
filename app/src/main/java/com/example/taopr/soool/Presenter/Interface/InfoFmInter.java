@@ -15,12 +15,11 @@ public interface InfoFmInter {
     void sendItem(InfoItem infoItem, Activity activity, int infoPosition);
     void loadData(int loadingKind, int accountNo, int lastPostNo);
 
-    public interface View{
+    public interface View {
         void getDataSuccess(ArrayList<InfoItem> infoItems, int loadingKind);
         void getDataFail(String message);
         void showInfoDetail(Intent intent, int requestCode);
         void showLoading();
         void hideLoading();
     }
-
 }

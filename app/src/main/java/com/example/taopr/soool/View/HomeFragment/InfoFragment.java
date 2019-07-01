@@ -272,7 +272,7 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
 
             if (data!= null && data.getParcelableExtra("infoItem") != null) {
                 infoItem = data.getParcelableExtra("infoItem");
-                Log.i(TAG, "onActivitiResult: ");
+                Log.i(TAG, "onActivityResult: ");
             }
 
             int infoPosition = data.getIntExtra("infoPosition", 0);

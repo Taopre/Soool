@@ -63,7 +63,7 @@ public class BookmarkFragment extends Fragment implements BookmarkPresenter.View
     public interface BookmarkView {
         // 현재 프래그먼트가 서버에 요청을 보내고 응답을 받았는지 여부를 마이페이지에 전달
         // (각 프래그먼트가 서버와 통신시에 보여주는 모든 로딩화면을 마이페이지에서 총괄하고 있기 때문)
-        // 해당 인터페이스는 HomeActivity에서 implemented 된다
+        // 해당 인터페이스는 HomeActivity 에서 implemented 된다
 
         void waitingForResponse(); // 북마크 -> 서버 통신요청했음을 홈액티비티를 통해 마이페이지 프래그먼트에 전달
         void receivedResponse(Boolean serverResponded);

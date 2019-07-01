@@ -420,7 +420,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     private void showLoading(){
         mypageProgress.setVisibility(View.VISIBLE);
     }
-
     private void hideLoading(){
         mypageProgress.setVisibility(View.GONE);
     }

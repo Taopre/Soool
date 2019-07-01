@@ -37,14 +37,12 @@ public interface InfoDetailInter {
 
        void getDataSuccess(ArrayList<InfoContentText> infoText, int bookmarkNo, boolean hasBookmarked);
        void getDataFail(String message);
-       boolean updateBookmarkView(boolean flag, int bookmarkCount);
        void getSessionData(int accountNo, String formattedTime);
        void notifyBookmarkChange(int postNo, int bookmarkNo, boolean hasBookmarked);
        void showLoading();
        void hideLoading();
        void backToFragments();
-
-
+       boolean updateBookmarkView(boolean flag, int bookmarkCount);
 
     }
 

@@ -108,13 +108,6 @@ public class InfoDetailPresenter extends BasePresenter implements InfoDetailInte
         // SESSION DATA - LoginSharedPreferences.java에 만들어둔 파일 가져옴
         accountNo = LoginSharedPreferences.getAccountNo(context, "LoginAccount");
 
-        /*
-        String sessionData = LoginSharedPreferences.LoginUserLoad(context, "LoginAccount");
-        Gson gson = new GsonBuilder().create();
-        LoginSessionItem loginSessionItem = gson.fromJson(sessionData, LoginSessionItem.class);
-        accountNick = loginSessionItem.getAccountNick();
-        accountNo = loginSessionItem.getAccountNo(); */
-
 
         // TIME - 굳이 있어야하는 이유를 잘 모르겠긴 한데..
         long currentTime = System.currentTimeMillis();

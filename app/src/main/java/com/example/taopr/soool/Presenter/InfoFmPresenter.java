@@ -25,7 +25,7 @@ public class InfoFmPresenter extends BasePresenter implements InfoFmInter {
     public Activity activity;
     //private ArrayList<InfoItem> infoItems = new ArrayList<>();
     private static String TAG = "정보_presenter";
-    private final int infoToDetail = 1212; // fragment랑 presenter에 둘다 이 숫자가 있어야 하는 이유?
+    private final int infoToDetail = 1212;
 
 
     public InfoFmPresenter(Context context){
@@ -99,7 +99,5 @@ public class InfoFmPresenter extends BasePresenter implements InfoFmInter {
     public void setView(InfoFmPresenter.View view) {
         this.view = view;
     }
-
-
 
 }

@@ -212,6 +212,10 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         this.bookmarkNo = bookmarkNo;
         this.hasBookmarked = hasBookmarked;
 
+        // 조회수 업데이트하기
+        int updateViews = infoItem.getViews() + 1;
+        infoItem.setViews(updateViews);
+        infoDetailView.setText(String.valueOf(infoItem.getViews()));
 
         // View 여러개 생성해두기
         TextView texts[] = new TextView[infoText.size()];
@@ -388,15 +392,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         // 게시물 정보 표시
         infoDetailTitle.setText(infoItem.getTitle());
         infoDetailWriter.setText(infoItem.getWriter());
-
-        // 조회수 +1 추가하기
-        // a. setText(조회수 + 1)
-        //infoDetailView.setText(String.valueOf(infoItem.getViews()+1));
-        // b. infoItem.setView(getViews()+1)을 한 다음에 setText하기
-
-        int updateViews = infoItem.getViews() + 1;
-        infoItem.setViews(updateViews);
-        infoDetailView.setText(String.valueOf(infoItem.getViews()));
 
         String[] splitDate = infoItem.getDate().split("\\s");
         String newDate = splitDate[0].replace("-", ".");

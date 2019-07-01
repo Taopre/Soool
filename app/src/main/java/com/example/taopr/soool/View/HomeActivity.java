@@ -350,7 +350,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     }
 
 
-    // MyBoard 프래그먼트에서 마이페이그 프래그먼트 view 에서 '내 게시글' ,'내 포인트' 값의 갱신이 필요하다는 알림을 보내는 메서드
+    // MyBoard 프래그먼트에서 마이페이지 프래그먼트 view 에서 '내 게시글' ,'내 포인트' 값의 갱신이 필요하다는 알림을 보내는 메서드
     // Home 액티비티에서는 MyBoard 프래그먼트에서 알림을 받으면 마이페이지 프래그먼트에 전달한다
     @Override
     public void updateProfileForMyBoard() {
@@ -363,7 +363,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     @Override
     public void waitingForResponse() {
 
-        // to inform mypageFragment that its childFragment, bookmarkFragment
+        // to inform myPageFragment that its childFragment, bookmarkFragment
         // has sent a request to server and waiting for the response
         mypageFragment.waitChildFragmentRes();
 
@@ -372,7 +372,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     @Override
     public void receivedResponse(Boolean serverResponded) {
 
-        // to inform mypageFragment that its childFragment, bookmarkFragment
+        // to inform myPageFragment that its childFragment, bookmarkFragment
         // has received the response from server
         mypageFragment.getChildFragmentRes(1,serverResponded);
 

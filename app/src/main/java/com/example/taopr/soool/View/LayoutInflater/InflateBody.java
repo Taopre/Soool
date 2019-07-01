@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.example.taopr.soool.R;
 
 public class InflateBody extends LinearLayout {
+
     public InflateBody(Context context) {
         super(context);
         inflateBody(context);

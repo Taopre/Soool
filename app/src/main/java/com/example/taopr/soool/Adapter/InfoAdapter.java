@@ -155,7 +155,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
 
     public ArrayList<InfoItem> addItem(InfoItem infoItem) {
 
-        // adding a single item to the list
+        // adding a single item to the list // 정보글엔 굳이 필요 없음
         infoItems.add(0, infoItem);
         notifyItemInserted(0);
         return infoItems;
