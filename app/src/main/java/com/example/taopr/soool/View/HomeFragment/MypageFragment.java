@@ -267,7 +267,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         //switch (fragmentNo) {
         switch (currentTab) {
             case 0:
-                if (myBoardFragment == null ){
+                if (myBoardFragment == null){
                     myBoardFragment = new MyBoardFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(ACCOUNT_NO_EXTRA
@@ -279,10 +279,14 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
                 break;
 
             case 1:
-                bookmarkFragment = new BookmarkFragment();
+                if(bookmarkFragment == null) {
+                    bookmarkFragment = new BookmarkFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(ACCOUNT_NO_EXTRA
+                            ,accountNo);
+                    bookmarkFragment.setArguments(bundle);
+                }
                 transaction.replace(R.id.fragment_container, bookmarkFragment);
-                //TODO : mypageFragment에서 bookmarkFragment로 보내줘야하는 부분 작성
-
                 break;
 
             case 2:

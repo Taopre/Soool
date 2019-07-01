@@ -263,11 +263,8 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
 
         if (resultCode == RESULT_OK) {
             // 북마크 리스트 삭제 시 아이템의 리스트 포지션 값을 받고, actionKind 로 구별
-            // 추가시 actionKind = 0 | 삭제 시 actionKind = 1
+            // 여기서는 상태 변경밖에 없겠고, 북마크 프래그먼트에서는 삭제, 수정이 가능
 
-            // actionKind가 같은 이름 다른 기능으로 쓰이는 걸까
-            // 1. loadData의 매개변수인 경우와
-            // 2. ActivityForResult:정보목록 변경사항 구분하는 경우
 
             Log.i(TAG, "onActivityResult: RESULT_OK");
             InfoItem infoItem = null;
@@ -282,24 +279,11 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
 
             Log.i(TAG, "onActivityResult: actionKind : " + actionKind);
 
-            switch(actionKind) {
-                case 0:
-                    infoAdapter.addItem(infoItem);
-                    infoItems.add(infoItem);
-                    infoRecyclerView.smoothScrollToPosition(0);
-                    break;
-                case 1:
-                    infoItems = infoAdapter.removeItem(infoPosition);
-                    break;
-            }
+            infoItems = infoAdapter.updateItem(infoItem, infoPosition);
+
 
         }
 
     }
 
-    /* 이건 어디서 왜 보여진건지 모르지만 일단 주석처리
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-    */
 }

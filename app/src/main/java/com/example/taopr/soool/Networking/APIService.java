@@ -248,8 +248,7 @@ public interface APIService {
     // 내 북마크 목록 받아오기
     @FormUrlEncoded
     @POST("/accountManage/myBookmark.php")
-    Observable<InfoList> getMyBookmarkItem(@Field("accountNo") int accountNo);
-
+    Observable<InfoList> getBookmarkedItem(@Field("accountNo") int accountNo);
 
 
 

@@ -124,8 +124,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         holder.infoTitle.setText(infoItem.getTitle());
         holder.infoComments.setText(String.valueOf(infoItem.getComments()));
         holder.infoWriter.setText(infoItem.getWriter());
-        holder.infoViews.setText(String.valueOf(position));
-
+        holder.infoViews.setText(String.valueOf(infoItem.getViews()));
 
 
         // 작성시간 '몇 분 전' 으로 표기하기
@@ -169,6 +168,12 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         this.infoItems = addListOfItems;
         notifyDataSetChanged();
 
+    }
+
+    public ArrayList<InfoItem> updateItem(InfoItem infoItem, int position) {
+        infoItems.set(position, infoItem);
+        notifyItemChanged(position, infoItem);
+        return infoItems;
     }
 
 }

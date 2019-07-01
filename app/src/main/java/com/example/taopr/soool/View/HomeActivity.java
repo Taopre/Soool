@@ -46,7 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MyBoardFragment.MyPageView{
+public class HomeActivity extends AppCompatActivity implements HomePresenter.View, MyBoardFragment.MyPageView, BookmarkFragment.BookmarkView  {
 
     @BindView(R.id.tabMain)
     ViewGroup btn_tabMain;
@@ -360,5 +360,29 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         }
     }
 
+    @Override
+    public void waitingForResponse() {
 
+        // to inform mypageFragment that its childFragment, bookmarkFragment
+        // has sent a request to server and waiting for the response
+        mypageFragment.waitChildFragmentRes();
+
+    }
+
+    @Override
+    public void receivedResponse(Boolean serverResponded) {
+
+        // to inform mypageFragment that its childFragment, bookmarkFragment
+        // has received the response from server
+        mypageFragment.getChildFragmentRes(1,serverResponded);
+
+    }
+
+    @Override
+    public void updateAccountInfo() {
+        // if there has been any change in bookmarkFragment concerning userProfile
+        if (mypageFragment != null) {
+            mypageFragment.updateProfile();
+        }
+    }
 }

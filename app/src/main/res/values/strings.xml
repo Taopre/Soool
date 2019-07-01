@@ -26,7 +26,7 @@
     <string name="my_page_tab_label_calendar">캘린더</string>
     <string name="my_page_my_qna">내 작성글</string>
     <string name="my_page_my_point">내 포인트</string>
-    <string name="my_page_notice_no_bookmark">아직 스크랩한 글이 없습니다</string>
+    <string name="my_page_notice_no_bookmark">아직 북마크한 글이 없습니다</string>
     <string name="my_page_notice_no_write_qna">아직 작성한 글이 없습니다</string>
     <string name="my_page_button_move_to_write_qna">글 작성하기</string>
     <string name="my_page_button_add_sch">일정추가</string>
