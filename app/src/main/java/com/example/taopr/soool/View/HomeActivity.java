@@ -110,7 +110,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         // 그래서 하위 프래그먼트에서 스와이프로 DrawerLayout 생기는 것을 막음
         mypageDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-
         viewBinding();
         callFragment(0,1);
         tabSetting();
@@ -210,7 +209,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
         if (!mypageDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mypageDrawerLayout.openDrawer(Gravity.RIGHT);
-
 
         }
     }
