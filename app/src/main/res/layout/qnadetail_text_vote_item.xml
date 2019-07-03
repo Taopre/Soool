@@ -8,6 +8,8 @@
         android:layout_height="wrap_content">
 
         <ProgressBar
+            android:paddingStart="@dimen/all_line_1dp"
+            android:paddingEnd="@dimen/all_line_1dp"
             android:id="@+id/progressbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
