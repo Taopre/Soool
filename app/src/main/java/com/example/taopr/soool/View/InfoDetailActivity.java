@@ -11,9 +11,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,11 +38,17 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.taopr.soool.Adapter.CommentAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
+import com.example.taopr.soool.Object.BoardRecommend;
+import com.example.taopr.soool.Object.CommentItem;
 import com.example.taopr.soool.Object.InfoContentText;
 import com.example.taopr.soool.Object.InfoItem;
+import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Object.RecommentItem;
 import com.example.taopr.soool.Presenter.InfoDetailPresenter;
+import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.View.LayoutInflater.InflateBody;
@@ -96,10 +105,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     @BindView(R.id.infoDetailShare)
     RelativeLayout infoDetailShare;
 
-    @BindView(R.id.infoCommentText)
-    EditText infoCommentText;
-    @BindView(R.id.infoCommentButton)
-    Button infoCommentButton;
+
 
     @BindView(R.id.bodyRelative)
     RelativeLayout bodyRelative;
@@ -122,6 +128,28 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     private ProgressBar infoProgress;
 
 
+    //댓글 부분
+    //댓글 입력 버튼 = btn_commentEnroll
+    //RecyclerView
+    @BindView(R.id.commentList)
+    RecyclerView commentList;
+    @BindView(R.id.infoCommentText)
+    EditText infoCommentText;
+    @BindView(R.id.infoCommentButton)
+    Button infoCommentButton;
+    @BindView(R.id.qnaboardCommentCount)
+    TextView InfoCommentCount;
+    private LinearLayoutManager linearLayoutManager;
+    private CommentAdapter commentAdapter;
+    private ArrayList<CommentItem> commentitem = new ArrayList<>();
+    private int Get_commentNo;
+    InfoDetailPresenter commentPresent;
+    String TextAddWriter;
+    int comment_postion;
+    private boolean commentBoolean = false;
+    private boolean  recommendResponse = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +167,26 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         // loadAdditionalData
         infoDetailPresenter.getAdditionalData(accountNo, postNo);
         Log.e(TAG, "onCreate: send accnoutNo: " + accountNo + " , postNo: " + postNo);
+
+
+
+
+        //댓글 관련부분
+        infoCommentButton.setOnClickListener(this);
+        commentList = (RecyclerView) findViewById(R.id.commentList);
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        commentList.addItemDecoration
+                (
+                        new DividerItemDecoration(this, linearLayoutManager.getOrientation())
+                );
+        commentList.setLayoutManager(linearLayoutManager);
+        commentPresent = new InfoDetailPresenter(this,this);
+        commentPresent.setView(this);
+        commentPresent.loadData(postNo);
+        commentList.setAdapter(commentAdapter);
+
 
     }
 
@@ -158,7 +206,9 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.infoDetailShare:
                 Toast.makeText(this, "이 게시물 공유하기",Toast.LENGTH_LONG).show();
                 break;
+            //댓글 작성 버튼
             case R.id.infoCommentButton:
+                commentEnroll();
                 break;
         }
     }
@@ -277,12 +327,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         infoDetailBookmark.setOnClickListener(this);
 
     }
-
-    @Override
-    public void getDataFail(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
     @Override
     public boolean updateBookmarkView(boolean flag, int bookmarkCount) {
 
@@ -323,6 +367,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
 
+
     @Override
     public void getSessionData(int accountNo, String formattedTime) {
         this.accountNo = accountNo;
@@ -355,7 +400,8 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
     // 백버튼 처리
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
         backToFragments();
     }
 
@@ -392,6 +438,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         // 게시물 정보 표시
         infoDetailTitle.setText(infoItem.getTitle());
         infoDetailWriter.setText(infoItem.getWriter());
+        InfoCommentCount.setText(String.valueOf(infoItem.getComments()));
 
         String[] splitDate = infoItem.getDate().split("\\s");
         String newDate = splitDate[0].replace("-", ".");
@@ -410,7 +457,8 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
         Intent intent = new Intent();
         intent.putExtra("infoItem", infoItem);
-        if (bookmarkChanged){
+        if (bookmarkChanged)
+        {
             // 북마크 변경사항이 생긴 경우
             if (!hasBookmarked) {
                 // 북마크 O -> 북마크 X : 삭제(1)
@@ -422,10 +470,186 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
                 intent.putExtra("actionKind", 2);
             }
         }
+//        if (commentBoolean)
+//        {
+//            intent.putExtra("qnaBoardItem", infoItem);
+//            intent.putExtra("actionKind", 1);
+//        }
         intent.putExtra("infoPosition", infoPosition);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         setResult(RESULT_OK, intent);
         finish();
+
+
+
     }
+
+    @Override
+    public void getDataFail(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+
+    //이하 댓글 관련부분
+    public void commentEnroll()
+    {
+        String commentContent = infoCommentText.getText().toString();
+        Log.d(TAG, "infoComment: 버튼은 눌러지니 ?");
+        if (Get_commentNo == 0)
+        {
+            Log.d(TAG, "infoComment: 댓글 안타니?");
+            commentPresent.commentRequest(postNo, accountNo, commentContent);
+            infoCommentText.getText().clear();
+        }
+        else
+        {
+            commentPresent.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
+            infoCommentText.getText().clear();
+        }
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(infoCommentText.getWindowToken(),0);
+    }
+    @Override
+    public void getCommentDataSuccess(ArrayList<CommentItem> commentitem)
+    {
+
+        this.commentitem = commentitem;
+
+        //댓글리스트데이터 성공적으로 받아왔을때 댓글어댑터 생성
+        commentAdapter = new CommentAdapter(InfoDetailActivity.this,this.commentitem,this,postNo,accountNo);
+        commentPresent.setView(this);
+        commentList.setAdapter(commentAdapter);
+
+        commentAdapter.toss_commentNo_Methods(new CommentAdapter.toss_commentNo_interface()
+        {
+            @Override
+            public void toss_commentNo_atActivity(int commentNo,String commentWriter,int position) {
+                Get_commentNo = commentNo;
+                commentWriter = commentWriter;
+                TextAddWriter = "@" + commentWriter +" ";
+                comment_postion = position;
+
+                if (Get_commentNo != 0)
+                {
+                    infoCommentText.getText().clear();
+                    infoCommentText.setText(TextAddWriter);
+                    infoCommentText.setSelection(infoCommentText.length());
+                    EditText_commentWirte_tag();
+                }
+                else
+                {
+                    infoCommentText.getText().clear();
+                    infoCommentText.setHint("댓글을 입력해주세요");
+                }
+
+            }
+
+            @Override
+            public void toss_commentCount_actiivity(int commentCount)
+            {
+                commentPresent.commentDeleteRequest(postNo,commentCount,0);
+            }
+        });
+    }
+
+    public void EditText_commentWirte_tag()
+    {
+
+        infoCommentText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                //s = editText전체값
+                //setText = 작성자 아이디 "@tag "
+                //text전체값이 setText보다 길이가 짧아질경우 editText클리어
+                //댓글번호 0
+                //부착되있는 TextWatcher remove
+                //1번 답글달기버튼을 누르고 2번답글달기 버튼을 눌렀을떄
+                //1번 답글달기 버튼을 누른상태면 editText의 text값이 1번의 setText
+                //ex) s.length() =  "@yu " = 4
+                //이상태에서
+                //2번 답글달기 버튼을 눌렀을때
+                //---해결 처음 editText에 setText하기전에 clear로 해결 - 여러 계정으로 디버깅 필요
+                if (s.length() < TextAddWriter.length())
+                {
+                    infoCommentText.getText().clear();
+                    Get_commentNo = 0;
+                    //첫번째 문제 해결책 removeTextChangeListener
+                    infoCommentText.removeTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+
+    @Override
+    public void getCommentDataFail(String message) {
+
+    }
+
+    @Override
+    public void moveToPage(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void commentInsertGoResponse(int response, int commentCount, CommentItem commentItem)
+    {
+        //댓글 작성
+        if (response == 0)
+        {
+            commentitem.add(commentItem);
+            commentAdapter.notifyDataSetChanged();
+            infoItem.setComments(commentCount);
+            InfoCommentCount.setText(String.valueOf(commentCount));
+            commentBoolean = true;
+        }
+    }
+
+    @Override
+    public void recommentInsertGoResponse(int response, RecommentItem recommentItem, int commentNo)
+    {
+        //대댓글 작성
+        if (response == 0)
+        {
+            commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_postion);
+        }
+    }
+
+    @Override
+    public void likeGoResponse(int response) {
+
+    }
+
+    @Override
+    public void CommentOrRecommentActivity(int commentNo) {
+
+    }
+
+    @Override
+    public void commentDeleteGoResponse(int response, int commentCount,int commentNo)
+    {
+        //댓글 삭제
+        if (response == 0)
+        {
+            infoItem.setComments(commentCount);
+            InfoCommentCount.setText(String.valueOf(commentCount));
+            commentBoolean = true;
+            commentAdapter.commentDeleteGoResponse(response,commentCount,comment_postion);
+        }
+    }
+
 
 }

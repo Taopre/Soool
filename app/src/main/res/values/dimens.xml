@@ -50,4 +50,7 @@
 
     <dimen name="all_line_1dp">1dp</dimen>
 
+    <!-- 답글숨기기 -->
+    <dimen name="recomment_hide_padding">83.2dp</dimen>
+    <dimen name="recomment_view_padding">74dp</dimen>
 </resources>

@@ -30,15 +30,16 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
 
 private Activity activity;
 private Context context;
-private ArrayList<RecommentItem> recommentitems;
+public ArrayList<RecommentItem> recommentitems;
 private RecommentItem recommentitem;
 
             String TAG = "recommentTag";
             int check;
-            int like_confirm = 0;
+
             private QnaDetailPresenter qnaDetailPresenter;
             int postNo;
-            int commentNo;
+            int commentNo = 9999;
+            ArrayList<Integer> commentNums = new ArrayList<>();
 
             private int accountNo;
             private TimeCalculator timeCalculator;
@@ -46,23 +47,20 @@ private RecommentItem recommentitem;
             int recommentPosition;
 
 
-public RecommentAdapter(Context context, ArrayList<RecommentItem> recommentitems,Activity activity,int postNo,int commentNo,int accountNo)
+public RecommentAdapter(Context context, ArrayList<RecommentItem> recommentitems,
+                        Activity activity,int postNo,int accountNo,int commentNo)
         {
         this.activity = activity;
         this.context = context;
         this.recommentitems = recommentitems;
         timeCalculator = new TimeCalculator();
         this.postNo = postNo;
+
         this.commentNo = commentNo;
         this.accountNo = accountNo;
-        }
-public RecommentAdapter(Context context,RecommentItem recommentitem)
-        {
-        this.context = context;
-        this.recommentitem = recommentitem;
 
-        Log.d(TAG,"생성완료");
         }
+
 
 
 @Override
@@ -78,9 +76,7 @@ public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 
 class ViewHolder extends RecyclerView.ViewHolder
 {
-    //TextView recommentNo;
-    //TextView accountNo;
-    //TextView date;
+
     TextView recommentWriter;
     TextView recommentContent;
     TextView recommentLike;
@@ -89,10 +85,6 @@ class ViewHolder extends RecyclerView.ViewHolder
     public ViewHolder(View v)
     {
         super(v);
-
-        //recommentNo = v.findViewById(R.id.recommentNo);
-        //accountNo = v.findViewById(R.id.accountNo);
-        //date = v.findViewById(R.id.date);
 
         recommentWriter = v.findViewById(R.id.recommentWriter);
         recommentContent = v.findViewById(R.id.recommentContent);
@@ -107,19 +99,9 @@ class ViewHolder extends RecyclerView.ViewHolder
     {
         RecommentItem recommentitem = recommentitems.get(i);
 
-//        viewHolder.date.setText(recommentitem.getDate());
-//        viewHolder.recommentNo.setText(String.valueOf(recommentitem.getRecommentNo()));
-//        viewHolder.accountNo.setText(String.valueOf(recommentitem.getAccountNo()));
 
         viewHolder.recommentWriter.setText(recommentitem.getCommentWriter() + " " + timeCalculator.getbeforeTime(recommentitem.getDate()));
         viewHolder.recommentContent.setText(recommentitem.getCommentContent());
-
-//        viewHolder.recommentNo.setText(recommentNoS);
-//        viewHolder.accountNo.setText(accountNoS);
-//        viewHolder.commentWriter.setText(commentWriterS);
-//        viewHolder.date.setText(dateS);
-//        viewHolder.commentContent.setText(commentContentS);
-
 
         String likeCount  = String.valueOf(recommentitem.getLikeCount());
 
@@ -166,12 +148,12 @@ class ViewHolder extends RecyclerView.ViewHolder
                     {
                         String update_like_count = String.valueOf(recommentitem.getLikeCount());
 
-                        viewHolder.recommentLike.setText("추천" + update_like_count);
+                        viewHolder.recommentLike.setText("추천 " + update_like_count);
                     }
                     else if (recommentitem.getLikeCount() >= 1)
                     {
                         String update_like_count = String.valueOf(recommentitem.getLikeCount()- 1);
-                        viewHolder.recommentLike.setText("추천"+update_like_count);
+                        viewHolder.recommentLike.setText("추천 "+update_like_count);
                     }
 
                     //String update_like_count = String.valueOf(commentitem.getLikeCount()- 1);
@@ -199,8 +181,6 @@ class ViewHolder extends RecyclerView.ViewHolder
 
                     viewHolder.recommentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
                     recommentItemA.setAccountNo(accountNo + 1);
-                    // check = check * -1;
-                    //notifyDataSetChanged();
                 }
 
                 //like_confirm setText글자만 change
@@ -223,7 +203,6 @@ class ViewHolder extends RecyclerView.ViewHolder
 
                 if (recommentitem.getAccountNo() == accountNo)
                 {
-
                     recommentPosition = i;
                     qnaDetailPresenter.commentDeleteRequest(postNo,commentNo,recommentitem.recommentNo);
                     Log.d(TAG, "onClick: recommentDelete");
@@ -308,12 +287,13 @@ class ViewHolder extends RecyclerView.ViewHolder
             }
 
             @Override
-            public void commentInsertGoResponse(int response,int commentCount) {
+            public void commentInsertGoResponse(int response,int commentCount,CommentItem commentItem) {
 
             }
 
             @Override
-            public void recommentInsertGoResponse(int response) {
+            public void recommentInsertGoResponse(int response,RecommentItem recommentItem,int commentNo) {
+
 
             }
 
@@ -328,7 +308,7 @@ class ViewHolder extends RecyclerView.ViewHolder
             }
 
             @Override
-            public void commentDeleteGoResponse(int response,int commentCount)
+            public void commentDeleteGoResponse(int response,int commentCount,int commentNo)
             {
                 recommentitems.remove(recommentPosition);
                 notifyDataSetChanged();

@@ -30,6 +30,12 @@ import com.example.taopr.soool.Adapter.CommentAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardDetailImageAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardDetailVoteAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
+
+import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
+import com.example.taopr.soool.Adapter.RecommentAdapter;
+import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
+import com.example.taopr.soool.Adapter.VoteImageAdapter;
+
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.CommentItem;
@@ -39,6 +45,7 @@ import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Object.RecommentItem;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
@@ -97,15 +104,11 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     private CommentAdapter commentAdapter;
     private ArrayList<CommentItem> commentitem = new ArrayList<>();
     private int Get_commentNo;
-    private String commentWriter;
     QnaDetailPresenter qnaDetailPresenterComment;
-    String setText;
+    String TextAddWriter;
     private boolean commentBoolean = false;
-
-    private boolean commentDeleteBoolean = false;
-    int Delete_item_position;
-
     private boolean  recommendResponse = false;
+    int comment_position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,7 +312,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         // 4. 이 주석 위에 것들을 아래 조건문에 잘 맞게 넣어줘서 보여질수 있게 하면 끝날 것 같다.
 
 
-        //qnaDetailPresenter = new QnaDetailPresenter(this,this);
+
         commentList = (RecyclerView) findViewById(R.id.commentList);
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
@@ -324,10 +327,9 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         qnaDetailPresenterComment.setView(this);
         qnaDetailPresenterComment.loadData(qnaBoardItem.getPostNo());
         commentList.setAdapter(commentAdapter);
-
-
-
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -542,34 +544,15 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
 
                 String commentContent = et_commentWrite.getText().toString();
-                Log.d(TAG, "YUJONG :" + String.valueOf(postNo));
-                Log.d(TAG, "YUJONG :" + String.valueOf(accountNo));
-                Log.d(TAG, "YUJONG :" + commentContent);
-                Log.d(TAG, "YUJONG :" + String.valueOf(Get_commentNo));
-
                 if (Get_commentNo == 0)
                 {
-
-                    Log.d(TAG, "onClick: CommentNo!!!");
-                    Log.d(TAG, "YUJONG123 :" + String.valueOf(postNo));
-                    Log.d(TAG, "YUJONG123 :" + String.valueOf(accountNo));
-                    Log.d(TAG, "YUJONG123 :" + commentContent);
                     qnaDetailPresenterComment.commentRequest(postNo, accountNo, commentContent);
-                    //tv_qnaboardCommentCount.setText(String.valueOf(qnaBoardItem.getComments() + 1));
                     et_commentWrite.getText().clear();
-
                 }
                 else
                 {
-                    Log.d(TAG, "onClick: CommentNo???");
-
                     qnaDetailPresenterComment.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
-
-                    //tv_qnaboardCommentCount.setText(String.valueOf(qnaBoardItem.getComments() + 1));
-
-                    Log.d(TAG,String.valueOf(Get_commentNo));
                     et_commentWrite.getText().clear();
-
                 }
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -827,48 +810,31 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     {
         this.commentitem = commentitem;
 
+        //댓글리스트데이터 성공적으로 받아왔을때 댓글어댑터 생성
         commentAdapter = new CommentAdapter(QnaBoardDetailActivity.this,this.commentitem,this,postNo,accountNo);
-        //commentAdapter = new commentAdapter(commentList.this,this.commentitem,this,accountNo);
         qnaDetailPresenterComment.setView(this);
         commentList.setAdapter(commentAdapter);
-
-//        CommentItemTouchCallBack commentItemTouchCallBack = new CommentItemTouchCallBack(this);
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(commentItemTouchCallBack);
-//        itemTouchHelper.attachToRecyclerView(commentList);
-//        commentList.addItemDecoration(new RecyclerView.ItemDecoration()
-//        {
-//            @Override
-//            public void onDraw(Canvas canvas,RecyclerView parent,RecyclerView.State state)
-//            {
-//                commentItemTouchCallBack.onDraw(canvas);
-//            }
-//        });
 
         commentAdapter.toss_commentNo_Methods(new CommentAdapter.toss_commentNo_interface()
         {
             @Override
-            public void toss_commentNo_atActivity(int commentNo,String commentWriter) {
+            public void toss_commentNo_atActivity(int commentNo,String commentWriter,int position) {
                 Get_commentNo = commentNo;
                 commentWriter = commentWriter;
-
-                setText = "@" + commentWriter +" ";
+                TextAddWriter = "@" + commentWriter +" ";
+                comment_position = position;
 
                 if (Get_commentNo != 0)
                 {
                     et_commentWrite.getText().clear();
-                    et_commentWrite.setText(setText);
+                    et_commentWrite.setText(TextAddWriter);
                     et_commentWrite.setSelection(et_commentWrite.length());
-                    //et_commentWrite.setTextColor(getResources().getColor(R.color.greenMain));
-                    Log.d(TAG, "toss_commentNo_atActivity: "+ String.valueOf(Get_commentNo));
-                    //Log.d(TAG, "toss_commentNo_atActivity: " + "1");
                     EditText_commentWirte_tag();
                 }
                 else
                 {
                     et_commentWrite.getText().clear();
                     et_commentWrite.setHint("댓글을 입력해주세요");
-                    Log.d(TAG, "toss_commentNo_atActivity: 들어오냐?" );
-                    //Log.d(TAG, "toss_commentNo_atActivity: " + "2");
                 }
 
             }
@@ -878,13 +844,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             {
                 qnaDetailPresenterComment.commentDeleteRequest(postNo,commentCount,0);
             }
-
         });
-
-
-
-
-
     }
 
 public void EditText_commentWirte_tag()
@@ -900,14 +860,6 @@ public void EditText_commentWirte_tag()
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count)
         {
-//            if (start != 0)
-//                {
-//                    SpannableStringBuilder ssb = new SpannableStringBuilder(et_commentWrite.getText().toString());
-//                    ssb.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grayMain)), start, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    et_commentWrite.setText(ssb);
-//                }
-
-
             //s = editText전체값
             //setText = 작성자 아이디 "@tag "
             //text전체값이 setText보다 길이가 짧아질경우 editText클리어
@@ -919,9 +871,8 @@ public void EditText_commentWirte_tag()
             //이상태에서
             //2번 답글달기 버튼을 눌렀을때
             //---해결 처음 editText에 setText하기전에 clear로 해결 - 여러 계정으로 디버깅 필요
-            if (s.length() < setText.length())
+            if (s.length() < TextAddWriter.length())
             {
-                //Log.d(TAG, "toss_commentNo_atActivity: " + "3");
                 et_commentWrite.getText().clear();
                 Get_commentNo = 0;
                 //첫번째 문제 해결책 removeTextChangeListener
@@ -950,53 +901,43 @@ public void EditText_commentWirte_tag()
     }
 
     @Override
-    public void commentInsertGoResponse(int response,int commentCount)
+    public void commentInsertGoResponse(int response,int commentCount,CommentItem commentItems)
     {
-
-        Log.d(TAG,"불렸냐?");
+        //댓글 작성
         if (response == 0)
         {
-            Log.d(TAG,"서버통신 완료!");
-//            qnaDetailPresenterComment = new QnaDetailPresenter(this,this);
-//            qnaDetailPresenterComment.setView(this);
-//            commentAdapter.notifyDataSetChanged();
-//            commentList.setAdapter(commentAdapter);
-
-            qnaBoardItem.setComments(commentCount);
-            tv_qnaboardCommentCount.setText(String.valueOf(commentCount));
-            commentBoolean = true;
-        }
-    }
-
-    @Override
-    public void commentDeleteGoResponse(int response,int commentCount)
-    {
-
-        Log.d(TAG,"삭제불렸냐?");
-        if (response == 0)
-        {
-            Log.d(TAG, "commentDeleteGoResponse: AFASPFAF");
-            Log.d(TAG, "commentDeleteGoResponse:commentCount " + String.valueOf(commentCount));
-            qnaBoardItem.setComments(commentCount);
-            tv_qnaboardCommentCount.setText(String.valueOf(commentCount));
-            commentBoolean = true;
-        }
-    }
-
-    @Override
-    public void recommentInsertGoResponse(int response)
-    {
-
-        Log.d(TAG,"불렸냐?");
-        if (response == 0)
-        {
-            Log.d(TAG,"서버통신 완료!");
-            qnaDetailPresenterComment = new QnaDetailPresenter(this,this);
-            qnaDetailPresenterComment.setView(this);
+            commentitem.add(commentItems);
             commentAdapter.notifyDataSetChanged();
-            commentList.setAdapter(commentAdapter);
+
+            qnaBoardItem.setComments(commentCount);
+            tv_qnaboardCommentCount.setText(String.valueOf(commentCount));
+            commentBoolean = true;
         }
     }
+    @Override
+    public void recommentInsertGoResponse(int response,RecommentItem recommentItem,int commentNo)
+    {
+        //대댓글 작성
+        if (response == 0)
+        {
+            commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_position);
+        }
+
+    }
+
+    @Override
+    public void commentDeleteGoResponse(int response,int commentCount,int commentNo)
+    {
+        //댓글 삭제
+        if (response == 0)
+        {
+            qnaBoardItem.setComments(commentCount);
+            tv_qnaboardCommentCount.setText(String.valueOf(commentCount));
+            commentBoolean = true;
+            commentAdapter.commentDeleteGoResponse(response,commentCount,comment_position);
+        }
+    }
+
 
     @Override
     public void likeGoResponse(int response) {
@@ -1004,12 +945,10 @@ public void EditText_commentWirte_tag()
     }
 
     @Override
-    public void CommentOrRecommentActivity(int commentNo) {
+    public void CommentOrRecommentActivity(int commentNo)
+    {
 
     }
-
-
-
     @Override
     public void onBackPressed()
     {
@@ -1024,7 +963,8 @@ public void EditText_commentWirte_tag()
             setResult(RESULT_OK, intent);
         }
 
-        if (recommendResponse) {
+        if (recommendResponse)
+        {
             Log.d(TAG, "isLike, isBads 하이 인텐트 엑션카이드"+qnaBoardItem.getIsLike()+", "+qnaBoardItem.getIsBad());
             intent = new Intent();
             intent.putExtra("qnaBoardItem", qnaBoardItem);
