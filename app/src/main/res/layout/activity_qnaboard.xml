@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/qnaboardLayout">
 
     <include layout="@layout/qna_actionbar"
         android:id="@+id/actionbar"/>
@@ -13,7 +14,8 @@
         android:layout_below="@+id/actionbar"
         android:layout_above="@+id/functionLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollLayout">
 
         <RelativeLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -115,7 +117,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:id="@+id/belowLayout"
+                    android:visibility="visible">
 
                     <FrameLayout
                         android:id="@+id/imageLayout"
@@ -138,9 +142,9 @@
                             android:id="@+id/qnaboardDeleteBtn"
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            android:layout_marginEnd="26dp"
-                            android:layout_marginTop="@dimen/all_space_between_16dp"
-                            android:layout_gravity="center_horizontal|right"
+                            android:layout_marginEnd="@dimen/all_space_between_8dp"
+                            android:layout_marginTop="@dimen/all_space_between_8dp"
+                            android:layout_gravity="center_horizontal|end"
                             android:src="@drawable/qna_post_remove_img" />
                     </FrameLayout>
 
@@ -165,7 +169,7 @@
                                 android:layout_marginStart="@dimen/text_size_13dp"
                                 android:layout_marginTop="@dimen/text_size_14dp"
                                 android:layout_marginBottom="@dimen/text_size_15dp"
-                                android:text="텍스트 투표 (6개 항목까지 가능합니다)"
+                                android:text="@string/qna_board_notice_text_voting_rules"
                                 android:textColor="@color/grayMain"
                                 android:textSize="@dimen/text_size_14dp"/>
 
@@ -218,8 +222,7 @@
                         android:id="@+id/qnaVoteImageLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                        android:orientation="vertical">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -233,7 +236,7 @@
                                 android:layout_marginStart="@dimen/text_size_13dp"
                                 android:layout_marginTop="@dimen/text_size_14dp"
                                 android:layout_marginBottom="@dimen/text_size_15dp"
-                                android:text="이미지 투표 (6개 항목까지 가능합니다)"
+                                android:text="@string/qna_board_notice_image_voting_rules"
                                 android:textColor="@color/grayMain"
                                 android:textSize="@dimen/text_size_14dp"/>
 
@@ -259,6 +262,21 @@
 
                 </LinearLayout>
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_below="@+id/contentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/spaceLayout"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="120dp"
+                android:visibility="gone"
+                android:id="@+id/qnaBoardProgress"
+                />
         </RelativeLayout>
     </ScrollView>
 

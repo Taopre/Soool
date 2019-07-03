@@ -391,7 +391,7 @@ public class QnaBoardModel {
                                     {
                                         try
                                         {
-                                            Log.d(TAG, "시작 바로 전");
+                                            Log.d(TAG, "프로그래스바 진황상황 apply");
                                             //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
                                             //Retrofit 객체 불러와서 선언하는 부분.
                                             APIService service = APIClient.getClient1().create(APIService.class);
@@ -446,11 +446,13 @@ public class QnaBoardModel {
                                     public void onSubscribe(Disposable d)
                                     {
                                         Log.d(TAG, "onSubscribe : 구독!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                        Log.d(TAG, "프로그래스바 진황상황 onSubscribe");
                                     }
                                     @Override
                                     public void onNext(Boolean s)
                                     {
                                         Log.d(TAG, "onNext: 다음!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                        Log.d(TAG, "프로그래스바 진황상황 onNext");
                                     }
 
                                     @Override
@@ -461,6 +463,7 @@ public class QnaBoardModel {
                                     public void onComplete()
                                     {
                                         Log.d(TAG, "onComplete : 완료!!!!!!!!!!!!!!!!!!!!!!");
+                                        Log.d(TAG, "프로그래스바 진황상황 onComplete");
                                     }
                                 });
                     }
@@ -575,7 +578,7 @@ public class QnaBoardModel {
                             {
                                 try
                                 {
-                                    Log.d(TAG, "시작 바로 전");
+                                    Log.d(TAG, "프로그래스바 진황상황 apply");
                                     //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
                                     //Retrofit 객체 불러와서 선언하는 부분.
                                     APIService service = APIClient.getClient1().create(APIService.class);
@@ -630,12 +633,13 @@ public class QnaBoardModel {
                             @Override
                             public void onSubscribe(Disposable d)
                             {
-                                Log.d(TAG, "onSubscribe : 구독!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                Log.d(TAG, "프로그래스바 진황상황 onSubscribe");
                             }
                             @Override
                             public void onNext(Boolean s)
                             {
                                 Log.d(TAG, "onNext: 다음!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                Log.d(TAG, "프로그래스바 진황상황 onNext");
                             }
 
                             @Override
@@ -646,6 +650,7 @@ public class QnaBoardModel {
                             public void onComplete()
                             {
                                 Log.d(TAG, "onComplete : 완료!!!!!!!!!!!!!!!!!!!!!!");
+                                Log.d(TAG, "프로그래스바 진황상황 onComplete");
                             }
                         });
             }

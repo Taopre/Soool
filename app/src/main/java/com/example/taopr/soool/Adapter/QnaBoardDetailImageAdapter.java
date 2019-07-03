@@ -2,6 +2,8 @@ package com.example.taopr.soool.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
     private RadioButton selected = null;
     public boolean voteFlag = false, alreadyVote = false;
     public int voteTotalNum = 0, totalImageNum = 0, userSelectPos = 999;
+    String TAG = "디테일 이미지투표 어댑터";
 
     public interface GridviewItemClickListner {
         void onListImageClick(int position) ;
@@ -89,14 +92,15 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         viewHolder.radioButton.setTag(position);
         viewHolder.textView.setTag(position);
         viewHolder.num.setTag(position);
-        viewHolder.num.setVisibility(View.GONE);
+        viewHolder.num.setVisibility(View.INVISIBLE);
         viewHolder.imageView.setTag(R.id.grid_image, position);
 
+        viewHolder.num.setText(item.get(position).getVote()+"");
         viewHolder.textView.setText(item.get(position).getStatus());
         if (item.get(position).isStringOrUri() == true) {
             Glide.with(convertView.getContext())
                     .load(Whatisthis.serverIp+item.get(position).getStrImage())
-                    .override(700, 300)
+                    .fitCenter()
                     .into(viewHolder.imageView);
 
             for (int i=0; i<getCount(); i++) {
@@ -118,9 +122,18 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         if (voteFlag == true) {
             viewHolder.radioButton.setVisibility(View.GONE);
             viewHolder.num.setVisibility(View.VISIBLE);
-            viewHolder.num.setText(item.get(position).getVote()+"");
             viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.imageView.setAlpha(50);
+            Log.d(TAG, "onBindViewHolder: 포지션이당"+userSelectPos);
+
+            if (position != (userSelectPos - 1)) {
+                Log.d(TAG, "onBindViewHolder: 틀린 포지션이당"+position);
+                viewHolder.num.setTextColor(Color.parseColor("#9d9d97"));
+            } else {
+                Log.d(TAG, "onBindViewHolder: 맞는 포지션이당"+position);
+                viewHolder.num.setTextColor(Color.parseColor("#08883e"));
+            }
+
         }
 
         if (alreadyVote == true) {

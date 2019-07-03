@@ -1,12 +1,14 @@
 package com.example.taopr.soool.View;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +20,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +32,9 @@ import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +45,7 @@ import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.BottomSheetDialogVoteSelect;
+import com.example.taopr.soool.Presenter.Interface.QnaBoardInter;
 import com.example.taopr.soool.Util.ExifUtils;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.Object.LoginSessionItem;
@@ -49,6 +56,7 @@ import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Presenter.QnaBoardPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.Keyboard;
 import com.example.taopr.soool.Util.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -56,12 +64,14 @@ import com.sangcomz.fishbun.FishBun;
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter;
 import com.sangcomz.fishbun.define.Define;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class QnaBoardActivity extends AppCompatActivity implements
         View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener, 
-        VoteImageAdapter.GridviewItemClickListner {
+        VoteImageAdapter.GridviewItemClickListner, TextWatcher {
 
     private final String TAG = "QnaBoardActivity";
     private static final int MY_PERMISSION_STORAGE = 1111;
@@ -72,11 +82,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
     EditText et_qnaboardTitle, et_qnaboardContent;
     ImageView iv_qnaImageVoteRemove, iv_qnaboardAddBtn, iv_qnaboardImage, iv_qnaboardAddTag, iv_qnaboardDeleteBtn, iv_qnaboardImagebtn, iv_qnaboardVoteBtn, iv_qnaTextVoteRemove;
     HorizontalScrollView h_scrollView;
-    LinearLayout ll_qnaVoteTextLayout, ll_qnaVoteImageLayout;
-    RelativeLayout rl_qnaTextAddLayout;
+    LinearLayout ll_qnaVoteTextLayout, ll_qnaVoteImageLayout, ll_belowLayout;
+    RelativeLayout rl_qnaTextAddLayout, rl_spaceLayout, rl_drawupBackLayout;
     FrameLayout imageLayout;
     RecyclerView recyclerView, rc_qnaboardTag;
     GridView gridView;
+    ProgressBar pb_qnaBoardProgress;
 
     public ArrayList<QnaBoardVoteItem> editModelArrayList;
     public ArrayList<GridVoteItem> gridVoteItemArrayList = new ArrayList<>();
@@ -97,6 +108,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
     GridVoteItem gridVoteItem;
     BottomSheetDialog bottomSheetDialog;
     BottomSheetDialogVoteSelect bottomSheetDialogVoteSelect;
+    Keyboard keyboard;
 
     String tag = "";
     String UploadImgPath, boardImagePath, accountNick;
@@ -184,7 +196,11 @@ public class QnaBoardActivity extends AppCompatActivity implements
         });
         recyclerView.setAdapter(qnaBoardVoteAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+
+        if (et_qnaboardContent.getText().length() > 0)
+            Toast.makeText(this,"gkggkkgkg", Toast.LENGTH_SHORT).show();
     }
+
 
     // 얘 머지?;;;;
 //    @Override
@@ -239,6 +255,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
         tv_drawupBack = findViewById(R.id.drawupBack);
         tv_drawupEnroll = findViewById(R.id.drawupEnroll);
         tv_drawupDelete = findViewById(R.id.drawupDelete);
+        pb_qnaBoardProgress = findViewById(R.id.qnaBoardProgress);
+        ll_belowLayout = findViewById(R.id.belowLayout);
+        rl_spaceLayout = findViewById(R.id.spaceLayout);
+        rl_drawupBackLayout = findViewById(R.id.drawupBackLayout);
 
         imageLayout.setVisibility(View.GONE);
         ll_qnaVoteTextLayout.setVisibility(View.GONE);
@@ -253,9 +273,11 @@ public class QnaBoardActivity extends AppCompatActivity implements
         iv_qnaTextVoteRemove.setOnClickListener(this);
         iv_qnaImageVoteRemove.setOnClickListener(this);
         gridView.setOnItemClickListener(this);
-        tv_drawupBack.setOnClickListener(this);
+        rl_drawupBackLayout.setOnClickListener(this);
         tv_drawupEnroll.setOnClickListener(this);
         tv_drawupDelete.setOnClickListener(this);
+        rl_spaceLayout.setOnClickListener(this);
+        et_qnaboardContent.addTextChangedListener(this);
     }
 
     // 권한 묻는 부분.
@@ -316,6 +338,14 @@ public class QnaBoardActivity extends AppCompatActivity implements
         boardImageSelect = false;
     }
 
+    public void showLoading() {
+        pb_qnaBoardProgress.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoading() {
+        pb_qnaBoardProgress.setVisibility(View.GONE);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -360,6 +390,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 iv_qnaboardVoteBtn.setClickable(true);
                  break;
             case R.id.qnaboardImageBtn:
+                imageLayout.setVisibility(View.VISIBLE);
                 //앨범 연동.
                 DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -392,17 +423,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 qnaItem.setImage(UploadImgPath);
 
                 break;
-            case R.id.drawupBack:
-                Toast.makeText(this, "뒤로가기 클릭", Toast.LENGTH_SHORT).show();
+            case R.id.drawupBackLayout:
                 //이전 액티비티로 인탠트 사용해줘야할 부분.
-//                if (actionKind == 1) {
-//                    Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-////                    intent.putExtra("qnaBoardItem", receiveQnaBoardItem);
-////                    intent.putExtra("fromActivity", 0);
-////                    intent.putExtra("qnaListPosition", qnaListPosition);
-//                    startActivity(intent);
-//                    finish();
-//                }
                 finish();
                 break;
             case R.id.drawupEnroll:
@@ -426,10 +448,13 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                 if (actionKind == 0) {
                     if (tag.equals("")) {
+                        Toast.makeText(v.getContext(),"태그 값을 선택해주세요.",Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
                     } else if (et_qnaboardTitle.getText().length() == 0) {
+                        Toast.makeText(v.getContext(),"제목을 입력해주세요.",Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onClick: 제목을 입력해주세요.");
                     } else if (et_qnaboardContent.getText().length() == 0) {
+                        Toast.makeText(v.getContext(),"내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onClick: 내용을 입력해주세요.");
                     } else if (boardImagePath == null) {
 
@@ -459,6 +484,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     // 텍스트 투표 예외처리 부분.
 
                                     if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
+                                        Toast.makeText(v.getContext(),i+1+"번째 내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
                                         Log.d(TAG, "onClick: " + i + 1 + "번째 내용을 입력해주세요.");
                                     }
                                     voteText.add(editModelArrayList.get(i).getEditTextValue());
@@ -469,6 +495,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
+                                // 저장하기 비활성화 -> 두번 클릭방지!
+                                tv_drawupEnroll.setClickable(false);
+                                showLoading();
+                                Log.d(TAG, "tv_drawupEnroll 비활성화");
                             } else if (voteSelect == 1) {
 
                                 // 이미지 투표 인 경우.
@@ -478,6 +508,9 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
+                                // 저장하기 비활성화 -> 두번 클릭방지!
+                                tv_drawupEnroll.setClickable(false);
+                                showLoading();
                             }
                         } else if (voteFlag == 1) {
 
@@ -491,9 +524,15 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
+                            // 저장하기 비활성화 -> 두번 클릭방지!
+                            tv_drawupEnroll.setClickable(false);
+                            Log.d(TAG, "tv_drawupEnroll 비활성화");
+                            showLoading();
                         }
 
                     } else {
+
+
                         // 1. 투표가 표함되는지 안되는지 선 체크
                         // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
                         // 3. 투표가 없다면
@@ -509,6 +548,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     // 텍스트 투표 예외처리 부분.
 
                                     if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
+                                        Toast.makeText(v.getContext(),i+1+"번째 내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
                                         Log.d(TAG, "onClick: " + i + 1 + "번째 내용을 입력해주세요.");
                                     }
                                     voteText.add(editModelArrayList.get(i).getEditTextValue());
@@ -519,6 +559,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
+                                // 저장하기 비활성화 -> 두번 클릭방지!
+                                tv_drawupEnroll.setClickable(false);
+                                Log.d(TAG, "tv_drawupEnroll 비활성화");
+                                showLoading();
                             } else if (voteSelect == 1) {
 
                                 qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
@@ -526,6 +570,9 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
+                                // 저장하기 비활성화 -> 두번 클릭방지!
+                                tv_drawupEnroll.setClickable(false);
+                                showLoading();
                             }
                         } else if (voteFlag == 1) {
                             Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
@@ -536,15 +583,22 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
+                            // 저장하기 비활성화 -> 두번 클릭방지!
+                            tv_drawupEnroll.setClickable(false);
+                            Log.d(TAG, "tv_drawupEnroll 비활성화");
+                            showLoading();
                         }
                     }
                 } else if (actionKind == 1) {
                     // receiveQnaBoardItem 수정되면 모델로 넘겨서 서버에 저장
                     if (tag.equals(null)) {
+                        Toast.makeText(v.getContext(),"태그 값을 선택해주세요.",Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
                     } else if (et_qnaboardTitle.getText().length() == 0) {
+                        Toast.makeText(v.getContext(),"제목을 입력해주세요.",Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onClick: 제목을 입력해주세요.");
                     } else if (et_qnaboardContent.getText().length() == 0) {
+                        Toast.makeText(v.getContext(),"내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onClick: 내용을 입력해주세요.");
                     }
 
@@ -555,12 +609,21 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         receiveQnaBoardItem.setImage(boardImagePath);
 
                         qnaBoardPresenter.modifyBoardReq(receiveQnaBoardItem);
+
+                        // 저장하기 비활성화 -> 두번 클릭방지!
+                        tv_drawupEnroll.setClickable(false);
+                        Log.d(TAG, "tv_drawupEnroll 비활성화");
+                        showLoading();
                     }catch (NullPointerException e) {
                         receiveQnaBoardItem.setTag(tag);
                         receiveQnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
                         receiveQnaBoardItem.setContent(et_qnaboardContent.getText().toString());
 
                         qnaBoardPresenter.modifyBoardReq(receiveQnaBoardItem);
+                        // 저장하기 비활성화 -> 두번 클릭방지!
+                        tv_drawupEnroll.setClickable(false);
+                        Log.d(TAG, "tv_drawupEnroll 비활성화");
+                        showLoading();
                     }
 
                 }
@@ -706,6 +769,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 // 삭제기능
                 Log.d(TAG, "삭제 버튼 -> "+receiveQnaBoardItem.getPostNo());
                 qnaBoardPresenter.deleteBoardReq(receiveQnaBoardItem.getPostNo());
+                showLoading();
+                break;
+            case R.id.spaceLayout:
+                keyboard = new Keyboard(v.getContext());
+                Log.d(TAG, "클릭 스페이스 레이아웃");
+                keyboard.showKeyboard(et_qnaboardContent);
                 break;
         }
     }
@@ -725,8 +794,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     // you can get an image path(ArrayList<String>) on <0.6.2
 
                     path = data.getParcelableArrayListExtra(Define.INTENT_PATH);
-                    if (boardImageSelect == false) {
-                        if (reSelectVoteImage == false) {
+                    if (!boardImageSelect) {
+                        if (!reSelectVoteImage) {
 
                             for (int i=0; i<path.size(); i++) {
                                 // path안의 값들을 이름 절대경로 뽑아서 저장하자
@@ -737,16 +806,19 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 cursor.moveToFirst();
                                 String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                                BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                                Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);
+                                // 리사이징 부분
+                                Bitmap bitmap = resizeBitmap(imagePath,324,186);
                                 bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+
+                                cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+                                cursor.moveToFirst();
+                                imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                 voteImage.add(imagePath);
                                 File file = new File(voteImage.get(i));
                                 Uri test = Uri.fromFile(file);
 
-                                gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                gridVoteItem = new GridVoteItem(true, "", voteImage.get(i), 0);
                                 gridVoteItemArrayList.add(gridVoteItem);
                             }
 
@@ -765,9 +837,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                             // 이미지가 최대인 6장일 경우
                             if (path.size() + gridVoteItemArrayList.size() == 6) {
-                                if (maybeDeletePosition != 999) {
-                                    gridVoteItemArrayList.remove(maybeDeletePosition);
-                                }
 
                                 for (int i = 0; i < path.size(); i++) {
                                     Uri imageUri = path.get(i);
@@ -776,28 +845,24 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     cursor.moveToFirst();
                                     String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                                    BitmapFactory.Options options = new BitmapFactory.Options();
-                                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
-                                    bitmap = ExifUtils.rotateBitmap(imagePath, bitmap);
+                                    // 리사이징 부분
+                                    Bitmap bitmap = resizeBitmap(imagePath,324,186);
+                                    bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+
+                                    cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+                                    cursor.moveToFirst();
+                                    imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                     voteImage.add(imagePath);
 
                                     File file = new File(voteImage.get(voteImage.size() - 1));
                                     Uri test = Uri.fromFile(file);
-
-                                    gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                    gridVoteItem = new GridVoteItem(true, "", voteImage.get(gridVoteItemArrayList.size()), 0);
                                     gridVoteItemArrayList.add(gridVoteItem);
                                 }
-
-                                maybeDeletePosition = 999;
                             }
                             // 이미지가 6장보다 작을 경우.
                             else {
-                                if (maybeDeletePosition != 999) {
-                                    gridVoteItemArrayList.remove(maybeDeletePosition);
-                                }
-
                                 for (int i = 0; i < path.size(); i++) {
                                     Uri imageUri = path.get(i);
                                     String[] filePath = {MediaStore.Images.Media.DATA};
@@ -805,17 +870,20 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     cursor.moveToFirst();
                                     String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                                    BitmapFactory.Options options = new BitmapFactory.Options();
-                                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
-                                    bitmap = ExifUtils.rotateBitmap(imagePath, bitmap);
+                                    // 리사이징 부분
+                                    Bitmap bitmap = resizeBitmap(imagePath,324,186);
+                                    bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+
+                                    cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+                                    cursor.moveToFirst();
+                                    imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                     voteImage.add(imagePath);
 
                                     File file = new File(voteImage.get(voteImage.size() - 1));
                                     Uri test = Uri.fromFile(file);
 
-                                    gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                    gridVoteItem = new GridVoteItem(true, "", voteImage.get(gridVoteItemArrayList.size()), 0);
                                     gridVoteItemArrayList.add(gridVoteItem);
                                 }
 
@@ -824,9 +892,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
                                 gridVoteItemArrayList.add(gridVoteItem);
 
-                                maybeDeletePosition = 999;
                             }
-
                             voteImageAdapter.notifyDataSetChanged();
 //                            gridView.setAdapter(voteImageAdapter);
 
@@ -843,10 +909,13 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         cursor.moveToFirst();
                         String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                        Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);
+                        // 리사이징 부분
+                        Bitmap bitmap = resizeBitmap(imagePath,324,186);
                         bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+
+                        cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+                        cursor.moveToFirst();
+                        imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                         imageLayout.setVisibility(View.VISIBLE);
 
@@ -855,22 +924,50 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         Uri test = Uri.fromFile(file);
                         Glide.with(this)
                                 .load(test)
-                                .override(100, 100)
-                                .centerCrop()
+                                .fitCenter()
                                 .into(iv_qnaboardImage);
 
                         cursor.close();
 
                         boardImageSelect = false;
+
+
                     }
                     break;
                 }
         }
     }
 
+    public Bitmap resizeBitmap(String photoPath, int targetW, int targetH) {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        int scaleFactor = 1;
+        if ((targetW > 0) || (targetH > 0)) {
+            scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        }
+
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true; //Deprecated API 21
+
+        return BitmapFactory.decodeFile(photoPath, bmOptions);
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Soool", null);
+        return Uri.parse(path);
+    }
+
     // Model에서 서버로 부터 받은 응답 값을 받아서 어떻게 처리할 지 결정하는 메서드.
     @Override
     public void enrollmentBoardRespGoToView(int response, QnaBoardItem qnaBoardItemResponse) {
+        hideLoading();
         switch (response) {
 
             /*
@@ -891,10 +988,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 break;
             case 2:
                 Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
+                // 저장하기 다시 활성화 -> 저장 실패했으므로
+                tv_drawupEnroll.setClickable(true);
+                Log.d(TAG, "tv_drawupEnroll 활성화");
                 break;
             case 3:
                 Toast.makeText(this, "전송 실패 와이파이가 안 좋은가??", Toast.LENGTH_SHORT).show();
                 // 다시 전송되도록 작성하자.
+                // 저장하기 다시 활성화 -> 저장 실패했으므로
+                tv_drawupEnroll.setClickable(true);
+                Log.d(TAG, "tv_drawupEnroll 활성화");
                 break;
         }
 
@@ -902,6 +1005,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     @Override
     public void modifyBoardRespGoToView(int response, QnaBoardItem qnaBoardItem) {
+        hideLoading();
         Intent intent;
         switch (response) {
             /*
@@ -928,6 +1032,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     @Override
     public void deleteBoardRespGoToView(int response) {
+        hideLoading();
         Intent intent;
         switch (response) {
             case 0:
@@ -957,6 +1062,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
         // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
         voteImage.remove(position);
         gridVoteItemArrayList.remove(position);
+
+        if (gridVoteItemArrayList.size() < 6) {
+            Uri uriTest = Uri.parse("");
+            gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
+            gridVoteItemArrayList.add(gridVoteItem);
+        }
         voteImageAdapter.notifyDataSetChanged();
     }
 
@@ -965,12 +1076,29 @@ public class QnaBoardActivity extends AppCompatActivity implements
         Log.d(TAG, "아이템체크: "+gridVoteItemArrayList.get(position).getImageIden()+"//"+gridVoteItemArrayList.get(position).getStatus());
         if (gridVoteItemArrayList.get(position).getImageIden() == 1) {
             reSelectVoteImage = true;
-            maybeDeletePosition = position;
-//            gridVoteItemArrayList.remove(position);
-//            voteImageAdapter.notifyDataSetChanged();
+            gridVoteItemArrayList.remove(position);
+            voteImageAdapter.notifyDataSetChanged();
+
             FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
         }
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String contentText = s.toString();
+
+        if (contentText.length() > 0)
+            tv_drawupEnroll.setTextColor(Color.parseColor("#0ba14a"));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
 }
 

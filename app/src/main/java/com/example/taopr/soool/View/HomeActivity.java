@@ -214,25 +214,29 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     }
 
     // DrawerLayout 탭 클릭
-    @OnClick({R.id.myPageDrawerMyAccount,R.id.myPageDrawerLogOut,R.id.myPageDrawerHandlingPrivacy,R.id.myPageDrawerPush,R.id.myPageDrawerTos
-    ,R.id.myPageDrawerVersion,R.id.myPageDrawerReport,R.id.myPageDrawerElseTab})
+    @OnClick({R.id.myPageDrawerMyAccount,R.id.myPageDrawerLogOut,R.id.myPageDrawerNotice,R.id.myPageDrawerHandlingPrivacy,
+            R.id.myPageDrawerPush,R.id.myPageDrawerTos,R.id.myPageDrawerVersion,R.id.myPageDrawerReport,R.id.myPageDrawerElseTab})
     public void drawerTabOnClick(View view){
+        Intent intent;
         switch (view.getId()) {
+            // 내 계정
             case R.id.myPageDrawerMyAccount:
-                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                intent = new Intent(HomeActivity.this, ProfileActivity.class);
                 intent.putExtra("accountNo", accountNo);
                 startActivityForResult(intent, CHANGE_PROFILE);
                 break;
+            // 공지사항
+            case R.id.myPageDrawerNotice:
+                intent = new Intent(HomeActivity.this, NoticeActivity.class);
+                startActivity(intent);
+                break;
+            // 로그 아웃
             case R.id.myPageDrawerLogOut:
-                //setLogout();
-
                 noticeDialog = new NoticeDialog(HomeActivity.this,getString(R.string.notice_dialog_logout_title),
                         getString(R.string.notice_dialog_logout_content),false,getString(R.string.all_button_ok),
                         getString(R.string.all_button_cancel),positiveListener,negativeListener);
                 noticeDialog.show();
-
                 break;
-
         }
 
     }
@@ -354,7 +358,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         // 내 게시물에서 서버로부터 응답을 받음
         mypageFragment.getChildFragmentRes(0,isMyBoardRes);
     }
-
 
     // MyBoard 프래그먼트에서 마이페이지 프래그먼트 view 에서 '내 게시글' ,'내 포인트' 값의 갱신이 필요하다는 알림을 보내는 메서드
     // Home 액티비티에서는 MyBoard 프래그먼트에서 알림을 받으면 마이페이지 프래그먼트에 전달한다

@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MainFragment extends BaseFragment  implements MainFmInter.View{//},MainInfoAdapter.OnItemClick{
+public class MainFragment extends BaseFragment  implements MainFmInter.View{
 
     @BindView(R.id.mainProgress)
     ProgressBar mainProgress;
@@ -115,10 +115,8 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{//},
             mainInfoAdapter = new MainInfoAdapter(getContext(),infoItems,new MainInfoAdapter.OnItemClick() {
                 @Override
                 public void onItemClick(int position) {
-                    InfoItem clickInfoItem = mainInfoAdapter.getClickInfoItem(position);
-                    Toast.makeText(getContext(), clickInfoItem.getTitle(), Toast.LENGTH_SHORT).show();
-                    // TODO: InfoDetail 액티비티 완성 시 밑에 주석 제거
-                   // mainFmPresenter.getIntentMoveInfo(getActivity(),position,clickInfoItem);
+                    InfoItem clickInfoItem = mainInfoAdapter.getInfoItem(position);
+                    mainFmPresenter.getIntentMoveInfo(getActivity(),position,clickInfoItem);
                 }
             });
             mainInfoViewPager.setAdapter(mainInfoAdapter);
@@ -207,8 +205,5 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{//},
     @Override
     public void hideLoading() { mainProgress.setVisibility(View.GONE);}
 
-    /*@Override
-    public void onItemClick(int position) {
 
-    }*/
 }

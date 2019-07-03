@@ -36,6 +36,7 @@ public class MainInfoAdapter extends PagerAdapter{
     private OnItemClick mListener;
     private ArrayList<InfoItem> infoItems;
     private TextView mainInfoTitle,mainInfoWriter,mainInfoDate,mainInfoViews,mainInfoComments;
+    private TextView mainInfoTotalConnt,mainInfoCurrentPos;
     private ImageView mainInfoImage;
     private RecyclerView mainInfoTagView;
     private HorizontalScrollView mainInfoTagSV;
@@ -80,8 +81,10 @@ public class MainInfoAdapter extends PagerAdapter{
             mainInfoComments = view.findViewById(R.id.mainInfoComments);
             mainInfoTagSV = view.findViewById(R.id.mainInfoTagSV);
             mainInfoTagView = view.findViewById(R.id.mainInfoTagView);
-            mainInfoImage = view.findViewById(R.id.mainInfoImage);
             mainInfoTagView.addItemDecoration(new RecyclerDecoration(32));
+            mainInfoImage = view.findViewById(R.id.mainInfoImage);
+            mainInfoTotalConnt = view.findViewById(R.id.mainInfoTotalCount);
+            mainInfoCurrentPos = view.findViewById(R.id.mainInfoCurrentPos);
 
             InfoItem infoItem = infoItems.get(position);
 
@@ -113,6 +116,8 @@ public class MainInfoAdapter extends PagerAdapter{
             mainInfoWriter.setText(infoItem.getWriter());
             mainInfoViews.setText(String.valueOf(position));
 
+            mainInfoTotalConnt.setText("3"); // 현재는 메인페이지에서 정보글은 3개로 픽스해서 보여주고 있음
+            mainInfoCurrentPos.setText(String.valueOf(position+1));
 
             // 작성시간 '몇 분 전' 으로 표기하기
             mainInfoDate.setText(timeCalculator.getbeforeTime(infoItem.date));
@@ -123,6 +128,7 @@ public class MainInfoAdapter extends PagerAdapter{
             Glide.with(context)
                     .load(infoCoverURI)
                     .centerCrop()
+                    .thumbnail(0.1f)
                     .addListener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -145,24 +151,8 @@ public class MainInfoAdapter extends PagerAdapter{
 
         // 뷰페이저에 추가.
         container.addView(view) ;
-
         return view ;
     }
-
-/*
-    private RequestListener<String, Drawable> requestListener = new RequestListener<String, GlideDrawable>() {
-        @Override
-        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-// 예외사항 처리
-            return false;
-        }
-        @Override
-        public boolean onResourceReady(GlideDrawable resouorce, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-// 이미지 로드 완료됬을 때 처리
-            return false;
-        }
-    }
-*/
 
     @Override
     public int getCount() {
@@ -181,7 +171,8 @@ public class MainInfoAdapter extends PagerAdapter{
         return (view == (View)object);
     }
 
-    public InfoItem getClickInfoItem(int position){
+    // 메인 페이지에서 정보글을 클릭했을 경우 디테일페이지에 해당 정보글 내용을 전달
+    public InfoItem getInfoItem(int position){
         return infoItems.get(position);
 
     }
