@@ -67,7 +67,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     RecyclerView rc_recycler, rc_qnaboardTagMany;
     GridView gv_gridview;
     HorizontalScrollView tagView;
-    RelativeLayout rl_qnadetailLayout, rl_qnaboardUnLikeLayout, rl_qnaboardLikeLayout, rl_voteFinishLayout;
+    RelativeLayout rl_qnadetailLayout, rl_qnaboardUnLikeLayout, rl_qnaboardLikeLayout, rl_voteFinishLayout, rl_drawupBackLayout, rl_drawupTextLayout;
+    ProgressBar pb_qnaBoardDetailProgress;
     private TextView tv_inActSelected = null;
     private ImageView iv_inActSelected = null;
     private ProgressBar pb_inActSelected = null;
@@ -224,6 +225,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_voteResultShow.setVisibility(View.VISIBLE);
                         // 투표 항목 뿌려줘야함.
                         qnaDetailPresenter.downloadVoteData(accountNo, qnaBoardItem.getPostNo());
+                        showLoading();
 
                         if (tagData.length == 0) {
                             tagView.setVisibility(View.GONE);
@@ -369,6 +371,9 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         iv_drawupBack = findViewById(R.id.drawupBack);
         tv_drawupReport = findViewById(R.id.drawupReport);
         tv_drawupModify = findViewById(R.id.drawupModify);
+        pb_qnaBoardDetailProgress = findViewById(R.id.qnaBoardDetailProgress);
+        rl_drawupBackLayout = findViewById(R.id.drawupBackLayout);
+        rl_drawupTextLayout = findViewById(R.id.drawupTextLayout);
 
         ll_voteLayout.setVisibility(View.GONE);
 
@@ -380,9 +385,17 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         rl_qnaboardUnLikeLayout.setOnClickListener(this);
         rl_qnaboardLikeLayout.setOnClickListener(this);
         rl_voteFinishLayout.setOnClickListener(this);
-        iv_drawupBack.setOnClickListener(this);
+        rl_drawupBackLayout.setOnClickListener(this);
         tv_drawupReport.setOnClickListener(this);
         tv_drawupModify.setOnClickListener(this);
+    }
+
+    public void showLoading() {
+        pb_qnaBoardDetailProgress.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoading() {
+        pb_qnaBoardDetailProgress.setVisibility(View.GONE);
     }
 
     @Override
@@ -409,6 +422,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 // 이 게시물의 추천 수를 올리기 위한 통신을 구현해야함. 보내야 할 값 아마도 게시물 번호, 회원 번호 정도?
 
                 qnaDetailPresenter.recommendOnOffReq(accountNo, postNo, 0, likeBtnOnOff);
+                showLoading();
                 break;
             case R.id.qnaboardUnLikeLayout:
                 flagUnLike++;
@@ -430,11 +444,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 // 이 게시물의 비추천 수를 올리기 위한 통신을 구현해야함. 보내야 할 값 아마도 게시물 번호, 회원 번호 정도?
 
                 qnaDetailPresenter.recommendOnOffReq(accountNo, postNo, 1, unLikeBtnOnOff);
+                showLoading();
                 break;
             case R.id.qnadetailLayout:
                 hideKeyboard();
                 break;
-            case R.id.drawupBack:
+            case R.id.drawupBackLayout:
                 Intent intentActionKind;
 
                 if (commentBoolean)
@@ -485,10 +500,14 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_voteResultShow.setText(voteTotalResult+"");
                         qnaBoardDetailVoteAdapter.notifyDataSetChanged();
 
+                        Log.d(TAG, "onClick: 내가 선택한 투표"+mySelectVoteNum);
+
                         if (fromActivity == 0) {
                             qnaDetailPresenter.updateVoteResult(accountNo, qnaBoardItem.getPostNo(), mySelectVoteNum);
+                            showLoading();
                         } else if (fromActivity == 1) {
                             qnaDetailPresenter.updateVoteResult(accountNo, qnaItem.getPostNo(), mySelectVoteNum);
+                            showLoading();
                         }
 
                         rl_voteFinishLayout.setVisibility(View.GONE);
@@ -514,10 +533,14 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_voteResultShow.setText(voteTotalResult+"");
                         qnaBoardDetailImageAdapter.notifyDataSetChanged();
 
+                        Log.d(TAG, "onClick: 내가 선택한 투표"+mySelectVoteNum);
+
                         if (fromActivity == 0) {
                             qnaDetailPresenter.updateVoteResult(accountNo, qnaBoardItem.getPostNo(), mySelectVoteNum);
+                            showLoading();
                         } else if (fromActivity == 1) {
                             qnaDetailPresenter.updateVoteResult(accountNo, qnaItem.getPostNo(), mySelectVoteNum);
+                            showLoading();
                         }
 
                         rl_voteFinishLayout.setVisibility(View.GONE);
@@ -539,8 +562,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 finish();
                 break;
             case R.id.commentEnroll:
-
-
                 String commentContent = et_commentWrite.getText().toString();
                 Log.d(TAG, "YUJONG :" + String.valueOf(postNo));
                 Log.d(TAG, "YUJONG :" + String.valueOf(accountNo));
@@ -622,6 +643,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void getDataSuccess(QnaVoteItem getQnaVoteItem) {
+        hideLoading();
         if (getQnaVoteItem.getQnaVoteStatus() == 0) {
             rc_recycler.setVisibility(View.VISIBLE);
 
@@ -687,30 +709,30 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     @Override
                     public void onListVoteListClick(int position, View view) {
                         Toast.makeText(view.getContext(), position + "", Toast.LENGTH_SHORT).show();
-                        TextView textView = view.findViewById(R.id.textViewssss);
-                        ImageView imageView = view.findViewById(R.id.textSelect);
-
-                        if (position != isSelectedPosition) {
-                            if (isSelectedPosition != 9999) {
-                                editModelArrayList.get(isSelectedPosition).setFlag(false);
-                                tv_inActSelected.setTextColor(Color.parseColor("#9d9d97"));
-                                iv_inActSelected.setVisibility(View.INVISIBLE);
-                            }
-                            isSelectedPosition = position;
-                            textView.setTextColor(Color.parseColor("#08883e"));
-                            imageView.setVisibility(View.VISIBLE);
-                            editModelArrayList.get(isSelectedPosition).setFlag(true);
-
-                            tv_inActSelected = textView;
-                            iv_inActSelected = imageView;
-                        }
-
-                        rl_voteFinishLayout.setVisibility(View.VISIBLE);
-                        whatVoteSelect = 0;
-
-                        for (int i = 0; i < editModelArrayList.size(); i++) {
-                            Log.d("어뎁터", "플레그: " + i + "  " + editModelArrayList.get(i).isFlag());
-                        }
+//                        TextView textView = view.findViewById(R.id.textViewssss);
+//                        ImageView imageView = view.findViewById(R.id.textSelect);
+//
+//                        if (position != isSelectedPosition) {
+//                            if (isSelectedPosition != 9999) {
+//                                editModelArrayList.get(isSelectedPosition).setFlag(false);
+//                                tv_inActSelected.setTextColor(Color.parseColor("#9d9d97"));
+//                                iv_inActSelected.setVisibility(View.INVISIBLE);
+//                            }
+//                            isSelectedPosition = position;
+//                            textView.setTextColor(Color.parseColor("#08883e"));
+//                            imageView.setVisibility(View.VISIBLE);
+//                            editModelArrayList.get(isSelectedPosition).setFlag(true);
+//
+//                            tv_inActSelected = textView;
+//                            iv_inActSelected = imageView;
+//                        }
+//
+//                        rl_voteFinishLayout.setVisibility(View.VISIBLE);
+//                        whatVoteSelect = 0;
+//
+//                        for (int i = 0; i < editModelArrayList.size(); i++) {
+//                            Log.d("어뎁터", "플레그: " + i + "  " + editModelArrayList.get(i).isFlag());
+//                        }
                     }
                 });
                 rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
@@ -784,11 +806,13 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void getDataFail(String message) {
+        hideLoading();
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void recommendComplete(boolean response, BoardRecommend boardRecommend) {
+        hideLoading();
         if (response) {
             qnaBoardItem.setGoods(boardRecommend.getLikeCount());
             qnaBoardItem.setBads(boardRecommend.getBadCount());
@@ -816,7 +840,20 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     @Override
     public void updateVoteResultComplete(boolean flag, QnaVoteItem updateQnaVoteItem) {
         if (flag) {
+            hideLoading();
 
+            if (updateQnaVoteItem.getQnaVoteStatus() == 0) {
+                for (int i = 0; i < editModelArrayList.size(); i++) {
+                    editModelArrayList.get(i).setVoteboard(updateQnaVoteItem.getVoteResult().get(i));
+                }
+                qnaBoardDetailVoteAdapter.notifyDataSetChanged();
+            }
+            else {
+                for (int i = 0; i < gridVoteItemArrayList.size(); i++) {
+                    gridVoteItemArrayList.get(i).setVote(updateQnaVoteItem.getVoteResult().get(i));
+                }
+                qnaBoardDetailImageAdapter.notifyDataSetChanged();
+            }
         } else {
 
         }
@@ -887,55 +924,55 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     }
 
-public void EditText_commentWirte_tag()
-{
-
-    et_commentWrite.addTextChangedListener(new TextWatcher()
+    public void EditText_commentWirte_tag()
     {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count)
+        et_commentWrite.addTextChangedListener(new TextWatcher()
         {
-//            if (start != 0)
-//                {
-//                    SpannableStringBuilder ssb = new SpannableStringBuilder(et_commentWrite.getText().toString());
-//                    ssb.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grayMain)), start, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    et_commentWrite.setText(ssb);
-//                }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-
-            //s = editText전체값
-            //setText = 작성자 아이디 "@tag "
-            //text전체값이 setText보다 길이가 짧아질경우 editText클리어
-            //댓글번호 0
-            //부착되있는 TextWatcher remove
-            //1번 답글달기버튼을 누르고 2번답글달기 버튼을 눌렀을떄
-            //1번 답글달기 버튼을 누른상태면 editText의 text값이 1번의 setText
-            //ex) s.length() =  "@yu " = 4
-            //이상태에서
-            //2번 답글달기 버튼을 눌렀을때
-            //---해결 처음 editText에 setText하기전에 clear로 해결 - 여러 계정으로 디버깅 필요
-            if (s.length() < setText.length())
-            {
-                //Log.d(TAG, "toss_commentNo_atActivity: " + "3");
-                et_commentWrite.getText().clear();
-                Get_commentNo = 0;
-                //첫번째 문제 해결책 removeTextChangeListener
-                et_commentWrite.removeTextChangedListener(this);
             }
-        }
 
-        @Override
-        public void afterTextChanged(Editable s) {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+    //            if (start != 0)
+    //                {
+    //                    SpannableStringBuilder ssb = new SpannableStringBuilder(et_commentWrite.getText().toString());
+    //                    ssb.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grayMain)), start, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    //                    et_commentWrite.setText(ssb);
+    //                }
 
-        }
-    });
 
-}
+                //s = editText전체값
+                //setText = 작성자 아이디 "@tag "
+                //text전체값이 setText보다 길이가 짧아질경우 editText클리어
+                //댓글번호 0
+                //부착되있는 TextWatcher remove
+                //1번 답글달기버튼을 누르고 2번답글달기 버튼을 눌렀을떄
+                //1번 답글달기 버튼을 누른상태면 editText의 text값이 1번의 setText
+                //ex) s.length() =  "@yu " = 4
+                //이상태에서
+                //2번 답글달기 버튼을 눌렀을때
+                //---해결 처음 editText에 setText하기전에 clear로 해결 - 여러 계정으로 디버깅 필요
+                if (s.length() < setText.length())
+                {
+                    //Log.d(TAG, "toss_commentNo_atActivity: " + "3");
+                    et_commentWrite.getText().clear();
+                    Get_commentNo = 0;
+                    //첫번째 문제 해결책 removeTextChangeListener
+                    et_commentWrite.removeTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
 
 
 
