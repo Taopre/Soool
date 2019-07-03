@@ -321,30 +321,45 @@
         </RelativeLayout>
 
     </ScrollView>
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/infoCommentContainer"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_alignParentBottom="true"
-        android:id="@+id/functionsLayout"
-        android:orientation="horizontal">
+        android:background="@color/background_white">
+
+        <View
+            android:id="@+id/infoCommentBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/all_line_1dp"
+            android:background="@color/grayLight_a50"
+            android:layout_alignTop="@id/commentEnroll"
+            android:layout_alignParentStart="true"/>
+
         <EditText
             android:id="@+id/commentWrite"
-            android:layout_weight="1"
-            android:textSize="@dimen/text_size_14dp"
-            android:layout_marginStart="@dimen/all_space_between_18dp"
-            android:hint="@string/qna_detail_hint_write_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"/>
+            android:hint="@string/qna_detail_hint_write_comment"
+            android:textColor="@color/grayMain"
+            android:textSize="@dimen/text_size_14dp"
+            android:background="@color/background_white"
+            android:layout_toLeftOf="@id/commentEnroll"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/all_space_between_18dp"
+            />
 
         <Button
-            android:background="@color/greenMain"
-            android:textColor="@color/background_white"
-            android:textSize="@dimen/text_size_14dp"
             android:id="@+id/commentEnroll"
             android:layout_width="70dp"
-            android:layout_height="51dp"
+            android:layout_height="match_parent"
+            android:background="@color/greenMain"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:textSize="@dimen/text_size_14dp"
+            android:textColor="@color/background_white"
             android:text="등록"/>
-    </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

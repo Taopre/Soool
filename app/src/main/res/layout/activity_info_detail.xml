@@ -205,6 +205,13 @@
             </LinearLayout>
 
             <!-- 댓글 + 대댓글 영역 추가 예정-->
+            <!-- 추가 완료-->
+            <include
+                android:layout_below="@+id/infoDetailBookmarkContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/linearLayout2"
+                layout="@layout/comment_layout" />
         </RelativeLayout>
 
     </ScrollView>
