@@ -26,7 +26,7 @@
     <string name="my_page_tab_label_calendar">캘린더</string>
     <string name="my_page_my_qna">내 작성글</string>
     <string name="my_page_my_point">내 포인트</string>
-    <string name="my_page_notice_no_bookmark">아직 스크랩한 글이 없습니다</string>
+    <string name="my_page_notice_no_bookmark">아직 북마크한 글이 없습니다</string>
     <string name="my_page_notice_no_write_qna">아직 작성한 글이 없습니다</string>
     <string name="my_page_button_move_to_write_qna">글 작성하기</string>
     <string name="my_page_button_add_sch">일정추가</string>
@@ -120,9 +120,11 @@
     <string name="sign_up_usable_nickname">사용 가능한 닉네임입니다</string>
     <string name="sign_up_check_password">비밀번호 확인</string>
     <string name="sign_up_not_match_password">비밀번호가 일치하지 않습니다</string>
+    <string name="sign_up_match_password">비밀번호가 일치합니다</string>
     <string name="sign_up_button_check_overlap">중복확인</string>
     <string name="sign_up_button_submit_profile">회원가입하기</string>
     <string name="sign_up_button_move_to_login">로그인하러 가기</string>
+    <string name="sign_up_notice_email">*본인의 이메일을 정확히 입력해주세요.</string>
 
 
     <!-- 회원정보 페이지 -->

@@ -1,180 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/greenMain"
-    tools:context=".View.StartingActivity">
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_marginTop="100dp"
+        android:layout_width="240dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo_white"/>
 
     <LinearLayout
+        android:layout_marginTop="130dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <CheckBox
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/background_white"
+            android:id="@+id/termsOfServiceCheck"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/background_white"
+            android:id="@+id/stHandlingPrivacy"
+            android:textSize="@dimen/text_size_13dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_13dp"
+            android:textColor="@color/background_white"
+            android:text="@string/starting_button_agree1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/stTos"
+            android:textColor="@color/background_white"
+            android:textSize="@dimen/text_size_13dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/starting_button_agree2"
+            android:textColor="@color/background_white"
+            android:textSize="@dimen/text_size_13dp"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="21dp"
         >
 
-        <ImageView
-            android:layout_marginTop="100dp"
-            android:layout_width="240dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:src="@drawable/logo_white"/>
-
-        <LinearLayout
-            android:layout_marginTop="130dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <CheckBox
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/background_white"
-                android:id="@+id/termsOfServiceCheck"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/background_white"
-                android:id="@+id/stHandlingPrivacy"
-                android:textSize="@dimen/text_size_13dp"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_13dp"
-                android:textColor="@color/background_white"
-                android:text="@string/starting_button_agree1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/stTos"
-                android:textColor="@color/background_white"
-                android:textSize="@dimen/text_size_13dp"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/starting_button_agree2"
-                android:textColor="@color/background_white"
-                android:textSize="@dimen/text_size_13dp"/>
-        </LinearLayout>
-
-        <FrameLayout
+        <com.kakao.usermgmt.LoginButton
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="21dp"
+            android:id="@+id/kakaoLogin"
+            android:visibility="gone"
             >
-
-            <com.kakao.usermgmt.LoginButton
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/kakaoLogin"
-                android:visibility="gone"
-                >
-            </com.kakao.usermgmt.LoginButton>
-
-            <RelativeLayout
-                android:layout_width="286dp"
-                android:layout_height="50dp"
-                android:background="@drawable/button_starting"
-                android:id="@+id/customKakaoLogin"
-                android:layout_gravity="center"
-                >
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_marginLeft="@dimen/all_space_between_20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_height="26dp"
-                    android:src="@drawable/starting_kakao"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/starting_button_start_kakao"
-                    android:layout_centerHorizontal="true"
-                    android:textColor="@color/black"
-                    android:layout_centerVertical="true"
-                    android:textSize="15dp"/>
-            </RelativeLayout>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/all_space_between_10dp"
-            android:layout_height="50dp">
-
-            <com.facebook.login.widget.LoginButton
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/faceLogin"
-                android:visibility="gone"/>
-            <RelativeLayout
-                android:layout_width="286dp"
-                android:layout_height="50dp"
-                android:background="@drawable/button_starting"
-                android:id="@+id/customFaceLogin"
-                android:layout_gravity="center"
-                >
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginLeft="@dimen/all_space_between_20dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/starting_facebook"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/starting_button_start_facebook"
-                    android:textColor="#4267b2"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:textSize="15dp"/>
-            </RelativeLayout>
-
-        </FrameLayout>
+        </com.kakao.usermgmt.LoginButton>
 
         <RelativeLayout
             android:layout_width="286dp"
             android:layout_height="50dp"
-            android:layout_marginTop="@dimen/all_space_between_10dp"
             android:background="@drawable/button_starting"
-            android:id="@+id/startingToSignUp"
+            android:id="@+id/customKakaoLogin"
             android:layout_gravity="center"
             >
             <ImageView
                 android:layout_width="28dp"
-                android:layout_height="24dp"
                 android:layout_marginLeft="@dimen/all_space_between_20dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/starting_soool"/>
+                android:layout_height="26dp"
+                android:src="@drawable/starting_kakao"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/starting_button_sign_up"
+                android:text="@string/starting_button_start_kakao"
                 android:layout_centerHorizontal="true"
-                android:textColor="@color/greenDark"
+                android:textColor="@color/black"
                 android:layout_centerVertical="true"
                 android:textSize="15dp"/>
         </RelativeLayout>
 
+    </FrameLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/all_space_between_10dp"
+        android:layout_height="50dp">
 
+        <com.facebook.login.widget.LoginButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/faceLogin"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:layout_width="286dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_starting"
+            android:id="@+id/customFaceLogin"
+            android:layout_gravity="center"
+            >
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="@dimen/all_space_between_20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/starting_facebook"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/starting_button_start_facebook"
+                android:textColor="#4267b2"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="15dp"/>
+        </RelativeLayout>
 
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="286dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/all_space_between_10dp"
+        android:background="@drawable/button_starting"
+        android:id="@+id/startingToSignUp"
+        android:layout_gravity="center"
+        >
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="@dimen/all_space_between_20dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/starting_soool"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/starting_button_move_to_login"
+            android:text="@string/starting_button_sign_up"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/greenDark"
+            android:layout_centerVertical="true"
+            android:textSize="15dp"/>
+    </RelativeLayout>
 
-            android:textColor="@color/background_white"
-            android:textSize="@dimen/text_size_13dp"
-            android:layout_marginTop="54dp"
-            android:layout_marginBottom="25dp"
-            android:padding="10dp"
-            android:id="@+id/startingToLogIn"
-            android:layout_gravity="center"
 
-            />
-    </LinearLayout>
-</ScrollView>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/starting_button_move_to_login"
+
+        android:textColor="@color/background_white"
+        android:textSize="@dimen/text_size_13dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginBottom="25dp"
+        android:padding="10dp"
+        android:id="@+id/startingToLogIn"
+        android:layout_gravity="center"
+
+        />
+</LinearLayout>

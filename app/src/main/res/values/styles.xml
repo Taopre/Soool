@@ -52,7 +52,7 @@
     </style>
 
     <style name="grayLightSize12TextView"  parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/grayMain</item>
+        <item name="android:textColor">@color/grayLight</item>
         <item name="android:textSize">@dimen/text_size_12dp</item>
 
     </style>

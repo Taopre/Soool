@@ -4,22 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.example.taopr.soool.Object.InfoItem;
-import com.example.taopr.soool.Presenter.InfoFmPresenter;
-
 
 import java.util.ArrayList;
 
-public interface InfoFmInter {
+public interface BookmarkInter {
 
-    void setView(InfoFmPresenter.View view);
+    void setView(BookmarkInter.View view);
     void sendItem(InfoItem infoItem, Activity activity, int infoPosition);
-    void loadData(int loadingKind, int accountNo, int lastPostNo);
+    void loadData(int accountNo, int loadingKind);
 
     public interface View {
         void getDataSuccess(ArrayList<InfoItem> infoItems, int loadingKind);
-        void getDataFail(String message);
+        void getDataFail(String msg);
         void showInfoDetail(Intent intent, int requestCode);
-        void showLoading();
-        void hideLoading();
     }
 }

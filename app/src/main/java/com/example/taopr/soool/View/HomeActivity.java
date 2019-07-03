@@ -46,7 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class HomeActivity extends AppCompatActivity implements HomePresenter.View , MyBoardFragment.MyPageView{
+public class HomeActivity extends AppCompatActivity implements HomePresenter.View, MyBoardFragment.MyPageView, BookmarkFragment.BookmarkView  {
 
     @BindView(R.id.tabMain)
     ViewGroup btn_tabMain;
@@ -64,7 +64,8 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     TextView myPageDrawerEmail;
     @BindView(R.id.myPageDrawerNickname)
     TextView myPageDrawerNickname;
-
+    @BindView(R.id.myPageDrawerLayout)
+    DrawerLayout mypageDrawerLayout;
 
     private String TAG = "홈 액티비티 ";
     // 현재 탭, 이전 탭
@@ -103,6 +104,12 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         homePresenter.setView(this);
         homePresenter.getAccountNo();
 
+
+        // DrawerLayout 은 Home 액티비티의 마이페이지 프래그먼트에서 우측 상단의 메뉴 아이콘 클릭 시에만 생성
+        // 하지만 Home 액티비티의 하위 프래그먼트에서 화면 우측 면에서 왼쪽으로 스와이프 할 경우 DrawerLayout 이 나타남
+        // 그래서 하위 프래그먼트에서 스와이프로 DrawerLayout 생기는 것을 막음
+        mypageDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
         viewBinding();
         callFragment(0,1);
         tabSetting();
@@ -138,7 +145,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         switch (currentTab){
             case 0:
                 if(mainFragment == null) mainFragment = new MainFragment();
-                transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+               // transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 transaction.replace(R.id.homeFragmentContainer, mainFragment);
                 break;
             case 1:
@@ -146,8 +153,8 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
                 //              이전탭이 커뮤니티와 마이페이지 탭일 경우,
                 if (infoFragment== null) infoFragment = new InfoFragment();
 
-                if (previousTabNo == 0) transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-                else transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+              /*  if (previousTabNo == 0) transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                else transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);*/
 
                 transaction.replace(R.id.homeFragmentContainer, infoFragment);
 
@@ -157,14 +164,14 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
                     qnaFragment = new QnaFragment();
                     Log.i(TAG, "callFragment: null");
                 }
-                if (previousTabNo ==3 ) transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
-                else transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                /*if (previousTabNo ==3 ) transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+                else transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);*/
 
                 transaction.replace(R.id.homeFragmentContainer, qnaFragment);
                 break;
             case 3:
                 if (mypageFragment == null) mypageFragment = new MypageFragment();
-                transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+               // transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
 
                 transaction.replace(R.id.homeFragmentContainer, mypageFragment);
                 break;
@@ -202,7 +209,6 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
         if (!mypageDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mypageDrawerLayout.openDrawer(Gravity.RIGHT);
-
 
         }
     }
@@ -350,7 +356,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     }
 
 
-    // MyBoard 프래그먼트에서 마이페이그 프래그먼트 view 에서 '내 게시글' ,'내 포인트' 값의 갱신이 필요하다는 알림을 보내는 메서드
+    // MyBoard 프래그먼트에서 마이페이지 프래그먼트 view 에서 '내 게시글' ,'내 포인트' 값의 갱신이 필요하다는 알림을 보내는 메서드
     // Home 액티비티에서는 MyBoard 프래그먼트에서 알림을 받으면 마이페이지 프래그먼트에 전달한다
     @Override
     public void updateProfileForMyBoard() {
@@ -360,5 +366,29 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         }
     }
 
+    @Override
+    public void waitingForResponse() {
 
+        // to inform myPageFragment that its childFragment, bookmarkFragment
+        // has sent a request to server and waiting for the response
+        mypageFragment.waitChildFragmentRes();
+
+    }
+
+    @Override
+    public void receivedResponse(Boolean serverResponded) {
+
+        // to inform myPageFragment that its childFragment, bookmarkFragment
+        // has received the response from server
+        mypageFragment.getChildFragmentRes(1,serverResponded);
+
+    }
+
+    @Override
+    public void updateAccountInfo() {
+        // if there has been any change in bookmarkFragment concerning userProfile
+        if (mypageFragment != null) {
+            mypageFragment.updateProfile();
+        }
+    }
 }
