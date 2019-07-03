@@ -129,7 +129,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         callFragment();
 
         return view;
-
     }
 
     // 마이페이지 탭
