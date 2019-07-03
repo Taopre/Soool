@@ -9,7 +9,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:src="@drawable/logo"
         android:scaleType="fitXY"
         android:id="@+id/mainInfoImage"
         />
@@ -20,6 +19,38 @@
         android:background="@drawable/gradient_background_black"
         android:id="@+id/mainInfoImageBack"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="3"
+        android:textSize="@dimen/text_size_15dp"
+        android:textColor="@color/grayLight"
+        android:id="@+id/mainInfoTotalCount"
+        android:layout_marginRight="@dimen/all_space_between_18dp"
+        android:layout_marginTop="@dimen/all_space_between_18dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/mainInfoTotalCount"
+        android:layout_toLeftOf="@id/mainInfoTotalCount"
+        android:text=" / "
+        android:textSize="@dimen/text_size_15dp"
+        android:textColor="@color/grayMain"
+        android:id="@+id/mainInfoCountSlash"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/mainInfoCountSlash"
+        android:layout_toLeftOf="@id/mainInfoCountSlash"
+        android:text="1"
+        android:textColor="@color/background_white"
+        android:textSize="@dimen/text_size_15dp"
+        android:id="@+id/mainInfoCurrentPos"/>
 
     <HorizontalScrollView
         android:id="@+id/mainInfoTagSV"
