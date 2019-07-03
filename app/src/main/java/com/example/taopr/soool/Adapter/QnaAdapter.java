@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,24 +169,27 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         holder.qnaBoardViews.setText(String.valueOf(qnaBoardItem.getViews()));
 
-
-        //holder.qnaBoardDate.setText(qnaBoardItem.getDate());
+        // 작성시간을 현재 시간 기준으로 시간이 얼마나 지났지를 표현
        holder.qnaBoardDate.setText(timeCalculator.getbeforeTime(qnaBoardItem.date));
 
-        //timeCalculator.getDate(qnaBoardItem.getDate());
-
-        Log.i(TAG, "onBindViewHolder: " + position + qnaBoardItem.getTitle() + qnaBoardItem.getImage());
         if(qnaBoardItem.getImage() != null){
             //holder.qnaBoardImage
             String qnaImageURI= Whatisthis.serverIp + qnaBoardItem.getImage();
 
-            Log.i(TAG, "onBindViewHolder: image not null");
+
+            int imageSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, context.getResources().getDimension(R.dimen.size_72dp)
+            , context.getResources().getDisplayMetrics());
+
             Glide.with(context)
                     .load(qnaImageURI)
+                    .centerCrop()
+                    .override(216,216)
                     .centerCrop()
                     .into(holder.qnaBoardImage);
 
             holder.qnaBoardImage.setVisibility(View.VISIBLE);
+            Log.i(TAG, "onBindViewHolder: 사이즈"+ imageSize );
+
         }
         else{
             holder.qnaBoardImage.setVisibility(View.INVISIBLE);
