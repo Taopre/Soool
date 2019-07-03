@@ -9,9 +9,16 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:src="@drawable/ic_add_a_photo_gray_100dp"
+        android:src="@drawable/logo"
         android:scaleType="fitXY"
         android:id="@+id/mainInfoImage"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@drawable/gradient_background_black"
+        android:id="@+id/mainInfoImageBack"
         />
 
     <HorizontalScrollView
@@ -48,7 +55,6 @@
             android:textSize="@dimen/text_size_20dp"
             android:id="@+id/mainInfoTitle"/>
 
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +78,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/mainInfoViewsTV"
-
             style="@style/grayLightSize12TextView"
             android:text="조회수"
             android:layout_toRightOf="@id/mainInfoDate"

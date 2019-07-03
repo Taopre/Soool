@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_up_usable_email"
-            android:textSize="@dimen/text_size_13dp"
+            android:textSize="@dimen/text_size_12dp"
             android:textColor="@color/greenMain"
             android:layout_below="@id/signUpEmailLay"
             android:layout_alignLeft="@id/signUpEmailLay"
@@ -71,6 +71,7 @@
             android:paddingLeft="@dimen/all_space_between_12dp"
             android:layout_marginTop="10dp"
             />
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -108,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_up_usable_nickname"
-            android:textSize="@dimen/text_size_13dp"
+            android:textSize="@dimen/text_size_12dp"
             android:textColor="@color/greenMain"
             android:layout_below="@id/signUpNickLay"
             android:layout_alignLeft="@id/signUpEmailLay"

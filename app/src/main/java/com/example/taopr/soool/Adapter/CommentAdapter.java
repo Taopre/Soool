@@ -30,8 +30,6 @@ import com.example.taopr.soool.R;
 import com.example.taopr.soool.TimeCalculator;
 import com.example.taopr.soool.View.ProfileActivity;
 import com.google.gson.Gson;
-import com.nikhilpanju.recyclerviewenhanced.OnActivityTouchListener;
-import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;

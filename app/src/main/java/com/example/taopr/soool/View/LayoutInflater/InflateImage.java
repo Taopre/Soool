@@ -8,17 +8,15 @@ import android.widget.LinearLayout;
 import com.example.taopr.soool.R;
 
 public class InflateImage extends LinearLayout{
+
     public InflateImage(Context context) {
         super(context);
-
         inflateImg(context);
     }
 
     public InflateImage(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         inflateImg(context);
-
     }
 
     private void inflateImg(Context context) {
