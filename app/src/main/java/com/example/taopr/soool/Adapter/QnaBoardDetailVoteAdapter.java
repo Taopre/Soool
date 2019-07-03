@@ -90,10 +90,12 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
             if (position != (userSelectPos - 1)) {
                 Log.d(TAG, "onBindViewHolder: 틀린 포지션이당"+position);
                 holder.textSelect.setVisibility(View.INVISIBLE);
+                holder.voteContentValue.setTextColor(Color.parseColor("#9d9d97"));
             } else {
                 Log.d(TAG, "onBindViewHolder: 맞는 포지션이당"+position);
                 holder.textSelect.setVisibility(View.VISIBLE);
                 holder.textView.setTextColor(Color.parseColor("#08883e"));
+                holder.voteContentValue.setTextColor(Color.parseColor("#08883e"));
             }
         }
 

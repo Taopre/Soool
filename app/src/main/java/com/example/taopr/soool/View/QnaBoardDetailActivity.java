@@ -42,6 +42,7 @@ import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.Keyboard;
 import com.example.taopr.soool.Util.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -82,6 +83,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     QnaBoardDetailImageAdapter qnaBoardDetailImageAdapter;
     GridVoteItem gridVoteItem;
     QnaDetailPresenter qnaDetailPresenter;
+    Keyboard keyboard;
 
     ArrayList<QnaBoardVoteItem> editModelArrayList = new ArrayList<>();
     ArrayList<String> tagArray = new ArrayList<>();
@@ -115,7 +117,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
 
-        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard = new Keyboard(this);
 
         String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
         Gson gson = new GsonBuilder().create();
@@ -387,7 +389,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         rl_voteFinishLayout.setOnClickListener(this);
         rl_drawupBackLayout.setOnClickListener(this);
         tv_drawupReport.setOnClickListener(this);
-        tv_drawupModify.setOnClickListener(this);
+        rl_drawupTextLayout.setOnClickListener(this);
     }
 
     public void showLoading() {
@@ -447,7 +449,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 showLoading();
                 break;
             case R.id.qnadetailLayout:
-                hideKeyboard();
+                keyboard.hideKeyboard(et_commentWrite);
                 break;
             case R.id.drawupBackLayout:
                 Intent intentActionKind;
@@ -529,6 +531,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                                 voteTotalResult += 1;
                             }
                         }
+                        qnaBoardDetailImageAdapter.userSelectPos = mySelectVoteNum;
                         qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
                         tv_voteResultShow.setText(voteTotalResult+"");
                         qnaBoardDetailImageAdapter.notifyDataSetChanged();
@@ -552,14 +555,19 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 }
 
                 break;
-            case R.id.drawupModify:
-                Intent intent = new Intent(this, QnaBoardActivity.class);
-                intent.putExtra("qnaBoardItem", qnaBoardItem);
-                intent.putExtra("actionKind", actionKind);
-                intent.putExtra("qnaListPosition", qnaListPosition);
-                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                startActivity(intent);
-                finish();
+            case R.id.drawupTextLayout:
+                if (isMyBoard) {
+                    Intent intent = new Intent(this, QnaBoardActivity.class);
+                    intent.putExtra("qnaBoardItem", qnaBoardItem);
+                    intent.putExtra("actionKind", actionKind);
+                    intent.putExtra("qnaListPosition", qnaListPosition);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Toast.makeText(view.getContext(), "신고하기",Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.commentEnroll:
                 String commentContent = et_commentWrite.getText().toString();
@@ -599,11 +607,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
                 break;
         }
-    }
-
-    private void hideKeyboard()
-    {
-        inputMethodManager.hideSoftInputFromWindow(et_commentWrite.getWindowToken(), 0);
     }
 
     @Override
@@ -850,6 +853,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             }
             else {
                 for (int i = 0; i < gridVoteItemArrayList.size(); i++) {
+                    Log.d(TAG, "이미지투표 업데이트 결과: "+updateQnaVoteItem.getVoteResult().get(i));
                     gridVoteItemArrayList.get(i).setVote(updateQnaVoteItem.getVoteResult().get(i));
                 }
                 qnaBoardDetailImageAdapter.notifyDataSetChanged();

@@ -83,7 +83,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
     ImageView iv_qnaImageVoteRemove, iv_qnaboardAddBtn, iv_qnaboardImage, iv_qnaboardAddTag, iv_qnaboardDeleteBtn, iv_qnaboardImagebtn, iv_qnaboardVoteBtn, iv_qnaTextVoteRemove;
     HorizontalScrollView h_scrollView;
     LinearLayout ll_qnaVoteTextLayout, ll_qnaVoteImageLayout, ll_belowLayout;
-    RelativeLayout rl_qnaTextAddLayout, rl_spaceLayout;
+    RelativeLayout rl_qnaTextAddLayout, rl_spaceLayout, rl_drawupBackLayout;
     FrameLayout imageLayout;
     RecyclerView recyclerView, rc_qnaboardTag;
     GridView gridView;
@@ -258,6 +258,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         pb_qnaBoardProgress = findViewById(R.id.qnaBoardProgress);
         ll_belowLayout = findViewById(R.id.belowLayout);
         rl_spaceLayout = findViewById(R.id.spaceLayout);
+        rl_drawupBackLayout = findViewById(R.id.drawupBackLayout);
 
         imageLayout.setVisibility(View.GONE);
         ll_qnaVoteTextLayout.setVisibility(View.GONE);
@@ -272,7 +273,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         iv_qnaTextVoteRemove.setOnClickListener(this);
         iv_qnaImageVoteRemove.setOnClickListener(this);
         gridView.setOnItemClickListener(this);
-        tv_drawupBack.setOnClickListener(this);
+        rl_drawupBackLayout.setOnClickListener(this);
         tv_drawupEnroll.setOnClickListener(this);
         tv_drawupDelete.setOnClickListener(this);
         rl_spaceLayout.setOnClickListener(this);
@@ -389,7 +390,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 iv_qnaboardVoteBtn.setClickable(true);
                  break;
             case R.id.qnaboardImageBtn:
-                ll_belowLayout.setVisibility(View.VISIBLE);
+                imageLayout.setVisibility(View.VISIBLE);
                 //앨범 연동.
                 DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -422,17 +423,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 qnaItem.setImage(UploadImgPath);
 
                 break;
-            case R.id.drawupBack:
-                Toast.makeText(this, "뒤로가기 클릭", Toast.LENGTH_SHORT).show();
+            case R.id.drawupBackLayout:
                 //이전 액티비티로 인탠트 사용해줘야할 부분.
-//                if (actionKind == 1) {
-//                    Intent intent = new Intent(this, QnaBoardDetailActivity.class);
-////                    intent.putExtra("qnaBoardItem", receiveQnaBoardItem);
-////                    intent.putExtra("fromActivity", 0);
-////                    intent.putExtra("qnaListPosition", qnaListPosition);
-//                    startActivity(intent);
-//                    finish();
-//                }
                 finish();
                 break;
             case R.id.drawupEnroll:
@@ -802,8 +794,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     // you can get an image path(ArrayList<String>) on <0.6.2
 
                     path = data.getParcelableArrayListExtra(Define.INTENT_PATH);
-                    if (boardImageSelect == false) {
-                        if (reSelectVoteImage == false) {
+                    if (!boardImageSelect) {
+                        if (!reSelectVoteImage) {
 
                             for (int i=0; i<path.size(); i++) {
                                 // path안의 값들을 이름 절대경로 뽑아서 저장하자
@@ -826,7 +818,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 File file = new File(voteImage.get(i));
                                 Uri test = Uri.fromFile(file);
 
-                                gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                gridVoteItem = new GridVoteItem(true, "", voteImage.get(i), 0);
                                 gridVoteItemArrayList.add(gridVoteItem);
                             }
 
@@ -845,9 +837,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                             // 이미지가 최대인 6장일 경우
                             if (path.size() + gridVoteItemArrayList.size() == 6) {
-                                if (maybeDeletePosition != 999) {
-                                    gridVoteItemArrayList.remove(maybeDeletePosition);
-                                }
 
                                 for (int i = 0; i < path.size(); i++) {
                                     Uri imageUri = path.get(i);
@@ -868,19 +857,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                     File file = new File(voteImage.get(voteImage.size() - 1));
                                     Uri test = Uri.fromFile(file);
-
-                                    gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                    gridVoteItem = new GridVoteItem(true, "", voteImage.get(gridVoteItemArrayList.size()), 0);
                                     gridVoteItemArrayList.add(gridVoteItem);
                                 }
-
-                                maybeDeletePosition = 999;
                             }
                             // 이미지가 6장보다 작을 경우.
                             else {
-                                if (maybeDeletePosition != 999) {
-                                    gridVoteItemArrayList.remove(maybeDeletePosition);
-                                }
-
                                 for (int i = 0; i < path.size(); i++) {
                                     Uri imageUri = path.get(i);
                                     String[] filePath = {MediaStore.Images.Media.DATA};
@@ -901,7 +883,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     File file = new File(voteImage.get(voteImage.size() - 1));
                                     Uri test = Uri.fromFile(file);
 
-                                    gridVoteItem = new GridVoteItem(false, "", test, 0);
+                                    gridVoteItem = new GridVoteItem(true, "", voteImage.get(gridVoteItemArrayList.size()), 0);
                                     gridVoteItemArrayList.add(gridVoteItem);
                                 }
 
@@ -910,9 +892,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
                                 gridVoteItemArrayList.add(gridVoteItem);
 
-                                maybeDeletePosition = 999;
                             }
-
                             voteImageAdapter.notifyDataSetChanged();
 //                            gridView.setAdapter(voteImageAdapter);
 
@@ -1082,6 +1062,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
         // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
         voteImage.remove(position);
         gridVoteItemArrayList.remove(position);
+
+        if (gridVoteItemArrayList.size() < 6) {
+            Uri uriTest = Uri.parse("");
+            gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
+            gridVoteItemArrayList.add(gridVoteItem);
+        }
         voteImageAdapter.notifyDataSetChanged();
     }
 
@@ -1090,9 +1076,9 @@ public class QnaBoardActivity extends AppCompatActivity implements
         Log.d(TAG, "아이템체크: "+gridVoteItemArrayList.get(position).getImageIden()+"//"+gridVoteItemArrayList.get(position).getStatus());
         if (gridVoteItemArrayList.get(position).getImageIden() == 1) {
             reSelectVoteImage = true;
-            maybeDeletePosition = position;
-//            gridVoteItemArrayList.remove(position);
-//            voteImageAdapter.notifyDataSetChanged();
+            gridVoteItemArrayList.remove(position);
+            voteImageAdapter.notifyDataSetChanged();
+
             FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
         }
     }
