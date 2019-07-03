@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/belowLayout"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <FrameLayout
                         android:id="@+id/imageLayout"
@@ -169,7 +169,7 @@
                                 android:layout_marginStart="@dimen/text_size_13dp"
                                 android:layout_marginTop="@dimen/text_size_14dp"
                                 android:layout_marginBottom="@dimen/text_size_15dp"
-                                android:text="텍스트 투표 (6개 항목까지 가능합니다)"
+                                android:text="@string/qna_board_notice_text_voting_rules"
                                 android:textColor="@color/grayMain"
                                 android:textSize="@dimen/text_size_14dp"/>
 
@@ -236,7 +236,7 @@
                                 android:layout_marginStart="@dimen/text_size_13dp"
                                 android:layout_marginTop="@dimen/text_size_14dp"
                                 android:layout_marginBottom="@dimen/text_size_15dp"
-                                android:text="이미지 투표 (6개 항목까지 가능합니다)"
+                                android:text="@string/qna_board_notice_image_voting_rules"
                                 android:textColor="@color/grayMain"
                                 android:textSize="@dimen/text_size_14dp"/>
 

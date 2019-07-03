@@ -9,8 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Object.GridVoteItem;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.Util.Whatisthis;
 
 import java.util.ArrayList;
 
@@ -73,17 +75,19 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
         }
         viewHolder.button.setTag(position);
         viewHolder.textView.setTag(position);
-        viewHolder.imageView.setTag(position);
+        viewHolder.imageView.setTag(R.id.imageView, position);
         viewHolder.layoutView.setTag(position);
 
         viewHolder.textView.setText(item.get(position).getStatus());
-        viewHolder.imageView.setImageURI(item.get(position).getImage());
 
-//        Glide.with(convertView.getContext())
-//                .load(Whatisthis.serverIp+item.get(position).getStrImage())
-//                .override(103, 103)
-//                .centerCrop()
-//                .into(viewHolder.imageView);
+        if (item.get(position).isStringOrUri()){
+            Glide.with(convertView.getContext())
+                    .load(item.get(position).getStrImage())
+                    .override(103, 103)
+                    .into(viewHolder.imageView);
+        }
+        else
+            viewHolder.imageView.setImageURI(item.get(position).getImage());
 
         viewHolder.button.setOnClickListener(this);
         viewHolder.textView.setOnClickListener(this);
@@ -92,6 +96,8 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
         if (item.get(position).getStatus().equals("항목추가")) {
             viewHolder.button.setVisibility(View.GONE);
         }
+        else if (item.get(position).getStatus().equals(""))
+            viewHolder.button.setVisibility(View.VISIBLE);
 
         return convertView;
     }

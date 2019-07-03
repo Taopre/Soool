@@ -14,10 +14,6 @@ public class GridVoteItem {
     private int vote = 0;
     private boolean isStringOrUri = false;
 
-    public GridVoteItem (String status) {
-        this.status = status;
-    };
-
     public GridVoteItem (boolean isStringOrUri, String status, Uri image, int imageIden) {
         this.isStringOrUri = isStringOrUri;
         this.status = status;
@@ -26,11 +22,11 @@ public class GridVoteItem {
 
     }
 
-    public GridVoteItem (boolean isStringOrUri, String status, String strImage) {
+    public GridVoteItem (boolean isStringOrUri, String status, String strImage, int imageIden) {
         this.isStringOrUri = isStringOrUri;
         this.status = status;
         this.strImage = strImage;
-
+        this.imageIden = imageIden;
     }
 
     public GridVoteItem (String status, Uri image, boolean isSelected, boolean isStringOrUri) {
