@@ -55,6 +55,8 @@
     <string name="all_button_yes">예</string>
     <string name="all_button_no">아니요</string>
 
+
+
     <!-- Toast 메세지 -->
 
     <string name="toast_notice_no_exist_post">마지막 게시물입니다</string>
@@ -104,6 +106,7 @@
     <!-- 마이 페이지 drawer layout -->
     <string name="drawer_my_account">내 계정</string>
     <string name="drawer_push_notification">푸시 알림 설정</string>
+    <string name="drawer_notice">공지사항</string>
     <string name="drawer_report">문의 및 신고</string>
     <string name="drawer_version">버전 정보</string>
     <string name="drawer_handling_privacy">개인정보 취급방침</string>
@@ -157,6 +160,10 @@
     <string name="login_button_login">로그인하기</string>
     <string name="login_button_find_password">비밀번호 찾기</string>
     <string name="login_button_sign_up">회원가입하기</string>
+
+    <!-- 공지사항 페이지-->
+    <string name="notice_no_exist_notice">공지 내용이 없습니다</string>
+    <string name="notice_label_page">공지사항</string>
 
 
     <string-array name="custom_months">

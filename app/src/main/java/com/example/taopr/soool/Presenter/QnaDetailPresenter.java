@@ -12,6 +12,7 @@ import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.CommentItem;
 import com.example.taopr.soool.Object.CommentListObject;
 import com.example.taopr.soool.Object.QnaVoteItem;
+import com.example.taopr.soool.Object.RecommentItem;
 import com.example.taopr.soool.Presenter.Interface.QnaDetailInter;
 import com.google.gson.Gson;
 
@@ -420,19 +421,19 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
     }
 
     @Override
-    public void commentDeleteResponss(int response,int commentCount)
+    public void commentDeleteResponss(int response,int commentCount,int commentNo)
     {
-        view.commentDeleteGoResponse(response,commentCount);
+        view.commentDeleteGoResponse(response,commentCount,commentNo);
     }
 
     @Override
-    public void commentInsertResponse(int response,int commentCount) {
-        view.commentInsertGoResponse(response,commentCount);
+    public void commentInsertResponse(int response,int commentCount,CommentItem commentItem) {
+        view.commentInsertGoResponse(response,commentCount,commentItem);
     }
 
     @Override
-    public void recommentInsertResponse(int response) {
-        view.recommentInsertGoResponse(response);
+    public void recommentInsertResponse(int response,RecommentItem recommentItem,int commentNo) {
+        view.recommentInsertGoResponse(response,recommentItem,commentNo);
     }
     @Override
     public void likeResponse(int response)
