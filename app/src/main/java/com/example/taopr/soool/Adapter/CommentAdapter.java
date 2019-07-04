@@ -315,11 +315,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         else if (commentitem.getLikeCount() >= 1)
                         {
                             String update_like_count = String.valueOf(commentitem.getLikeCount() - 1);
-
                             holder.commentLike.setText("추천 " + update_like_count);
                         }
-
-
                         holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
 
                     commentitem.setAccountNo(accountNo + 0);
