@@ -234,7 +234,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 if (CommentOrRecomment == false)
                 {
                     CommentOrRecomment = true;
-                    Log.d(TAG, "대댓글 입력프로세스: 3단계"+commentitem.getCommentNo());
                     toss_commentNo_interface.toss_commentNo_atActivity(commentitem.getCommentNo(),commentitem.getCommentWriter(),position);
                 }
                 else if(CommentOrRecomment == true)
@@ -285,7 +284,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             //like_confirm = like_confirm + 0;
             //안누른 댓글
             holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
-
             commentitem.setAccountNo(accountNo + 0);
         }
 
@@ -301,15 +299,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             public void onClick(View v)
             {
 
-                Log.d(TAG,String.valueOf(check));
-                Log.d(TAG, "onClickSDGSDG:" + String.valueOf(position) +"ASDASDAS" + String.valueOf(commentitem.getCommentNo()));
                 int commentORrecomment = 0;
                 CommentItem commentItemA = commentitems.get(position);
                 if (commentItemA.getAccountNo() - accountNo  == 1)
                 {
                     //좋아요 취소
                     //이미 눌렀는데 또 누를경우
-                        Log.d(TAG,"과연 좋아요 눌렀을때");
                         int like_check = 0;
                         qnaDetailPresenter.likeRequest(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
                         if (commentitem.getLikeCount() == 0)
@@ -334,8 +329,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         //좋아요
                         int like_check = 1;
                         qnaDetailPresenter.likeRequest(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
-                        Log.d(TAG,"과연 좋아요 안눌렀을때");
-                             if (commentitem.getLikeCount() == 0)
+
+                        if (commentitem.getLikeCount() == 0)
                         {
                             String update_like_count = String.valueOf(commentitem.getLikeCount() + 1);
                             holder.commentLike.setText("추천 " + update_like_count);
@@ -347,8 +342,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                             holder.commentLike.setText("추천 " + update_like_count);
                         }
                         holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
-                        Log.d(TAG, "Asdsgsdgsgsg: " + String.valueOf(v.getId()));
-                        Log.d(TAG, "Asdsgsdgsgsgas: " + String.valueOf(position));
 
                       commentitem.setAccountNo(accountNo + 1);
 
@@ -389,8 +382,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                                         recommentitem = gsonobject.fromJson(String.valueOf(jsonObject),RecommentItem.class);
                                         Log.d(TAG,String.valueOf(jsonObject));
                                         recommentitems.add(recommentitem);
-
-                                        Log.d(TAG, "대댓글 입력프로세스: 개새야"+recommentitems.size()+"");
 
                                     }
                                     catch (JSONException e)
@@ -473,14 +464,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         if (commentitem.getCommentContent().equals("삭제된 댓글입니다."))
         {
-            holder.commentDelete.setVisibility(View.GONE);
-            holder.commentLike.setVisibility(View.GONE);
-            holder.recomment_insert.setVisibility(View.GONE);
+//            holder.commentDelete.setVisibility(View.GONE);
+//            holder.commentLike.setVisibility(View.GONE);
+//            holder.recomment_insert.setVisibility(View.GONE);
+
+            holder.commentDelete.setText("");
+            holder.commentLike.setText("");
+            holder.recomment_insert.setText("");
             holder.comment_delete_img.setVisibility(View.VISIBLE);
+            holder.commentContent.setTextColor(context.getResources().getColor(R.color.grayMain));
 
             int recommentCountPadding = (int) context.getResources().getDimension(R.dimen.all_space_between_18dp);
-            holder.commentContent.setTextColor(context.getResources().getColor(R.color.grayMain));
-            holder.recommentCount.setPadding(recommentCountPadding,0,0,0);
+            holder.recommentCount.setPadding(0,0,0,0);
         }
 
 
@@ -534,10 +529,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void recommentInsertGoResponse(int response,RecommentItem recommentItem,int commentNo)
     {
-        //0,1
-        //commentNo = 1
-        //3,2
-        Log.d(TAG, "AAAAAAAA: " + commentNo);
+        //commentNo = adapter에서 넘긴 position
         CommentItem commentItem = commentitems.get(commentNo);
         int position;
         //view가 안보여지고 있는상태 (false)
@@ -566,9 +558,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
 
             recommentitems.add(recommentitems.size(),recommentItem);
-
             position = commentNo;
-            //commentitems.get(position).setRecommentCount(recommentitems.size());
             commentItem.setRecommentCount(recommentitems.size());
             notifyItemChanged(position,commentItem);
         }
@@ -599,6 +589,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void commentDeleteGoResponse(int response,int commentCount,int commentNo)
     {
+        //commentNo = adapter에서 넘긴 position
         CommentItem commentItem = commentitems.get(commentNo);
         int position = commentNo - 1;
         commentItem.setRecommentCount(recommentitems.size());
