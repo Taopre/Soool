@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class LoginSharedPreferences {
+
     private String nameOfShared = "LoginUser";
     private String keyOfShared = "LoginAccount";
     private String TAG = "쉐어드";
