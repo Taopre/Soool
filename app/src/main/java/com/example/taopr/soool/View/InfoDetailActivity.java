@@ -145,7 +145,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     private int Get_commentNo;
     InfoDetailPresenter commentPresent;
     String TextAddWriter;
-    int comment_postion;
+    int comment_position;
     private boolean commentBoolean = false;
     private boolean  recommendResponse = false;
 
@@ -527,7 +527,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
                 Get_commentNo = commentNo;
                 commentWriter = commentWriter;
                 TextAddWriter = "@" + commentWriter +" ";
-                comment_postion = position;
+                comment_position = position;
 
                 if (Get_commentNo != 0)
                 {
@@ -624,13 +624,12 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         //대댓글 작성
         if (response == 0)
         {
-            commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_postion);
+            commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_position);
         }
     }
 
     @Override
     public void likeGoResponse(int response) {
-
     }
 
     @Override
@@ -647,7 +646,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             infoItem.setComments(commentCount);
             InfoCommentCount.setText(String.valueOf(commentCount));
             commentBoolean = true;
-            commentAdapter.commentDeleteGoResponse(response,commentCount,comment_postion);
+            commentAdapter.commentDeleteGoResponse(response,commentCount,comment_position);
         }
     }
 
