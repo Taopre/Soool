@@ -860,22 +860,25 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         {
             @Override
             public void toss_commentNo_atActivity(int commentNo,String commentWriter,int position) {
-                Get_commentNo = commentNo;
-                commentWriter = commentWriter;
-                TextAddWriter = "@" + commentWriter +" ";
                 comment_position = position;
 
-                if (Get_commentNo != 0)
+                if (commentNo != 9999)
                 {
-                    et_commentWrite.getText().clear();
-                    et_commentWrite.setText(TextAddWriter);
-                    et_commentWrite.setSelection(et_commentWrite.length());
-                    EditText_commentWirte_tag();
-                }
-                else
-                {
-                    et_commentWrite.getText().clear();
-                    et_commentWrite.setHint("댓글을 입력해주세요");
+                    Get_commentNo = commentNo;
+                    commentWriter = commentWriter;
+                    TextAddWriter = "@" + commentWriter +" ";
+                    if (Get_commentNo != 0)
+                    {
+                        et_commentWrite.getText().clear();
+                        et_commentWrite.setText(TextAddWriter);
+                        et_commentWrite.setSelection(et_commentWrite.length());
+                        EditText_commentWirte_tag();
+                    }
+                    else
+                    {
+                        et_commentWrite.getText().clear();
+                        et_commentWrite.setHint("댓글을 입력해주세요");
+                    }
                 }
 
             }
@@ -982,7 +985,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void likeGoResponse(int response) {
-
     }
 
     @Override

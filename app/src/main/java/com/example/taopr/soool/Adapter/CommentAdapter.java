@@ -55,8 +55,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     int check;
     int[] likeList;
 
-
-
     private TimeCalculator timeCalculator;
     private NoticeDialog noticeDialog;
 
@@ -162,7 +160,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                             new DividerItemDecoration(context,manager.getOrientation())
                     );
 
-
             recommentList.setLayoutManager(manager);
             recommentList.setAdapter(recommentAdapter);
 
@@ -266,25 +263,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         ///// 댓글 좋아요 기능 ////
         String likeCount  = String.valueOf(commentitem.getLikeCount());
-
         likeList = commentitem.getLikeList();
         Arrays.sort(likeList);
         check = Arrays.binarySearch(likeList,accountNo);//생성자에 회원번호 추가
-
-
         if (check >= 0)
         {
             //like_confirm = like_confirm + 1;
             //이미 좋아요를 누른 댓글
             holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
-            commentitem.setAccountNo(accountNo + 1);
+            commentitem.setAccountNo(1);
         }
         else
         {
             //like_confirm = like_confirm + 0;
             //안누른 댓글
             holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
-            commentitem.setAccountNo(accountNo + 0);
+            commentitem.setAccountNo(0);
         }
 
 
@@ -300,8 +294,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             {
 
                 int commentORrecomment = 0;
-                CommentItem commentItemA = commentitems.get(position);
-                if (commentItemA.getAccountNo() - accountNo  == 1)
+                if (commentitem.getAccountNo() == 1)
                 {
                     //좋아요 취소
                     //이미 눌렀는데 또 누를경우
@@ -319,14 +312,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         }
                         holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
 
-                    commentitem.setAccountNo(accountNo + 0);
+                        commentitem.setAccountNo(0);
                 }
-                else if (commentItemA.getAccountNo() - accountNo == 0)
+                else if (commentitem.getAccountNo() == 0)
                 {
                         //좋아요
                         int like_check = 1;
                         qnaDetailPresenter.likeRequest(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
-
                         if (commentitem.getLikeCount() == 0)
                         {
                             String update_like_count = String.valueOf(commentitem.getLikeCount() + 1);
@@ -340,8 +332,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         }
                         holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
 
-                      commentitem.setAccountNo(accountNo + 1);
-
+                     commentitem.setAccountNo(1);
                 }
 
             }
@@ -461,10 +452,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         if (commentitem.getCommentContent().equals("삭제된 댓글입니다."))
         {
-//            holder.commentDelete.setVisibility(View.GONE);
-//            holder.commentLike.setVisibility(View.GONE);
-//            holder.recomment_insert.setVisibility(View.GONE);
-
             holder.commentDelete.setText("");
             holder.commentLike.setText("");
             holder.recomment_insert.setText("");
@@ -574,7 +561,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void likeGoResponse(int response)
     {
-
     }
 
     @Override
@@ -588,7 +574,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     {
         //commentNo = adapter에서 넘긴 position
         CommentItem commentItem = commentitems.get(commentNo);
-        int position = commentNo - 1;
+        int position = commentNo;
         commentItem.setRecommentCount(recommentitems.size());
         notifyItemChanged(position,commentItem);
     }
