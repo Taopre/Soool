@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    android:paddingRight="@dimen/all_space_between_18dp">
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/subActionBarLeft"
         />
     <ImageView
@@ -30,18 +30,18 @@
         android:layout_alignParentLeft="true"
         android:gravity="center"
         android:id="@+id/subActionBarLeftImage"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_centerVertical="true"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="공지사항"
         android:id="@+id/subActionBarTitle"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="14dp"
         android:layout_toRightOf="@id/subActionBarLeftImage"
         android:layout_centerVertical="true"
         android:gravity="center"
-        android:visibility="gone"
+        android:visibility="visible"
         android:textSize="@dimen/text_size_18dp"
         android:textColor="@color/black"
         />
@@ -63,10 +63,17 @@
         android:textSize="@dimen/text_size_15dp"
         android:text="저장하기"
         android:layout_alignParentRight="true"
+        android:paddingRight="@dimen/all_space_between_18dp"
         android:textColor="@color/greenDark"
         android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/subActionBarRight"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/all_line_1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grayLight_a50"
+        />
 
 </RelativeLayout>
