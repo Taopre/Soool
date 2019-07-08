@@ -45,6 +45,7 @@ public class NoticeActivity extends AppCompatActivity implements NoticeInter.Vie
         noticePresenter = new NoticePresenter();
         noticePresenter.setView(this);
         noticePresenter.loadNoticeList();
+
     }
 
     @Override
