@@ -121,6 +121,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
 
         keyboard = new Keyboard(this);
+        keyboard.hideKeyboard(et_commentWrite);
 
         String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
         Gson gson = new GsonBuilder().create();
@@ -231,6 +232,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         // 투표 항목 뿌려줘야함.
                         qnaDetailPresenter.downloadVoteData(accountNo, qnaBoardItem.getPostNo());
                         showLoading();
+                        // 로딩시 클릭 다 막자 -> 수정하기 뒤로가기 추천 비추천 등록 댓글입력공간
 
                         if (tagData.length == 0) {
                             tagView.setVisibility(View.GONE);
@@ -268,7 +270,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         }
                     } else if (qnaBoardItem.getQnaCate() == 1) {
                         // 투표 X.
-
+                        hideLoading();
                         if (tagData.length == 0) {
                             tagView.setVisibility(View.GONE);
                             tv_qnaboardTagOne.setVisibility(View.VISIBLE);
@@ -396,10 +398,22 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     public void showLoading() {
         pb_qnaBoardDetailProgress.setVisibility(View.VISIBLE);
+        rl_drawupBackLayout.setClickable(false);
+        rl_drawupTextLayout.setClickable(false);
+        rl_qnaboardLikeLayout.setClickable(false);
+        rl_qnaboardUnLikeLayout.setClickable(false);
+        btn_commentEnroll.setClickable(false);
+        et_commentWrite.setClickable(false);
     }
 
     public void hideLoading() {
         pb_qnaBoardDetailProgress.setVisibility(View.GONE);
+        rl_drawupBackLayout.setClickable(true);
+        rl_drawupTextLayout.setClickable(true);
+        rl_qnaboardLikeLayout.setClickable(true);
+        rl_qnaboardUnLikeLayout.setClickable(true);
+        btn_commentEnroll.setClickable(true);
+        et_commentWrite.setClickable(true);
     }
 
     @Override
@@ -407,14 +421,23 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         switch (view.getId()) {
             case R.id.qnaboardLikeLayout:
                 flagLike++;
-
+                Log.d(TAG, "추천테스트 좋아요 -> "+flagLike + "//" +flagUnLike);
                 // 추천 클릭시 색깔 변함 준 부분
                 if (flagLike % 2 == 1) {
+                    if (flagUnLike % 2 == 1) {
+                        flagUnLike = 0;
+                        unLikeBtnOnOff = 0;
+                        tv_qnaboardUnLike.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardUnLike.setText((qnaBoardItem.getBads()-1)+"");
+                    }
+                    else {
+                        tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
+                    }
                     likeBtnOnOff = 1;
                     tv_qnaboardLike.setTextColor(Color.parseColor("#08883e"));
                     tv_qnaboardLikeText.setTextColor(Color.parseColor("#08883e"));
                     tv_qnaboardLike.setText((qnaBoardItem.getGoods()+1)+"");
-                    tv_qnaboardUnLike.setText(qnaBoardItem.getBads()+"");
                 } else {
                     likeBtnOnOff = 0;
                     tv_qnaboardLike.setTextColor(Color.parseColor("#9d9d97"));
@@ -430,12 +453,22 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.qnaboardUnLikeLayout:
                 flagUnLike++;
+                Log.d(TAG, "추천테스트 안좋아요 -> "+flagLike + "//" +flagUnLike);
                 // 비추천 클릭시 색깔 변함 준 부분
                 if (flagUnLike % 2 == 1) {
+                    if (flagLike % 2 == 1) {
+                        flagLike = 0;
+                        likeBtnOnOff = 0;
+                        tv_qnaboardLike.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardLikeText.setTextColor(Color.parseColor("#9d9d97"));
+                        tv_qnaboardLike.setText((qnaBoardItem.getGoods()-1)+"");
+                    }
+                    else {
+                        tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
+                    }
                     unLikeBtnOnOff = 1;
                     tv_qnaboardUnLike.setTextColor(Color.parseColor("#08883e"));
                     tv_qnaboardUnLikeText.setTextColor(Color.parseColor("#08883e"));
-                    tv_qnaboardLike.setText(qnaBoardItem.getGoods()+"");
                     tv_qnaboardUnLike.setText((qnaBoardItem.getBads()+1)+"");
                 } else {
                     unLikeBtnOnOff = 0;

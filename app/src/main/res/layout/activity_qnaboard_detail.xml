@@ -12,7 +12,7 @@
 
     <ScrollView
         android:layout_below="@+id/actionbar"
-        android:layout_above="@+id/functionsLayout"
+        android:layout_above="@+id/infoCommentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -192,11 +192,14 @@
                         android:visibility="gone" />
 
                     <GridView
+                        android:layout_marginStart="@dimen/text_size_13dp"
+                        android:layout_marginEnd="@dimen/text_size_14dp"
+                        android:layout_marginBottom="@dimen/text_size_14dp"
                         android:id="@+id/gridview"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:numColumns="3"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <RelativeLayout
                         android:id="@+id/voteFinishLayout"
@@ -315,7 +318,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/qnaBoardDetailProgress"
                 />
         </RelativeLayout>

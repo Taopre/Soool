@@ -100,7 +100,8 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         if (item.get(position).isStringOrUri() == true) {
             Glide.with(convertView.getContext())
                     .load(Whatisthis.serverIp+item.get(position).getStrImage())
-                    .fitCenter()
+                    .centerCrop()
+                    .override(309,309)
                     .into(viewHolder.imageView);
 
             for (int i=0; i<getCount(); i++) {
@@ -116,7 +117,7 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
                 viewHolder.progressBar.setProgress(item.get(position).getVote());
             }
         });
-        viewHolder.progressBar.setScaleY(27f);
+//        viewHolder.progressBar.setScaleY(27f);
         viewHolder.progressBar.setMax(voteTotalNum);
 
         if (voteFlag == true) {

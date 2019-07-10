@@ -72,7 +72,6 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
             }
         });
         holder.progressBar.setMax(voteTotalNums);
-        holder.progressBar.setScaleY(44);
         holder.bind(clickListener);
 
         if (position == getItemCount() - 1) {

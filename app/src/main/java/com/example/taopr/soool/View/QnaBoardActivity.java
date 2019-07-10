@@ -114,7 +114,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
     String UploadImgPath, boardImagePath, accountNick;
     String[] tagData = new String[0];
     int maybeDeletePosition = 999, voteFlag = 1, actionKind = 9999, qnaListPosition, count = 2, accountNo, voteSelect = 2;
-    boolean boardImageSelect = false, reSelectVoteImage = false;
+    boolean boardImageSelect = false, reSelectVoteImage = false, loading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +123,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
         checkPermission();
+
+        keyboard = new Keyboard(this);
+        keyboard.hideKeyboard(et_qnaboardTitle);
+//        keyboard.hideKeyboard(et_qnaboardContent);
 
         String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
         Gson gson = new GsonBuilder().create();
@@ -340,10 +344,32 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     public void showLoading() {
         pb_qnaBoardProgress.setVisibility(View.VISIBLE);
+        tv_drawupEnroll.setClickable(false);
+        iv_qnaboardAddTag.setClickable(false);
+        et_qnaboardTitle.setClickable(false);
+        et_qnaboardContent.setClickable(false);
+        iv_qnaTextVoteRemove.setClickable(false);
+        iv_qnaImageVoteRemove.setClickable(false);
+        iv_qnaboardAddBtn.setClickable(false);
+        iv_qnaboardImagebtn.setClickable(false);
+        iv_qnaboardVoteBtn.setClickable(false);
+        // voteImageAdapter 클릭리스너를 어떻게 막을까...
+        loading = true;
     }
 
     public void hideLoading() {
         pb_qnaBoardProgress.setVisibility(View.GONE);
+        tv_drawupEnroll.setClickable(true);
+        iv_qnaboardAddTag.setClickable(true);
+        et_qnaboardTitle.setClickable(true);
+        et_qnaboardContent.setClickable(true);
+        iv_qnaTextVoteRemove.setClickable(true);
+        iv_qnaImageVoteRemove.setClickable(true);
+        iv_qnaboardAddBtn.setClickable(true);
+        iv_qnaboardImagebtn.setClickable(true);
+        iv_qnaboardVoteBtn.setClickable(true);
+
+        loading = false;
     }
 
     @Override
@@ -495,8 +521,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
-                                // 저장하기 비활성화 -> 두번 클릭방지!
-                                tv_drawupEnroll.setClickable(false);
                                 showLoading();
                                 Log.d(TAG, "tv_drawupEnroll 비활성화");
                             } else if (voteSelect == 1) {
@@ -508,8 +532,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
-                                // 저장하기 비활성화 -> 두번 클릭방지!
-                                tv_drawupEnroll.setClickable(false);
                                 showLoading();
                             }
                         } else if (voteFlag == 1) {
@@ -523,10 +545,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     et_qnaboardContent.getText().toString());
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaItem);
-
-                            // 저장하기 비활성화 -> 두번 클릭방지!
-                            tv_drawupEnroll.setClickable(false);
-                            Log.d(TAG, "tv_drawupEnroll 비활성화");
+;
                             showLoading();
                         }
 
@@ -559,9 +578,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
-                                // 저장하기 비활성화 -> 두번 클릭방지!
-                                tv_drawupEnroll.setClickable(false);
-                                Log.d(TAG, "tv_drawupEnroll 비활성화");
                                 showLoading();
                             } else if (voteSelect == 1) {
 
@@ -570,8 +586,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
-                                // 저장하기 비활성화 -> 두번 클릭방지!
-                                tv_drawupEnroll.setClickable(false);
                                 showLoading();
                             }
                         } else if (voteFlag == 1) {
@@ -583,9 +597,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                             qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
-                            // 저장하기 비활성화 -> 두번 클릭방지!
-                            tv_drawupEnroll.setClickable(false);
-                            Log.d(TAG, "tv_drawupEnroll 비활성화");
                             showLoading();
                         }
                     }
@@ -610,9 +621,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                         qnaBoardPresenter.modifyBoardReq(receiveQnaBoardItem);
 
-                        // 저장하기 비활성화 -> 두번 클릭방지!
-                        tv_drawupEnroll.setClickable(false);
-                        Log.d(TAG, "tv_drawupEnroll 비활성화");
                         showLoading();
                     }catch (NullPointerException e) {
                         receiveQnaBoardItem.setTag(tag);
@@ -620,9 +628,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         receiveQnaBoardItem.setContent(et_qnaboardContent.getText().toString());
 
                         qnaBoardPresenter.modifyBoardReq(receiveQnaBoardItem);
-                        // 저장하기 비활성화 -> 두번 클릭방지!
-                        tv_drawupEnroll.setClickable(false);
-                        Log.d(TAG, "tv_drawupEnroll 비활성화");
+
                         showLoading();
                     }
 
@@ -988,16 +994,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 break;
             case 2:
                 Toast.makeText(this, "콜백 실패 백엔드 개발자를 욕하세요. 망했다리~~", Toast.LENGTH_SHORT).show();
-                // 저장하기 다시 활성화 -> 저장 실패했으므로
-                tv_drawupEnroll.setClickable(true);
-                Log.d(TAG, "tv_drawupEnroll 활성화");
                 break;
             case 3:
                 Toast.makeText(this, "전송 실패 와이파이가 안 좋은가??", Toast.LENGTH_SHORT).show();
                 // 다시 전송되도록 작성하자.
-                // 저장하기 다시 활성화 -> 저장 실패했으므로
-                tv_drawupEnroll.setClickable(true);
-                Log.d(TAG, "tv_drawupEnroll 활성화");
                 break;
         }
 
@@ -1058,28 +1058,38 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     @Override
     public void onListImageBtnClick(int position) {
-        // 그리드 뷰 버튼 클릭 리스너
-        // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
-        voteImage.remove(position);
-        gridVoteItemArrayList.remove(position);
+        if (!loading) {
+            // 그리드 뷰 버튼 클릭 리스너
+            // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
+            voteImage.remove(position);
+            gridVoteItemArrayList.remove(position);
 
-        if (gridVoteItemArrayList.size() < 6) {
-            Uri uriTest = Uri.parse("");
-            gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
-            gridVoteItemArrayList.add(gridVoteItem);
+            if (gridVoteItemArrayList.size() < 6) {
+                Uri uriTest = Uri.parse("");
+                gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
+                gridVoteItemArrayList.add(gridVoteItem);
+            }
+            voteImageAdapter.notifyDataSetChanged();
         }
-        voteImageAdapter.notifyDataSetChanged();
+        else {
+            Log.d(TAG, "onListImageBtnClick: 동작X 로딩중");
+        }
     }
 
     @Override
     public void onListLayoutClick(int position) {
-        Log.d(TAG, "아이템체크: "+gridVoteItemArrayList.get(position).getImageIden()+"//"+gridVoteItemArrayList.get(position).getStatus());
-        if (gridVoteItemArrayList.get(position).getImageIden() == 1) {
-            reSelectVoteImage = true;
-            gridVoteItemArrayList.remove(position);
-            voteImageAdapter.notifyDataSetChanged();
+        if (!loading) {
+            Log.d(TAG, "아이템체크: " + gridVoteItemArrayList.get(position).getImageIden() + "//" + gridVoteItemArrayList.get(position).getStatus());
+            if (gridVoteItemArrayList.get(position).getImageIden() == 1) {
+                reSelectVoteImage = true;
+                gridVoteItemArrayList.remove(position);
+                voteImageAdapter.notifyDataSetChanged();
 
-            FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6-voteImage.size()).startAlbum();
+                FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6 - voteImage.size()).startAlbum();
+            }
+        }
+        else {
+            Log.d(TAG, "onListImageBtnClick: 동작X 로딩중");
         }
     }
 
