@@ -44,9 +44,12 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     private final int QNA_MOVE_TO_WRITE = 3200;
     private final int QNA_MOVE_TO_DETAIL = 3100;
 
+    private QnaFmView qnaFmView;
+
     private SwipeRefreshLayout qnaSwipeRefreshLayout;
     private ProgressBar qnaProgress;
     private int accountNo;
+
     private boolean onPaging = false; // 페이징 중인지 아닌지 판별하는 변수, true 일때 페이징중
 
     private boolean isResponse = false ; // 서버에 isResponse 를 받았다면 true , 아니면 false
@@ -54,6 +57,10 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
 
     public QnaFragment() {
         Log.i(TAG, "QnaFragment: ");
+    }
+
+    public interface QnaFmView{
+        void qnaUpdateItem(QnaBoardItem qnaBoardItem,int actionKind,boolean updatedByUser); // qnaBoard
     }
 
     // 액티비티에서 프래그먼트로 값 넘기는 거 확인
@@ -162,14 +169,20 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        if (context instanceof QnaFmView) {
+            qnaFmView = (QnaFmView) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
-       // mListener = null;
+        if (qnaFmView!=null){
+            qnaFmView = null;
+        }
     }
 
     @OnClick({R.id.fab_default})
@@ -291,17 +304,56 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
             int qnaListPosition = data.getIntExtra("qnaListPosition",0);
             int actionKind = data.getIntExtra("actionKind",99);
 
-            switch (actionKind){
-                case 0:
-                    qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
-                    qnaRecycler.smoothScrollToPosition(0);
-                case 1:
-                    qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
-                    break;
-                case 2:
-                    qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
-                    break;
+            if (actionKind != 99) {
+                switch (actionKind) {
+                    case 0:
+                        qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
+                        qnaRecycler.smoothScrollToPosition(0);
+                    case 1:
+
+                        qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem, qnaListPosition);
+                        break;
+                    case 2:
+                        qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
+                        break;
+                }
+                // 업데이트된 글의 작성자가 유저와 일치할 경우 true , 아닐 경우 false
+                // true 일 경우일 때만 마이페이지의 글 업데이트
+
+                // 업데이트된 item을 Home 액티비티에 전달
+                if (qnaBoardItem.getAccountNo() == accountNo) {
+                    qnaFmView.qnaUpdateItem(qnaBoardItem, actionKind,true);
+                }
+                else{
+                    qnaFmView.qnaUpdateItem(qnaBoardItem, actionKind,false);
+                }
             }
+        }
+    }
+    public void updateQnaBoardItem(QnaBoardItem qnaBoardItem,int actionKind){
+        switch (actionKind){
+            case 0:
+                qnaBoardItems = qnaAdapter.addItem(qnaBoardItem);
+                qnaRecycler.smoothScrollToPosition(0);
+            case 1:
+
+                // 수정된 게시글과 postNo 값이 같은 리스트의 아이템을 찾아 수정
+                for (int a=0; a<qnaBoardItems.size(); a++){
+                    if(qnaBoardItems.get(a).getPostNo() == qnaBoardItem.getPostNo()){
+                        int qnaListPosition = a;
+                        qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
+                    }
+                }
+                break;
+            case 2:
+                // 수정된 게시글과 postNo 값이 같은 리스트의 아이템을 찾아 수정
+                for (int a=0; a<qnaBoardItems.size(); a++){
+                    if(qnaBoardItems.get(a).getPostNo() == qnaBoardItem.getPostNo()){
+                        int qnaListPosition = a;
+                        qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
+                    }
+                }
+                break;
         }
     }
 }

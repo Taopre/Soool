@@ -72,8 +72,6 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
 
         RecyclerView qnaboardTagView;
 
-
-
         public ViewHolder(View v) {
             super(v);
 
@@ -95,10 +93,36 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
         notifyItemRemoved(position);
         return qnaBoardItems;
     }
+    public ArrayList<QnaBoardItem> deleteItem(QnaBoardItem qnaBoardItem){
+        for (int a=0; a<qnaBoardItems.size(); a++){
+            if(qnaBoardItems.get(a).getPostNo() == qnaBoardItem.getPostNo()) {
+                int position = a;
+                qnaBoardItems.remove(position);
+                notifyItemRemoved(position);
+            }
+        }
+        /*qnaBoardItems.remove(position);
+        notifyItemRemoved(position);*/
+        return qnaBoardItems;
+    }
 
     public ArrayList<QnaBoardItem> modifyItem(QnaBoardItem qnaBoardItem, int position){
         qnaBoardItems.set(position,qnaBoardItem);
         notifyItemChanged(position,qnaBoardItem);
+        return qnaBoardItems;
+    }
+
+    // 내 게시물에 대한 리스트가 메모리에 올라가 있는 상황에서 커뮤니티나 홈 탭에서 내 게시물과 겹치는
+    // 게시글에 대해서 수정이 일어났을 경우 QnaBoardItem 객체를 받아 객체의 postNo 값이 같은
+    // 리스트의 아이템에 대해서 찾아서 수정
+    public ArrayList<QnaBoardItem> modifyItem(QnaBoardItem modifiedQnaBoardItem){
+        for (int a=0; a<qnaBoardItems.size(); a++) {
+            if(qnaBoardItems.get(a).getPostNo() == modifiedQnaBoardItem.getPostNo()) {
+                int position = a;
+                qnaBoardItems.set(position, modifiedQnaBoardItem);
+                notifyItemChanged(position, modifiedQnaBoardItem);
+            }
+        }
         return qnaBoardItems;
     }
 
@@ -188,7 +212,6 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
                     .into(holder.qnaBoardImage);
 
             holder.qnaBoardImage.setVisibility(View.VISIBLE);
-            Log.i(TAG, "onBindViewHolder: 사이즈"+ imageSize );
 
         }
         else{

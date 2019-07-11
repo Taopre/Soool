@@ -23,6 +23,7 @@ import android.widget.Toolbar;
 import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.ProfileInfo;
+import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Presenter.HomePresenter;
 import com.example.taopr.soool.Presenter.Interface.HomeInter;
 import com.example.taopr.soool.R;
@@ -46,7 +47,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class HomeActivity extends AppCompatActivity implements HomePresenter.View, MyBoardFragment.MyPageView, BookmarkFragment.BookmarkView  {
+public class HomeActivity extends AppCompatActivity implements HomePresenter.View,
+        MyBoardFragment.MyPageView, BookmarkFragment.BookmarkView,QnaFragment.QnaFmView
+        ,MainFragment.MainFmView {
 
     @BindView(R.id.tabMain)
     ViewGroup btn_tabMain;
@@ -369,6 +372,8 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         }
     }
 
+
+
     @Override
     public void waitingForResponse() {
 
@@ -392,6 +397,61 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         // if there has been any change in bookmarkFragment concerning userProfile
         if (mypageFragment != null) {
             mypageFragment.updateProfile();
+        }
+    }
+
+    // 커뮤니티 글이나 정보 글이 업데이트 되었을 경우
+    // 커뮤니티 글이 업데이트( 추가,수정,삭제 ) 될 경우
+    // Main, Qna, MyPage 의 MyBoard 페이지의 리스트를 업데이트해주기 위해서
+    // 각각 프래그먼트에서 업데이트 정보를 Home 액티비티로 전달을 하고 Home 액티비티에서는
+    // 모든 페이지에서 업데이트한 아이템을 수정해준다
+
+    // qna 페이지에서 업데이트가 있으면 Main 페이지와 MyPage 페이지의 리스트에서 업데이트된 아이템을 수정
+
+    @Override
+    public void qnaUpdateItem(QnaBoardItem qnaBoardItem, int actionKind,boolean updatedByUser) {
+        Log.i(TAG, "updateQnaBoardItem: postNo : " + qnaBoardItem.getPostNo() +"  actionKind : " +actionKind) ;
+        if (mypageFragment != null && updatedByUser){
+            mypageFragment.updateMyBoard(qnaBoardItem,actionKind);
+        }
+        // main 페이지에서는 조회수 순으로 보여주기 때문에 새로 작성한 글에 대해서는
+        // main 에 추가하지 않도록 예외처리
+        if (mainFragment != null && actionKind != 0){
+            mainFragment.updateQnaBoardItem(qnaBoardItem,actionKind);
+        }
+    }
+
+    // main 페이지에서 qna 글 업데이트
+    //
+    @Override
+    public void mainUpdateQnaItem(QnaBoardItem qnaBoardItem, int actionKind,boolean updatedByUser) {
+        if (mypageFragment != null && updatedByUser){
+            mypageFragment.updateMyBoard(qnaBoardItem,actionKind);
+        }
+        if (qnaFragment != null){
+            qnaFragment.updateQnaBoardItem(qnaBoardItem,actionKind);
+        }
+    }
+
+    // main 페이지에서 info 글 업데이트
+    @Override
+    public void mainUpdateInfoItem() {
+
+    }
+
+
+
+    @Override
+    public void myBoardUpdateItem(QnaBoardItem qnaBoardItem, int actionKind) {
+        // main 페이지에서는 조회수 순으로 보여주기 때문에 새로 작성한 글에 대해서는
+        // main 에 추가하지 않도록 예외처리
+
+        if (mainFragment != null && actionKind != 0){
+            mainFragment.updateQnaBoardItem(qnaBoardItem,actionKind);
+        }
+
+        if (qnaFragment != null){
+            qnaFragment.updateQnaBoardItem(qnaBoardItem,actionKind);
         }
     }
 }

@@ -77,6 +77,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         void startMyBoardLoading(); // 마이보드에서 서버에 요청을 보내고 리스폰스를 기다리고 있다는 걸 (Home 액티비티를 통해) 마이페이지에 전달
         void endMyBoardLoading(Boolean isMyBoardRes); // 마이보드에서 서버로부터 응답을 받았다는 것을 (Home 액티비티를 통해) 마이페이지에 전달
         void updateProfileForMyBoard(); // 유저의 '내 게시글' , '내 포인트' 의 값이 변화 했을경우 Home 액티비티를 거쳐 마이페이지 프래그먼트에 알려준다
+        void myBoardUpdateItem(QnaBoardItem qnaBoardItem,int actionKind);
     }
 
     @Override
@@ -308,6 +309,22 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
         startActivityForResult(intent,requestCode);
     }
 
+    // 홈, 커뮤니티 페이지에서 유저가 작성한 글에 update 가 있을 경우
+    // 마이페이지의 리스트에서도 업데이트하는 부분
+    public void myBoardUpdateItem(QnaBoardItem qnaBoardItem,int actionKind){
+        switch (actionKind){
+            case 0:
+                qnaAdapter.addItem(qnaBoardItem);
+                break;
+            case 1:
+                qnaAdapter.modifyItem(qnaBoardItem);
+                break;
+            case 2:
+                qnaAdapter.deleteItem(qnaBoardItem);
+                break;
+        }
+
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -335,25 +352,27 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
             int qnaListPosition = data.getIntExtra("qnaListPosition", 0);
             int actionKind = data.getIntExtra("actionKind", 99);
 
-            switch (actionKind) {
-                case 0:
-                    if (qnaAdapter == null) {
-                        qnaBoardItems.add(qnaBoardItem);
-                        qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
-                        myBoardRecycler.setAdapter(qnaAdapter);
-                    }
-                    else {
-                        qnaAdapter.addItem(qnaBoardItem);
-                        qnaBoardItems.add(qnaBoardItem);
-                        myBoardRecycler.smoothScrollToPosition(0);
-                    }
+            if (actionKind != 99) {
+                switch (actionKind) {
+                    case 0:
+                        if (qnaAdapter == null) {
+                            qnaBoardItems.add(qnaBoardItem);
+                            qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
+                            myBoardRecycler.setAdapter(qnaAdapter);
+                        } else {
+                            qnaAdapter.addItem(qnaBoardItem);
+                            qnaBoardItems.add(qnaBoardItem);
+                            myBoardRecycler.smoothScrollToPosition(0);
+                        }
 
-                case 1:
-                    qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
-                    break;
-                case 2:
-                    qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
-                    break;
+                    case 1:
+                        qnaBoardItems = qnaAdapter.modifyItem(qnaBoardItem, qnaListPosition);
+                        break;
+                    case 2:
+                        qnaBoardItems = qnaAdapter.deleteItem(qnaListPosition);
+                        break;
+                }
+                myPageView.myBoardUpdateItem(qnaBoardItem,actionKind);
             }
 
             // TODO: 포인트 정책 회의 후 댓글 작성 시에는 포인트 지급이 되지 않는다면 actionKind 값이 1일 때는 예외 처리

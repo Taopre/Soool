@@ -27,7 +27,7 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
     private final int MAIN_MOVE_TO_INFO = 1200;
     private MainFmPresenter.View view;
 
-    private int accountNo;
+    public int accountNo;
     private boolean isQnaBoardRes,isInfoRes; // 로딩화면을 위해 response 를 받았는지 안받은지에 대한 상태변수
     public boolean qnaBoardResSuccess, infoResSuccess; // qna,info 글 리스트를 서버로부터 성공적으로 받아 왔는지에 대한 상태변수
     private String TAG = "홈 메인 액티비티";

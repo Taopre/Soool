@@ -46,6 +46,12 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     private MainFmPresenter mainFmPresenter;
     private QnaAdapter qnaAdapter;
     private MainInfoAdapter mainInfoAdapter;
+    private MainFmView mainFmView;
+
+    public interface MainFmView{
+        void mainUpdateQnaItem(QnaBoardItem qnaBoardItem,int actionKind,boolean updateByUser); // qnaBoard
+        void mainUpdateInfoItem();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,6 +144,9 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
 
     // 메인 페이지에서는 게시글을 추가하는 경우는 없다
     // 그래서 수정과 삭제 두 가지 상황에 대한 처리
+
+    // TODO: info 게시글인지 qna 게시글인지에 대한 구분자 값을 통해서 따로 처리 필요
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -150,18 +159,34 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
             int qnaListPosition = data.getIntExtra("qnaListPosition",0);
             int actionKind = data.getIntExtra("actionKind",99);
 
-            switch (actionKind){
+            QnaBoardItem qnaBoardItem = null;
+            if (data != null && data.getParcelableExtra("qnaBoardItem") != null) {
+                qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
+            }
 
-                case 1:
-                    QnaBoardItem qnaBoardItem = null;
-                    if (data.getParcelableExtra("qnaBoardItem") != null) {
-                        qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
-                    }
-                    qnaAdapter.modifyItem(qnaBoardItem,qnaListPosition);
-                    break;
-                case 2:
-                    qnaAdapter.deleteItem(qnaListPosition);
-                    break;
+            // main 에서는 글 작성하는 페이지로 이동하는 경우가 없기 때문에
+            // actionKind 값이 0일 경우에는 예외처리
+            if (actionKind != 99 && actionKind != 0) {
+                switch (actionKind) {
+
+                    case 1:
+                        qnaAdapter.modifyItem(qnaBoardItem, qnaListPosition);
+                        break;
+                    case 2:
+                        qnaAdapter.deleteItem(qnaListPosition);
+                        break;
+                }
+                // 업데이트된 글의 작성자가 유저와 일치할 경우 true , 아닐 경우 false
+                // true 일 경우일 때만 마이페이지, 커뮤니트의 글 업데이트
+                // false 커뮤니티만 업데이트
+
+                // 업데이트된 QnaBoardItem을 Home 액티비티에 전달
+                if (qnaBoardItem.getAccountNo() == mainFmPresenter.accountNo) {
+                    mainFmView.mainUpdateQnaItem(qnaBoardItem, actionKind,true);
+                }
+                else{
+                    mainFmView.mainUpdateQnaItem(qnaBoardItem, actionKind,false);
+                }
             }
         }
     }
@@ -169,11 +194,20 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof MainFmView) {
+            mainFmView = (MainFmView) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        if (mainFmView!=null){
+            mainFmView = null;
+        }
     }
 
     // 리사이클러뷰 클릭 이벤트
@@ -206,4 +240,16 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     public void hideLoading() { mainProgress.setVisibility(View.GONE);}
 
 
+    //TODO: 추가,삭제 코드 작성
+    public void updateQnaBoardItem(QnaBoardItem qnaBoardItem,int actionKind){
+        switch (actionKind){
+            case 1:
+                qnaAdapter.modifyItem(qnaBoardItem);
+                break;
+            case 2:
+                qnaAdapter.deleteItem(qnaBoardItem);
+                break;
+        }
+    }
+    public void updateMainInfo(){}
 }

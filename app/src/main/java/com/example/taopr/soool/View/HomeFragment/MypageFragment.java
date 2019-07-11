@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.taopr.soool.Object.LoginSessionItem;
+import com.example.taopr.soool.Object.QnaBoardItem;
 import com.example.taopr.soool.Object.UserProfile;
 import com.example.taopr.soool.Presenter.MypageFmPresenter;
 import com.example.taopr.soool.R;
@@ -311,8 +312,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.i(TAG, "onAttach: ");
-
-
     }
 
     @Override
@@ -333,8 +332,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         }
     }
 
-
-    // 유저의 프로필 정보를 response 받아 뷰로 보여주기
+    // 유저의 프로필 정보를 성공적으로 받아왔을 경우 response 받아 뷰로 보여주기
     @Override
     public void getUserProfileSuccess(UserProfile userProfile){
         this.userProfile = userProfile;
@@ -358,6 +356,16 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
         myPageDrawerNickname.setText(userProfile.getAccountNick());
     }
 
+    // 내 게시물을 수정했을 경우
+    // 홈이나 커뮤니티 페이지에서 내가 작성한 글에 대해서 수정이 일어났을 경우
+    // 수정된 아이템에 대해서만 변경하기 위해서
+    // ( 마이페이지가 메모리에 이미 올라가 있는 경우, 아이템을 수정하기 위해서 택한 방법 )
+
+    public void updateMyBoard(QnaBoardItem qnaBoardItem,int actionKind){
+        if (myBoardFragment != null){
+            myBoardFragment.myBoardUpdateItem(qnaBoardItem, actionKind);
+        }
+    }
 
     // 유저의 프로필 정보를 뷰로 보여준다
     public void showProfileInfo(){
