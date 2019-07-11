@@ -410,7 +410,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
     @Override
     public void qnaUpdateItem(QnaBoardItem qnaBoardItem, int actionKind,boolean updatedByUser) {
-        Log.i(TAG, "updateQnaBoardItem: postNo : " + qnaBoardItem.getPostNo() +"  actionKind : " +actionKind) ;
+
         if (mypageFragment != null && updatedByUser){
             mypageFragment.updateMyBoard(qnaBoardItem,actionKind);
         }
