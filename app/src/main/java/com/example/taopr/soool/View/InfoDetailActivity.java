@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +53,7 @@ import com.example.taopr.soool.Presenter.InfoDetailPresenter;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.Keyboard;
 import com.example.taopr.soool.View.LayoutInflater.InflateBody;
 import com.example.taopr.soool.View.LayoutInflater.InflateImage;
 import com.example.taopr.soool.View.LayoutInflater.InflateSubtitle;
@@ -111,7 +114,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     RelativeLayout bodyRelative;
 
     //(ACTION BAR)
-    TextView subActionBarRight, subActionBarLeft;
+    TextView subActionBarRight, subActionBarLeft, subActionBarTitle;
     ImageView subActionBarLeftImage;
 
     // Objects
@@ -147,7 +150,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     String TextAddWriter;
     int comment_position;
     private boolean commentBoolean = false;
-    private boolean  recommendResponse = false;
+    private boolean recommendResponse = false;
 
 
     @Override
@@ -167,8 +170,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         // loadAdditionalData
         infoDetailPresenter.getAdditionalData(accountNo, postNo);
         Log.e(TAG, "onCreate: send accnoutNo: " + accountNo + " , postNo: " + postNo);
-
-
 
 
         //댓글 관련부분
@@ -196,8 +197,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
         switch (view.getId()) {
             case R.id.subActionBarLeftImage:
-                // TODO : forResult로 무언가 보내줘야하는 거 같음 (지금 앱 터짐)
-                // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.app.Activity.finish()' on a null object reference
                 backToFragments();
                 break;
             case R.id.infoDetailBookmark:
@@ -240,9 +239,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         subActionBarRight = findViewById(R.id.subActionBarRight);
         subActionBarLeft = findViewById(R.id.subActionBarLeft);
         subActionBarLeftImage = findViewById(R.id.subActionBarLeftImage);
+        subActionBarTitle = findViewById(R.id.subActionBarTitle);
 
         subActionBarLeft.setVisibility(View.INVISIBLE);
         subActionBarRight.setVisibility(View.INVISIBLE);
+        subActionBarTitle.setVisibility(View.INVISIBLE);
         subActionBarLeftImage.setVisibility(View.VISIBLE);
         subActionBarLeftImage.setOnClickListener(this);
 
@@ -281,6 +282,12 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
                     InflateSubtitle inflateSubtitle = new InflateSubtitle(getApplicationContext());
                     infoDetailContent.addView(inflateSubtitle);
                     texts[i] = inflateSubtitle.findViewById(R.id.subtitle_tv);
+
+                    // 부제목 글자 속성 변경
+                    texts[i].setTextColor(getResources().getColor(R.color.black, null));
+                    texts[i].setTypeface(null, Typeface.BOLD);
+                    texts[i].setTextSize(13);
+
                     texts[i].setText(infoText.get(i).getText());
                     break;
                 case 1:
@@ -400,8 +407,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
     // 백버튼 처리
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed(){
         backToFragments();
     }
 
@@ -451,14 +457,14 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
 
+    // 뒤로 가기 버튼 누르면 변경사항을 이전 프래그먼트로 보내고 상세보기 액티비티 닫기
     public void backToFragments() {
         // 인포 프래그먼트로 보내는 경우
         // 마이페이지 북마크로 보내는 경우
 
         Intent intent = new Intent();
         intent.putExtra("infoItem", infoItem);
-        if (bookmarkChanged)
-        {
+        if (bookmarkChanged){
             // 북마크 변경사항이 생긴 경우
             if (!hasBookmarked) {
                 // 북마크 O -> 북마크 X : 삭제(1)
@@ -470,11 +476,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
                 intent.putExtra("actionKind", 2);
             }
         }
-//        if (commentBoolean)
-//        {
-//            intent.putExtra("qnaBoardItem", infoItem);
-//            intent.putExtra("actionKind", 1);
-//        }
         intent.putExtra("infoPosition", infoPosition);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         setResult(RESULT_OK, intent);
@@ -651,4 +652,12 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
 
+    // 공유하기
+    public void share(){
+        ShareCompat.IntentBuilder.from(mActivity)
+                .setType("text/plain")
+                .setChooserTitle("Share URL")
+                .setText("http://www.url.com")
+                .startChooser();
+    }
 }
