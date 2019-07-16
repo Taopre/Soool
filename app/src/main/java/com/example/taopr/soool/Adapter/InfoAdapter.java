@@ -137,6 +137,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
         Glide.with(context)
                 .load(infoCoverURI)
                 .centerCrop()
+                .thumbnail(0.3f)
                 .into(holder.infoCover);
 
 
