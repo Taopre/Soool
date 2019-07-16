@@ -7,6 +7,11 @@
     android:background="#1A9D9D97"
     android:id="@+id/recomment_row"
     >
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grayLight_a50"
+        />
     <TextView
         android:id="@+id/recommentWriter"
         android:paddingTop="18dp"

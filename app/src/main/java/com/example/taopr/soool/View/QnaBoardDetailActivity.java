@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,6 +114,13 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     private boolean commentBoolean = false;
     private boolean  recommendResponse = false;
     int comment_position;
+    //
+    ScrollView qnaboard_detail_scrollView;
+    LinearLayout comment_layout_top;
+    boolean commentDeleteRecommentDelete = false;
+    RelativeLayout noComment_notice;
+    RelativeLayout infoCommentContainer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -318,15 +327,20 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
 
         commentList = (RecyclerView) findViewById(R.id.commentList);
-        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this)
+        {
+            @Override
+            public  boolean canScrollVertically()
+            {
+                return false;
+            }
+        };
+
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-        commentList.addItemDecoration
-                (
-                        new DividerItemDecoration(this, linearLayoutManager.getOrientation())
-                );
         commentList.setLayoutManager(linearLayoutManager);
-        //commentList.addOnItemTouchListener(selectItemOnqnaRecycler());
+
+
         qnaDetailPresenterComment = new QnaDetailPresenter(this,this);
         qnaDetailPresenterComment.setView(this);
         qnaDetailPresenterComment.loadData(qnaBoardItem.getPostNo());
@@ -381,7 +395,13 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
         ll_voteLayout.setVisibility(View.GONE);
 
+        //
         commentList = findViewById(R.id.commentList);
+        qnaboard_detail_scrollView = findViewById(R.id.qnaboard_detail_scrollView);
+        comment_layout_top = findViewById(R.id.comment_layout_top);
+        noComment_notice = findViewById(R.id.noComment_notice);
+        infoCommentContainer = findViewById(R.id.infoCommentContainer);
+
 
         // 뷰의 리스너 선언 부분입니다.
         btn_commentEnroll.setOnClickListener(this);
@@ -573,19 +593,27 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.commentEnroll:
                 String commentContent = et_commentWrite.getText().toString();
-                if (Get_commentNo == 0)
+                if(commentContent.length() == 0)
                 {
-                    qnaDetailPresenterComment.commentRequest(postNo, accountNo, commentContent);
-                    et_commentWrite.getText().clear();
+                    Toast.makeText(view.getContext(),"댓글을 입력해주세요.",Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    qnaDetailPresenterComment.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
-                    et_commentWrite.getText().clear();
+                    if (Get_commentNo == 0)
+                    {
+                        qnaDetailPresenterComment.commentRequest(postNo, accountNo, commentContent);
+                        et_commentWrite.getText().clear();
+                    }
+                    else
+                    {
+                        qnaDetailPresenterComment.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
+                        et_commentWrite.getText().clear();
+                    }
                 }
 
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(et_commentWrite.getWindowToken(),0);
+                keyboard.hideKeyboard(et_commentWrite);
+                //InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                //imm.hideSoftInputFromWindow(et_commentWrite.getWindowToken(),0);
 
 
                 break;
@@ -850,11 +878,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     public void getCommentDataSuccess(ArrayList<CommentItem> commentitem)
     {
         this.commentitem = commentitem;
-
         //댓글리스트데이터 성공적으로 받아왔을때 댓글어댑터 생성
-        commentAdapter = new CommentAdapter(QnaBoardDetailActivity.this,this.commentitem,this,postNo,accountNo);
+        commentAdapter = new CommentAdapter(QnaBoardDetailActivity.this,this.commentitem,this,postNo,accountNo,accountNick);
         qnaDetailPresenterComment.setView(this);
         commentList.setAdapter(commentAdapter);
+        setCommentList();
+
 
         commentAdapter.toss_commentNo_Methods(new CommentAdapter.toss_commentNo_interface()
         {
@@ -884,12 +913,34 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             }
 
             @Override
-            public void toss_commentCount_actiivity(int commentCount)
+            public void toss_commentCount_actiivity(int commentCount,int commentDeleteOrRecommentDelete,int deletePosition)
             {
-                qnaDetailPresenterComment.commentDeleteRequest(postNo,commentCount,0);
+              comment_position = deletePosition;
+              if (commentDeleteOrRecommentDelete == 0)
+              {
+                  commentDeleteRecommentDelete = true;
+              }
+              qnaDetailPresenterComment.commentDeleteRequest(postNo,commentCount,0);
             }
         });
     }
+
+    public void setCommentList()
+    {
+        if(commentitem.size() == 0)
+        {
+            commentList.setVisibility(View.INVISIBLE);
+            noComment_notice.setVisibility(View.VISIBLE);
+
+        }
+        else
+        {
+            commentList.setVisibility(View.VISIBLE);
+            noComment_notice.setVisibility(View.INVISIBLE);
+
+        }
+    }
+
 
     public void EditText_commentWirte_tag()
     {
@@ -950,9 +1001,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         //댓글 작성
         if (response == 0)
         {
-            commentitem.add(commentItems);
-            commentAdapter.notifyDataSetChanged();
 
+            commentitem.add(commentItems);
+            commentAdapter.notifyItemChanged(0);
+            scrollToView(comment_layout_top,qnaboard_detail_scrollView,0);
+
+            setCommentList();
             qnaBoardItem.setComments(commentCount);
             tv_qnaboardCommentCount.setText(String.valueOf(commentCount));
             commentBoolean = true;
@@ -965,6 +1019,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         if (response == 0)
         {
             commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_position);
+
+            commentList.requestFocus(commentNo - 1);
         }
 
     }
@@ -978,10 +1034,18 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             qnaBoardItem.setComments(commentCount);
             tv_qnaboardCommentCount.setText(String.valueOf(commentCount));
             commentBoolean = true;
-            commentAdapter.commentDeleteGoResponse(response,commentCount,comment_position);
+            if (commentDeleteRecommentDelete)
+            {
+                //댓글
+                commentAdapter.commentDeleteGoResponse(0,commentCount,comment_position);
+            }
+            else
+            {
+                //대댓글
+                commentAdapter.commentDeleteGoResponse(1,commentCount,comment_position);
+            }
         }
     }
-
 
     @Override
     public void likeGoResponse(int response) {
@@ -992,6 +1056,25 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     {
 
     }
+
+    public static void scrollToView(View view, final ScrollView scrollView, int count) {
+        if (view != null && view != scrollView) {
+            count += view.getTop();
+            scrollToView((View) view.getParent(), scrollView, count);
+        } else if (scrollView != null) {
+            final int finalCount = count;
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(0, finalCount);
+                }
+            }, 200);
+        }
+    }
+
+
+
     @Override
     public void onBackPressed()
     {
