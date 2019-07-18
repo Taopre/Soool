@@ -48,6 +48,7 @@ import com.example.taopr.soool.Object.QnaBoardVoteItem;
 import com.example.taopr.soool.Object.QnaItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Object.RecommentItem;
+import com.example.taopr.soool.Presenter.CommentPresenter;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
@@ -62,7 +63,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class QnaBoardDetailActivity extends AppCompatActivity implements View.OnClickListener,
-        QnaBoardDetailImageAdapter.GridviewItemClickListner, QnaDetailPresenter.View {
+        QnaBoardDetailImageAdapter.GridviewItemClickListner, QnaDetailPresenter.View, CommentPresenter.View{
 
     String TAG = "QnaBoardDetailActivity", accountNick;
     String[] tagData = new String[0];
@@ -109,7 +110,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     private CommentAdapter commentAdapter;
     private ArrayList<CommentItem> commentitem = new ArrayList<>();
     private int Get_commentNo;
-    QnaDetailPresenter qnaDetailPresenterComment;
+    CommentPresenter commentPresenter;
     String TextAddWriter;
     private boolean commentBoolean = false;
     private boolean  recommendResponse = false;
@@ -341,9 +342,9 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         commentList.setLayoutManager(linearLayoutManager);
 
 
-        qnaDetailPresenterComment = new QnaDetailPresenter(this,this);
-        qnaDetailPresenterComment.setView(this);
-        qnaDetailPresenterComment.loadData(qnaBoardItem.getPostNo());
+        commentPresenter = new CommentPresenter(this,this);
+        commentPresenter.setView(this);
+        commentPresenter.loadData(qnaBoardItem.getPostNo());
         commentList.setAdapter(commentAdapter);
     }
 
@@ -601,12 +602,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 {
                     if (Get_commentNo == 0)
                     {
-                        qnaDetailPresenterComment.commentRequest(postNo, accountNo, commentContent);
+                        commentPresenter.commentRequest(postNo, accountNo, commentContent);
                         et_commentWrite.getText().clear();
                     }
                     else
                     {
-                        qnaDetailPresenterComment.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
+                        commentPresenter.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
                         et_commentWrite.getText().clear();
                     }
                 }
@@ -880,7 +881,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         this.commentitem = commentitem;
         //댓글리스트데이터 성공적으로 받아왔을때 댓글어댑터 생성
         commentAdapter = new CommentAdapter(QnaBoardDetailActivity.this,this.commentitem,this,postNo,accountNo,accountNick);
-        qnaDetailPresenterComment.setView(this);
+        commentPresenter.setView(this);
         commentList.setAdapter(commentAdapter);
         setCommentList();
 
@@ -920,8 +921,16 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
               {
                   commentDeleteRecommentDelete = true;
               }
-              qnaDetailPresenterComment.commentDeleteRequest(postNo,commentCount,0);
+                commentPresenter.commentDeleteRequest(postNo,commentCount,0);
             }
+
+            @Override
+            public void toss_likeRequest_activity(int postNo, int commentNo, int accountNo, int like_check, int commentORrecomment, int recommentNo)
+            {
+                commentPresenter.likeRequest(postNo,commentNo,like_check,commentORrecomment,0,recommentNo);
+            }
+
+
         });
     }
 

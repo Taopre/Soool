@@ -12,6 +12,7 @@ import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Object.CommentItem;
 import com.example.taopr.soool.Object.CommentListObject;
 import com.example.taopr.soool.Object.RecommentItem;
+import com.example.taopr.soool.Presenter.CommentPresenter;
 import com.example.taopr.soool.Presenter.InfoDetailPresenter;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.View.InfoDetailActivity;
@@ -37,8 +38,7 @@ import retrofit2.Response;
 public class CommentModel
 {
 
-    private QnaDetailPresenter qnaDetailPresenter;
-    private InfoDetailPresenter infoDetailPresenter;
+    private CommentPresenter commentPresenter;
     private Context context;
     private APIService service;
     String TAG = "commentInsertModel";
@@ -48,16 +48,10 @@ public class CommentModel
     RecommentItem recommentItem;
 
 
-    public CommentModel(Context context,QnaDetailPresenter qnaDetailPresenter)
+    public CommentModel(Context context,CommentPresenter commentPresenter)
     {
         this.context = context;
-        this.qnaDetailPresenter =  qnaDetailPresenter;
-        Log.d(TAG, "commentRequest: 모델 생성자 성공?????");
-    }
-    public CommentModel(Context context, InfoDetailPresenter infoDetailPresenter)
-    {
-        this.context = context;
-        this.infoDetailPresenter = infoDetailPresenter;
+        this.commentPresenter = commentPresenter;
     }
 
     public void commentRequest(int postNo,int accountNo,String commentContent)
@@ -110,14 +104,8 @@ public class CommentModel
                                                                 Log.d(TAG, "onResponseBBBBBBB: " + commentItem.getAccountNo());
                                                                 //commentItemArrayList.add(commentItem);
                                                                 //Log.d(TAG, "onResponse: DDDDDDD" + commentItemArrayList.get(commentItemArrayList.size()-1).getAccountNo());
-                                                                if (qnaDetailPresenter == null)
-                                                                {
-                                                                    infoDetailPresenter.commentInsertResponse(0,commentCount,commentItem);
-                                                                }
-                                                                else
-                                                                {
-                                                                    qnaDetailPresenter.commentInsertResponse(0,commentCount,commentItem);
-                                                                }
+
+                                                                commentPresenter.commentInsertResponse(0,commentCount,commentItem);
 
                                                                 //qnaDetailPresenter.loadData(postNo);
                                                                 //현재 댓글 입력이 성공(result값으로 true)되면
@@ -127,14 +115,7 @@ public class CommentModel
                                                             else if (result.equals("false"))
                                                             {
 
-                                                                if (qnaDetailPresenter == null)
-                                                                {
-                                                                    infoDetailPresenter.commentInsertResponse(1,commentCount,commentItem);
-                                                                }
-                                                                else
-                                                                {
-                                                                    qnaDetailPresenter.commentInsertResponse(1,commentCount,commentItem);
-                                                                }
+                                                                commentPresenter.commentInsertResponse(1,commentCount,commentItem);
                                                             }
 
                                                         }
@@ -232,26 +213,13 @@ public class CommentModel
                                                 Log.d(TAG, "onResponseRRRRCCCCCC: " + addComment);
 
 
-                                                if (qnaDetailPresenter == null)
-                                                {
-                                                    infoDetailPresenter.recommentInsertResponse(0,recommentItem,commentNo);
-                                                }
-                                                else
-                                                {
-                                                    qnaDetailPresenter.recommentInsertResponse(0,recommentItem,commentNo);
-                                                }
+                                                commentPresenter.recommentInsertResponse(0,recommentItem,commentNo);
                                             }
                                             else if (result.equals("false"))
                                             {
 
-                                                if (qnaDetailPresenter == null)
-                                                {
-                                                    infoDetailPresenter.recommentInsertResponse(1,recommentItem,commentNo);
-                                                }
-                                                else
-                                                {
-                                                    qnaDetailPresenter.recommentInsertResponse(1,recommentItem,commentNo);
-                                                }
+
+                                                commentPresenter.recommentInsertResponse(1,recommentItem,commentNo);
                                             }
                                         }
 
@@ -341,25 +309,11 @@ public class CommentModel
                                                             if (result.equals("true"))
                                                             {
                                                                 int a = 0;
-                                                                if (qnaDetailPresenter == null)
-                                                                {
-                                                                    infoDetailPresenter.likeResponse(a);
-                                                                }
-                                                                else
-                                                                {
-                                                                    qnaDetailPresenter.likeResponse(a);
-                                                                }
+                                                                commentPresenter.likeResponse(a);
                                                             }
                                                             else if (result.equals("false"))
                                                             {
-                                                                if (qnaDetailPresenter == null)
-                                                                {
-                                                                    infoDetailPresenter.likeResponse(1);
-                                                                }
-                                                                else
-                                                                {
-                                                                    qnaDetailPresenter.likeResponse(1);
-                                                                }
+                                                                commentPresenter.likeResponse(1);
                                                             }
 
                                                         }
@@ -444,23 +398,13 @@ public class CommentModel
                                                             if (result.equals("true")) {
                                                                 Log.d(TAG, "commentDeleteGoResponse:commentCount " + String.valueOf(commentCount));
 
-                                                                if (qnaDetailPresenter == null)
-                                                                {
-                                                                    infoDetailPresenter.commentDeleteResponss(0, commentCount,commentNo);
-                                                                    //infoDetailPresenter.loadData(postNo);
-                                                                }
-                                                                else
-                                                                    {
-                                                                    qnaDetailPresenter.commentDeleteResponss(0, commentCount,commentNo);
-                                                                    //qnaDetailPresenter.loadData(postNo);
-                                                                }
+
+                                                                commentPresenter.commentDeleteResponss(0, commentCount,commentNo);
+
                                                             } else if (result.equals("false")) {
 
-                                                                if (qnaDetailPresenter == null) {
-                                                                    infoDetailPresenter.commentDeleteResponss(1, commentCount,commentNo);
-                                                                } else {
-                                                                    qnaDetailPresenter.commentDeleteResponss(1, commentCount,commentNo);
-                                                                }
+                                                                commentPresenter.commentDeleteResponss(1, commentCount,commentNo);
+
                                                             }
                                                         }
                                                     } catch (Exception e) {
