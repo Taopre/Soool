@@ -43,6 +43,7 @@ import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> implements QnaDetailPresenter.View
 {
+
     private Activity activity;
     private Context context;
     private ArrayList<CommentItem> commentitems;

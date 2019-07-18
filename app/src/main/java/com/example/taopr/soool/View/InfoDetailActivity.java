@@ -159,6 +159,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     boolean commentDeleteRecommentDelete = false;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
