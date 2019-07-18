@@ -46,9 +46,10 @@ private RecommentItem recommentitem;
             private NoticeDialog noticeDialog;
             int recommentPosition;
 
+            String accountNick;
 
 public RecommentAdapter(Context context, ArrayList<RecommentItem> recommentitems,
-                        Activity activity,int postNo,int accountNo,int commentNo)
+                        Activity activity,int postNo,int accountNo,int commentNo,String accountNick)
         {
         this.activity = activity;
         this.context = context;
@@ -58,6 +59,7 @@ public RecommentAdapter(Context context, ArrayList<RecommentItem> recommentitems
 
         this.commentNo = commentNo;
         this.accountNo = accountNo;
+        this.accountNick = accountNick;
 
         }
 
@@ -113,13 +115,13 @@ class ViewHolder extends RecyclerView.ViewHolder
 
         if (check >= 0)
         {
-            recommentitem.setAccountNo(accountNo + 1);
+            recommentitem.setAccountNo(1);
             //이미 좋아요를 누른 댓글
             viewHolder.recommentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
         }
         else
         {
-            recommentitem.setAccountNo(accountNo + 0);
+            recommentitem.setAccountNo(0);
             //안누른 댓글
             viewHolder.recommentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
         }
@@ -134,10 +136,10 @@ class ViewHolder extends RecyclerView.ViewHolder
             public void onClick(View v)
             {
 
-                RecommentItem recommentItemA = recommentitems.get(i);
+                //RecommentItem recommentItemA = recommentitems.get(i);
                 Log.d(TAG,String.valueOf(check));
                 int commentORrecomment = 1;
-                if (recommentItemA.getAccountNo() - accountNo  == 1)
+                if (recommentitem.getAccountNo() == 1)
                 {
                     //좋아요 취소
                     int like_check = 0;
@@ -158,10 +160,10 @@ class ViewHolder extends RecyclerView.ViewHolder
 
                     //String update_like_count = String.valueOf(commentitem.getLikeCount()- 1);
                     viewHolder.recommentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
-                    recommentItemA.setAccountNo(accountNo + 0);
+                    recommentitem.setAccountNo(0);
                     //notifyDataSetChanged();
                 }
-                else if (recommentItemA.getAccountNo() - accountNo == 0)
+                else if (recommentitem.getAccountNo() == 0)
                 {
                     //좋아요
                     int like_check = 1;
@@ -180,7 +182,7 @@ class ViewHolder extends RecyclerView.ViewHolder
                     }
 
                     viewHolder.recommentLike.setTextColor(ContextCompat.getColor(context, R.color.greenDark));
-                    recommentItemA.setAccountNo(accountNo + 1);
+                    recommentitem.setAccountNo(1);
                 }
 
                 //like_confirm setText글자만 change
@@ -201,7 +203,7 @@ class ViewHolder extends RecyclerView.ViewHolder
             {
 
 
-                if (recommentitem.getAccountNo() == accountNo)
+                if (recommentitem.getCommentWriter().equals(accountNick))
                 {
                     recommentPosition = i;
                     qnaDetailPresenter.commentDeleteRequest(postNo,commentNo,recommentitem.recommentNo);

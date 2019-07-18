@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     >
@@ -10,7 +10,6 @@
         android:layout_height="46dp"
         android:layout_marginTop="25.6dp"
         android:orientation="vertical"
-        android:weightSum="2"
         >
         <View
             android:layout_width="match_parent"
@@ -18,6 +17,7 @@
             android:background="@color/grayLight_a50"
             />
         <LinearLayout
+            android:id="@+id/comment_layout_top"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -42,22 +42,38 @@
         </LinearLayout>
     </LinearLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="2"
         android:orientation="vertical"
         >
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grayLight_a50"
-            />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/commentList"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/noComment_notice"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="invisible"
+            >
+            <TextView
+                android:id="@+id/noComment_notice_text"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notice_no_commentList"
+                android:textColor="@color/grayMid"
+                android:textSize="@dimen/text_size_15dp"
+                />
+        </RelativeLayout>
 </LinearLayout>
