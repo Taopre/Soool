@@ -29,6 +29,7 @@ public class InfoDetailPresenter extends BasePresenter implements InfoDetailInte
     private InfoDetailPresenter.View view;
     private String TAG = "Info_Detail_Presenter";
 
+
     public Activity activity;
     String accountNick;
     int accountNo;

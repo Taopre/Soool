@@ -11,6 +11,7 @@ import com.example.taopr.soool.Presenter.InfoDetailPresenter;
 import java.util.ArrayList;
 
 public interface InfoDetailInter {
+
     /*
     * 1. getIntent로 Fragment에서 보낸 리스트 받아오기
     * 2. Content + Bookmark 데이터 서버에서 받아오기 (postNo, accountNo 보내기)
