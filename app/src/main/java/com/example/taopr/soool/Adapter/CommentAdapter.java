@@ -26,6 +26,8 @@ import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.CommentItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Object.RecommentItem;
+import com.example.taopr.soool.Presenter.CommentPresenter;
+import com.example.taopr.soool.Presenter.InfoDetailPresenter;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.TimeCalculator;
@@ -41,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> implements QnaDetailPresenter.View
+public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> implements CommentPresenter.View
 {
 
     private Activity activity;
@@ -74,6 +76,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     {
         public void toss_commentNo_atActivity(int commentNo,String commentWriter,int position);
         public void toss_commentCount_actiivity(int commentCount,int commentDeleteOrRecommentDelete,int deletePosition);
+        public void toss_likeRequest_activity(int postNo,int commentNo,int accountNo,int like_check,int commentORrecomment,int recommentNo);
 
     }
     private toss_commentNo_interface toss_commentNo_interface;
@@ -292,10 +295,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             commentitem.setAccountNo(0);
         }
 
-
-        qnaDetailPresenter = new QnaDetailPresenter(activity,context);
-        qnaDetailPresenter.setView(this);
-        //해당 댓글에 좋아요를 누르지 않은 회원
+         //해당 댓글에 좋아요를 누르지 않은 회원
         holder.commentLike.setText("추천 " +likeCount);
         holder.commentLike.setOnClickListener(new View.OnClickListener()
         {
@@ -310,7 +310,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     //좋아요 취소
                     //이미 눌렀는데 또 누를경우
                         int like_check = 0;
-                        qnaDetailPresenter.likeRequest(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
+                        toss_commentNo_interface.toss_likeRequest_activity(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
                         if (commentitem.getLikeCount() == 0)
                         {
                             String update_like_count = String.valueOf(commentitem.getLikeCount());
@@ -329,7 +329,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 {
                         //좋아요
                         int like_check = 1;
-                        qnaDetailPresenter.likeRequest(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
+                        toss_commentNo_interface.toss_likeRequest_activity(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
                         if (commentitem.getLikeCount() == 0)
                         {
                             String update_like_count = String.valueOf(commentitem.getLikeCount() + 1);
@@ -507,30 +507,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
 
     }
-
-
-
-    @Override
-    public void getDataSuccess(QnaVoteItem qnaVoteItem)
-    {
-
-    }
-
-    @Override
-    public void getDataFail(String message) {
-
-    }
-
-    @Override
-    public void recommendComplete(boolean flag, BoardRecommend boardRecommend) {
-
-    }
-
-    @Override
-    public void updateVoteResultComplete(boolean flag, QnaVoteItem qnaVoteItem) {
-
-    }
-
      @Override
     public void getCommentDataSuccess(ArrayList<CommentItem> commentitem) {
 
@@ -557,76 +533,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     {
         //commentNo = adapter에서 넘긴 position
         CommentItem commentItem = commentitems.get(commentNo);
-
-
-//        Log.d(TAG, "recommentInsertGoResponse: " + commentNo);
-//
-//
-//       // view가 안보여지고 있는상태 (false)
-//        if (recommentViewOrHide == false)
-//        {
-//            if (recommentitems.size() == 0) //대댓글 리스트 객체가 null일경우
-//            {
-//                int recommentCount = commentItem.getRecommentCount();
-//                for (int i = 0;i < recommentCount ; i++)
-//                {
-//                    try
-//                    {
-//                        JSONArray jsonArray = new JSONArray(commentItem.getRecomment());
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        Gson gsonobject = new Gson();
-//
-//                        recommentitem = gsonobject.fromJson(String.valueOf(jsonObject),RecommentItem.class);
-//                        Log.d(TAG,String.valueOf(jsonObject));
-//                        recommentitems.add(recommentitem);
-//                    }
-//                    catch (JSONException e)
-//                    {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            recommentViewOrHide = true;
-////            recommentitems.add(recommentitems.size(),recommentItem);
-////            commentItem.setRecommentCount(recommentitems.size());
-////            notifyItemChanged(commentNo,commentItem);
-//        }
-//        else //view가 보여지고 있는 상태 (true)
-//        {
-//
-//            //view 한번보여짐 - recommentitem not null
-//            //다시 닫음 false 다시 열음  true 4번 오는거맞음
-//            //
-//            if (recommentitems.size() > 0) //대댓글 리스트 객체가 null이 아닐경우
-//            {
-//                recommentitems = new ArrayList<>();
-//                Log.d(TAG, "recommentInsertProcess: 4 ");
-//                int recommentCount = commentItem.getRecommentCount();
-//                for (int i = 0;i < recommentCount ; i++)
-//                {
-//                    try
-//                    {
-//                        JSONArray jsonArray = new JSONArray(commentItem.getRecomment());
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        Gson gsonobject = new Gson();
-//
-//                        recommentitem = gsonobject.fromJson(String.valueOf(jsonObject),RecommentItem.class);
-//                        Log.d(TAG,String.valueOf(jsonObject));
-//                        recommentitems.add(recommentitem);
-//                    }
-//                    catch (JSONException e)
-//                    {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            recommentViewOrHide = false;
-////            recommentitems.add(recommentitems.size() - 1,recommentItem);
-////            commentItem.setRecommentCount(recommentitems.size());
-////            notifyItemChanged(commentNo,commentItem);
-//        }
         if (recommentitems.size() == 0)
         {
             recommentitems = new ArrayList<>();

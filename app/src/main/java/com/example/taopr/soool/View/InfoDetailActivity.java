@@ -50,6 +50,7 @@ import com.example.taopr.soool.Object.InfoContentText;
 import com.example.taopr.soool.Object.InfoItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Object.RecommentItem;
+import com.example.taopr.soool.Presenter.CommentPresenter;
 import com.example.taopr.soool.Presenter.InfoDetailPresenter;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
@@ -66,7 +67,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class InfoDetailActivity extends AppCompatActivity implements View.OnClickListener, InfoDetailPresenter.View{
+public class InfoDetailActivity extends AppCompatActivity implements View.OnClickListener, InfoDetailPresenter.View, CommentPresenter.View{
 
     String TAG = "InfoDetailActivity";
 
@@ -154,7 +155,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     private CommentAdapter commentAdapter;
     private ArrayList<CommentItem> commentitem = new ArrayList<>();
     private int Get_commentNo;
-    InfoDetailPresenter commentPresent;
+    CommentPresenter commentPresent;
     String TextAddWriter;
     int comment_position;
     private boolean commentBoolean = false;
@@ -198,7 +199,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
 
         commentList.setLayoutManager(linearLayoutManager);
-        commentPresent = new InfoDetailPresenter(this,this);
+        commentPresent = new CommentPresenter(this,this);
         commentPresent.setView(this);
         commentPresent.loadData(postNo);
         commentList.setAdapter(commentAdapter);
@@ -573,6 +574,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
                 }
                 commentPresent.commentDeleteRequest(postNo,commentCount,0);
 
+            }
+            @Override
+            public void toss_likeRequest_activity(int postNo, int commentNo, int accountNo, int like_check, int commentORrecomment, int recommentNo)
+            {
+                commentPresent.likeRequest(postNo,commentNo,like_check,commentORrecomment,0,recommentNo);
             }
         });
     }
