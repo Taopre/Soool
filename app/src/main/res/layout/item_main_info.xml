@@ -2,30 +2,29 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black_a5F"
     xmlns:tools="http://schemas.android.com/tools">
 
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:scaleType="fitXY"
         android:id="@+id/mainInfoImage"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:background="@drawable/gradient_background_black"
         android:id="@+id/mainInfoImageBack"
-        />
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_main_info_thumbnail" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:text="3"
+        android:visibility="gone"
         android:textSize="@dimen/text_size_15dp"
         android:textColor="@color/grayLight"
         android:id="@+id/mainInfoTotalCount"
@@ -37,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/mainInfoTotalCount"
         android:layout_toLeftOf="@id/mainInfoTotalCount"
+        android:visibility="gone"
         android:text=" / "
         android:textSize="@dimen/text_size_15dp"
         android:textColor="@color/grayMain"
@@ -48,6 +48,7 @@
         android:layout_alignTop="@id/mainInfoCountSlash"
         android:layout_toLeftOf="@id/mainInfoCountSlash"
         android:text="1"
+        android:visibility="gone"
         android:textColor="@color/background_white"
         android:textSize="@dimen/text_size_15dp"
         android:id="@+id/mainInfoCurrentPos"/>
@@ -62,6 +63,7 @@
         android:layout_above="@id/mainInfoLay"
         android:layout_marginBottom="@dimen/all_space_between_10dp"
         android:scrollbars="none"
+        android:visibility="gone"
         >
 
         <android.support.v7.widget.RecyclerView
@@ -74,9 +76,11 @@
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:id="@+id/mainInfoLay"
+
+        android:layout_marginLeft="@dimen/all_space_between_18dp"
         android:layout_alignLeft="@id/mainInfoTagSV"
         android:layout_alignBottom="@id/mainInfoImage"
-        android:layout_marginBottom="14dp"
+        android:paddingBottom="@dimen/all_space_between_18dp"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -84,6 +88,7 @@
             tools:text="글의 제목입니다"
             android:textColor="@color/background_white"
             android:textSize="@dimen/text_size_20dp"
+
             android:id="@+id/mainInfoTitle"/>
 
         <TextView
@@ -93,7 +98,7 @@
             tools:text="작성자"
             style="@style/grayLightSize12TextView"
             android:layout_below="@id/mainInfoTitle"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             />
 
         <TextView
@@ -105,6 +110,7 @@
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
             android:layout_toRightOf="@id/mainInfoWriter"
             android:layout_alignTop="@id/mainInfoWriter"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -125,7 +131,6 @@
             android:layout_toRightOf="@id/mainInfoViewsTV"
             android:layout_alignTop="@id/mainInfoWriter"
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
-
             />
         <TextView
             android:layout_width="wrap_content"
@@ -146,6 +151,7 @@
             android:layout_toRightOf="@id/mainInfoCommentsTV"
             android:layout_alignTop="@id/mainInfoWriter"
             android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
+
     </RelativeLayout>
 
 

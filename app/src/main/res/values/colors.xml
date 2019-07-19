@@ -5,7 +5,8 @@
     <color name="colorAccent">#0ba14a</color>
     <color name="black">#272727</color>
     <color name="black_a00">#00272727</color>
-    <color name="black_a2F">#2F272727</color>
+    <color name="black_a2F">#3F272727</color>
+    <color name="black_a5F">#aF272727</color>
     <color name="transparent">#1A000000</color>
     <color name="background_white">#FFFFFF</color>
     <color name="greenMain">#0ba14a</color>

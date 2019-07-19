@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
@@ -45,8 +46,13 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     private LinearLayoutManager linearLayoutManager;
     private MainFmPresenter mainFmPresenter;
     private QnaAdapter qnaAdapter;
-    private MainInfoAdapter mainInfoAdapter;
+    private MainInfoAdapter mainInfoAdapter = null;
     private MainFmView mainFmView;
+    private Handler handler = null;
+    private Thread thread = null;
+    private int infoCurrentPage=0;	// info 현재 페이지번호
+    private int infoPageMoveDirection=0; // info 뷰페이저 화면 전환. 방향 0이 오른쪽, 1이 왼쪽
+    private boolean viewPagerthreadDead = false; // false 가 살아있음 , true 가 죽은거
 
     public interface MainFmView{
         void mainUpdateQnaItem(QnaBoardItem qnaBoardItem,int actionKind,boolean updateByUser); // qnaBoard
@@ -79,6 +85,10 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
 
         infoList(); // info 글 리스트 관련
         qnaBoardList(); // qna 글 리스트 관련
+
+        if (mainInfoAdapter != null ){
+            infoViewAutoChange();
+        }
 
         return view;
     }
@@ -115,6 +125,9 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
         }
     }
 
+    // TODO: 프래그먼트 detach 될 경우 thread 종료시켜주기
+    // TODO: 사용자가 스와이프 했을 때 뷰도 생각해서 스레드 짜야할듯 ( 방향 중요 )
+
     @Override
     public void getInfoSuccess(ArrayList<InfoItem> infoItems) {
         if( mainInfoAdapter == null){
@@ -126,6 +139,98 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
                 }
             });
             mainInfoViewPager.setAdapter(mainInfoAdapter);
+
+            handler = new Handler(){
+
+                public void handleMessage(android.os.Message msg) {
+
+                    /*if(infoCurrentPage==0){
+
+                        mainInfoViewPager.setCurrentItem(1);
+                        infoCurrentPage++;
+
+                    }else if(infoCurrentPage==1){
+                        mainInfoViewPager.setCurrentItem(2);
+
+                        infoCurrentPage++;
+
+                    }else if(infoCurrentPage==2){
+                        mainInfoViewPager.setCurrentItem(0);
+
+                        infoCurrentPage=0;
+                    }*/
+
+                    if(mainInfoViewPager.getCurrentItem()==0){
+
+                        mainInfoViewPager.setCurrentItem(1);
+
+                      //  infoCurrentPage++;
+                        infoPageMoveDirection = 0;
+
+                    }else if(mainInfoViewPager.getCurrentItem()==1 && infoPageMoveDirection==0){
+                        mainInfoViewPager.setCurrentItem(2);
+                        infoPageMoveDirection = 1;
+                      //  infoCurrentPage++;
+
+                    }
+                    else if(mainInfoViewPager.getCurrentItem()==1 && infoPageMoveDirection==1){
+                        mainInfoViewPager.setCurrentItem(0);
+                        infoPageMoveDirection = 0;
+                        //infoCurrentPage++;
+
+                    }else if(mainInfoViewPager.getCurrentItem()==2){
+                        mainInfoViewPager.setCurrentItem(1);
+                      //  infoCurrentPage=0;
+                        infoPageMoveDirection = 1;
+
+                    }
+
+                }
+            };
+            infoViewAutoChange();
+        }
+
+    }
+
+    private void infoViewAutoChange(){
+        if (thread == null) {
+            thread = new Thread() {
+
+                //run은 jvm이 쓰레드를 채택하면, 해당 쓰레드의 run메서드를 수행한다.
+
+                public void run() {
+
+                    super.run();
+
+                    while (!thread.isInterrupted()){
+
+                        try {
+                            Log.i(TAG, "run: 0" + thread.isInterrupted());
+                            Thread.sleep(4000);
+                            if (viewPagerthreadDead){
+                                thread.interrupt();
+                            }
+                            Log.i(TAG, "run: 1" + thread.isInterrupted());
+                            if (!thread.isInterrupted()) {
+                                handler.sendEmptyMessage(0);
+                            }
+
+                        } catch (InterruptedException e) {
+
+                           // Log.i(TAG, "run: int");
+                            e.printStackTrace();
+
+                        }
+
+                    }
+
+                    Log.i(TAG, "run: end" + thread.isInterrupted());
+
+                }
+
+            };
+
+            thread.start();
         }
 
     }
@@ -191,6 +296,9 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
         }
     }
 
+
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -208,6 +316,11 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
         if (mainFmView!=null){
             mainFmView = null;
         }
+        Log.i(TAG, "onDetach: " + thread.isInterrupted());
+        thread.interrupt();
+        Log.i(TAG, "onDetach: " + thread.isInterrupted());
+        viewPagerthreadDead = true;
+       // thread = null;
     }
 
     // 리사이클러뷰 클릭 이벤트
@@ -240,7 +353,6 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     public void hideLoading() { mainProgress.setVisibility(View.GONE);}
 
 
-    //TODO: 추가,삭제 코드 작성
     public void updateQnaBoardItem(QnaBoardItem qnaBoardItem,int actionKind){
         switch (actionKind){
             case 1:

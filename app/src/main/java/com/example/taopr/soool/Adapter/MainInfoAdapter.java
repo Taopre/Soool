@@ -66,6 +66,7 @@ public class MainInfoAdapter extends PagerAdapter{
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.item_main_info, container, false);
 
+            Log.i(TAG, "instantiateItem: 포지션" +position);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -173,8 +174,8 @@ public class MainInfoAdapter extends PagerAdapter{
 
     // 메인 페이지에서 정보글을 클릭했을 경우 디테일페이지에 해당 정보글 내용을 전달
     public InfoItem getInfoItem(int position){
+        Log.i(TAG, "getInfoItem: 포지션 " + position);
         return infoItems.get(position);
-
     }
 
 }
