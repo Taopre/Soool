@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/qnaboardLayout">
+    android:id="@+id/qnaboardLayout"
+    android:focusableInTouchMode="true">
 
     <include layout="@layout/qna_actionbar"
         android:id="@+id/actionbar"/>

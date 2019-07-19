@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".View.InfoDetailActivity"
-    android:id="@+id/infoDetailLayout">
+    android:id="@+id/infoDetailLayout"
+    android:focusableInTouchMode="true">
 
 
     <!-- 액션바
