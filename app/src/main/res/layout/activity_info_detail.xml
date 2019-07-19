@@ -8,6 +8,7 @@
     tools:context=".View.InfoDetailActivity"
     android:id="@+id/infoDetailLayout">
 
+
     <!-- 액션바
     <include
         layout="@layout/sub_actionbar"

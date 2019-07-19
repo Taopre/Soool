@@ -166,6 +166,10 @@
     <string name="notice_label_page">공지사항</string>
 
 
+    <!-- 댓글 리스트 -->
+    <string name="notice_no_commentList">아직 댓글이 없습니다. 작성해주세요.</string>
+
+
     <string-array name="custom_months">
         <item>Jan</item>
         <item>Feb</item>

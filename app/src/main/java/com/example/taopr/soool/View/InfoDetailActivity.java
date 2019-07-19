@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
@@ -49,6 +50,7 @@ import com.example.taopr.soool.Object.InfoContentText;
 import com.example.taopr.soool.Object.InfoItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Object.RecommentItem;
+import com.example.taopr.soool.Presenter.CommentPresenter;
 import com.example.taopr.soool.Presenter.InfoDetailPresenter;
 import com.example.taopr.soool.Presenter.QnaDetailPresenter;
 import com.example.taopr.soool.R;
@@ -65,7 +67,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class InfoDetailActivity extends AppCompatActivity implements View.OnClickListener, InfoDetailPresenter.View{
+public class InfoDetailActivity extends AppCompatActivity implements View.OnClickListener, InfoDetailPresenter.View, CommentPresenter.View{
 
     String TAG = "InfoDetailActivity";
 
@@ -108,6 +110,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     @BindView(R.id.infoDetailShare)
     RelativeLayout infoDetailShare;
 
+    @BindView(R.id.body)
+    ScrollView body;
+    @BindView(R.id.comment_layout_top)
+    LinearLayout comment_layout_top;
+
 
 
     @BindView(R.id.bodyRelative)
@@ -142,16 +149,19 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     Button infoCommentButton;
     @BindView(R.id.qnaboardCommentCount)
     TextView InfoCommentCount;
+    @BindView(R.id.noComment_notice)
+    RelativeLayout noComment_notice;
     private LinearLayoutManager linearLayoutManager;
     private CommentAdapter commentAdapter;
     private ArrayList<CommentItem> commentitem = new ArrayList<>();
     private int Get_commentNo;
-    InfoDetailPresenter commentPresent;
+    CommentPresenter commentPresent;
     String TextAddWriter;
     int comment_position;
     private boolean commentBoolean = false;
-    private boolean recommendResponse = false;
 
+    private boolean  recommendResponse = false;
+    boolean commentDeleteRecommentDelete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,15 +185,21 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         //댓글 관련부분
         infoCommentButton.setOnClickListener(this);
         commentList = (RecyclerView) findViewById(R.id.commentList);
-        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this)
+        {
+            @Override
+            public  boolean canScrollVertically()
+            {
+                return false;
+            }
+        };
+
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-        commentList.addItemDecoration
-                (
-                        new DividerItemDecoration(this, linearLayoutManager.getOrientation())
-                );
+
+
         commentList.setLayoutManager(linearLayoutManager);
-        commentPresent = new InfoDetailPresenter(this,this);
+        commentPresent = new CommentPresenter(this,this);
         commentPresent.setView(this);
         commentPresent.loadData(postNo);
         commentList.setAdapter(commentAdapter);
@@ -517,9 +533,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         this.commentitem = commentitem;
 
         //댓글리스트데이터 성공적으로 받아왔을때 댓글어댑터 생성
-        commentAdapter = new CommentAdapter(InfoDetailActivity.this,this.commentitem,this,postNo,accountNo);
+        commentAdapter = new CommentAdapter(InfoDetailActivity.this,this.commentitem,this,postNo,accountNo,accountNick);
         commentPresent.setView(this);
         commentList.setAdapter(commentAdapter);
+        setCommentList();
+
 
         commentAdapter.toss_commentNo_Methods(new CommentAdapter.toss_commentNo_interface()
         {
@@ -546,9 +564,21 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public void toss_commentCount_actiivity(int commentCount)
+            public void toss_commentCount_actiivity(int commentCount,int commentDeleteOrRecommentDelete,int deletePosition)
             {
+
+                comment_position = deletePosition;
+                if (commentDeleteOrRecommentDelete == 0)
+                {
+                    commentDeleteRecommentDelete = true;
+                }
                 commentPresent.commentDeleteRequest(postNo,commentCount,0);
+
+            }
+            @Override
+            public void toss_likeRequest_activity(int postNo, int commentNo, int accountNo, int like_check, int commentORrecomment, int recommentNo)
+            {
+                commentPresent.likeRequest(postNo,commentNo,like_check,commentORrecomment,0,recommentNo);
             }
         });
     }
@@ -593,7 +623,21 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         });
 
     }
+    public void setCommentList()
+    {
+        if(commentitem.size() == 0)
+        {
+            commentList.setVisibility(View.INVISIBLE);
+            noComment_notice.setVisibility(View.VISIBLE);
 
+        }
+        else
+        {
+            commentList.setVisibility(View.VISIBLE);
+            noComment_notice.setVisibility(View.INVISIBLE);
+
+        }
+    }
 
     @Override
     public void getCommentDataFail(String message) {
@@ -613,11 +657,30 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         {
             commentitem.add(commentItem);
             commentAdapter.notifyDataSetChanged();
+            scrollToView(comment_layout_top,body,0);
+
+            setCommentList();
             infoItem.setComments(commentCount);
             InfoCommentCount.setText(String.valueOf(commentCount));
             commentBoolean = true;
         }
     }
+    public static void scrollToView(View view, final ScrollView scrollView, int count) {
+        if (view != null && view != scrollView) {
+            count += view.getTop();
+            scrollToView((View) view.getParent(), scrollView, count);
+        } else if (scrollView != null) {
+            final int finalCount = count;
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(0, finalCount);
+                }
+            }, 200);
+        }
+    }
+
 
     @Override
     public void recommentInsertGoResponse(int response, RecommentItem recommentItem, int commentNo)
@@ -626,6 +689,8 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         if (response == 0)
         {
             commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_position);
+
+            commentList.requestFocus(commentNo - 1);
         }
     }
 
@@ -647,7 +712,16 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             infoItem.setComments(commentCount);
             InfoCommentCount.setText(String.valueOf(commentCount));
             commentBoolean = true;
-            commentAdapter.commentDeleteGoResponse(response,commentCount,comment_position);
+            if (commentDeleteRecommentDelete)
+            {
+                //댓글
+                commentAdapter.commentDeleteGoResponse(0,commentCount,comment_position);
+            }
+            else
+            {
+                //대댓글
+                commentAdapter.commentDeleteGoResponse(1,commentCount,comment_position);
+            }
         }
     }
 
