@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="108dp"
+    android:layout_marginHorizontal="@dimen/all_space_between_18dp"
    >
 
 
@@ -10,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/qnaBoardImage"
+        android:layout_marginLeft="@dimen/all_space_between_18dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/all_space_between_18dp"
 
         />
 
@@ -20,8 +21,6 @@
         android:id="@+id/h_scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/all_space_between_18dp"
-        android:layout_marginRight="@dimen/all_space_between_18dp"
         android:layout_marginTop="@dimen/all_space_between_16dp"
         android:layout_toLeftOf="@id/qnaBoardImage"
         android:layout_alignParentStart="true"

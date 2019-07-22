@@ -25,6 +25,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -45,6 +47,7 @@ import com.example.taopr.soool.Adapter.VoteImageAdapter;
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Dialog.BottomSheetDialog;
 import com.example.taopr.soool.Dialog.BottomSheetDialogVoteSelect;
+import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Presenter.Interface.QnaBoardInter;
 import com.example.taopr.soool.Util.ExifUtils;
 import com.example.taopr.soool.Object.GridVoteItem;
@@ -115,6 +118,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
     String[] tagData = new String[0];
     int maybeDeletePosition = 999, voteFlag = 1, actionKind = 9999, qnaListPosition, count = 2, accountNo, voteSelect = 2;
     boolean boardImageSelect = false, reSelectVoteImage = false;
+
+
+    private NoticeDialog CanclenoticeDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -425,7 +432,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 break;
             case R.id.drawupBackLayout:
                 //이전 액티비티로 인탠트 사용해줘야할 부분.
-                finish();
+                confirmCancel();
                 break;
             case R.id.drawupEnroll:
 
@@ -1099,6 +1106,35 @@ public class QnaBoardActivity extends AppCompatActivity implements
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+
+    @Override
+    public void onBackPressed()
+    {
+        confirmCancel();
+    }
+    public void confirmCancel()
+    {
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                CanclenoticeDialog.dismiss();
+            }
+        };
+
+        CanclenoticeDialog = new NoticeDialog(this,
+                "작성 중인 글을 취소하시겠습니까? 뒤로 가기 선택 시, 작성 중인 글은 저장되지 않습니다.", false, "예",
+                "아니요", positiveListener, negativeListener);
+        CanclenoticeDialog.show();
     }
 }
 

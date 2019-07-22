@@ -19,7 +19,7 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="38dp"
+        android:layout_height="wrap_content"
         android:gravity="bottom"
         android:layout_below="@id/noticeDialogTitle"
         android:id="@+id/noticeDialogContent"
@@ -27,7 +27,9 @@
         android:textColor="@color/grayMid"
         android:text="content"
         android:layout_marginBottom="@dimen/all_space_between_10dp"
-        android:layout_marginLeft="@dimen/all_space_between_24dp"/>
+        android:layout_marginLeft="@dimen/all_space_between_24dp"
+        android:paddingTop="@dimen/all_space_between_20dp"
+        />
 
     <RadioButton
         android:layout_width="wrap_content"

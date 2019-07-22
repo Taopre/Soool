@@ -50,7 +50,7 @@
                 android:layout_toRightOf="@+id/iv_textVote"
                 android:layout_alignTop="@+id/iv_textVote"
                 android:layout_marginStart="70dp"
-                android:background="@color/grayMid"/>
+                android:background="@color/grayLight_a50"/>
 
 
             <ImageView

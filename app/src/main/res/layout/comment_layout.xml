@@ -40,8 +40,15 @@
                 android:textColor="@color/black"
                 />
         </LinearLayout>
-    </LinearLayout>
 
+    </LinearLayout>
+    <View
+        android:id="@+id/divideFrame"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grayLight_a50"
+        android:visibility="invisible"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,7 +67,7 @@
         <RelativeLayout
             android:id="@+id/noComment_notice"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center"
             android:gravity="center"
@@ -72,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/notice_no_commentList"
-                android:textColor="@color/grayMid"
+                android:textColor="@color/grayMain"
                 android:textSize="@dimen/text_size_15dp"
                 />
         </RelativeLayout>

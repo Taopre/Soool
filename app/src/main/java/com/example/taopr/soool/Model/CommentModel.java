@@ -56,7 +56,6 @@ public class CommentModel
 
     public void commentRequest(int postNo,int accountNo,String commentContent)
     {
-        Log.d(TAG, "commentRequest: 인서트 리퀘스트 성공?????");
         Observable.just("")
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(Schedulers.io())
@@ -89,25 +88,16 @@ public class CommentModel
 
                                                             String result = returnData.getString("result");
 
-                                                            Log.d(TAG, "result!!!: " + result);
-
                                                             int commentCount = returnData.getInt("commentCount");
                                                             if (result.equals("true"))
                                                             {
 
                                                                 Gson gsonObject = new Gson();
                                                                 String addComment = String.valueOf(returnData.getJSONObject("commentitem"));
-                                                                Log.d(TAG, "onResponseCCCCCC: " + addComment);
 
                                                                 commentItem = gsonObject.fromJson(addComment, CommentItem.class);
 
-                                                                Log.d(TAG, "onResponseBBBBBBB: " + commentItem.getAccountNo());
-                                                                //commentItemArrayList.add(commentItem);
-                                                                //Log.d(TAG, "onResponse: DDDDDDD" + commentItemArrayList.get(commentItemArrayList.size()-1).getAccountNo());
-
                                                                 commentPresenter.commentInsertResponse(0,commentCount,commentItem);
-
-                                                                //qnaDetailPresenter.loadData(postNo);
                                                                 //현재 댓글 입력이 성공(result값으로 true)되면
                                                                 //해당 게시물에 있는 전체 댓글을 load하는 방식 - 굉장히 비효율적
                                                                 //댓글 insert할떄에 response값으로 방금 입력한 댓글을 전송하는 방법으로 수정해야함함
@@ -122,7 +112,7 @@ public class CommentModel
                                                     }
                                                     catch (Exception e)
                                                     {
-                                                        Log.e(TAG, "apply: ", e);
+
                                                     }
                                                 }
                                                 @Override
@@ -136,8 +126,7 @@ public class CommentModel
                                         }
                                         catch (Exception e)
                                         {
-                                            Log.d(TAG, "onFailure: 실패2");
-                                            Log.e(TAG, "apply: ", e);
+
                                         }
                                         return  true;
                                     }
@@ -200,18 +189,12 @@ public class CommentModel
 
                                             String result = returnData.getString("result");
                                             int commentNo = returnData.getInt("commentNo");
-                                            Log.d(TAG, "result!!!: " + result);
-                                            Log.d(TAG, "Coommentent!!!: " + String.valueOf(commentNo));
-
-
                                             if (result.equals("true"))
                                             {
 
                                                 Gson gsonObject = new Gson();
                                                 String addComment = String.valueOf(returnData.getJSONObject("recommentitem"));
                                                 recommentItem = gsonObject.fromJson(addComment,RecommentItem.class);
-                                                Log.d(TAG, "onResponseRRRRCCCCCC: " + addComment);
-
 
                                                 commentPresenter.recommentInsertResponse(0,recommentItem,commentNo);
                                             }
@@ -295,16 +278,12 @@ public class CommentModel
                                                     try
                                                     {
                                                         String message = response.body().string();
-                                                        //Gson gsonobject = new Gson();
-                                                        Log.d(TAG,message);
-
                                                         JSONArray jsonArray = new JSONArray(message);
                                                         for (int i =0;i <jsonArray.length() ;i++)
                                                         {
                                                             JSONObject returnData = jsonArray.getJSONObject(i);
-
-
                                                             String result = returnData.getString("result");
+
 
                                                             if (result.equals("true"))
                                                             {
@@ -320,8 +299,8 @@ public class CommentModel
                                                     }
                                                     catch (Exception e)
                                                     {
-                                                        Log.e(TAG, "apply: ", e);
-                                                        Log.d(TAG,"eeorkeor");
+
+
                                                     }
                                                 }
                                                 @Override
@@ -335,8 +314,7 @@ public class CommentModel
                                         }
                                         catch (Exception e)
                                         {
-                                            Log.d(TAG, "onFailure: 실패2");
-                                            Log.e(TAG, "apply: ", e);
+
                                         }
                                         return  true;
                                     }
@@ -386,8 +364,6 @@ public class CommentModel
                                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                                     try {
                                                         String message = response.body().string();
-                                                        //Gson gsonobject = new Gson();
-                                                        Log.d(TAG, message);
 
                                                         JSONArray jsonArray = new JSONArray(message);
                                                         for (int i = 0; i < jsonArray.length(); i++) {
@@ -395,21 +371,17 @@ public class CommentModel
                                                             String result = returnData.getString("result");
                                                             int commentCount = returnData.getInt("commentCount");
 
-                                                            if (result.equals("true")) {
-                                                                Log.d(TAG, "commentDeleteGoResponse:commentCount " + String.valueOf(commentCount));
-
-
+                                                            if (result.equals("true"))
+                                                            {
                                                                 commentPresenter.commentDeleteResponss(0, commentCount,commentNo);
-
-                                                            } else if (result.equals("false")) {
-
+                                                            }
+                                                            else if (result.equals("false"))
+                                                            {
                                                                 commentPresenter.commentDeleteResponss(1, commentCount,commentNo);
-
                                                             }
                                                         }
                                                     } catch (Exception e) {
-                                                        Log.e(TAG, "apply: ", e);
-                                                        Log.d(TAG, "eeorkeor");
+
                                                     }
                                                 }
 
@@ -421,8 +393,7 @@ public class CommentModel
 
                                             });
                                         } catch (Exception e) {
-                                            Log.d(TAG, "onFailure: 실패2");
-                                            Log.e(TAG, "apply: ", e);
+
                                         }
                                         return true;
                                     }

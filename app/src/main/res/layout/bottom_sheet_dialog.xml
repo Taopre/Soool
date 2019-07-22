@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="80dp"
             android:layout_marginTop="41dp"
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
@@ -32,25 +32,25 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tagDrinkPersLayout"
+            android:id="@+id/tagRecipeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/tagBottlesLayout"
             android:layout_toRightOf="@+id/tagBottlesLayout"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="15dp"
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tagDrinkPers"
+                android:id="@+id/tagRecipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="7dp"
-                android:text="주사"
+                android:text="레시피"
                 android:textColor="@color/grayMain"
                 android:textSize="16dp" />
         </LinearLayout>
@@ -60,8 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/tagBottlesLayout"
-            android:layout_toRightOf="@+id/tagDrinkPersLayout"
-            android:layout_marginStart="40dp"
+            android:layout_toRightOf="@+id/tagRecipeLayout"
+            android:layout_marginStart="15dp"
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
             android:orientation="horizontal">
@@ -80,11 +80,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tagSmallDrinkerLayout"
+            android:id="@+id/tagDrinkPersLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="50dp"
             android:layout_below="@+id/tagHangoverLayout"
             android:layout_marginTop="@dimen/text_size_14dp"
             android:background="@drawable/dialog_tag_frame_gray"
@@ -92,25 +92,25 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tagSmallDrinker"
+                android:id="@+id/tagDrinkPers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="7dp"
-                android:text="알쓰"
+                android:text="주사"
                 android:textColor="@color/grayMain"
                 android:textSize="16dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tagDrinkNextLayout"
+            android:id="@+id/tagHoneytipLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
-            android:layout_toRightOf="@+id/tagSmallDrinkerLayout"
-            android:layout_marginStart="40dp"
+            android:layout_toRightOf="@+id/tagDrinkPersLayout"
+            android:layout_marginStart="15dp"
             android:layout_below="@+id/tagHangoverLayout"
             android:layout_marginTop="@dimen/text_size_14dp"
             android:background="@drawable/dialog_tag_frame_gray"
@@ -118,17 +118,72 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tagDrinkNext"
+                android:id="@+id/tagHoneytip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="7dp"
-                android:text="술 먹은 다음날"
+                android:text="꿀팁"
                 android:textColor="@color/grayMain"
                 android:textSize="16dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tagHeronLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_toRightOf="@+id/tagHoneytipLayout"
+            android:layout_marginStart="15dp"
+            android:layout_below="@+id/tagHangoverLayout"
+            android:layout_marginTop="@dimen/text_size_14dp"
+            android:background="@drawable/dialog_tag_frame_gray"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tagHeron"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="7dp"
+                android:text="해장"
+                android:textColor="@color/grayMain"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/tagEtcLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_toRightOf="@+id/tagHeronLayout"
+            android:layout_marginStart="15dp"
+            android:layout_below="@+id/tagHangoverLayout"
+            android:layout_marginTop="@dimen/text_size_14dp"
+            android:background="@drawable/dialog_tag_frame_gray"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tagEtc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="7dp"
+                android:text="기타"
+                android:textColor="@color/grayMain"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+
     </RelativeLayout>
     
     <LinearLayout

@@ -148,6 +148,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     TextView InfoCommentCount;
     @BindView(R.id.noComment_notice)
     RelativeLayout noComment_notice;
+    @BindView(R.id.divideFrame)
+    View divideFrame;
+    @BindView(R.id.noComment_notice_text)
+    TextView noComment_notice_text;
+
     private LinearLayoutManager linearLayoutManager;
     private CommentAdapter commentAdapter;
     private ArrayList<CommentItem> commentitem = new ArrayList<>();
@@ -527,7 +532,7 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         imm.hideSoftInputFromWindow(infoCommentText.getWindowToken(),0);
     }
     @Override
-    public void getCommentDataSuccess(ArrayList<CommentItem> commentitem)
+    public void getCommentDataSuccess(ArrayList<CommentItem> commentitem,int position)
     {
 
         this.commentitem = commentitem;
@@ -541,6 +546,12 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
         commentAdapter.toss_commentNo_Methods(new CommentAdapter.toss_commentNo_interface()
         {
+            @Override
+            public void toss_comment_position(int position)
+            {
+
+            }
+
             @Override
             public void toss_commentNo_atActivity(int commentNo,String commentWriter,int position) {
                 Get_commentNo = commentNo;
@@ -627,14 +638,19 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     {
         if(commentitem.size() == 0)
         {
+            int topPadding =
+                    (int) this.getResources().getDimension(R.dimen.infoDetail_commentList_noComment_text_padding);
+            noComment_notice_text.setPaddingRelative(0,topPadding,0,topPadding);
             commentList.setVisibility(View.INVISIBLE);
             noComment_notice.setVisibility(View.VISIBLE);
+            divideFrame.setVisibility(View.VISIBLE);
 
         }
         else
         {
             commentList.setVisibility(View.VISIBLE);
             noComment_notice.setVisibility(View.INVISIBLE);
+            divideFrame.setVisibility(View.INVISIBLE);
 
         }
     }

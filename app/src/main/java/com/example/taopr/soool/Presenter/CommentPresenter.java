@@ -48,7 +48,7 @@ public class CommentPresenter extends BasePresenter implements CommentInter
                             public void onSuccess(CommentListObject commentList_object)
                             {
                                 ArrayList<CommentItem> commentitem = new ArrayList(commentList_object.getQnaCommentItems());
-                                view.getCommentDataSuccess(commentitem);
+                                view.getCommentDataSuccess(commentitem,0);
                             }
 
                             @Override

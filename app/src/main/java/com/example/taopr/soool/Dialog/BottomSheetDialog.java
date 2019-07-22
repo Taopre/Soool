@@ -22,8 +22,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
 
     public static BottomSheetDialog getInstance() { return new BottomSheetDialog(); }
 
-    LinearLayout ll_tagBottlesLayout, ll_tagDrinkPersLayout, ll_tagHangoverLayout, ll_tagSmallDrinkerLayout, ll_tagDrinkNextLayout;
-    TextView tv_tagBottles, tv_tagDrinkPers, tv_tagHangover, tv_tagSmallDrinker, tv_tagDrinkNext, tv_cancel, tv_complete;
+    LinearLayout ll_tagBottlesLayout, ll_tagDrinkPersLayout, ll_tagHangoverLayout,ll_tagRecipeLayout,ll_tagHoneytipLayout,ll_tagHeronLayout,ll_tagEtcLayout;
+    TextView tv_tagBottles, tv_tagDrinkPers, tv_tagHangover,tv_cancel, tv_complete,tv_tagRecipe,tv_tagHoneytip,tv_tagHeron,tv_tagEtc;
 
     public ArrayList<String> tagArray = new ArrayList<>();
     private BottomSheetDialoggListener bottomSheetDialoggListener;
@@ -48,13 +48,23 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         ll_tagBottlesLayout = view.findViewById(R.id.tagBottlesLayout);
         ll_tagDrinkPersLayout = view.findViewById(R.id.tagDrinkPersLayout);
         ll_tagHangoverLayout = view.findViewById(R.id.tagHangoverLayout);
-        ll_tagSmallDrinkerLayout =  view.findViewById(R.id.tagSmallDrinkerLayout);
-        ll_tagDrinkNextLayout =  view.findViewById(R.id.tagDrinkNextLayout);
+
+        ll_tagRecipeLayout = view.findViewById(R.id.tagRecipeLayout);
+        ll_tagHoneytipLayout = view.findViewById(R.id.tagHoneytipLayout);
+        ll_tagHeronLayout = view.findViewById(R.id.tagHeronLayout);
+        ll_tagEtcLayout = view.findViewById(R.id.tagEtcLayout);
+
+
         tv_tagBottles = view.findViewById(R.id.tagBottles);
         tv_tagDrinkPers = view.findViewById(R.id.tagDrinkPers);
         tv_tagHangover = view.findViewById(R.id.tagHangover);
-        tv_tagSmallDrinker = view.findViewById(R.id.tagSmallDrinker);
-        tv_tagDrinkNext = view.findViewById(R.id.tagDrinkNext);
+
+        tv_tagRecipe = view.findViewById(R.id.tagRecipe);
+        tv_tagHoneytip = view.findViewById(R.id.tagHoneytip);
+        tv_tagHeron = view.findViewById(R.id.tagHeron);
+        tv_tagEtc = view.findViewById(R.id.tagEtc);
+
+
         tv_cancel = view.findViewById(R.id.cancel);
         tv_complete = view.findViewById(R.id.complete);
 
@@ -62,8 +72,13 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
         ll_tagBottlesLayout.setOnClickListener(this);
         ll_tagDrinkPersLayout.setOnClickListener(this);
         ll_tagHangoverLayout.setOnClickListener(this);
-        ll_tagSmallDrinkerLayout.setOnClickListener(this);
-        ll_tagDrinkNextLayout.setOnClickListener(this);
+
+        ll_tagRecipeLayout.setOnClickListener(this);
+        ll_tagHoneytipLayout.setOnClickListener(this);
+        ll_tagHeronLayout.setOnClickListener(this);
+        ll_tagEtcLayout.setOnClickListener(this);
+
+
         tv_cancel.setOnClickListener(this);
         tv_complete.setOnClickListener(this);
         return view;
@@ -111,30 +126,56 @@ public class BottomSheetDialog extends BottomSheetDialogFragment implements View
                     ll_tagHangoverLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_gray));
                 }
                 break;
-            case R.id.tagSmallDrinkerLayout:
+            case R.id.tagRecipeLayout:
                 flagTag4++;
 
                 if (flagTag4 % 2 == 1) {
-                    tagArray.add(tv_tagSmallDrinker.getText().toString());
-                    tv_tagSmallDrinker.setTextColor(Color.parseColor("#08883e"));
-                    ll_tagSmallDrinkerLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_green));
+                    tagArray.add(tv_tagRecipe.getText().toString());
+                    tv_tagRecipe.setTextColor(Color.parseColor("#08883e"));
+                    ll_tagRecipeLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_green));
                 } else {
-                    tagArray.remove(tv_tagSmallDrinker.getText().toString());
-                    tv_tagSmallDrinker.setTextColor(Color.parseColor("#9d9d97"));
-                    ll_tagSmallDrinkerLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_gray));
+                    tagArray.remove(tv_tagRecipe.getText().toString());
+                    tv_tagRecipe.setTextColor(Color.parseColor("#9d9d97"));
+                    ll_tagRecipeLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_gray));
                 }
                 break;
-            case R.id.tagDrinkNextLayout:
+            case R.id.tagHoneytipLayout:
                 flagTag5++;
 
                 if (flagTag5 % 2 == 1) {
-                    tagArray.add(tv_tagDrinkNext.getText().toString());
-                    tv_tagDrinkNext.setTextColor(Color.parseColor("#08883e"));
-                    ll_tagDrinkNextLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_green));
+                    tagArray.add(tv_tagHoneytip.getText().toString());
+                    tv_tagHoneytip.setTextColor(Color.parseColor("#08883e"));
+                    ll_tagHoneytipLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_green));
                 } else {
-                    tagArray.remove(tv_tagDrinkNext.getText().toString());
-                    tv_tagDrinkNext.setTextColor(Color.parseColor("#9d9d97"));
-                    ll_tagDrinkNextLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_gray));
+                    tagArray.remove(tv_tagHoneytip.getText().toString());
+                    tv_tagHoneytip.setTextColor(Color.parseColor("#9d9d97"));
+                    ll_tagHoneytipLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_gray));
+                }
+                break;
+            case R.id.tagHeronLayout:
+                flagTag5++;
+
+                if (flagTag5 % 2 == 1) {
+                    tagArray.add(tv_tagHeron.getText().toString());
+                    tv_tagHeron.setTextColor(Color.parseColor("#08883e"));
+                    ll_tagHeronLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_green));
+                } else {
+                    tagArray.remove(tv_tagHeron.getText().toString());
+                    tv_tagHeron.setTextColor(Color.parseColor("#9d9d97"));
+                    ll_tagHeronLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_gray));
+                }
+                break;
+            case R.id.tagEtcLayout:
+                flagTag5++;
+
+                if (flagTag5 % 2 == 1) {
+                    tagArray.add(tv_tagEtc.getText().toString());
+                    tv_tagEtc.setTextColor(Color.parseColor("#08883e"));
+                    ll_tagEtcLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_green));
+                } else {
+                    tagArray.remove(tv_tagEtc.getText().toString());
+                    tv_tagEtc.setTextColor(Color.parseColor("#9d9d97"));
+                    ll_tagEtcLayout.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.tag_frame_gray));
                 }
                 break;
             case R.id.complete:
