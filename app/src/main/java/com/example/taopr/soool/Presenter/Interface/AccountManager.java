@@ -26,7 +26,7 @@ public interface AccountManager {
 
 //    boolean signUpReq(String acconutEmail, String accountPW, String accountNick);
 
-    void signUpReq(String acconutEmail, String accountPW, String accountNick);
+    void signUpReq(String acconutEmail, String accountPW, String accountNick );
 
    // boolean checkDuplicity(int separator,String emailOrNick);
 

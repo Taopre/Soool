@@ -9,9 +9,13 @@ public interface LoginInter {
     //줄 아래쪽 부분은 View에서 선언되며 정의된 부분의 메서드들을 이곳에서 명시해주는 부분. 으로 구별할 수 있다. 참고하세요.
     void setView(LoginPresenter.View view);
 
-    void login(LoginItem usetItem);
+    void login(LoginItem userItem);
+
+    void getPW(LoginItem userItem);
 
     void loginResponse(String response);
+
+    void confirmPw(LoginItem userItem, String enAccountPw);
 
 //    void loginDataSend(LoginSessionItem item);
 //--------------------------------------------------------------------------------------
@@ -20,6 +24,8 @@ public interface LoginInter {
 
         void loginResponseGoToVIew(String response);
 //        void loginDataSend(LoginSessionItem item);
+
+        void viewConfirmPw(LoginItem userItem, String enAccountPw);
     }
 
 }

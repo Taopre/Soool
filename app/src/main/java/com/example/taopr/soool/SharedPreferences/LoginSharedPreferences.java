@@ -2,6 +2,7 @@ package com.example.taopr.soool.SharedPreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 import android.util.Log;
 
 import com.example.taopr.soool.Object.LoginSessionItem;
@@ -11,8 +12,10 @@ import com.google.gson.GsonBuilder;
 public class LoginSharedPreferences {
 
     private String nameOfShared = "LoginUser";
+    private String nameOfPWIv = "pwIv";
     private String keyOfShared = "LoginAccount";
     private String TAG = "쉐어드";
+
     public static void LoginUserSave(Context context, String key, String Value){
         SharedPreferences pref = context.getSharedPreferences("LoginUser", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -69,6 +72,26 @@ public class LoginSharedPreferences {
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNick = loginSessionItem.getAccountNick();
         return accountNick;
+    }
+
+    public void savePWIv(Context context, String key, byte[] iv){
+        SharedPreferences pref = context.getSharedPreferences(nameOfPWIv, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString(key, Base64.encodeToString(iv,Base64.DEFAULT));
+
+        Log.i(TAG, "savePWIv: " + Base64.encodeToString(iv,Base64.DEFAULT));
+        editor.commit();
+    }
+
+    public byte[] getPWIv(Context context, String key){
+        SharedPreferences pref = context.getSharedPreferences( nameOfPWIv, Context.MODE_PRIVATE);
+        String data = pref.getString(key, "aaaaa");
+
+        Log.i(TAG, "getPWIv: " + data);
+        byte[] Iv = Base64.decode(data,Base64.DEFAULT);
+
+        return Iv;
     }
 
 }

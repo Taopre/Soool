@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,23 @@ import com.example.taopr.soool.Object.LoginItem;
 import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Presenter.LoginPresenter;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.DeCryptor;
+import com.example.taopr.soool.Util.EnCryptor;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +45,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     LoginPresenter loginPresenter;
     LoginSessionItem loginSessionItem;
 
-
     @BindView(R.id.accountFindPwd) TextView tv_findpwd;
     @BindView(R.id.accountSignup) TextView tv_signup;
     @BindView(R.id.accountId)
@@ -36,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
     @BindView(R.id.accountLoginBtn) Button btn_login;
     @BindView(R.id.accountAutoLoginCheck)
     CheckBox cb_autologin;
+    private EnCryptor encryptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +65,8 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
 
         ButterKnife.bind(this);
         DoBinding(); // ui 선언 및 presenter 선언, presenter에서 넘어올 응답에 대한 변화 view? 선언까지
+
+        encryptor = new EnCryptor();
 
         //id 와 pwd를 입력하고
         //id가 있다면 login 없다면 wrong 메시지를 textview에 띄워주는 과정
@@ -107,48 +127,58 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
             Toast.makeText(this, "존재하지 않는 이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
         }
 
-//        if (response == true) {
-//            Intent intent = new Intent(this, MainActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(intent);
-//        }else {
-//            setConfirmText("Login Fail!!");
-//        }
     }
 
-    //이 함수는 LoginActivity(view) 이곳에서 서버로 부터 데이터 받아서 저장할려고 만들었다가 방법을 바꾸면서 사용안하게 되었기 때문에 주석처리 해두었음.
-//    @Override
-//    public void loginDataSend(LoginSessionItem item) {
-//        setConfirmText("From DB userdata :" + item.getAccountNo() + ", " + item.getAccountNick() + ", " + item.getAccountImage() + ", " +
-//                item.getAccountPoint() + ", " + item.getAccountBc() + ", " + item.getAccountCc());
-//
-//        Log.d(TAG, "loginDataSend: " + item.getAccountNo());
-//        Log.d(TAG, "loginDataSend: " + item.getAccountNick());
-//        Log.d(TAG, "loginDataSend: " + item.getAccountImage());
-//        Log.d(TAG, "loginDataSend: " + item.getAccountPoint());
-//        Log.d(TAG, "loginDataSend: " + item.getAccountBc());
-//        Log.d(TAG, "loginDataSend: " + item.getAccountCc());
-//
-////        if (cb_autologin.isChecked()) {
-////            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
-////                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
-////            // Gson 인스턴스 생성
-////            Gson gson = new GsonBuilder().create();
-////            // JSON 으로 변환
-////            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
-////            //shared에 객체 저장
-////            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
-////        }else {
-////            loginSessionItem = new LoginSessionItem(item.getAccountNo(), item.getAccountNick(), item.getAccountImage(), item.getAccountPoint(),
-////                    item.getAccountBc(), item.getAccountCc(), cb_autologin.isChecked());
-////            // Gson 인스턴스 생성
-////            Gson gson = new GsonBuilder().create();
-////            // JSON 으로 변환
-////            String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
-////            //shared에 객체 저장
-////            LoginSharedPreferences.LoginUserSave(this, "LoginAccount", userClass);
-////        }
-//    }
+    @Override
+    public void viewConfirmPw(LoginItem userItem, String enAccountPw) {
+
+        try {
+            DeCryptor deCryptor = new DeCryptor();
+            LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
+            byte[] iv = loginSharedPreferences.getPWIv(this,userItem.getId());
+            String encryPw = null;
+            encryPw = deCryptor.decryptData("soool_key",
+                    Base64.decode(enAccountPw,Base64.DEFAULT),iv);
+
+
+            if (userItem.getPwd().equals(encryPw)){
+                Log.i(TAG, "onResponse:  일치");
+                loginPresenter.login(userItem);
+            }
+
+            else{
+                Log.i(TAG, "onResponse: 불일치");
+
+                Toast.makeText(this, "존재하지 않는 이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (UnrecoverableEntryException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -157,12 +187,54 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
             case R.id.accountLoginBtn :
                 //로그인 버튼 리스너
                 //이메일 형식인지 아닌지 예외처리해서 맞다면 실행하게 처리해야함
+
                 LoginItem loginItem = new LoginItem();
-                Log.d(TAG, "login btn click: " + et_id.getText().toString() + "//" + et_pwd.getText().toString() + cb_autologin.isChecked());
                 loginItem.setId(et_id.getText().toString());
                 loginItem.setPwd(et_pwd.getText().toString());
+                Log.i(TAG, "onClick: 아이디 " + loginItem.getId());
+
+
+                /*LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
+                byte[] loginIv = loginSharedPreferences.getPWIv(this,loginItem.getId());
+
+                String textToEncrypt = et_pwd.getText().toString();
+
+                Log.i(TAG, "onClick: 비밀번호 " + et_pwd.getText().toString());
+
+                try {
+                   *//* final byte[] encryptedText = encryptor
+                            .encryptText("soool_key",textToEncrypt);*//*
+                    final byte[] encryptedText = encryptor.encryptText("soool_key",textToEncrypt,loginIv);
+
+                    loginItem.setPwd(Base64.encodeToString(encryptedText, Base64.DEFAULT));
+
+                    Log.i(TAG, "onClick: 암호" + loginItem.getPwd());
+
+                } catch (UnrecoverableEntryException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (KeyStoreException e) {
+                    e.printStackTrace();
+                } catch (NoSuchProviderException e) {
+                    e.printStackTrace();
+                } catch (NoSuchPaddingException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InvalidAlgorithmParameterException e) {
+                    e.printStackTrace();
+                } catch (SignatureException e) {
+                    e.printStackTrace();
+                } catch (BadPaddingException e) {
+                    e.printStackTrace();
+                } catch (IllegalBlockSizeException e) {
+                    e.printStackTrace();
+                }*/
                 loginItem.setAutologinStatus(cb_autologin.isChecked());
-                loginPresenter.login(loginItem);
+                loginPresenter.getPW(loginItem);
                 break;
             case R.id.accountFindPwd :
                 //비밀번호 찾기 텍뷰 리스너
@@ -183,6 +255,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 break;
         }
     }
+
 
 
     private void drawUnderline() {

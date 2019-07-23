@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,17 +30,34 @@ import com.example.taopr.soool.Dialog.NoticeDialog;
 import com.example.taopr.soool.Object.ProfileInfo;
 import com.example.taopr.soool.Presenter.ProfilePresenter;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.Util.DeCryptor;
+import com.example.taopr.soool.Util.EnCryptor;
 import com.example.taopr.soool.Util.Whatisthis;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
-import com.example.taopr.soool.Util.Whatisthis;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sangcomz.fishbun.FishBun;
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter;
 import com.sangcomz.fishbun.define.Define;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import android.util.Base64;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,6 +83,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ImageView profileImage;
     @BindView(R.id.profileProgress)
     ProgressBar profileProgress;
+
+    private EnCryptor enCryptor;
+    private DeCryptor deCryptor;
 
 
     private final String TAG = "마이 프로필 액티비티";
@@ -101,6 +122,19 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         ButterKnife.bind(this);
 
         loginSharedPreferences = new LoginSharedPreferences();
+
+
+        try {
+            deCryptor = new DeCryptor();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         permissionlistener = new PermissionListener() {
             @Override
@@ -175,9 +209,38 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     // 받아온 유저 프로필 정보에서 유저가 수정한 내용이 있을 경우에만 '저장하기' 버튼을 활성화
     @Override
     public void getProfileInfoSuccess(ProfileInfo profileInfo) {
+
+        Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+profileInfo.getAccountEmail()+".bin");
+        byte[] bytes;
+        String pwd = "";
+        try {
+            bytes = Files.readAllBytes(ttt);
+            pwd = deCryptor.decryptData("soool_key", Base64.decode(profileInfo.getAccountPw(),Base64.DEFAULT),bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableEntryException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+
         profileAcEmail.setText(profileInfo.getAccountEmail());
         profileAcNick.setText(profileInfo.getAccountNick());
-        profileAcPW.setText(profileInfo.getAccountPw());
+        profileAcPW.setText(pwd);
         if(!profileInfo.getAccountImage().equals("soool_default")){
             showProfileImage(profileInfo.getAccountImage());
         }
@@ -321,6 +384,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         subActionBarRight = findViewById(R.id.subActionBarRight);
         subActionBarLeft = findViewById(R.id.subActionBarLeft);
+        subActionBarLeftImage = findViewById(R.id.subActionBarLeftImage);
+
+        subActionBarLeftImage.setVisibility(View.GONE);
+        subActionBarLeft.setVisibility(View.VISIBLE);
 
         subActionBarLeft.setText(R.string.all_button_cancel);
         subActionBarRight.setText(R.string.all_button_save);

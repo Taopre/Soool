@@ -33,7 +33,7 @@
     <RelativeLayout
         android:id="@+id/noBookmark"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:visibility="invisible">
 
         <LinearLayout
@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/all_space_between_12dp"
                 android:textSize="@dimen/text_size_15dp"
+                android:layout_gravity="center"
                 android:text="@string/my_page_notice_no_bookmark" />
 
         </LinearLayout>

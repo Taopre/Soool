@@ -1,6 +1,7 @@
 package com.example.taopr.soool.Model;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
 
@@ -10,6 +11,7 @@ import com.example.taopr.soool.Networking.APIClient;
 import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Presenter.LoginPresenter;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.DeCryptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,6 +20,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -28,6 +41,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginModel {
 
@@ -44,6 +58,114 @@ public class LoginModel {
     public LoginModel(LoginPresenter loginPresenter, Context context) {
         this.loginPresenter = loginPresenter;
         this.context = context;
+    }
+
+    public void getPw(LoginItem userItem){
+        Observable.just(userItem.getId())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
+                .map(new Function<String, Boolean>()
+                {
+                    @Override
+                    public Boolean apply(String s) throws Exception
+                    {
+                        try
+                        {
+
+                            //Retrofit 사용 시 apiservice와 apiclient를 사용하자.
+                            //Retrofit 객체 불러와서 선언하는 부분.
+                            APIService service = APIClient.getClient().create(APIService.class);
+
+                            //Call함수로 LoginActivity(view)로부터 받은 인자를 서버로 넘기는 부분.
+                            Call<ResponseBody> callServer = service.getaccountPw(userItem.getId());
+
+                            //서버로 부터 응답을 받는 부분.
+                            callServer.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    try {
+                                        String msg = response.body().string();
+
+                                        Log.i(TAG, "onResponse: " + msg);
+                                        // 복호화
+
+                                        // 로그인 시 작성한 이메일이 가입된 이메일이 아닐경우
+                                        if (msg.equals("false")){
+                                            loginPresenter.loginResponse("nee");
+                                        }
+
+                                        // 이메일이 있는 경우
+                                        else{
+
+                                            login(userItem);
+
+                                        }
+                                    }
+                                    catch (IOException e) {
+                                        e.printStackTrace();
+                                    } /*catch (CertificateException e) {
+                                        e.printStackTrace();
+                                    } catch (NoSuchAlgorithmException e) {
+                                        e.printStackTrace();
+                                    } catch (KeyStoreException e) {
+                                        e.printStackTrace();
+                                    } catch (InvalidKeyException e) {
+                                        e.printStackTrace();
+                                    } catch (UnrecoverableEntryException e) {
+                                        e.printStackTrace();
+                                    } catch (InvalidAlgorithmParameterException e) {
+                                        e.printStackTrace();
+                                    } catch (NoSuchPaddingException e) {
+                                        e.printStackTrace();
+                                    } catch (BadPaddingException e) {
+                                        e.printStackTrace();
+                                    } catch (NoSuchProviderException e) {
+                                        e.printStackTrace();
+                                    } catch (IllegalBlockSizeException e) {
+                                        e.printStackTrace();
+                                    }
+*/
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                    Log.d(TAG, "onFailure: 실패");
+                                    Log.e(TAG, "onFailure: ", t);
+                                }
+                            });
+                        }
+                        catch(Exception e) {
+                            Log.d(TAG, "onFailure: 실패2");
+                            Log.e(TAG, "apply: ", e);
+                        }
+
+                        return true;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>()
+                {
+                    @Override
+                    public void onSubscribe(Disposable d)
+                    {
+                        Log.d(TAG, "onSubscribe : wfpowjefpwfepowfjwpfojwfepojfe");
+                    }
+                    @Override
+                    public void onNext(Boolean s)
+                    {
+                        Log.d(TAG, "onNext: wfpowjefpwfepowfjwpfojwfepojfe");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError : wfpowjefpwfepowfjwpfojwfepojfe");
+                    }
+                    @Override
+                    public void onComplete()
+                    {
+                        Log.d(TAG, "onComplete : wfpowjefpwfepowfjwpfojwfepojfe");
+                    }
+                });
     }
 
     //LoginActvity(view)로부터 입력받은 값을 model에서 로그인 처리를 위해 만든 메서드.
