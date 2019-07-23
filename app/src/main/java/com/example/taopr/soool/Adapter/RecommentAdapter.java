@@ -68,7 +68,6 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recomment, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -106,7 +105,6 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
         final int[] likeList = recommentitem.getLikeList();
         Arrays.sort(likeList);
         check = Arrays.binarySearch(likeList, accountNo);//생성자에 회원번호 추가
-        //Log.d(TAG, String.valueOf(check) + "@@@@@@@@@@@@@@@@@@@@@@@@@" + String.valueOf(position));
         //추후에 아이콘색 채워넣기로 바꿔야됨됨
 
         if (check >= 0) {
@@ -126,15 +124,12 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
             @Override
             public void onClick(View v) {
 
-                //RecommentItem recommentItemA = recommentitems.get(i);
-                Log.d(TAG, String.valueOf(check));
                 int commentORrecomment = 1;
                 if (recommentitem.getAccountNo() == 1) {
                     //좋아요 취소
                     int like_check = 0;
                     commentPresenter.likeRequest(postNo, commentNo, accountNo, like_check, commentORrecomment, recommentitem.getRecommentNo());
                     //이미 눌렀는데 또 누를경우
-                    Log.d(TAG, "과연 좋아요 눌렀을때");
                     if (recommentitem.getLikeCount() == 0) {
                         String update_like_count = String.valueOf(recommentitem.getLikeCount());
 
@@ -144,10 +139,8 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
                         viewHolder.recommentLike.setText("추천 " + update_like_count);
                     }
 
-                    //String update_like_count = String.valueOf(commentitem.getLikeCount()- 1);
                     viewHolder.recommentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
                     recommentitem.setAccountNo(0);
-                    //notifyDataSetChanged();
                 } else if (recommentitem.getAccountNo() == 0) {
                     //좋아요
                     int like_check = 1;
@@ -171,21 +164,20 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
         });
 
 
-        //holder.comment_rowBG.setVisibility(View.GONE);
         View.OnClickListener positiveListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                if (recommentitem.getCommentWriter().equals(accountNick)) {
+                if (recommentitem.getCommentWriter().equals(accountNick))
+                {
                     recommentPosition = i;
                     commentPresenter.commentDeleteRequest(postNo, commentNo, recommentitem.recommentNo);
-                    Log.d(TAG, "onClick: recommentDelete");
-                    Log.d(TAG, "onClick: recommentDelete" + String.valueOf(recommentitem.recommentNo));
-                    Log.d(TAG, "onClick: recommentDelete" + String.valueOf(commentNo));
-                } else {
-                    Toast.makeText(context, "본인 댓글만 삭제 하실 수 있습니다", Toast.LENGTH_LONG).show();
                 }
+                else
+                 {
+                    Toast.makeText(context, "본인 댓글만 삭제 하실 수 있습니다", Toast.LENGTH_LONG).show();
+                 }
                 noticeDialog.dismiss();
             }
         };
@@ -196,7 +188,6 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
             }
         };
 
-        //viewHolder.recomment_row.setAlpha(0.01f);
         viewHolder.recomment_row.setLongClickable(true);
         viewHolder.recomment_row.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -221,7 +212,7 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
 
 
     @Override
-    public void getCommentDataSuccess(ArrayList<CommentItem> commentitem) {
+    public void getCommentDataSuccess(ArrayList<CommentItem> commentitem,int position) {
 
     }
 

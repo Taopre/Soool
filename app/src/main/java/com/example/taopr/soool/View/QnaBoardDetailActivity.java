@@ -121,6 +121,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     boolean commentDeleteRecommentDelete = false;
     RelativeLayout noComment_notice;
     RelativeLayout infoCommentContainer;
+    View divideFrame;
+    TextView noComment_notice_text;
 
 
     @Override
@@ -404,6 +406,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         comment_layout_top = findViewById(R.id.comment_layout_top);
         noComment_notice = findViewById(R.id.noComment_notice);
         infoCommentContainer = findViewById(R.id.infoCommentContainer);
+        divideFrame = findViewById(R.id.divideFrame);
+        noComment_notice_text = findViewById(R.id.noComment_notice_text);
 
 
         // 뷰의 리스너 선언 부분입니다.
@@ -646,10 +650,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 }
 
                 keyboard.hideKeyboard(et_commentWrite);
-                //InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                //imm.hideSoftInputFromWindow(et_commentWrite.getWindowToken(),0);
-
-
                 break;
         }
     }
@@ -909,7 +909,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void getCommentDataSuccess(ArrayList<CommentItem> commentitem)
+    public void getCommentDataSuccess(ArrayList<CommentItem> commentitem,int position)
     {
         this.commentitem = commentitem;
         //댓글리스트데이터 성공적으로 받아왔을때 댓글어댑터 생성
@@ -918,9 +918,14 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         commentList.setAdapter(commentAdapter);
         setCommentList();
 
-
         commentAdapter.toss_commentNo_Methods(new CommentAdapter.toss_commentNo_interface()
         {
+            @Override
+            public void toss_comment_position(int position)
+            {
+                commentAdapter.getCommentDataSuccess(commentitem,comment_position);
+            }
+
             @Override
             public void toss_commentNo_atActivity(int commentNo,String commentWriter,int position) {
                 comment_position = position;
@@ -962,24 +967,28 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             {
                 commentPresenter.likeRequest(postNo,commentNo,like_check,commentORrecomment,0,recommentNo);
             }
-
-
         });
+
     }
 
     public void setCommentList()
     {
         if(commentitem.size() == 0)
         {
+
+            int topPadding =
+                    (int) this.getResources().getDimension(R.dimen.qnaDetail_commentList_noComment_text_padding);
+            noComment_notice_text.setPaddingRelative(0,topPadding,0,topPadding);
             commentList.setVisibility(View.INVISIBLE);
             noComment_notice.setVisibility(View.VISIBLE);
+            divideFrame.setVisibility(View.VISIBLE);
 
         }
         else
         {
             commentList.setVisibility(View.VISIBLE);
             noComment_notice.setVisibility(View.INVISIBLE);
-
+            divideFrame.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -1060,8 +1069,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         //대댓글 작성
         if (response == 0)
         {
-            commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_position);
 
+            commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_position);
             commentList.requestFocus(commentNo - 1);
         }
 
@@ -1114,7 +1123,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             }, 200);
         }
     }
-
 
 
     @Override

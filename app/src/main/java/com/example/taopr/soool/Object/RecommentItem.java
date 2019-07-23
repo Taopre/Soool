@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class RecommentItem
 {
+    @SerializedName("commentNo")
+    public int commentNo;
     @SerializedName("recommentNo")
     public int recommentNo;
     @SerializedName("accountNo")
@@ -27,8 +29,9 @@ public class RecommentItem
     String TAG = "RecommentItem";
 
 
-    public RecommentItem(int recommentNo, int accountNo, String commentWriter, String date, String commentContent,int likeCount,int[] likeList)
+    public RecommentItem(int commentNo,int recommentNo, int accountNo, String commentWriter, String date, String commentContent,int likeCount,int[] likeList)
     {
+        this.commentNo = commentNo;
         this.recommentNo = recommentNo;
         this.accountNo = accountNo;
         this.commentWriter = commentWriter;
@@ -38,6 +41,14 @@ public class RecommentItem
         this.likeList = likeList;
 
         Log.d(TAG, "생성완료!");
+    }
+
+    public int getCommentNo() {
+        return commentNo;
+    }
+
+    public void setCommentNo(int commentNo) {
+        this.commentNo = commentNo;
     }
 
     public int getRecommentNo()

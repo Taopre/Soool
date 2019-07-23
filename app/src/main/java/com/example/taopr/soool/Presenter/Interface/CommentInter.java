@@ -39,7 +39,7 @@ public interface CommentInter {
 
     public interface View {
         //댓글 리스트받는 부분
-        void getCommentDataSuccess(ArrayList<CommentItem> commentitem);
+        void getCommentDataSuccess(ArrayList<CommentItem> commentitem,int position);
 
         void getCommentDataFail(String message);
 

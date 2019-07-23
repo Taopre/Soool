@@ -54,4 +54,9 @@
     <!-- 답글숨기기 -->
     <dimen name="recomment_hide_padding">83.2dp</dimen>
     <dimen name="recomment_view_padding">74dp</dimen>
+    <!-- 댓글없을때 notice text padding -->
+    <dimen name="qnaDetail_commentList_noComment_text_padding">150dp</dimen>
+    <dimen name="infoDetail_commentList_noComment_text_padding">75dp</dimen>
+
+
 </resources>
