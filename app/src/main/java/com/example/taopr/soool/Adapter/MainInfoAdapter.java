@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,8 @@ public class MainInfoAdapter extends PagerAdapter{
     private  String[] tags = new String[0];
     private String TAG = "홈 메인 정보 어댑터";
     private TimeCalculator timeCalculator;
+    SparseArray<View> views = new SparseArray<View>();
+
 
 
     public interface OnItemClick {
@@ -115,7 +118,7 @@ public class MainInfoAdapter extends PagerAdapter{
             mainInfoTitle.setText(infoItem.getTitle());
             mainInfoComments.setText(String.valueOf(infoItem.getComments()));
             mainInfoWriter.setText(infoItem.getWriter());
-            mainInfoViews.setText(String.valueOf(position));
+            mainInfoViews.setText(String.valueOf(infoItem.getViews()));
 
             mainInfoTotalConnt.setText("3"); // 현재는 메인페이지에서 정보글은 3개로 픽스해서 보여주고 있음
             mainInfoCurrentPos.setText(String.valueOf(position+1));
@@ -152,6 +155,7 @@ public class MainInfoAdapter extends PagerAdapter{
 
         // 뷰페이저에 추가.
         container.addView(view) ;
+        views.put( position, view );
         return view ;
     }
 
@@ -165,6 +169,7 @@ public class MainInfoAdapter extends PagerAdapter{
     public void destroyItem(ViewGroup container, int position, Object object) {
         // 뷰페이저에서 삭제.
         container.removeView((View) object);
+        views.remove(position);
     }
 
     @Override
@@ -177,5 +182,34 @@ public class MainInfoAdapter extends PagerAdapter{
         Log.i(TAG, "getInfoItem: 포지션 " + position);
         return infoItems.get(position);
     }
+
+    public void infoItemUpdate(InfoItem infoItem,int position){
+        Log.i(TAG, "infoItemUpdate: 인포" + position);
+        infoItems.set(position,infoItem);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        int key = 0;
+
+        for(int i = 0; i < views.size(); i++) {
+
+            key = views.keyAt(i);
+
+            View view = views.get(key);
+
+        }
+
+
+        super.notifyDataSetChanged();
+    }
+    @Override
+    public int getItemPosition(Object object) {
+        Log.i(TAG, "getItemPosition: 인포");
+        return POSITION_NONE;
+
+    }
+
 
 }

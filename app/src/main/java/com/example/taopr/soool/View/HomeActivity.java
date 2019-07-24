@@ -393,12 +393,11 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     // Home 액티비티에서는 MyBoard 프래그먼트에서 알림을 받으면 마이페이지 프래그먼트에 전달한다
     @Override
     public void updateProfileForMyBoard() {
-        Log.i(TAG, "updateProfileForMyBoard: ");
         if (mypageFragment != null){
+            Log.i(TAG, "updateProfileForMyBoard: ");
             mypageFragment.updateProfile();
         }
     }
-
 
 
     @Override
@@ -437,7 +436,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
     @Override
     public void qnaUpdateItem(QnaBoardItem qnaBoardItem, int actionKind,boolean updatedByUser) {
-
+        Log.i(TAG, "qnaUpdateItem: ");
         if (mypageFragment != null && updatedByUser){
             mypageFragment.updateMyBoard(qnaBoardItem,actionKind);
         }
@@ -452,6 +451,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     //
     @Override
     public void mainUpdateQnaItem(QnaBoardItem qnaBoardItem, int actionKind,boolean updatedByUser) {
+        Log.i(TAG, "mainUpdateQnaItem: ");
         if (mypageFragment != null && updatedByUser){
             mypageFragment.updateMyBoard(qnaBoardItem,actionKind);
         }
@@ -466,13 +466,11 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
     }
 
-
-
     @Override
     public void myBoardUpdateItem(QnaBoardItem qnaBoardItem, int actionKind) {
         // main 페이지에서는 조회수 순으로 보여주기 때문에 새로 작성한 글에 대해서는
         // main 에 추가하지 않도록 예외처리
-
+        Log.i(TAG, "myBoardUpdateItem: ");
         if (mainFragment != null && actionKind != 0){
             mainFragment.updateQnaBoardItem(qnaBoardItem,actionKind);
         }

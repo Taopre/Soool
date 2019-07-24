@@ -1103,7 +1103,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
         };
 
         CanclenoticeDialog = new NoticeDialog(this,
-                "작성 중인 글을 취소하시겠습니까? 뒤로 가기 선택 시, 작성 중인 글은 저장되지 않습니다.", false, "예",
+                "작성 중인 글을 취소하시겠습니까?\n 취소 시, 작성 중인 글은 저장되지 않습니다.", false, "예",
                 "아니요", positiveListener, negativeListener);
         CanclenoticeDialog.show();
     }

@@ -141,10 +141,8 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
             }
         });
 
-
         return view;
     }
-
 
 
     @Override
@@ -169,7 +167,6 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
             public void onItemClick(View view, int position) {
                 infoFmPresenter.sendItem(infoItems.get(position), getActivity(), position);
             }
-
             @Override
             public void onLongItemClick(View view, int position) {
                 infoFmPresenter.sendItem(infoItems.get(position), getActivity(), position);
@@ -177,16 +174,13 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
         });
     }
 
-
     @Override
     public void onRefresh() {
         // 글 목록을 새로고침 할 경우에 서버에 다시 요청보내기
         // 페이징 넘버를 여기서 초기화한다는 건 무슨말일까? (qnaFragment.java onRefresh()참조)
 
         infoFmPresenter.loadData(1, accountNo, -1);
-
     }
-
 
     @Override
     public void getDataSuccess(ArrayList<InfoItem> infoItems, int loadingKind) {
@@ -198,8 +192,7 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
         if (infoItems.size() == 0) {
             // 더이상 받아올 게시물이 없을 때 (end of page)
             // (stringName => no_more_post로 변경하면 좋겠군)
-            Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
-
+           // Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
         } else {
 
             switch (loadingKind){
