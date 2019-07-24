@@ -64,7 +64,6 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
         holder.voteContentValue.setText((editModelArrayList.get(position).getVoteboard())+"");
         holder.itemView.setTag(position);
         holder.textSelect.setVisibility(View.INVISIBLE);
-        Log.d(TAG, "투표값 "+editModelArrayList.get(position).getVoteboard()+"///"+voteTotalNums+"///"+voteFlag);
         holder.progressBar.post(new Runnable() {
             @Override
             public void run() {
@@ -85,13 +84,10 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
         if (voteFlag == true) {
             holder.progressBar.setVisibility(View.VISIBLE);
             holder.voteContentValue.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onBindViewHolder: 포지션이당"+userSelectPos);
             if (position != (userSelectPos - 1)) {
-                Log.d(TAG, "onBindViewHolder: 틀린 포지션이당"+position);
                 holder.textSelect.setVisibility(View.INVISIBLE);
                 holder.voteContentValue.setTextColor(Color.parseColor("#9d9d97"));
             } else {
-                Log.d(TAG, "onBindViewHolder: 맞는 포지션이당"+position);
                 holder.textSelect.setVisibility(View.VISIBLE);
                 holder.textView.setTextColor(Color.parseColor("#08883e"));
                 holder.voteContentValue.setTextColor(Color.parseColor("#08883e"));
@@ -99,7 +95,6 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
         }
 
         if (alreadyVote == true) {
-            Log.d("adapter", "onBindViewHolder: 투표끝 작동되지마");
             clickListener = null;
         }
     }
@@ -133,7 +128,6 @@ public class QnaBoardDetailVoteAdapter extends RecyclerView.Adapter<QnaBoardDeta
                     if (clickListener != null) {
                         clickListener.onListVoteListClick(getAdapterPosition(), v);
                     } else {
-                        Log.d("adapter", "onClick: 끝나라!!!");
                     }
                 }
             });
