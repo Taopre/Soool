@@ -490,7 +490,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         Toast.makeText(v.getContext(),"내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onClick: 내용을 입력해주세요.");
                     } else if (boardImagePath == null) {
-
+                        Log.i(TAG, "onClick: "+tag);
                         // 1. 투표가 표함되는지 안되는지 선 체크
                         // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
                         // 3. 투표가 없다면
@@ -708,29 +708,39 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             if (arrayList.size() == 0) {
                                 tv_qnaboardBeforeTag.setVisibility(View.VISIBLE);
                                 h_scrollView.setVisibility(View.GONE);
+
+                                if (tagArray.size() > 0) {
+                                    tv_qnaboardBeforeTag.setVisibility(View.GONE);
+                                    h_scrollView.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 tv_qnaboardBeforeTag.setVisibility(View.GONE);
                                 h_scrollView.setVisibility(View.VISIBLE);
+                                tagArray = arrayList;
                             }
 
-                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), arrayList, 0, new QnaBoardTagAdapter.ClickListener(){
+                            qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), tagArray, 0, new QnaBoardTagAdapter.ClickListener(){
                                 @Override
                                 public void ListClick(int position, View view) {
-                                    Log.i(TAG, "ListClick: 삭제");
+                                    tag ="";
                                     tagArray.remove(position);
                                     qnaBoardTagAdapter.notifyDataSetChanged();
+                                    for (int i=0; i<tagArray.size(); i++) {
+                                        if (i == tagArray.size() - 1)
+                                            tag += tagArray.get(i);
+                                        else if (i < tagArray.size())
+                                            tag += tagArray.get(i) + "@##@";
+                                    }
                                 }
                             });
                             rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTag.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
-                            tagArray = arrayList;
-
-                            for (int i = 0; i < arrayList.size(); i++) {
-                                if (i == arrayList.size() - 1)
-                                    tag += arrayList.get(i);
-                                else if (i < arrayList.size())
-                                    tag += arrayList.get(i) + "@##@";
+                            for (int i = 0; i < tagArray.size(); i++) {
+                                if (i == tagArray.size() - 1)
+                                    tag += tagArray.get(i);
+                                else if (i < tagArray.size())
+                                    tag += tagArray.get(i) + "@##@";
                             }
                         }
 
