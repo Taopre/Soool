@@ -40,6 +40,8 @@ import com.sangcomz.fishbun.FishBun;
 import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter;
 import com.sangcomz.fishbun.define.Define;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,6 +51,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.SignatureException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -109,7 +112,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private PermissionListener permissionlistener;
     private LoginSharedPreferences loginSharedPreferences;
-    int accountNo;
+    private int accountNo;
+    private String accountNoSt;
+
+    private String decAccountPw = null; // 복호화된 유저 비밀번호
 
 
     // 권한
@@ -182,6 +188,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void getProfileIntent(){
         Intent intent = getIntent();
         accountNo = intent.getIntExtra("accountNo",0);
+        accountNoSt = String.valueOf(accountNo);
         profilePresenter.getProfileInfo(accountNo);
 
     }
@@ -210,12 +217,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void getProfileInfoSuccess(ProfileInfo profileInfo) {
 
-        Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+profileInfo.getAccountEmail()+".bin");
+        Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin");
+
         byte[] bytes;
-        String pwd = "";
         try {
             bytes = Files.readAllBytes(ttt);
-            pwd = deCryptor.decryptData("soool_key", Base64.decode(profileInfo.getAccountPw(),Base64.DEFAULT),bytes);
+            decAccountPw = deCryptor.decryptData("soool_key", Base64.decode(profileInfo.getAccountPw(),Base64.DEFAULT),bytes);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (UnrecoverableEntryException e) {
@@ -240,7 +247,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         profileAcEmail.setText(profileInfo.getAccountEmail());
         profileAcNick.setText(profileInfo.getAccountNick());
-        profileAcPW.setText(pwd);
+        profileAcPW.setText(decAccountPw);
         if(!profileInfo.getAccountImage().equals("soool_default")){
             showProfileImage(profileInfo.getAccountImage());
         }
@@ -404,12 +411,70 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.subActionBarLeft:
                 pageFinish();
                 break;
-            case R.id.subActionBarRight:
-                ProfileInfo changeProfileInfo = new ProfileInfo(profileAcEmail.getText().toString(),
-                        profileAcNick.getText().toString(),profileInfo.getAccountImage(),
-                        profileAcPW.getText().toString(),capacitySpiPosition,favoriteSpiPosition,reasonSpiPosition);
 
-                profilePresenter.changeProfileInfo(changeProfileInfo);
+            // '저장하기' 버튼 클릭
+            case R.id.subActionBarRight:
+
+                String modifiedPW = profileAcPW.getText().toString();
+
+                // 비밀번호 변경시 변경한 암호화 값을 디비에 저장하고 iv 값을 바이너리 파일로 프론트에 저장
+                if(!decAccountPw.equals(modifiedPW)){
+                    try {
+                        enCryptor = new EnCryptor();
+                        // 기존에 저장된 iv 삭제 후 저장
+
+                        String enAccountPw = Base64.encodeToString(enCryptor.encryptText("soool_key",modifiedPW), Base64.DEFAULT);
+                        String filePath = Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin";
+                        File f = new File(filePath);
+                        if (f.delete()){
+                            FileOutputStream test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountNoSt+".bin");
+
+                            test.write(enCryptor.getIv());
+                            test.close();
+
+                            ProfileInfo changeProfileInfo = new ProfileInfo(profileAcEmail.getText().toString(),
+                                    profileAcNick.getText().toString(), profileInfo.getAccountImage(),
+                                    enAccountPw, capacitySpiPosition, favoriteSpiPosition, reasonSpiPosition);
+
+                            profilePresenter.changeProfileInfo(changeProfileInfo);
+                        }
+                        else{
+                            Toast.makeText(this, "파일 접근 권한이 없습니다", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    } catch (UnrecoverableEntryException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (KeyStoreException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchProviderException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchPaddingException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InvalidAlgorithmParameterException e) {
+                        e.printStackTrace();
+                    } catch (SignatureException e) {
+                        e.printStackTrace();
+                    } catch (BadPaddingException e) {
+                        e.printStackTrace();
+                    } catch (IllegalBlockSizeException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                else {
+                    ProfileInfo changeProfileInfo = new ProfileInfo(profileAcEmail.getText().toString(),
+                            profileAcNick.getText().toString(), profileInfo.getAccountImage(),
+                            profileInfo.getAccountPw(), capacitySpiPosition, favoriteSpiPosition, reasonSpiPosition);
+
+                    profilePresenter.changeProfileInfo(changeProfileInfo);
+                }
 
                 break;
         }

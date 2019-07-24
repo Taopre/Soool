@@ -13,6 +13,7 @@ import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.Util.DeCryptor;
 import com.example.taopr.soool.Util.EnCryptor;
+import com.example.taopr.soool.View.LoginActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -114,7 +115,7 @@ public class SignUpModel {
                                             }
                                         //}
                                     } catch (IOException e) {
-                                        signUpPresenter.signUpReqResponse(false);
+                                        signUpPresenter.signUpReqResponse(false,"");
                                         Log.i(TAG, "onResponse: IOException");
                                     } catch (JSONException e) {
                                         Toast.makeText(context, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
@@ -124,13 +125,13 @@ public class SignUpModel {
 
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                    signUpPresenter.signUpReqResponse(false);
+                                    signUpPresenter.signUpReqResponse(false,"");
                                     Log.i(TAG, "onFailure: ");
                                 }
                             });
                         }
                         catch(Exception e) {
-                            signUpPresenter.signUpReqResponse(false);
+                            signUpPresenter.signUpReqResponse(false,"");
                             Log.i(TAG, "apply: Exception");
                         }
 
@@ -190,68 +191,35 @@ public class SignUpModel {
                                     try {
                                         String msg = response.body().string();
                                         JSONArray jsonArray = new JSONArray(msg);
-                                        Log.i(TAG, "암호 onResponse: 1");
                                         for (int i=0; i<jsonArray.length(); i++) {
                                             JSONObject returnData = jsonArray.getJSONObject(i);
 
                                             String result = returnData.getString("result");
                                             int accountNo = returnData.getInt("accountNo");
 
-
-                                          /*  try {
-                                                DeCryptor deCryptor = new DeCryptor();
-                                                try {
-                                                    Log.i(TAG, "onResponse: 디코딩" +
-                                                            deCryptor.decryptData("android_key",
-                                                                    Base64.decode(accountPW,Base64.DEFAULT),
-                                                                    loginSharedPreferences.getPWIv(context,accountNick)));
-                                                } catch (UnrecoverableEntryException e) {
-                                                    e.printStackTrace();
-                                                } catch (NoSuchProviderException e) {
-                                                    e.printStackTrace();
-                                                } catch (NoSuchPaddingException e) {
-                                                    e.printStackTrace();
-                                                } catch (InvalidKeyException e) {
-                                                    e.printStackTrace();
-                                                } catch (BadPaddingException e) {
-                                                    e.printStackTrace();
-                                                } catch (IllegalBlockSizeException e) {
-                                                    e.printStackTrace();
-                                                } catch (InvalidAlgorithmParameterException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            } catch (CertificateException e) {
-                                                e.printStackTrace();
-                                            } catch (NoSuchAlgorithmException e) {
-                                                e.printStackTrace();
-                                            } catch (KeyStoreException e) {
-                                                e.printStackTrace();
-                                            }*/
-
-
-
                                             if(result.equals("true")) {
 
-                                                Log.i(TAG, "onResponse: 암호 3");
                                                 item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png", 50, 0, 0, true);
                                                 // Gson 인스턴스 생성
                                                 Gson gson = new GsonBuilder().create();
                                                 // JSON 으로 변환
                                                 String userClass = gson.toJson(item, LoginSessionItem.class);
                                                 //shared에 객체 저장
+                                                Log.i(TAG, "onResponse: 암호 " + accountNo);
                                                 LoginSharedPreferences.LoginUserSave(context, "LoginAccount", userClass);
+                                                Log.i(TAG, "onCreate: 비번" + LoginSharedPreferences.getAccountNo(context,"LoginAccount"));
                                                 //회원가입 성공을 View에게 전송.
-                                                signUpPresenter.signUpReqResponse(true);
+                                                signUpPresenter.signUpReqResponse(true,String.valueOf(accountNo));
                                             } else if (result.equals("false")) {
                                                 Log.d(TAG, "onResponse false : false");
                                                 //회원가입 실패를 View에게 전송.
-                                                signUpPresenter.signUpReqResponse(false);
+                                                signUpPresenter.signUpReqResponse(false,"");
                                             }
                                         }
                                     }
 
                                     catch (IOException e) {
-                                        signUpPresenter.signUpReqResponse(false);
+                                        signUpPresenter.signUpReqResponse(false,"");
                                         Log.i(TAG, "Sign Up onResponse: IOException");
                                     }
                                     catch (JSONException e) {
@@ -265,7 +233,7 @@ public class SignUpModel {
                                 // TODO: 후에 각각 상황에 맞는 처리를 해줘야 할듯
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                    signUpPresenter.signUpReqResponse(false);
+                                    signUpPresenter.signUpReqResponse(false,"");
                                     Log.i(TAG, "Sign Up onFailure: ");
                                     Toast.makeText(context, context.getString(R.string.toast_notice_page_error), Toast.LENGTH_SHORT).show();
                                 }
@@ -273,7 +241,7 @@ public class SignUpModel {
                         }
 
                         catch(Exception e) {
-                            signUpPresenter.signUpReqResponse(false);
+                            signUpPresenter.signUpReqResponse(false,"");
                             Log.i(TAG, "Sign Up apply: Exception");
                         }
 

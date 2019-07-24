@@ -285,7 +285,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
 
     private void setLogout() {
-        LoginSharedPreferences.LoginUserDelete(HomeActivity.this,"LoginAccount");
+        LoginSharedPreferences.LoginUserLogOut(HomeActivity.this,"LoginAccount");
         Intent intent = new Intent(HomeActivity.this, StartingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -91,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
 
     private String TAG = "SignUpActivity";
     private byte[] accountPWIv;
-
+    private EnCryptor enCryptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +102,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         actionBar.hide();
 
         ButterKnife.bind(this);
+
+        enCryptor = new EnCryptor();
         signUpPresenter = new SignUpPresenter(SignUpActivity.this, this);
         signUpPresenter.setView(this);
 
@@ -357,17 +359,28 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     }
 
     //회원가입에 대한 서버로 부터의 응답을 View에서 처리하기 위해 만든 메서드.
-    public void signUpReqResponseGoToVIew (boolean response) {
+    public void signUpReqResponseGoToVIew (boolean response,String accountNo) {
         if( response == false){
             Toast.makeText(this, "다시 시도해주세요", Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(this, "가입 성공! 환영합니다 :)", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, HomeActivity.class);
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            // 암호화 IV 바이너리 파일로 저장
+            try {
+                FileOutputStream test = null;
+                test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountNo+".bin");
+                test.write(enCryptor.getIv());
+                test.close();
+
+                Toast.makeText(this, "가입 성공! 환영합니다 :)", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, HomeActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -441,19 +454,20 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
 
         else{
 
-            EnCryptor enCryptor = new EnCryptor();
+            // EnCryptor enCryptor = new EnCryptor();
             LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
 
             String accountPwEn=null;
 
             try {
 
-                FileOutputStream test = null;
+               // FileOutputStream test = null;
 
                 accountPwEn = Base64.encodeToString(enCryptor.encryptText("soool_key",accountPWSt), Base64.DEFAULT);
-                test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountEmailSt+".bin");
+                //loginSharedPreferences.savePWIv(this,accountEmailSt,enCryptor.getIv());
+                /*test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountEmailSt+".bin");
                 test.write(enCryptor.getIv());
-                test.close();
+                test.close();*/
             } catch (UnrecoverableEntryException e) {
                 e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
@@ -478,7 +492,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
                 e.printStackTrace();
             }
 
-            loginSharedPreferences.savePWIv(this,accountEmailSt,enCryptor.getIv());
+
 
             signUpPresenter.signUpReq(accountEmailSt,accountPwEn,accountNickSt);
         }

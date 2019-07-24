@@ -93,38 +93,14 @@ public class LoginModel {
                                         if (msg.equals("false")){
                                             loginPresenter.loginResponse("nee");
                                         }
-
                                         // 이메일이 있는 경우
                                         else{
-
-                                            login(userItem);
-
+                                            loginPresenter.confirmPw(userItem,msg);
                                         }
                                     }
                                     catch (IOException e) {
                                         e.printStackTrace();
-                                    } /*catch (CertificateException e) {
-                                        e.printStackTrace();
-                                    } catch (NoSuchAlgorithmException e) {
-                                        e.printStackTrace();
-                                    } catch (KeyStoreException e) {
-                                        e.printStackTrace();
-                                    } catch (InvalidKeyException e) {
-                                        e.printStackTrace();
-                                    } catch (UnrecoverableEntryException e) {
-                                        e.printStackTrace();
-                                    } catch (InvalidAlgorithmParameterException e) {
-                                        e.printStackTrace();
-                                    } catch (NoSuchPaddingException e) {
-                                        e.printStackTrace();
-                                    } catch (BadPaddingException e) {
-                                        e.printStackTrace();
-                                    } catch (NoSuchProviderException e) {
-                                        e.printStackTrace();
-                                    } catch (IllegalBlockSizeException e) {
-                                        e.printStackTrace();
                                     }
-*/
                                 }
 
                                 @Override
