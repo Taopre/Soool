@@ -5,6 +5,8 @@ public class LoginSessionItem {
     private int accountNo, accountPoint, accountBc, accountCc;
     private boolean accountAutoLogin;
 
+
+
     public LoginSessionItem(int _accountNo, String _accountNick, String _accountImage,
                             int _accountPoint, int _accountBc, int _accountCc, boolean _accountAutoLogin) {
         this.accountNo = _accountNo; //회원 번호
@@ -42,6 +44,10 @@ public class LoginSessionItem {
 
     public boolean isAccountAutoLogin() {
         return accountAutoLogin;
+    }
+
+    public void setAccountAutoLogin(boolean accountAutoLogin) {
+        this.accountAutoLogin = accountAutoLogin;
     }
 
     public void setAccountNick(String accountNick) {

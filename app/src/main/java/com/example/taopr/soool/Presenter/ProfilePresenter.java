@@ -44,7 +44,6 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
                 new APICallback<ProfileInfo>() {
                     @Override
                     public void onSuccess(ProfileInfo profileInfo) {
-                        Log.i(TAG, "onSuccess: 프로필 "+ profileInfo.getAccountEmail());
                         view.getProfileInfoSuccess(profileInfo);
                     }
 

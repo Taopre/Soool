@@ -2,6 +2,7 @@ package com.example.taopr.soool.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -21,8 +22,13 @@ import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
 import com.example.taopr.soool.Util.DeCryptor;
 import com.example.taopr.soool.Util.EnCryptor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
@@ -68,6 +74,8 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
 
         encryptor = new EnCryptor();
 
+        Log.i(TAG, "onCreate: 비번" + LoginSharedPreferences.getAccountNo(LoginActivity.this,"LoginAccount"));
+
         //id 와 pwd를 입력하고
         //id가 있다면 login 없다면 wrong 메시지를 textview에 띄워주는 과정
         //1. id 입력
@@ -80,16 +88,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         btn_login.setOnClickListener(this);
         tv_findpwd.setOnClickListener(this);
         tv_signup.setOnClickListener(this);
-//        btn_login.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                LoginItem loginItem = new LoginItem();
-//                Log.d("onClick", et_id.getText().toString() + "//" + et_pwd.getText().toString());
-//                loginItem.setId(et_id.getText().toString());
-//                loginItem.setPwd(et_pwd.getText().toString());
-//                loginPresenter.login(loginItem);
-//            }
-//        });
 
 
     }
@@ -126,29 +124,36 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
         } else if (response.equals("nee")) {
             Toast.makeText(this, "존재하지 않는 이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
         }
-
     }
 
+    // 유저가 입력한 비밀번호와 디비에 암호화되서 저장된 값과 일치하지는 확인
     @Override
     public void viewConfirmPw(LoginItem userItem, String enAccountPw) {
 
         try {
             DeCryptor deCryptor = new DeCryptor();
-            LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
-            byte[] iv = loginSharedPreferences.getPWIv(this,userItem.getId());
-            String encryPw = null;
-            encryPw = deCryptor.decryptData("soool_key",
-                    Base64.decode(enAccountPw,Base64.DEFAULT),iv);
+
+            String accountNoSt = String.valueOf(LoginSharedPreferences.getAccountNo(LoginActivity.this,"LoginAccount"));
+            Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin");
+            byte[] pwIv;
+            pwIv = Files.readAllBytes(ttt);
+
+            //LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
+            //byte[] iv = loginSharedPreferences.getPWIv(this,userItem.getId());
+            String decPw = null;
+
+            decPw = deCryptor.decryptData("soool_key",
+                    Base64.decode(enAccountPw,Base64.DEFAULT),pwIv);
 
 
-            if (userItem.getPwd().equals(encryPw)){
+            if (userItem.getPwd().equals(decPw)){
+                Log.i(TAG, "viewConfirmPw: 작성한 값 " + userItem.getPwd() + " 디비 값 :" + decPw);
                 Log.i(TAG, "onResponse:  일치");
                 loginPresenter.login(userItem);
             }
 
             else{
                 Log.i(TAG, "onResponse: 불일치");
-
                 Toast.makeText(this, "존재하지 않는 이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
             }
 
@@ -193,46 +198,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 loginItem.setPwd(et_pwd.getText().toString());
                 Log.i(TAG, "onClick: 아이디 " + loginItem.getId());
 
-
-                /*LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
-                byte[] loginIv = loginSharedPreferences.getPWIv(this,loginItem.getId());
-
-                String textToEncrypt = et_pwd.getText().toString();
-
-                Log.i(TAG, "onClick: 비밀번호 " + et_pwd.getText().toString());
-
-                try {
-                   *//* final byte[] encryptedText = encryptor
-                            .encryptText("soool_key",textToEncrypt);*//*
-                    final byte[] encryptedText = encryptor.encryptText("soool_key",textToEncrypt,loginIv);
-
-                    loginItem.setPwd(Base64.encodeToString(encryptedText, Base64.DEFAULT));
-
-                    Log.i(TAG, "onClick: 암호" + loginItem.getPwd());
-
-                } catch (UnrecoverableEntryException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (KeyStoreException e) {
-                    e.printStackTrace();
-                } catch (NoSuchProviderException e) {
-                    e.printStackTrace();
-                } catch (NoSuchPaddingException e) {
-                    e.printStackTrace();
-                } catch (InvalidKeyException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InvalidAlgorithmParameterException e) {
-                    e.printStackTrace();
-                } catch (SignatureException e) {
-                    e.printStackTrace();
-                } catch (BadPaddingException e) {
-                    e.printStackTrace();
-                } catch (IllegalBlockSizeException e) {
-                    e.printStackTrace();
-                }*/
                 loginItem.setAutologinStatus(cb_autologin.isChecked());
                 loginPresenter.getPW(loginItem);
                 break;

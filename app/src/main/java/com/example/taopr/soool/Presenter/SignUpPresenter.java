@@ -63,9 +63,9 @@ public class SignUpPresenter implements AccountManager {
 
     // 회원가입 결과를 view에게 전송하기 위해 사용한 함수.
     // 서버로 response 를 받았다면 프로그래스바 숨기기
-    public void signUpReqResponse (boolean response) {
+    public void signUpReqResponse (boolean response,String accountNo) {
         view.hideLoading();
-        view.signUpReqResponseGoToVIew(response);
+        view.signUpReqResponseGoToVIew(response,accountNo);
 
     }
 }

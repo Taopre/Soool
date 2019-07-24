@@ -22,7 +22,7 @@ public interface AccountManager {
 
     void clickDuplicityResponse(int separator, String emailorNick, boolean response);
 
-    void signUpReqResponse(boolean response);
+    void signUpReqResponse(boolean response,String accountNo);
 
 //    boolean signUpReq(String acconutEmail, String accountPW, String accountNick);
 
@@ -36,7 +36,7 @@ public interface AccountManager {
     public interface View {
        // void setConfirmText(String text);
         void clickDuplicityResponseGoToVIew(int separator, String emailorNick, boolean response);
-        void signUpReqResponseGoToVIew(boolean response);
+        void signUpReqResponseGoToVIew(boolean response,String accountNo);
         void showLoading();
         void hideLoading();
     }
