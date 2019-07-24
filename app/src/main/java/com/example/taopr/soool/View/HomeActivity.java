@@ -233,20 +233,47 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
                 intent = new Intent(HomeActivity.this, NoticeActivity.class);
                 startActivity(intent);
                 break;
-            // 로그 아웃
+
+            // 이용약관
+            case R.id.myPageDrawerTos:
+                intent = new Intent(this, TosActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.myPageDrawerHandlingPrivacy:
+                intent = new Intent(this,HandlingPrivacyActivity.class);
+                startActivity(intent);
+                break;
+
+            //버전정보
+            case R.id.myPageDrawerVersion:
+                noticeDialog = new NoticeDialog(this, getString(R.string.soool_version),getString(R.string.all_button_ok),positiveListener);
+                noticeDialog.show();
+                break;
+
+                //이용약관
+            //
+            //로그 아웃
             case R.id.myPageDrawerLogOut:
                 noticeDialog = new NoticeDialog(HomeActivity.this,getString(R.string.notice_dialog_logout_title),
                         getString(R.string.notice_dialog_logout_content),false,getString(R.string.all_button_ok),
-                        getString(R.string.all_button_cancel),positiveListener,negativeListener);
+                        getString(R.string.all_button_cancel),logOutPositiveListener,negativeListener);
                 noticeDialog.show();
                 break;
         }
 
     }
-    private View.OnClickListener positiveListener = new View.OnClickListener() {
+    // 로그 아웃 다이얼로그 '확인' 버튼 리스너
+    private View.OnClickListener logOutPositiveListener = new View.OnClickListener() {
         public void onClick(View v) {
             noticeDialog.dismiss();
             setLogout();
+        }
+    };
+
+    private View.OnClickListener positiveListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
         }
     };
 

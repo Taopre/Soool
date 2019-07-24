@@ -31,6 +31,7 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StartingActivity extends AppCompatActivity {
 
@@ -219,5 +220,20 @@ public class StartingActivity extends AppCompatActivity {
         content = new SpannableString(getString(R.string.starting_button_move_to_login));
         content.setSpan(new UnderlineSpan(), 0, getString(R.string.starting_button_move_to_login).length(), 0);
         startingToLogIn.setText(content);
+    }
+
+    @OnClick({R.id.stHandlingPrivacy,R.id.stTos})
+    public void onClick(View view){
+        Intent intent;
+        switch (view.getId()){
+            case R.id.stHandlingPrivacy:
+                intent = new Intent(this,HandlingPrivacyActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.stTos:
+                intent = new Intent(this,TosActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

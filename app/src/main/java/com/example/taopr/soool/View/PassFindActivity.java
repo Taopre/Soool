@@ -74,7 +74,7 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
         switch (passFIndResponse.getEmailExist()) {
             case "true" :
                 if (passFIndResponse.getResult().equals("true")) {
-                    et_password.setText(passFIndResponse.getFakePwd());
+                    //et_password.setText(passFIndResponse.getFakePwd());
 //                    Toast.makeText(this, "임시 비밀번호를 확인 후 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "메일 확인 절차를 다시 한번 부탁드립니다.", Toast.LENGTH_SHORT).show();

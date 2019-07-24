@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greenMain"
+    tools:context=".View.Guide.GuideHeadFragment">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="95dp"
+        android:src="@drawable/intro_logo"
+        android:id="@+id/guideHeadLogo"
+        android:layout_marginTop="209dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/guideHeadLogo"
+        android:id="@+id/guideHeadTitle"
+        android:text="@string/guide_label_app"
+        android:textColor="@color/background_white"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:textSize="24dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/guide_explain_app"
+        android:textSize="@dimen/text_size_16dp"
+        android:textColor="@color/background_white"
+        android:layout_marginTop="@dimen/all_space_between_10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/guideHeadTitle"
+        android:gravity="center"
+        />
+</RelativeLayout>

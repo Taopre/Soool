@@ -13,6 +13,7 @@ public class LoginSharedPreferences {
 
     private String nameOfShared = "LoginUser";
     private String nameOfPWIv = "pwIv";
+    private String nameOfGuide = "guide";
     private String keyOfShared = "LoginAccount";
     private String TAG = "쉐어드";
 
@@ -92,6 +93,22 @@ public class LoginSharedPreferences {
         byte[] Iv = Base64.decode(data,Base64.DEFAULT);
 
         return Iv;
+    }
+
+    // 가이드 다시 보지 않기
+
+    public void setHasSeeGuide(Context context){
+        SharedPreferences pref = context.getSharedPreferences(nameOfGuide, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putBoolean("hasSeeGuide",true);
+        editor.commit();
+    }
+
+    public Boolean getHasSeeGuide(Context context){
+        SharedPreferences pref = context.getSharedPreferences( nameOfGuide, Context.MODE_PRIVATE);
+        boolean data = pref.getBoolean("hasSeeGuide", false);
+        return data;
     }
 
 }

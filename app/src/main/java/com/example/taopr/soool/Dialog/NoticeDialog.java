@@ -30,8 +30,8 @@ public class NoticeDialog extends Dialog{
     TextView noticeDialogTitle;
 
 
-    private View.OnClickListener mPositiveListener;
-    private View.OnClickListener mNegativeListener;
+    private View.OnClickListener mPositiveListener=null;
+    private View.OnClickListener mNegativeListener=null;
     private String dialogTitle,dialogContent;
     private String negativeText,positiveText; // 네거티브 버튼 라벨, 포지티브 버튼 라벨
     private boolean isExistCheck = false;  // '다시 보지 않기' 체크박스 유무  false = 무
@@ -62,8 +62,14 @@ public class NoticeDialog extends Dialog{
 
         noticeDialogContent.setText(dialogContent);
 
-        noticeDialogPositive.setText(positiveText);
-        noticeDialogNegative.setText(negativeText);
+        // 확인버튼
+        if (mPositiveListener != null) noticeDialogPositive.setText(positiveText);
+        else noticeDialogPositive.setVisibility(View.GONE);
+
+        // 취소버튼
+        if (mNegativeListener != null)  noticeDialogNegative.setText(negativeText);
+        else noticeDialogNegative.setVisibility(View.GONE);
+
 
         if (isExistCheck) noticeDialogCheck.setVisibility(View.VISIBLE);
         else noticeDialogCheck.setVisibility(View.GONE);
@@ -82,6 +88,7 @@ public class NoticeDialog extends Dialog{
         this.positiveText =positiveText;
         this.negativeText = negativeText;
     }
+    // 제목 없음 , 체크 박스 없음
     public NoticeDialog(@NonNull Context context,  String dialogContent, boolean isExistCheck, String positiveText,
                         String negativeText, View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
         super(context);
@@ -94,5 +101,12 @@ public class NoticeDialog extends Dialog{
         this.negativeText = negativeText;
     }
 
+    // 내용만 있음
+    public NoticeDialog(@NonNull Context context, String dialogContent,String positiveText,View.OnClickListener positiveListener){
+        super(context);
+        this.dialogContent = dialogContent;
+        this.positiveText = positiveText;
+        this.mPositiveListener = positiveListener;
+    }
 
 }

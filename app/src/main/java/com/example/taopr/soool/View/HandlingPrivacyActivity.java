@@ -1,51 +1,28 @@
 package com.example.taopr.soool.View;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.taopr.soool.Presenter.Interface.NoticeInter;
-import com.example.taopr.soool.Presenter.NoticePresenter;
 import com.example.taopr.soool.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+public class HandlingPrivacyActivity extends AppCompatActivity implements View.OnClickListener {
 
-public class NoticeActivity extends AppCompatActivity implements NoticeInter.View,View.OnClickListener{
-    @BindView(R.id.noticeRecycler)
-    RecyclerView noticeRecycler;
-    @BindView(R.id.noticeProgress)
-    ProgressBar noticeProgress;
-
-    private String TAG = "공지사항 페이지";
-    //액션바
     private ImageView subActionBarLeftImage ;
     private TextView subActionBarRight;
     private TextView subActionBarLeft;
     private TextView subActionBarTitle;
 
-    private NoticePresenter noticePresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notice);
-        ButterKnife.bind(this);
-
-        noticePresenter = new NoticePresenter();
-        noticePresenter.setView(this);
-        noticePresenter.loadNoticeList();
-
+        setContentView(R.layout.activity_handling_privacy);
     }
 
     @Override
@@ -79,7 +56,7 @@ public class NoticeActivity extends AppCompatActivity implements NoticeInter.Vie
         subActionBarRight.setVisibility(View.INVISIBLE);
 
         subActionBarTitle.setVisibility(View.VISIBLE);
-        subActionBarTitle.setText(getString(R.string.notice_label_page));
+        subActionBarTitle.setText(getString(R.string.drawer_handling_privacy));
 
         subActionBarLeftImage.setVisibility(View.VISIBLE);
         subActionBarLeftImage.setOnClickListener(this);
@@ -88,38 +65,12 @@ public class NoticeActivity extends AppCompatActivity implements NoticeInter.Vie
     }
 
     @Override
-    public void getNoticeListSuccess() {
-
-    }
-
-    @Override
-    public void getDataFail(int dataType) {
-
-    }
-
-    @Override
-    public void moveToPage(Intent intent, int requestCode) {
-
-    }
-
-    @Override
-    public void showLoading() {
-        noticeProgress.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void hideLoading() {
-        noticeProgress.setVisibility(View.VISIBLE);
-    }
-
-    // 뒤로가기 클릭 시 이전페이지 이동 및 현재 페이지는 스택에서 제거
-    @Override
     public void onClick(View view) {
         finish();
     }
 
     @Override
     public void onBackPressed() {
-       finish();
+        finish();
     }
 }
