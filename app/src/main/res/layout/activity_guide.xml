@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/greenMain"
+    android:layout_height="match_parent"
+    tools:context=".View.GuideActivity">
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/guideViewpagerIndicator"
+        android:layout_alignParentTop="true"
+        android:id="@+id/guideViewpager"
+        >
+    </android.support.v4.view.ViewPager>
+
+    
+    <me.relex.circleindicator.CircleIndicator
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:id="@+id/guideViewpagerIndicator"
+        android:layout_above="@id/guideStartingButton">
+    </me.relex.circleindicator.CircleIndicator>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:id="@+id/guideStartingButton"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="@dimen/all_space_between_18dp"
+        android:layout_marginRight="@dimen/all_space_between_18dp"
+        android:background="@drawable/button_no_border_background_white"
+        android:text="@string/guide_start_button_text"
+        android:textSize="@dimen/text_size_14dp"
+        android:stateListAnimator="@null"
+        android:textColor="@color/greenDark"
+        />
+
+
+</RelativeLayout>

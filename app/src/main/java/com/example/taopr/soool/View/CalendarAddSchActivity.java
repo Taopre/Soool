@@ -43,6 +43,7 @@ public class CalendarAddSchActivity extends CalendarSchBaseActivity
     EditText addSchTextContent;
     TextView subActionBarRight;
     TextView subActionBarLeft ;
+    ImageView subActionBarLeftImage;
     private CalendarAddSchPresenter calendarAddSchPresenter;
 
     private final String TAG ="캘린더 추가 Sch 액티비티";
@@ -232,8 +233,11 @@ public class CalendarAddSchActivity extends CalendarSchBaseActivity
 
         subActionBarRight = findViewById(R.id.subActionBarRight);
         subActionBarLeft = findViewById(R.id.subActionBarLeft);
+        subActionBarLeftImage = findViewById(R.id.subActionBarLeftImage);
 
+        subActionBarLeftImage.setVisibility(View.GONE);
         subActionBarLeft.setText(R.string.all_button_cancel);
+        subActionBarLeft.setVisibility(View.VISIBLE);
         subActionBarRight.setText(R.string.all_button_save);
         subActionBarLeft.setOnClickListener(this);
         subActionBarRight.setOnClickListener(this);

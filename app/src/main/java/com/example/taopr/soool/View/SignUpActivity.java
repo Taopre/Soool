@@ -1,12 +1,12 @@
 package com.example.taopr.soool.View;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +16,26 @@ import android.widget.Toast;
 
 import com.example.taopr.soool.Presenter.SignUpPresenter;
 import com.example.taopr.soool.R;
+import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.EnCryptor;
 
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.UnrecoverableEntryException;
+
+import android.util.Base64;
 import java.util.regex.Pattern;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +88,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     private Boolean clickEmailDupBool = false; // 이메일 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
     private Boolean clickNickDupBool = false; // 닉네임 중복체크 버튼 클릭여부 false=클릭x , true=클릭o
 
+
     private String TAG = "SignUpActivity";
+    private byte[] accountPWIv;
 
 
     @Override
@@ -84,6 +104,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         ButterKnife.bind(this);
         signUpPresenter = new SignUpPresenter(SignUpActivity.this, this);
         signUpPresenter.setView(this);
+
 
         drawUnderline();
     }
@@ -101,9 +122,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
 
         Intent intent = getIntent();
         Boolean throughSNS = intent.getBooleanExtra("throughSNS", false);
-
- /*       Log.i(TAG, "signUpThroughSNS: " + intent.getBooleanExtra("throughSNS", false) +
-                intent.getStringExtra("snsAccountEmail") );*/
 
         if(throughSNS) {
             if(intent.getStringExtra("snsAccountEmail").length() > 0){
@@ -145,13 +163,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
 
         // 이메일 값을 아무것도 입력하지 않은 경우
         if(accountEmail.getText().length()==0){
-            Log.i(TAG, "emailDupClick: 이메일 값 입력해주세요");
             Toast.makeText(this, "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
         }
 
         // 이메일 값을 정규식에 맞춰 작성하지 않은 경우
         else if(ismail == false){
-            Log.i(TAG, "emailDupClick: 이메일 정규식 불일치");
             Toast.makeText(this, "양식에 맞게 작성해주세요", Toast.LENGTH_SHORT).show();
         }
 
@@ -159,16 +175,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         else {
 
             // 보내는 값일 이메일인 경우 separator=0, 닉네임인 경우 separator=1
-//            Boolean b = signUpPresenter.clickDuplicity(0,accountEmail.getText().toString());
             signUpPresenter.clickDuplicity(0,accountEmail.getText().toString());
-//            Log.i(TAG, "emailDupClick: email = " + accountEmail.getText().toString() + ", 사용 가능 여부 : " + b);
-//
-//            // 중복 false, 중복x true
-//
-//            emailEnable = b;
-//            clickEmailDupBool = true;
-//
-//            accountPW.requestFocus();
+
         }
     }
 
@@ -177,16 +185,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         // separator 이메일일때 0, 닉네임일때 1
         // response 값 중복 false, 중복x true
         if (separator == 0) {
-           // Log.i(TAG, "emailDupClick: email = " + emailorNick + ", 사용 가능 여부 : " + response);
 
-            //signUpNoticeEnableEmail.setVisibility(View.VISIBLE);
             if (response){
-            //    Toast.makeText(this, "사용가능", Toast.LENGTH_SHORT).show();
 
                 enableEmailValue = emailorNick;
                 accountNick.requestFocus();
-              /*  signUpNoticeEnableEmail.setText(getString(R.string.sign_up_usable_email));
-                signUpNoticeEnableEmail.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));*/
 
            } else{
               /*  Toast.makeText(this, "사용 불가능", Toast.LENGTH_SHORT).show();
@@ -202,9 +205,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
             if (response){
                 accountPW.requestFocus();
                 enableNickValue = emailorNick;
-         /*       Toast.makeText(this, "사용가능", Toast.LENGTH_SHORT).show();
-                signUpNoticeEnableNick.setText(getString(R.string.sign_up_usable_nickname));
-                signUpNoticeEnableNick.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));*/
+
 
             }else{
                /* Toast.makeText(this, "사용 불가능", Toast.LENGTH_SHORT).show();
@@ -242,16 +243,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     @OnTextChanged({R.id.confirmPW, R.id.accountPW})
     void editConfirmPW(){
 
-        Log.i(TAG, "editConfirmPW: 입력");
         if(accountPW.getText().length() >0 && confirmPW.getText().length()>0) {
             if (accountPW.getText().toString().equals(confirmPW.getText().toString())) {
-                Log.i(TAG, "editConfirmPW: 일치");
                 signUpNoticeEnablePw.setText(getString(R.string.sign_up_match_password));
                 signUpNoticeEnablePw.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.greenMain));
                 signUpNoticeEnablePw.setVisibility(View.VISIBLE);
                 pwEnable = true;
             } else {
-                Log.i(TAG, "editConfirmPW: 불일치");
                 signUpNoticeEnablePw.setText(getString(R.string.sign_up_not_match_password));
                 signUpNoticeEnablePw.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.redMain));
                 signUpNoticeEnablePw.setVisibility(View.VISIBLE);
@@ -410,7 +408,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         if(accountEmailSt.length()==0 || accountNickSt.length()==0 ||
                 accountPWSt.length()==0 || confirmPW.getText().length()==0){
 
-            Log.i(TAG, "clickSignUp: 모든 텍스트를 입력해주세요");
             Toast.makeText(this, "모든 항목을 입력해주세요", Toast.LENGTH_SHORT).show();
 
         }
@@ -418,29 +415,24 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         // 2번 , 3번
         else if(emailEnable == false){
             if(clickEmailDupBool){
-                Log.i(TAG, "clickSignUp: 사용불가능한 이메일입니다");
                 Toast.makeText(this,getString(R.string.sign_up_disable_email), Toast.LENGTH_SHORT).show();
             }
             else{
-                Log.i(TAG, "clickSignUp: 중복 체크를 부탁드립니다");
                 Toast.makeText(this, "이메일 중복 체크를 부탁드립니다", Toast.LENGTH_SHORT).show();
             }
         }
 
         // 4번 , 비밀번호와 비밀번호확인카에 입력한 두 값이 일치하는지
         else if(pwEnable == false){
-            Log.i(TAG, "clickSignUp: 비밀번호 불일치 ");
             Toast.makeText(this, "비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
         }
 
         // 5번 , 6번
         else if(nickEnable == false){
             if (clickNickDupBool){
-                Log.i(TAG, "clickSignUp: 사용 불가능한 닉네임입니다");
                 Toast.makeText(this,getString(R.string.sign_up_disable_nickname), Toast.LENGTH_SHORT).show();
             }
             else{
-                Log.i(TAG, "clickSignUp: 중복 체크를 부탁드립니다");
                 Toast.makeText(this, "닉네임 중복 체크를 부탁드립니다", Toast.LENGTH_SHORT).show();
             }
         }
@@ -448,9 +440,47 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         // 상위의 조건을 모두 만족한 경우 서버에 accountEmail, accountPW, accountNick 전달.
 
         else{
-//            boolean signUpSuccess = signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
-            //회원가입 가능한지 model로 요청 하는 부분.
-            signUpPresenter.signUpReq(accountEmailSt,accountPWSt,accountNickSt);
+
+            EnCryptor enCryptor = new EnCryptor();
+            LoginSharedPreferences loginSharedPreferences = new LoginSharedPreferences();
+
+            String accountPwEn=null;
+
+            try {
+
+                FileOutputStream test = null;
+
+                accountPwEn = Base64.encodeToString(enCryptor.encryptText("soool_key",accountPWSt), Base64.DEFAULT);
+                test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountEmailSt+".bin");
+                test.write(enCryptor.getIv());
+                test.close();
+            } catch (UnrecoverableEntryException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+            } catch (NoSuchProviderException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            } catch (SignatureException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            }
+
+            loginSharedPreferences.savePWIv(this,accountEmailSt,enCryptor.getIv());
+
+            signUpPresenter.signUpReq(accountEmailSt,accountPwEn,accountNickSt);
         }
     }
 
@@ -465,8 +495,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-
-        Log.i(TAG, "setLinkToLogin: 로그인 페이지 이동");
     }
 
     private void drawUnderline() {

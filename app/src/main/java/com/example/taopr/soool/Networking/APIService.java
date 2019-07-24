@@ -52,6 +52,10 @@ public interface APIService {
                                  @Field("accountNick") String accountNick);
 
     @FormUrlEncoded
+    @POST("Login/getPw.php")
+    Call<ResponseBody> getaccountPw(@Field("accountEmail") String accountEmail);
+
+    @FormUrlEncoded
     @POST("/Login/Login.php")
     Call<ResponseBody> getUserItem(@Field("accountEmail") String accountEmail,
                                    @Field("accountPW") String accountPW);

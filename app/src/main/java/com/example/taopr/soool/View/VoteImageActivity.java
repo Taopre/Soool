@@ -79,7 +79,7 @@ public class VoteImageActivity  extends AppCompatActivity {
         });
     }
 
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
+    public class MyPagerAdapter extends FragmentPagerAdapter {
         private int NUM_ITEMS;
         private ArrayList<String> imageItems;
         String TAG ="투표 뷰 페이저 ";

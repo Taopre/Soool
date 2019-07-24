@@ -32,11 +32,24 @@ public class LoginPresenter implements LoginInter {
         //view로부터 받은 값을 model로 보내기 위한 부분.
         loginModel.login(userItem);
     }
+
+    @Override
+    public void getPW(LoginItem userItem) {
+        loginModel.getPw(userItem);
+    }
+
     //LoginModel(model)의 응답을 LoginActivity(view)에게 보내주는 메서드.
     @Override
     public void loginResponse(String response) {
         view.loginResponseGoToVIew(response);
     }
+
+    @Override
+    public void confirmPw(LoginItem userItem, String enAccountPw) {
+
+        view.viewConfirmPw(userItem,enAccountPw);
+    }
+
 
 //    @Override
 //    public void loginDataSend(LoginSessionItem item) {

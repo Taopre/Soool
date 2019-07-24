@@ -23,12 +23,27 @@ import com.example.taopr.soool.Object.UserProfile;
 import com.example.taopr.soool.Presenter.MypageFmPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.DeCryptor;
+import com.example.taopr.soool.Util.EnCryptor;
 import com.example.taopr.soool.View.MyPageFragment.BookmarkFragment;
 import com.example.taopr.soool.View.MyPageFragment.CalendarFragment;
 import com.example.taopr.soool.View.MyPageFragment.MyBoardFragment;
 import com.example.taopr.soool.Util.Whatisthis;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,6 +95,7 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
     private Boolean isProfileRes = false;  // 프로필 정보를 서버로 응답을 받았는지 (성공,실패 포함)
     private Boolean isFragmentRes = false; // 부착한 프래그먼트에서 서버로부터 응답을 받았는지 ( 성공.실패 포함 )
+
 
 
     public MypageFragment() {

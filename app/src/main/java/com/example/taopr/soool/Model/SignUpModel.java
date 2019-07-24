@@ -1,6 +1,7 @@
 package com.example.taopr.soool.Model;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +11,8 @@ import com.example.taopr.soool.Networking.APIService;
 import com.example.taopr.soool.Presenter.SignUpPresenter;
 import com.example.taopr.soool.R;
 import com.example.taopr.soool.SharedPreferences.LoginSharedPreferences;
+import com.example.taopr.soool.Util.DeCryptor;
+import com.example.taopr.soool.Util.EnCryptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,6 +21,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -39,6 +55,7 @@ public class SignUpModel {
 
     private static String emailOrNick;
     private static APIClient apiClient;
+
     Call<ResponseBody> request = null;
 
     LoginSessionItem item;
@@ -143,7 +160,11 @@ public class SignUpModel {
     }
 
     public void signUpReq(String accountEmail, String accountPW, String accountNick){
+
+
         //회원가입 버튼 눌렀을때 처리할 부분.
+
+        Log.i(TAG, "암호 signUpReq: 0");
 
         Observable.just("")
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -155,9 +176,13 @@ public class SignUpModel {
                     {
                         try
                         {
+
+
                             APIService service = APIClient.getClient().create(APIService.class);
 
+
                             Call<ResponseBody> request = service.signUpRes(accountEmail, accountPW, accountNick);
+
 
                             request.enqueue(new Callback<ResponseBody>() {
                                 @Override
@@ -165,16 +190,49 @@ public class SignUpModel {
                                     try {
                                         String msg = response.body().string();
                                         JSONArray jsonArray = new JSONArray(msg);
+                                        Log.i(TAG, "암호 onResponse: 1");
                                         for (int i=0; i<jsonArray.length(); i++) {
                                             JSONObject returnData = jsonArray.getJSONObject(i);
 
                                             String result = returnData.getString("result");
                                             int accountNo = returnData.getInt("accountNo");
-                                            //종현이가 넘겨줘야 주석 풀어야함
-//                                            int accountPoint = returnData.getInt("accountPoint");
+
+
+                                          /*  try {
+                                                DeCryptor deCryptor = new DeCryptor();
+                                                try {
+                                                    Log.i(TAG, "onResponse: 디코딩" +
+                                                            deCryptor.decryptData("android_key",
+                                                                    Base64.decode(accountPW,Base64.DEFAULT),
+                                                                    loginSharedPreferences.getPWIv(context,accountNick)));
+                                                } catch (UnrecoverableEntryException e) {
+                                                    e.printStackTrace();
+                                                } catch (NoSuchProviderException e) {
+                                                    e.printStackTrace();
+                                                } catch (NoSuchPaddingException e) {
+                                                    e.printStackTrace();
+                                                } catch (InvalidKeyException e) {
+                                                    e.printStackTrace();
+                                                } catch (BadPaddingException e) {
+                                                    e.printStackTrace();
+                                                } catch (IllegalBlockSizeException e) {
+                                                    e.printStackTrace();
+                                                } catch (InvalidAlgorithmParameterException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } catch (CertificateException e) {
+                                                e.printStackTrace();
+                                            } catch (NoSuchAlgorithmException e) {
+                                                e.printStackTrace();
+                                            } catch (KeyStoreException e) {
+                                                e.printStackTrace();
+                                            }*/
+
+
 
                                             if(result.equals("true")) {
 
+                                                Log.i(TAG, "onResponse: 암호 3");
                                                 item = new LoginSessionItem(accountNo, accountNick, "/profileimage/defualtimage.png", 50, 0, 0, true);
                                                 // Gson 인스턴스 생성
                                                 Gson gson = new GsonBuilder().create();
@@ -191,6 +249,7 @@ public class SignUpModel {
                                             }
                                         }
                                     }
+
                                     catch (IOException e) {
                                         signUpPresenter.signUpReqResponse(false);
                                         Log.i(TAG, "Sign Up onResponse: IOException");
@@ -212,6 +271,7 @@ public class SignUpModel {
                                 }
                             });
                         }
+
                         catch(Exception e) {
                             signUpPresenter.signUpReqResponse(false);
                             Log.i(TAG, "Sign Up apply: Exception");

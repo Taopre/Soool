@@ -55,7 +55,7 @@ public class SignUpPresenter implements AccountManager {
 //    }
 
     //회원가입 버튼을 클릭했을 때 서버로 보낼 정보를 위해 사용한 함수.
-    public void signUpReq(String acconutEmail, String accountPW, String accountNick){
+    public void signUpReq(String acconutEmail, String accountPW, String accountNick ){
         view.showLoading();
         signUpModel.signUpReq(acconutEmail,accountPW,accountNick);
 

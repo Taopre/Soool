@@ -22,7 +22,6 @@ public class BookmarkPresenter extends BasePresenter implements BookmarkInter {
     private String TAG = "북마크_presenter";
     private final int bookmarkToDetail = 1212;
 
-
     public BookmarkPresenter(Context context) {
         this.context = context;
         this.apiService = APIClient.getClient1().create(APIService.class);
@@ -61,6 +60,8 @@ public class BookmarkPresenter extends BasePresenter implements BookmarkInter {
                     public void onSuccess(InfoList infoList) {
 
                         if (infoList != null) {
+
+
                             ArrayList<InfoItem> infoItems = new ArrayList(infoList.getInfoItems());
                             view.getDataSuccess(infoItems, loadingKind);
                         }

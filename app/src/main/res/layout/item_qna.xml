@@ -15,8 +15,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
 
-        android:layout_marginRight="@dimen/all_space_between_18dp"
-
         />
 
     <HorizontalScrollView
