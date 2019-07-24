@@ -63,6 +63,7 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
         intent.putExtra("infoItem",infoItem);
         intent.putExtra("fromActivity", 0);
         intent.putExtra("actionKind", 1);
+        Log.i(TAG, "getIntentMoveInfo: 인포 값" + infoListPosition);
         intent.putExtra("infoPosition",infoListPosition);
         view.moveToPage(intent,MAIN_MOVE_TO_INFO);
     }

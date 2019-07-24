@@ -73,16 +73,13 @@ public class TimeCalculator {
         min =  Integer.parseInt(dateString.substring(14,16));
         sec =  Integer.parseInt(dateString.substring(17,19));
 
-        Log.i(TAG, "getDate: " + year +"  " + month +"  " + date + " " +hour +"  "+min +"  "+ sec);
-
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(monthYearPattern);
         Calendar cal = Calendar.getInstance();
 
-        Log.i(TAG, "getLongDate: 오늘 날짜 +" + simpleDateFormat.format(cal.getTime()));
 
         cal.set(year,month,date,hour,min,sec);
-        Log.i(TAG, "getLongDate: 작성 날짜 +" + simpleDateFormat.format(cal.getTime()));
+
 
         return cal.getTimeInMillis();
     }

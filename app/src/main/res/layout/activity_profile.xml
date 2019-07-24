@@ -109,6 +109,7 @@
             android:background="@drawable/edit_text_theme"
             android:id="@+id/profileAccountPW"
             android:textColor="@color/black"
+            android:inputType="textPassword"
             android:textSize="@dimen/text_size_14dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"

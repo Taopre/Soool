@@ -252,10 +252,10 @@ public class CalendarAddSchActivity extends CalendarSchBaseActivity
     public void getDataSuccess(HashMap<String, CalendarItem> calendarItemMap) {
         this.calendarItemMap = calendarItemMap;
         Intent intent = new Intent();
+        Log.i(TAG, "getDataSuccess: 작성한 날짜" + selectedDay.getTime());
         intent.putExtra(DATE_EXTRA,selectedDay.getTime());
         intent.putExtra(CALENDAR_LIST_EXTRA,(Serializable) calendarItemMap);
         setResult(RESULT_OK, intent);
-
         finish();
     }
 

@@ -231,7 +231,7 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind) {
         if (qnaBoardItems.size() == 0) {
-            Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
         }
         else {
             switch (loadingKind) {

@@ -53,6 +53,8 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     private int infoCurrentPage=0;	// info 현재 페이지번호
     private int infoPageMoveDirection=0; // info 뷰페이저 화면 전환. 방향 0이 오른쪽, 1이 왼쪽
     private boolean viewPagerthreadDead = false; // false 가 살아있음 , true 가 죽은거
+    private final int MAIN_MOVE_TO_QNA = 1100;
+    private final int MAIN_MOVE_TO_INFO = 1200;
 
     public interface MainFmView{
         void mainUpdateQnaItem(QnaBoardItem qnaBoardItem,int actionKind,boolean updateByUser); // qnaBoard
@@ -124,9 +126,6 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
             mainQnaRecycler.setAdapter(qnaAdapter);
         }
     }
-
-    // TODO: 프래그먼트 detach 될 경우 thread 종료시켜주기
-    // TODO: 사용자가 스와이프 했을 때 뷰도 생각해서 스레드 짜야할듯 ( 방향 중요 )
 
     @Override
     public void getInfoSuccess(ArrayList<InfoItem> infoItems) {
@@ -256,42 +255,58 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // 리스트 수정, 삭제
-            // 리스트 수정, 삭제의 경우에는 리스트에 있는 아이템을 수정,삭제를 하는 것이기 때문에
-            // 아이템의 리스트 포지션 값을 받고 , actionKind 로 수정인지 삭제인지 구별
-            // 수정 --> actionKind = 1
-            // 삭제 --> actionKind = 2
-            int qnaListPosition = data.getIntExtra("qnaListPosition",0);
-            int actionKind = data.getIntExtra("actionKind",99);
+            switch (requestCode) {
+                case MAIN_MOVE_TO_QNA:
+                    // 리스트 수정, 삭제
+                    // 리스트 수정, 삭제의 경우에는 리스트에 있는 아이템을 수정,삭제를 하는 것이기 때문에
+                    // 아이템의 리스트 포지션 값을 받고 , actionKind 로 수정인지 삭제인지 구별
+                    // 수정 --> actionKind = 1
+                    // 삭제 --> actionKind = 2
+                    int qnaListPosition = data.getIntExtra("qnaListPosition", 0);
+                    int actionKind = data.getIntExtra("actionKind", 99);
 
-            QnaBoardItem qnaBoardItem = null;
-            if (data != null && data.getParcelableExtra("qnaBoardItem") != null) {
-                qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
-            }
+                    QnaBoardItem qnaBoardItem = null;
+                    if (data != null && data.getParcelableExtra("qnaBoardItem") != null) {
+                        qnaBoardItem = data.getParcelableExtra("qnaBoardItem");
+                    }
 
-            // main 에서는 글 작성하는 페이지로 이동하는 경우가 없기 때문에
-            // actionKind 값이 0일 경우에는 예외처리
-            if (actionKind != 99 && actionKind != 0) {
-                switch (actionKind) {
+                    // main 에서는 글 작성하는 페이지로 이동하는 경우가 없기 때문에
+                    // actionKind 값이 0일 경우에는 예외처리
+                    if (actionKind != 99 && actionKind != 0) {
+                        switch (actionKind) {
 
-                    case 1:
-                        qnaAdapter.modifyItem(qnaBoardItem, qnaListPosition);
-                        break;
-                    case 2:
-                        qnaAdapter.deleteItem(qnaListPosition);
-                        break;
-                }
-                // 업데이트된 글의 작성자가 유저와 일치할 경우 true , 아닐 경우 false
-                // true 일 경우일 때만 마이페이지, 커뮤니트의 글 업데이트
-                // false 커뮤니티만 업데이트
+                            case 1:
+                                qnaAdapter.modifyItem(qnaBoardItem, qnaListPosition);
+                                break;
+                            case 2:
+                                qnaAdapter.deleteItem(qnaListPosition);
+                                break;
+                        }
+                        // 업데이트된 글의 작성자가 유저와 일치할 경우 true , 아닐 경우 false
+                        // true 일 경우일 때만 마이페이지, 커뮤니트의 글 업데이트
+                        // false 커뮤니티만 업데이트
 
-                // 업데이트된 QnaBoardItem을 Home 액티비티에 전달
-                if (qnaBoardItem.getAccountNo() == mainFmPresenter.accountNo) {
-                    mainFmView.mainUpdateQnaItem(qnaBoardItem, actionKind,true);
-                }
-                else{
-                    mainFmView.mainUpdateQnaItem(qnaBoardItem, actionKind,false);
-                }
+                        // 업데이트된 QnaBoardItem을 Home 액티비티에 전달
+                        if (qnaBoardItem.getAccountNo() == mainFmPresenter.accountNo) {
+                            mainFmView.mainUpdateQnaItem(qnaBoardItem, actionKind, true);
+                        } else {
+                            mainFmView.mainUpdateQnaItem(qnaBoardItem, actionKind, false);
+                        }
+                    }
+                    break;
+                case MAIN_MOVE_TO_INFO:
+                    // actionKind 가 1일때 업데이트된 정보가 있는 경우
+
+                    Log.i(TAG, "onActivityResult: 인포");
+                    InfoItem infoItem;
+                    if (data != null && data.getParcelableExtra("infoItem") != null) {
+                        infoItem = data.getParcelableExtra("infoItem");
+                        int infoPosition = data.getIntExtra("infoPosition",99);
+                        if (infoPosition!= 99){
+                            mainInfoAdapter.infoItemUpdate(infoItem,infoPosition);
+                        }
+                    }
+
             }
         }
     }

@@ -221,9 +221,16 @@ public class CalendarFragment extends Fragment implements CalendarFmPresenter.Vi
             switch (requestCode){
                 case CALENDAR_ADD_INT:
 
-                    String selectedDate = data.getStringExtra(DATE_EXTRA);
-                    Log.i(TAG, "onActivityResult:  " + selectedDate);
-                    selectedDay = sooolCalendar.getDate(selectedDate);
+                    //String selectedDate = data.getStringExtra(DATE_EXTRA);
+                    if(data.getStringExtra(DATE_EXTRA) != null) {
+                        selectedDay = sooolCalendar.getDate(data.getStringExtra(DATE_EXTRA));
+                    }
+                    else{
+                        long selectedDate = data.getLongExtra(DATE_EXTRA, 0);
+                        selectedDay = sooolCalendar.getDate(String.valueOf(selectedDate));
+                    }
+
+                    //selectedDay = sooolCalendar.getDate(selectedDate);
                     calendarItemMap = (HashMap<String,CalendarItem>) data.getSerializableExtra(CALENDAR_LIST_EXTRA);
                     showEventDate();
             }

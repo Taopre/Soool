@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
 
         encryptor = new EnCryptor();
 
+
         //id 와 pwd를 입력하고
         //id가 있다면 login 없다면 wrong 메시지를 textview에 띄워주는 과정
         //1. id 입력
