@@ -1,12 +1,10 @@
 package com.example.taopr.soool.View;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -33,10 +31,6 @@ import com.example.taopr.soool.Adapter.QnaBoardDetailImageAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardDetailVoteAdapter;
 import com.example.taopr.soool.Adapter.QnaBoardTagAdapter;
 
-import com.example.taopr.soool.Adapter.QnaBoardVoteAdapter;
-import com.example.taopr.soool.Adapter.RecommentAdapter;
-import com.example.taopr.soool.Adapter.RecyclerItemClickListener;
-import com.example.taopr.soool.Adapter.VoteImageAdapter;
 
 import com.example.taopr.soool.Decorater.RecyclerDecoration;
 import com.example.taopr.soool.Object.BoardRecommend;
@@ -58,9 +52,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class QnaBoardDetailActivity extends AppCompatActivity implements View.OnClickListener,
         QnaBoardDetailImageAdapter.GridviewItemClickListner, QnaDetailPresenter.View, CommentPresenter.View{
@@ -140,7 +132,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNick = loginSessionItem.getAccountNick();
-        Log.i(TAG, "onCreate: 닉네임" + accountNick);
         accountNo = loginSessionItem.getAccountNo();
 
         vote = getIntent().getIntExtra("vote", 2);
@@ -160,7 +151,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             }
             postNo = qnaItem.getPostNo();
         } else if (qnaBoardItem != null) {
-            Log.d(TAG, "onCreate: 태그값 처음"+qnaBoardItem.getTag());
             if (qnaBoardItem.getTag().contains("@##@")) {
                 tagData = qnaBoardItem.getTag().split("@##@");
                 for (int i = 0; i < tagData.length; i++) {
@@ -204,7 +194,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     }
 
                     // isLike / isBad 값은 0 아니면 1.
-                    Log.d(TAG, "isLike , isBad: "+qnaBoardItem.getIsLike()+", "+qnaBoardItem.getIsBad());
 
                     flagLike = qnaBoardItem.getIsLike();
                     flagUnLike = qnaBoardItem.getIsBad();
@@ -256,7 +245,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                             qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 1);
                             rc_qnaboardTagMany.setAdapter(qnaBoardTagAdapter);
                             rc_qnaboardTagMany.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-//                            rc_qnaboardTagMany.addItemDecoration(new RecyclerDecoration(16));
                         }
 
                         tv_qnaboardTitle.setText(qnaBoardItem.getTitle());
@@ -271,8 +259,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         if (qnaBoardItem.getImage() == null) {
                             iv_qnaboardImage.setVisibility(View.GONE);
                         } else {
-                            Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaBoardItem.getImage());
-                                
+
                                 
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaBoardItem.getImage())
@@ -307,7 +294,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         if (qnaBoardItem.getImage() == null) {
                             iv_qnaboardImage.setVisibility(View.GONE);
                         } else {
-                            Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+qnaBoardItem.getImage());
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaBoardItem.getImage())
                                     .override(100, 100)
@@ -400,7 +386,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
         ll_voteLayout.setVisibility(View.GONE);
 
-        //
+        //댓글관련
         commentList = findViewById(R.id.commentList);
         qnaboard_detail_scrollView = findViewById(R.id.qnaboard_detail_scrollView);
         comment_layout_top = findViewById(R.id.comment_layout_top);
@@ -446,7 +432,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         switch (view.getId()) {
             case R.id.qnaboardLikeLayout:
                 flagLike++;
-                Log.d(TAG, "추천테스트 좋아요 -> "+flagLike + "//" +flagUnLike);
                 // 추천 클릭시 색깔 변함 준 부분
                 if (flagLike % 2 == 1) {
                     if (flagUnLike % 2 == 1) {
@@ -478,7 +463,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.qnaboardUnLikeLayout:
                 flagUnLike++;
-                Log.d(TAG, "추천테스트 안좋아요 -> "+flagLike + "//" +flagUnLike);
                 // 비추천 클릭시 색깔 변함 준 부분
                 if (flagUnLike % 2 == 1) {
                     if (flagLike % 2 == 1) {
@@ -525,7 +509,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 }
 
                 if (recommendResponse) {
-                    Log.d(TAG, "isLike, isBads 하이 인텐트 엑션카이드"+qnaBoardItem.getIsLike()+", "+qnaBoardItem.getIsBad());
                     intentActionKind = new Intent();
                     intentActionKind.putExtra("qnaBoardItem", qnaBoardItem);
                     intentActionKind.putExtra("actionKind", 1);
@@ -547,12 +530,10 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         qnaBoardDetailVoteAdapter.notifyDataSetChanged();
 
                         for (int i=0; i<editModelArrayList.size(); i++) {
-                            Log.d(TAG, "플레그: "+editModelArrayList.get(i).isFlag());
                             if (editModelArrayList.get(i).isFlag() == true) {
                                 editModelArrayList.get(i).setVoteboard(editModelArrayList.get(i).getVoteboard()+1);
                                 editModelArrayList.get(i).setFlag(false);
 
-                                Log.d(TAG, "몇번째 :"+i);
                                 mySelectVoteNum = i+1;
                                 voteTotalResult += 1;
                             }
@@ -562,7 +543,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_voteResultShow.setText(voteTotalResult+"");
                         qnaBoardDetailVoteAdapter.notifyDataSetChanged();
 
-                        Log.d(TAG, "onClick: 내가 선택한 투표"+mySelectVoteNum);
 
                         if (fromActivity == 0) {
                             qnaDetailPresenter.updateVoteResult(accountNo, qnaBoardItem.getPostNo(), mySelectVoteNum);
@@ -586,7 +566,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                                 gridVoteItemArrayList.get(i).setVote(gridVoteItemArrayList.get(i).getVote()+1);
                                 gridVoteItemArrayList.get(i).setSelected(false);
 
-                                Log.d(TAG, "몇번째 :"+i);
                                 mySelectVoteNum = i+1;
                                 voteTotalResult += 1;
                             }
@@ -596,7 +575,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         tv_voteResultShow.setText(voteTotalResult+"");
                         qnaBoardDetailImageAdapter.notifyDataSetChanged();
 
-                        Log.d(TAG, "onClick: 내가 선택한 투표"+mySelectVoteNum);
 
                         if (fromActivity == 0) {
                             qnaDetailPresenter.updateVoteResult(accountNo, qnaBoardItem.getPostNo(), mySelectVoteNum);
@@ -625,8 +603,9 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                     startActivity(intent);
                     finish();
                 }
-                else {
-                    Toast.makeText(view.getContext(), "신고하기",Toast.LENGTH_SHORT).show();
+                else
+                {
+
                 }
                 break;
             case R.id.commentEnroll:
@@ -656,12 +635,10 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onListImageClick(int position) {
-        Toast.makeText(this, position+"", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onListRadioClick(int position, View view) {
-        Toast.makeText(view.getContext(), position+"", Toast.LENGTH_LONG).show();
 
         RadioButton radioButton = view.findViewById(R.id.radio);
 
@@ -683,7 +660,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         qnaBoardDetailImageAdapter.notifyDataSetChanged();
 
         for (int i=0; i<gridVoteItemArrayList.size(); i++) {
-            Log.d(TAG, "투표 현황: "+i+" "+gridVoteItemArrayList.get(i).isSelected());
         }
 
 
@@ -695,7 +671,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         if (getQnaVoteItem.getQnaVoteStatus() == 0) {
             rc_recycler.setVisibility(View.VISIBLE);
 
-            Log.d(TAG, "getDataSuccess: 투표했니? "+getQnaVoteItem.getMemberIsVoted());
 
             if (getQnaVoteItem.getMemberIsVoted() == 0) {
                 for (int i = 0; i < getQnaVoteItem.getVoteText().size(); i++) {
@@ -708,7 +683,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 qnaBoardDetailVoteAdapter = new QnaBoardDetailVoteAdapter(this, editModelArrayList, new QnaBoardDetailVoteAdapter.ClickListener() {
                     @Override
                     public void onListVoteListClick(int position, View view) {
-                        Toast.makeText(view.getContext(), position + "", Toast.LENGTH_SHORT).show();
                         TextView textView = view.findViewById(R.id.textViewssss);
                         ImageView imageView = view.findViewById(R.id.textSelect);
 
@@ -731,14 +705,12 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         whatVoteSelect = 0;
 
                         for (int i = 0; i < editModelArrayList.size(); i++) {
-                            Log.d("어뎁터", "플레그: " + i + "  " + editModelArrayList.get(i).isFlag());
                         }
                     }
                 });
                 rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
                 rc_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
-                Log.d(TAG, "getDataSuccess: text total : "+getQnaVoteItem.getTotalVoteCount());
                 voteTotalResult = getQnaVoteItem.getTotalVoteCount();
                 qnaBoardDetailVoteAdapter.voteTotalNums = voteTotalResult;
                 qnaBoardDetailVoteAdapter.notifyDataSetChanged();
@@ -748,7 +720,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 for (int i = 0; i < getQnaVoteItem.getVoteText().size(); i++) {
                     QnaBoardVoteItem editModel = new QnaBoardVoteItem();
                     editModel.setEditTextValue(getQnaVoteItem.getVoteText().get(i));
-//                    editModel.setFlag(true);
                     editModel.setVoteboard(getQnaVoteItem.getVoteResult().get(i));
                     editModelArrayList.add(editModel);
                 }
@@ -756,31 +727,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 qnaBoardDetailVoteAdapter = new QnaBoardDetailVoteAdapter(this, editModelArrayList, new QnaBoardDetailVoteAdapter.ClickListener() {
                     @Override
                     public void onListVoteListClick(int position, View view) {
-                        Toast.makeText(view.getContext(), position + "", Toast.LENGTH_SHORT).show();
-//                        TextView textView = view.findViewById(R.id.textViewssss);
-//                        ImageView imageView = view.findViewById(R.id.textSelect);
-//
-//                        if (position != isSelectedPosition) {
-//                            if (isSelectedPosition != 9999) {
-//                                editModelArrayList.get(isSelectedPosition).setFlag(false);
-//                                tv_inActSelected.setTextColor(Color.parseColor("#9d9d97"));
-//                                iv_inActSelected.setVisibility(View.INVISIBLE);
-//                            }
-//                            isSelectedPosition = position;
-//                            textView.setTextColor(Color.parseColor("#08883e"));
-//                            imageView.setVisibility(View.VISIBLE);
-//                            editModelArrayList.get(isSelectedPosition).setFlag(true);
-//
-//                            tv_inActSelected = textView;
-//                            iv_inActSelected = imageView;
-//                        }
-//
-//                        rl_voteFinishLayout.setVisibility(View.VISIBLE);
-//                        whatVoteSelect = 0;
-//
-//                        for (int i = 0; i < editModelArrayList.size(); i++) {
-//                            Log.d("어뎁터", "플레그: " + i + "  " + editModelArrayList.get(i).isFlag());
-//                        }
                     }
                 });
                 rc_recycler.setAdapter(qnaBoardDetailVoteAdapter);
@@ -792,9 +738,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
                 qnaBoardDetailVoteAdapter.alreadyVote = true;
                 qnaBoardDetailVoteAdapter.notifyDataSetChanged();
-                Log.d(TAG, "getDataSuccess: 투표했지?"+ qnaBoardDetailVoteAdapter.alreadyVote);
 
-                Log.d(TAG, "getDataSuccess: text total : "+getQnaVoteItem.getTotalVoteCount());
                 voteTotalResult = getQnaVoteItem.getTotalVoteCount();
                 qnaBoardDetailVoteAdapter.voteTotalNums = voteTotalResult;
                 qnaBoardDetailVoteAdapter.notifyDataSetChanged();
@@ -816,7 +760,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
                 qnaBoardDetailImageAdapter.totalImageNum = getQnaVoteItem.getVoteImage().size();
                 voteTotalResult = getQnaVoteItem.getTotalVoteCount();
-                Log.d(TAG, "getDataSuccess: total in act "+voteTotalResult+"");
                 qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
                 qnaBoardDetailImageAdapter.notifyDataSetChanged();
 
@@ -842,7 +785,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 qnaBoardDetailImageAdapter.notifyDataSetChanged();
 
                 voteTotalResult = getQnaVoteItem.getTotalVoteCount();
-                Log.d(TAG, "getDataSuccess: total in act "+voteTotalResult+"");
                 qnaBoardDetailImageAdapter.voteTotalNum = voteTotalResult;
                 qnaBoardDetailImageAdapter.notifyDataSetChanged();
 
@@ -865,7 +807,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             qnaBoardItem.setGoods(boardRecommend.getLikeCount());
             qnaBoardItem.setBads(boardRecommend.getBadCount());
 
-            Log.d(TAG, "recommendComplete: isLike, isBad" +likeBtnOnOff+", "+unLikeBtnOnOff);
 
             if (likeBtnOnOff > 0)
                 qnaBoardItem.setIsLike(1);
@@ -877,7 +818,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             else
                 qnaBoardItem.setIsBad(0);
 
-            Log.d(TAG, "recommendComplete: 추천 결과 제대로왔다. "+qnaBoardItem.getGoods() +"//"+ qnaBoardItem.getBads());
 
             recommendResponse = true;
         } else {
@@ -898,7 +838,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             }
             else {
                 for (int i = 0; i < gridVoteItemArrayList.size(); i++) {
-                    Log.d(TAG, "이미지투표 업데이트 결과: "+updateQnaVoteItem.getVoteResult().get(i));
                     gridVoteItemArrayList.get(i).setVote(updateQnaVoteItem.getVoteResult().get(i));
                 }
                 qnaBoardDetailImageAdapter.notifyDataSetChanged();
@@ -942,6 +881,11 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         et_commentWrite.setSelection(et_commentWrite.length());
                         EditText_commentWirte_tag();
                     }
+                    else if(et_commentWrite.getHint().toString().equals(TextAddWriter))
+                    {
+                        et_commentWrite.getText().clear();
+                        et_commentWrite.setHint("댓글을 입력해주세요");
+                    }
                     else
                     {
                         et_commentWrite.getText().clear();
@@ -965,7 +909,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
             @Override
             public void toss_likeRequest_activity(int postNo, int commentNo, int accountNo, int like_check, int commentORrecomment, int recommentNo)
             {
-                commentPresenter.likeRequest(postNo,commentNo,like_check,commentORrecomment,0,recommentNo);
+                commentPresenter.likeRequest(postNo,commentNo,accountNo,like_check,commentORrecomment,recommentNo);
             }
         });
 
@@ -1141,7 +1085,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
 
         if (recommendResponse)
         {
-            Log.d(TAG, "isLike, isBads 하이 인텐트 엑션카이드"+qnaBoardItem.getIsLike()+", "+qnaBoardItem.getIsBad());
             intent = new Intent();
             intent.putExtra("qnaBoardItem", qnaBoardItem);
             intent.putExtra("actionKind", 1);

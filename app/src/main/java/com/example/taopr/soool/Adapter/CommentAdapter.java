@@ -253,7 +253,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     CommentOrRecomment = false;
                     holder.recomment_insert.setText("답글달기");
                     toss_commentNo_interface.toss_commentNo_atActivity(0,commentitem.getCommentWriter(),position);
-
                 }
                 
             }
@@ -303,12 +302,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             {
 
                 int commentORrecomment = 0;
+                Log.d(TAG, "GDGSDGSDG" + commentitem.getAccountNo());
                 if (commentitem.getAccountNo() == 1)
                 {
                     //좋아요 취소
                     //이미 눌렀는데 또 누를경우
                         int like_check = 0;
+                    Log.d(TAG, "GDGSDGSDG" + "취소" + like_check);
                         toss_commentNo_interface.toss_likeRequest_activity(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
+
                         if (commentitem.getLikeCount() == 0)
                         {
                             String update_like_count = String.valueOf(commentitem.getLikeCount());
@@ -319,6 +321,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                             String update_like_count = String.valueOf(commentitem.getLikeCount() - 1);
                             holder.commentLike.setText("추천 " + update_like_count);
                         }
+
                         holder.commentLike.setTextColor(ContextCompat.getColor(context, R.color.grayMain));
 
                         commentitem.setAccountNo(0);
@@ -326,8 +329,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 else if (commentitem.getAccountNo() == 0)
                 {
                         //좋아요
-                        int like_check = 1;
-                        toss_commentNo_interface.toss_likeRequest_activity(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
+                    int like_check = 1;
+                    toss_commentNo_interface.toss_likeRequest_activity(postNo,commentitem.getCommentNo(),accountNo,like_check,commentORrecomment,0);
                         if (commentitem.getLikeCount() == 0)
                         {
                             String update_like_count = String.valueOf(commentitem.getLikeCount() + 1);
@@ -388,8 +391,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     v.setTag(position);
                     if (holder.recommentView.getText().toString().equals("답글달기"))
                     {
-                        toss_commentNo_interface.toss_commentNo_atActivity(commentitem.getCommentNo(),commentitem.getCommentWriter(),position);
-                    }
+                        if (CommentOrRecomment == false)
+                        {
+                            CommentOrRecomment = true;
+                            toss_commentNo_interface.toss_commentNo_atActivity(commentitem.getCommentNo(),commentitem.getCommentWriter(),position);
+                        }
+                        else if(CommentOrRecomment == true)
+                        {
+
+                            CommentOrRecomment = false;
+                            holder.recomment_insert.setText("답글달기");
+                            toss_commentNo_interface.toss_commentNo_atActivity(0,commentitem.getCommentWriter(),position);
+
+                        }                    }
                     else
                     {
                         if (!holder.recommentList.isShown())
@@ -418,11 +432,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         }
                         else
                         {
+
                             String DeleteContent =  holder.commentContent.getText().toString();
                             if(DeleteContent.equals("삭제된 댓글입니다."))
                             {
                                 recommentitems.clear();
                             }
+
+
                             holder.recommentList.setVisibility(View.GONE);
                             int rightpadding =
                                     (int) context.getResources().getDimension(R.dimen.recomment_view_padding);
@@ -479,15 +496,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
         });
 
-
-
         if (commentitem.getCommentContent().equals("삭제된 댓글입니다."))
         {
             holder.commentDelete.setText("");
-            holder.commentLike.setVisibility(View.GONE);
+            holder.commentLike.setText("");
             holder.recomment_insert.setText("");
             holder.comment_delete_img.setVisibility(View.VISIBLE);
             holder.commentContent.setTextColor(context.getResources().getColor(R.color.grayMain));
+
             int recommentCountPadding = (int)context.getResources().getDimension(R.dimen.all_space_between_18dp);
             holder.recommentCount.setPadding(0,0,0,0);
         }
@@ -587,22 +603,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void commentDeleteGoResponse(int response,int commentCount,int commentNo)
     {
+        //commentNo = adapter에서 넘긴 position
         if (response == 0)//댓글
         {
-            if (commentitems.get(commentNo).getRecommentCount() == 0)
-            {
-                commentitems.remove(commentNo);
-            }
-            else
-            {
-                commentitems.get(commentNo).setCommentContent("삭제된 댓글입니다.");
-            }
-            notifyItemChanged(commentNo);
+            commentitems.remove(commentNo);
+            notifyDataSetChanged();
         }
         else if (response == 1)
         {
             recommentAdapter.commentDeleteGoResponse(response,commentCount,commentNo);
-
+            CommentItem commentItem = commentitems.get(commentNo);
+            commentItem.setRecommentCount(recommentitems.size());
             notifyItemChanged(commentNo);
         }
     }

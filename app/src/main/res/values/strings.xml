@@ -221,12 +221,13 @@
 
     <string-array name="capacity_array">
         <item>항목을 선택해주세요</item>
-        <item>유종현</item>
+        <item>술래Y</item>
         <item>소주 1잔</item>
+        <item>소주 반병</item>
         <item>소주 1병</item>
         <item>소주 2병</item>
         <item>소주 3병</item>
-        <item>김병구</item>
+        <item>술래K</item>
     </string-array>
 
     <string-array name="favorite_array">
@@ -236,7 +237,7 @@
         <item>고량주</item>
         <item>데킬라</item>
         <item>칵테일</item>
-        <item>김병구</item>
+        <item>술래K</item>
     </string-array>
 
     <string-array name="reason_array">
@@ -246,7 +247,7 @@
         <item>취하고 싶어서</item>
         <item>이성과의 만남</item>
         <item>다른 이유3</item>
-        <item>김병구</item>
+        <item>술래K</item>
     </string-array>
 
 

@@ -133,7 +133,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
         keyboard = new Keyboard(this);
         keyboard.hideKeyboard(et_qnaboardTitle);
-//        keyboard.hideKeyboard(et_qnaboardContent);
 
         String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
         Gson gson = new GsonBuilder().create();
@@ -156,7 +155,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                 tv_qnaboardBeforeTag.setVisibility(View.GONE);
                 h_scrollView.setVisibility(View.VISIBLE);
-                Log.d(TAG, "onCreate 태그값: "+receiveQnaBoardItem.getTag());
                 if (receiveQnaBoardItem.getTag().contains("@##@")) {
                     tagData = receiveQnaBoardItem.getTag().split("@##@");
                     for (int i = 0; i < tagData.length; i++) {
@@ -185,7 +183,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     imageLayout.setVisibility(View.GONE);
                 } else {
                     imageLayout.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "onCreate: 이미지?? "+Whatisthis.serverIp+receiveQnaBoardItem.getImage());
                     Glide.with(this)
                             .load(Whatisthis.serverIp+receiveQnaBoardItem.getImage())
                             .override(100, 100)
@@ -207,23 +204,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
         });
         recyclerView.setAdapter(qnaBoardVoteAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-
-        if (et_qnaboardContent.getText().length() > 0)
-            Toast.makeText(this,"gkggkkgkg", Toast.LENGTH_SHORT).show();
     }
 
 
-    // 얘 머지?;;;;
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.drawupBack:
-//                finish();
-//                return true;
-//
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+
 
     private ArrayList<QnaBoardVoteItem> populateList(){
 
@@ -295,7 +279,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
     private void checkPermission(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // 다시 보지 않기 버튼을 만드려면 이 부분에 바로 요청을 하도록 하면 됨 (아래 else{..} 부분 제거)
-            // ActivityCompat.requestPermissions((Activity)mContext, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_CAMERA);
 
             // 처음 호출시엔 if()안의 부분은 false로 리턴 됨 -> else{..}의 요청으로 넘어감
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -393,9 +376,8 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                     voteImage.clear();
 
-                    Log.d(TAG, "이미지 투표 초기화?: "+gridVoteItemArrayList.size() + "// " + voteImage.size());
                 } catch (NullPointerException e) {
-                    Log.d(TAG, "onClick: "+e);
+                    Log.d(TAG, "Null pointer");
                 }
 
                 iv_qnaboardVoteBtn.setClickable(true);
@@ -417,7 +399,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                     voteText.clear();
                 } catch (NullPointerException e) {
-                    Log.d(TAG, "onClick: "+e);
+                    Log.d(TAG, "Null pointer");
                 }
 
                 iv_qnaboardVoteBtn.setClickable(true);
@@ -442,7 +424,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 };
                 new AlertDialog.Builder(this)
                         .setTitle("업로드할 이미지 선택")
-//                        .setPositiveButton("사진촬영", cameraListener)
                         .setNeutralButton("취소", cancelListener)
                         .setNegativeButton("앨범선택", albumListener)
                         .show();
@@ -470,11 +451,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 // 투표가 구별이 되었다면 그 값들 또한 예외처리 이후에 객체에 저장을 해주어야한다.
 
                 // 2019/4/26 태그 ui부분 변경해줬으므로 예외처리 부분도 변경해야합니다.
-                /*
-                if (tagArray.size() == 0) {
-                    Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
-                }
-                 */
+
                 // 위 방식으로 변경해야합니다.
                 // 아직 적용하지 않은 이유는 객체의 데이터가 변경되야하므로 팀원들과 상의후에 변경하기 위해 아직 주석에가 남겨둡니다.
                 // 객체 tag 변수를 ArrayList<String>으로 변경해야함을 회의해야한다.
@@ -482,15 +459,15 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 if (actionKind == 0) {
                     if (tag.equals("")) {
                         Toast.makeText(v.getContext(),"태그 값을 선택해주세요.",Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
+
                     } else if (et_qnaboardTitle.getText().length() == 0) {
                         Toast.makeText(v.getContext(),"제목을 입력해주세요.",Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onClick: 제목을 입력해주세요.");
+
                     } else if (et_qnaboardContent.getText().length() == 0) {
                         Toast.makeText(v.getContext(),"내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onClick: 내용을 입력해주세요.");
+
                     } else if (boardImagePath == null) {
-                        Log.i(TAG, "onClick: "+tag);
+
                         // 1. 투표가 표함되는지 안되는지 선 체크
                         // 2. 투표가 있다면 이미지 / 텍스트 중 어떤 투표인지 -> 투표는 다른 디비로 보낼것 이기 때문
                         // 3. 투표가 없다면
@@ -503,14 +480,9 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                             // 투표가 존재하는 경우.
 
-//                            qnaBoardItem.setQnaCate(0);
                             if (voteSelect == 0) {
 
                                 // 텍스트 투표 인 경우.
-
-//                                qnaBoardItem.setTag(tag);
-//                                qnaBoardItem.setTitle(et_qnaboardTitle.getText().toString());
-//                                qnaBoardItem.setContent(et_qnaboardContent.getText().toString());
 
                                 for (int i = 0; i < editModelArrayList.size(); i++) {
 
@@ -518,7 +490,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                     if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
                                         Toast.makeText(v.getContext(),i+1+"번째 내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
-                                        Log.d(TAG, "onClick: " + i + 1 + "번째 내용을 입력해주세요.");
                                     }
                                     voteText.add(editModelArrayList.get(i).getEditTextValue());
                                 }
@@ -529,7 +500,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 qnaBoardPresenter.enrollmentBoardReq(qnaItem);
 
                                 showLoading();
-                                Log.d(TAG, "tv_drawupEnroll 비활성화");
                             } else if (voteSelect == 1) {
 
                                 // 이미지 투표 인 경우.
@@ -545,8 +515,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                             // 투표가 존재하지 않는 경우.
 
-                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString());
 
                             qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
                                     et_qnaboardContent.getText().toString());
@@ -564,7 +532,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         // 3. 투표가 없다면
                         // 이 세가지를 구별해야 할듯?
 
-                        Log.d(TAG, "onClick: 찍혀라!!!!!!!!!!!!!!1 " + voteFlag + voteSelect);
+
 
                         if (voteFlag == 0) {
                             if (voteSelect == 0) {
@@ -575,7 +543,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                                     if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
                                         Toast.makeText(v.getContext(),i+1+"번째 내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
-                                        Log.d(TAG, "onClick: " + i + 1 + "번째 내용을 입력해주세요.");
                                     }
                                     voteText.add(editModelArrayList.get(i).getEditTextValue());
                                 }
@@ -596,8 +563,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 showLoading();
                             }
                         } else if (voteFlag == 1) {
-                            Log.d(TAG, "enroll onClick: " + "태그 : " + tag + " 제목 : "
-                                    + et_qnaboardTitle.getText().toString() + " 내용 : " + et_qnaboardContent.getText().toString() + " 이미지 : " + boardImagePath);
 
                             qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
                                     et_qnaboardContent.getText().toString(), boardImagePath);
@@ -611,13 +576,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     // receiveQnaBoardItem 수정되면 모델로 넘겨서 서버에 저장
                     if (tag.equals(null)) {
                         Toast.makeText(v.getContext(),"태그 값을 선택해주세요.",Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onClick: 태그 값을 선택해주세요.");
                     } else if (et_qnaboardTitle.getText().length() == 0) {
                         Toast.makeText(v.getContext(),"제목을 입력해주세요.",Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onClick: 제목을 입력해주세요.");
                     } else if (et_qnaboardContent.getText().length() == 0) {
                         Toast.makeText(v.getContext(),"내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onClick: 내용을 입력해주세요.");
                     }
 
                     try {
@@ -655,8 +617,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                         if (voteSelect == 0) {
                             ll_qnaVoteTextLayout.setVisibility(View.VISIBLE);
-//                            recyclerView.setVisibility(View.VISIBLE);
-//                            rl_qnaTextAddLayout.setVisibility(View.VISIBLE);
+
                         } else {
                             ll_qnaVoteImageLayout.setVisibility(View.VISIBLE);
                             // 다중 이미지 테스트 성공.
@@ -674,7 +635,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
                     @Override
                     public void noVotesoReturn(boolean flag) {
                         if (flag == true) {
-                            Log.d(TAG, "noVotesoReturn: 아무것도 안누름");
                             iv_qnaboardVoteBtn.setVisibility(View.VISIBLE);
                         } else {
 
@@ -790,13 +750,11 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 break;
             case R.id.drawupDelete:
                 // 삭제기능
-                Log.d(TAG, "삭제 버튼 -> "+receiveQnaBoardItem.getPostNo());
                 qnaBoardPresenter.deleteBoardReq(receiveQnaBoardItem.getPostNo());
                 showLoading();
                 break;
             case R.id.spaceLayout:
                 keyboard = new Keyboard(v.getContext());
-                Log.d(TAG, "클릭 스페이스 레이아웃");
                 keyboard.showKeyboard(et_qnaboardContent);
                 break;
         }
@@ -813,8 +771,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
         {
             case Define.ALBUM_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    // path = imageData.getStringArrayListExtra(Define.INTENT_PATH);
-                    // you can get an image path(ArrayList<String>) on <0.6.2
 
                     path = data.getParcelableArrayListExtra(Define.INTENT_PATH);
                     if (!boardImageSelect) {
@@ -910,14 +866,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     gridVoteItemArrayList.add(gridVoteItem);
                                 }
 
-                                Log.d(TAG, "onActivityResult: 조건문 안녕 제대로 추가안한거 맞아 여긴");
                                 Uri uriTest = Uri.parse("");
                                 gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
                                 gridVoteItemArrayList.add(gridVoteItem);
 
                             }
                             voteImageAdapter.notifyDataSetChanged();
-//                            gridView.setAdapter(voteImageAdapter);
 
                             reSelectVoteImage = false;
                         }
@@ -1089,14 +1043,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
             voteImageAdapter.notifyDataSetChanged();
         }
         else {
-            Log.d(TAG, "onListImageBtnClick: 동작X 로딩중");
         }
     }
 
     @Override
     public void onListLayoutClick(int position) {
         if (!loading) {
-            Log.d(TAG, "아이템체크: " + gridVoteItemArrayList.get(position).getImageIden() + "//" + gridVoteItemArrayList.get(position).getStatus());
             if (gridVoteItemArrayList.get(position).getImageIden() == 1) {
                 reSelectVoteImage = true;
                 gridVoteItemArrayList.remove(position);
@@ -1106,7 +1058,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
             }
         }
         else {
-            Log.d(TAG, "onListImageBtnClick: 동작X 로딩중");
         }
     }
 
