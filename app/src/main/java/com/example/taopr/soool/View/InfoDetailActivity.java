@@ -48,6 +48,7 @@ import com.example.taopr.soool.Object.BoardRecommend;
 import com.example.taopr.soool.Object.CommentItem;
 import com.example.taopr.soool.Object.InfoContentText;
 import com.example.taopr.soool.Object.InfoItem;
+import com.example.taopr.soool.Object.LoginSessionItem;
 import com.example.taopr.soool.Object.QnaVoteItem;
 import com.example.taopr.soool.Object.RecommentItem;
 import com.example.taopr.soool.Presenter.CommentPresenter;
@@ -60,6 +61,8 @@ import com.example.taopr.soool.View.LayoutInflater.InflateBody;
 import com.example.taopr.soool.View.LayoutInflater.InflateImage;
 import com.example.taopr.soool.View.LayoutInflater.InflateSubtitle;
 import com.example.taopr.soool.Util.Whatisthis;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -168,15 +171,29 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     private boolean  recommendResponse = false;
     boolean commentDeleteRecommentDelete = false;
 
+    //keyboard
+    Keyboard keyboard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_detail);
         ButterKnife.bind(this);
 
+        keyboard = new Keyboard(this);
+
+        String data = LoginSharedPreferences.LoginUserLoad(this, "LoginAccount");
+        Gson gson = new GsonBuilder().create();
+        // JSON 으로 변환
+        LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
+        accountNick = loginSessionItem.getAccountNick();
+        accountNo = loginSessionItem.getAccountNo();
+
+
         infoProgress = findViewById(R.id.infoDetailProgress);
         infoDetailPresenter = new InfoDetailPresenter(this);
         infoDetailPresenter.setView(this);
+
 
         // getData sent from InfoFragment & sharedPreference
         getIntentInfo();
@@ -203,10 +220,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         linearLayoutManager.setStackFromEnd(true);
 
 
+
         commentList.setLayoutManager(linearLayoutManager);
         commentPresent = new CommentPresenter(this,this);
         commentPresent.setView(this);
-        commentPresent.loadData(postNo);
+        commentPresent.loadData(infoItem.getPostNo());
         commentList.setAdapter(commentAdapter);
 
 
@@ -516,20 +534,25 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     public void commentEnroll()
     {
         String commentContent = infoCommentText.getText().toString();
-        Log.d(TAG, "infoComment: 버튼은 눌러지니 ?");
-        if (Get_commentNo == 0)
+        if(commentContent.length() == 0)
         {
-            Log.d(TAG, "infoComment: 댓글 안타니?");
-            commentPresent.commentRequest(postNo, accountNo, commentContent);
-            infoCommentText.getText().clear();
+            Toast.makeText(this,"댓글을 입력해주세요.",Toast.LENGTH_LONG).show();
         }
         else
         {
-            commentPresent.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
-            infoCommentText.getText().clear();
+            if (Get_commentNo == 0)
+            {
+                commentPresent.commentRequest(postNo, accountNo, commentContent);
+                infoCommentText.getText().clear();
+            }
+            else
+            {
+                commentPresent.recommentRequest(postNo,Get_commentNo,accountNo,commentContent);
+                infoCommentText.getText().clear();
+            }
         }
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(infoCommentText.getWindowToken(),0);
+
+        keyboard.hideKeyboard(infoCommentText);
     }
     @Override
     public void getCommentDataSuccess(ArrayList<CommentItem> commentitem,int position)
@@ -537,39 +560,46 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
         this.commentitem = commentitem;
 
-        //댓글리스트데이터 성공적으로 받아왔을때 댓글어댑터 생성
+
         commentAdapter = new CommentAdapter(InfoDetailActivity.this,this.commentitem,this,postNo,accountNo,accountNick);
         commentPresent.setView(this);
         commentList.setAdapter(commentAdapter);
         setCommentList();
-
 
         commentAdapter.toss_commentNo_Methods(new CommentAdapter.toss_commentNo_interface()
         {
             @Override
             public void toss_comment_position(int position)
             {
-
+                commentAdapter.getCommentDataSuccess(commentitem,comment_position);
             }
 
             @Override
             public void toss_commentNo_atActivity(int commentNo,String commentWriter,int position) {
-                Get_commentNo = commentNo;
-                commentWriter = commentWriter;
-                TextAddWriter = "@" + commentWriter +" ";
                 comment_position = position;
 
-                if (Get_commentNo != 0)
+                if (commentNo != 9999)
                 {
-                    infoCommentText.getText().clear();
-                    infoCommentText.setText(TextAddWriter);
-                    infoCommentText.setSelection(infoCommentText.length());
-                    EditText_commentWirte_tag();
-                }
-                else
-                {
-                    infoCommentText.getText().clear();
-                    infoCommentText.setHint("댓글을 입력해주세요");
+                    Get_commentNo = commentNo;
+                    commentWriter = commentWriter;
+                    TextAddWriter = "@" + commentWriter +" ";
+                    if (Get_commentNo != 0)
+                    {
+                        infoCommentText.getText().clear();
+                        infoCommentText.setText(TextAddWriter);
+                        infoCommentText.setSelection(infoCommentText.length());
+                        EditText_commentWirte_tag();
+                    }
+                    else if(infoCommentText.getHint().toString().equals(TextAddWriter))
+                    {
+                        infoCommentText.getText().clear();
+                        infoCommentText.setHint("댓글을 입력해주세요");
+                    }
+                    else
+                    {
+                        infoCommentText.getText().clear();
+                        infoCommentText.setHint("댓글을 입력해주세요");
+                    }
                 }
 
             }
@@ -577,21 +607,21 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void toss_commentCount_actiivity(int commentCount,int commentDeleteOrRecommentDelete,int deletePosition)
             {
-
                 comment_position = deletePosition;
                 if (commentDeleteOrRecommentDelete == 0)
                 {
                     commentDeleteRecommentDelete = true;
                 }
                 commentPresent.commentDeleteRequest(postNo,commentCount,0);
-
             }
+
             @Override
             public void toss_likeRequest_activity(int postNo, int commentNo, int accountNo, int like_check, int commentORrecomment, int recommentNo)
             {
-                commentPresent.likeRequest(postNo,commentNo,like_check,commentORrecomment,0,recommentNo);
+                commentPresent.likeRequest(postNo,commentNo,accountNo,like_check,commentORrecomment,recommentNo);
             }
         });
+
     }
 
     public void EditText_commentWirte_tag()
@@ -669,10 +699,11 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
     public void commentInsertGoResponse(int response, int commentCount, CommentItem commentItem)
     {
         //댓글 작성
+        Log.d(TAG, "commentInsertGoResponse: " + "안타냐");
         if (response == 0)
         {
             commentitem.add(commentItem);
-            commentAdapter.notifyDataSetChanged();
+            commentAdapter.notifyItemChanged(0);
             scrollToView(comment_layout_top,body,0);
 
             setCommentList();
@@ -705,7 +736,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
         if (response == 0)
         {
             commentAdapter.recommentInsertGoResponse(response,recommentItem,comment_position);
-
             commentList.requestFocus(commentNo - 1);
         }
     }

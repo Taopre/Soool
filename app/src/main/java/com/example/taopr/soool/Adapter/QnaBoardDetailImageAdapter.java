@@ -117,7 +117,6 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
                 viewHolder.progressBar.setProgress(item.get(position).getVote());
             }
         });
-//        viewHolder.progressBar.setScaleY(27f);
         viewHolder.progressBar.setMax(voteTotalNum);
 
         if (voteFlag == true) {
@@ -125,13 +124,10 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
             viewHolder.num.setVisibility(View.VISIBLE);
             viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.imageView.setAlpha(50);
-            Log.d(TAG, "onBindViewHolder: 포지션이당"+userSelectPos);
 
             if (position != (userSelectPos - 1)) {
-                Log.d(TAG, "onBindViewHolder: 틀린 포지션이당"+position);
                 viewHolder.num.setTextColor(Color.parseColor("#9d9d97"));
             } else {
-                Log.d(TAG, "onBindViewHolder: 맞는 포지션이당"+position);
                 viewHolder.num.setTextColor(Color.parseColor("#08883e"));
             }
 
@@ -170,11 +166,7 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
     public void onClick(View v) {
         // ListBtnClickListener(MainActivity)의 onListBtnClick() 함수 호출.
         switch (v.getId()) {
-//            case R.id.grid_image:
-//                if (this.gridviewItemClickListner != null) {
-//                    this.gridviewItemClickListner.onListImageClick((int)v.getTag()) ;
-//                }
-//                break;
+
             case R.id.radio:
                 if (this.gridviewItemClickListner != null) {
                     this.gridviewItemClickListner.onListRadioClick((int)v.getTag(), v) ;
