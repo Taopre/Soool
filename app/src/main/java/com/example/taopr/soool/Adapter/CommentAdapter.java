@@ -418,6 +418,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         }
                         else
                         {
+                            String DeleteContent =  holder.commentContent.getText().toString();
+                            if(DeleteContent.equals("삭제된 댓글입니다."))
+                            {
+                                recommentitems.clear();
+                            }
                             holder.recommentList.setVisibility(View.GONE);
                             int rightpadding =
                                     (int) context.getResources().getDimension(R.dimen.recomment_view_padding);
@@ -479,11 +484,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         if (commentitem.getCommentContent().equals("삭제된 댓글입니다."))
         {
             holder.commentDelete.setText("");
-            holder.commentLike.setText("");
+            holder.commentLike.setVisibility(View.GONE);
             holder.recomment_insert.setText("");
             holder.comment_delete_img.setVisibility(View.VISIBLE);
             holder.commentContent.setTextColor(context.getResources().getColor(R.color.grayMain));
-
             int recommentCountPadding = (int)context.getResources().getDimension(R.dimen.all_space_between_18dp);
             holder.recommentCount.setPadding(0,0,0,0);
         }
@@ -583,17 +587,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void commentDeleteGoResponse(int response,int commentCount,int commentNo)
     {
-        //commentNo = adapter에서 넘긴 position
         if (response == 0)//댓글
         {
-            commentitems.remove(commentNo);
-            notifyDataSetChanged();
+            if (commentitems.get(commentNo).getRecommentCount() == 0)
+            {
+                commentitems.remove(commentNo);
+            }
+            else
+            {
+                commentitems.get(commentNo).setCommentContent("삭제된 댓글입니다.");
+            }
+            notifyItemChanged(commentNo);
         }
         else if (response == 1)
         {
             recommentAdapter.commentDeleteGoResponse(response,commentCount,commentNo);
-            CommentItem commentItem = commentitems.get(commentNo);
-            commentItem.setRecommentCount(recommentitems.size());
+
             notifyItemChanged(commentNo);
         }
     }
