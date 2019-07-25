@@ -801,12 +801,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                 // 리사이징 부분
-                                Bitmap bitmap = resizeBitmap(imagePath,324,186);
-                                bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
-
-                                cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
-                                cursor.moveToFirst();
-                                imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+//                                Bitmap bitmap = resizeBitmap(imagePath,324,186);
+//                                bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+//
+//                                cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+//                                cursor.moveToFirst();
+//                                imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                 voteImage.add(imagePath);
                                 File file = new File(voteImage.get(i));
@@ -840,12 +840,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                     // 리사이징 부분
-                                    Bitmap bitmap = resizeBitmap(imagePath,324,186);
-                                    bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
-
-                                    cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
-                                    cursor.moveToFirst();
-                                    imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+//                                    Bitmap bitmap = resizeBitmap(imagePath,324,186);
+//                                    bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+//
+//                                    cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+//                                    cursor.moveToFirst();
+//                                    imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                     voteImage.add(imagePath);
 
@@ -865,12 +865,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                     // 리사이징 부분
-                                    Bitmap bitmap = resizeBitmap(imagePath,324,186);
-                                    bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
-
-                                    cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
-                                    cursor.moveToFirst();
-                                    imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+//                                    Bitmap bitmap = resizeBitmap(imagePath,324,186);
+//                                    bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+//
+//                                    cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+//                                    cursor.moveToFirst();
+//                                    imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                                     voteImage.add(imagePath);
 
@@ -902,12 +902,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                         // 리사이징 부분
-                        Bitmap bitmap = resizeBitmap(imagePath,324,186);
-                        bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
-
-                        cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
-                        cursor.moveToFirst();
-                        imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+//                        Bitmap bitmap = resizeBitmap(imagePath,324,186);
+//                        bitmap = ExifUtils.rotateBitmap(imagePath,bitmap);
+//
+//                        cursor = getContentResolver().query(getImageUri(this,bitmap), filePath, null, null, null);
+//                        cursor.moveToFirst();
+//                        imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
                         imageLayout.setVisibility(View.VISIBLE);
 
