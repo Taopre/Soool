@@ -56,9 +56,9 @@ public class NoticeDialog extends Dialog{
         // null 값인지 아닌지로 구분하여 Title 에 text 값을 부여한다
 
         if (noticeDialogTitle != null) {
-            noticeDialogTitle.setVisibility(View.GONE);
             noticeDialogTitle.setText(dialogTitle);
         }
+        else noticeDialogTitle.setVisibility(View.GONE);
 
         noticeDialogContent.setText(dialogContent);
 

@@ -331,7 +331,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         linearLayoutManager.setStackFromEnd(true);
         commentList.setLayoutManager(linearLayoutManager);
 
-
         commentPresenter = new CommentPresenter(this,this);
         commentPresenter.setView(this);
         commentPresenter.loadData(qnaBoardItem.getPostNo());

@@ -515,8 +515,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         // 성공시 deleteAccountSuccess() 에서 starting 액티비티 페이지로 이동
         // 이동할 때 스택을 초기화 후 이동
         else if(view.getId() == R.id.deleteAccount){
-
-            profilePresenter.deleteAccount(accountNo);
+            noticeDialog = new NoticeDialog(ProfileActivity.this,getString(R.string.notice_dialog_delete_user_title),
+                    getString(R.string.notice_dialog_delete_user_content),false,getString(R.string.all_button_yes),
+                    getString(R.string.all_button_no),deleteUserPositiveListener,negativeListener);
+            noticeDialog.show();
+            //profilePresenter.deleteAccount(accountNo);
         }
     }
 
@@ -533,6 +536,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         return true;
     }
 
+    // 로그 아웃 다이얼로그 '확인' 버튼 리스너
+    private View.OnClickListener deleteUserPositiveListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            noticeDialog.dismiss();
+            profilePresenter.deleteAccount(accountNo);
+        }
+    };
 
     private View.OnClickListener positiveListener = new View.OnClickListener() {
         public void onClick(View v) {

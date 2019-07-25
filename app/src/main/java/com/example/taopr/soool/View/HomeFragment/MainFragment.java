@@ -88,6 +88,7 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
         infoList(); // info 글 리스트 관련
         qnaBoardList(); // qna 글 리스트 관련
 
+        viewPagerthreadDead = false; // 메인 화면을 부착할 경우 스레드가 살아 있다는 상태를 저장하는 변수
         if (mainInfoAdapter != null ){
             infoViewAutoChange();
         }
@@ -142,57 +143,42 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
             handler = new Handler(){
 
                 public void handleMessage(android.os.Message msg) {
+                    if (mainInfoViewPager != null) {
+                        if (mainInfoViewPager.getCurrentItem() == 0) {
 
-                    /*if(infoCurrentPage==0){
+                            mainInfoViewPager.setCurrentItem(1);
 
-                        mainInfoViewPager.setCurrentItem(1);
-                        infoCurrentPage++;
+                            //  infoCurrentPage++;
+                            infoPageMoveDirection = 0;
 
-                    }else if(infoCurrentPage==1){
-                        mainInfoViewPager.setCurrentItem(2);
+                        } else if (mainInfoViewPager.getCurrentItem() == 1 && infoPageMoveDirection == 0) {
+                            mainInfoViewPager.setCurrentItem(2);
+                            infoPageMoveDirection = 1;
+                            //  infoCurrentPage++;
 
-                        infoCurrentPage++;
+                        } else if (mainInfoViewPager.getCurrentItem() == 1 && infoPageMoveDirection == 1) {
+                            mainInfoViewPager.setCurrentItem(0);
+                            infoPageMoveDirection = 0;
+                            //infoCurrentPage++;
 
-                    }else if(infoCurrentPage==2){
-                        mainInfoViewPager.setCurrentItem(0);
+                        } else if (mainInfoViewPager.getCurrentItem() == 2) {
+                            mainInfoViewPager.setCurrentItem(1);
+                            //  infoCurrentPage=0;
+                            infoPageMoveDirection = 1;
 
-                        infoCurrentPage=0;
-                    }*/
-
-                    if(mainInfoViewPager.getCurrentItem()==0){
-
-                        mainInfoViewPager.setCurrentItem(1);
-
-                      //  infoCurrentPage++;
-                        infoPageMoveDirection = 0;
-
-                    }else if(mainInfoViewPager.getCurrentItem()==1 && infoPageMoveDirection==0){
-                        mainInfoViewPager.setCurrentItem(2);
-                        infoPageMoveDirection = 1;
-                      //  infoCurrentPage++;
-
-                    }
-                    else if(mainInfoViewPager.getCurrentItem()==1 && infoPageMoveDirection==1){
-                        mainInfoViewPager.setCurrentItem(0);
-                        infoPageMoveDirection = 0;
-                        //infoCurrentPage++;
-
-                    }else if(mainInfoViewPager.getCurrentItem()==2){
-                        mainInfoViewPager.setCurrentItem(1);
-                      //  infoCurrentPage=0;
-                        infoPageMoveDirection = 1;
-
+                        }
                     }
 
                 }
             };
             infoViewAutoChange();
         }
-
     }
 
     private void infoViewAutoChange(){
+
         if (thread == null) {
+      //  if (viewPagerthreadDead) {
             thread = new Thread() {
 
                 //run은 jvm이 쓰레드를 채택하면, 해당 쓰레드의 run메서드를 수행한다.
@@ -201,36 +187,32 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
 
                     super.run();
 
-                    while (!thread.isInterrupted()){
+                    while (!thread.isInterrupted()) {
 
                         try {
-                            Log.i(TAG, "run: 0" + thread.isInterrupted());
                             Thread.sleep(4000);
-                            if (viewPagerthreadDead){
+                            if (viewPagerthreadDead) {
                                 thread.interrupt();
+                                thread = null;
+                                break;
                             }
-                            Log.i(TAG, "run: 1" + thread.isInterrupted());
+
                             if (!thread.isInterrupted()) {
                                 handler.sendEmptyMessage(0);
                             }
 
                         } catch (InterruptedException e) {
-
-                           // Log.i(TAG, "run: int");
+                            // Log.i(TAG, "run: int");
                             e.printStackTrace();
-
                         }
-
                     }
-
-                    Log.i(TAG, "run: end" + thread.isInterrupted());
-
                 }
-
             };
-
-            thread.start();
+            if (thread != null) {
+                thread.start();
+            }
         }
+
 
     }
 
@@ -331,9 +313,7 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
         if (mainFmView!=null){
             mainFmView = null;
         }
-        Log.i(TAG, "onDetach: " + thread.isInterrupted());
         thread.interrupt();
-        Log.i(TAG, "onDetach: " + thread.isInterrupted());
         viewPagerthreadDead = true;
        // thread = null;
     }

@@ -125,10 +125,12 @@
                 <ImageView
                     android:id="@+id/qnaboardImage"
                     android:layout_width="match_parent"
-                    android:layout_height="186dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/ic_launcher_background"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    />
 
                 <TextView
                     android:id="@+id/qnaboardContent"

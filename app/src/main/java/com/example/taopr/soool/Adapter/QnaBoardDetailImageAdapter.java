@@ -141,7 +141,6 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), position+"", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(v.getContext(), VoteImageActivity.class);
                 intent.putExtra("totalImageNum", item.size());
                 intent.putExtra("imageList", images);

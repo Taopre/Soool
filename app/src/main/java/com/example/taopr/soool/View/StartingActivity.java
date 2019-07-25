@@ -1,6 +1,10 @@
 package com.example.taopr.soool.View;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +12,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +32,15 @@ import com.google.gson.GsonBuilder;
 import com.kakao.auth.Session;
 import com.kakao.usermgmt.LoginButton;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.kakao.util.helper.Utility.getPackageInfo;
 
 public class StartingActivity extends AppCompatActivity {
 
@@ -65,7 +74,8 @@ public class StartingActivity extends AppCompatActivity {
         doBinding();
 
         checkAutoLogin();
-
+        Log.i(TAG, "onCreate: keyhash" + getKeyHash(this));
+        getFaceKey();
        callback = new SessionCallback(this);
 
         mCallbackManager = CallbackManager.Factory.create();
@@ -141,6 +151,40 @@ public class StartingActivity extends AppCompatActivity {
         });
 
     }
+    public static String getKeyHash(final Context context) {
+        PackageInfo packageInfo = getPackageInfo(context, PackageManager.GET_SIGNATURES);
+        if (packageInfo == null)
+            return null;
+
+        for (Signature signature : packageInfo.signatures) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                return Base64.encodeToString(md.digest(), Base64.NO_WRAP);
+            } catch (NoSuchAlgorithmException e) {
+                Log.w("", "Unable to get MessageDigest. signature=" + signature, e);
+            }
+        }
+        return null;
+    }
+    public void getFaceKey(){
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.facebook.samples.hellofacebook",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+
+    }
+
 
 
     // 자동로그인 설정을 한 경우

@@ -136,7 +136,8 @@
                             android:layout_marginEnd="@dimen/all_space_between_16dp"
                             android:layout_width="324dp"
                             android:scaleType="fitXY"
-                            android:layout_height="186dp"
+                            android:adjustViewBounds="true"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal|top" />
 
                         <ImageView

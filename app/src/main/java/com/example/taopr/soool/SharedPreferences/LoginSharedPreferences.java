@@ -15,12 +15,12 @@ public class LoginSharedPreferences {
     private String nameOfPWIv = "pwIv";
     private String nameOfGuide = "guide";
     private String keyOfShared = "LoginAccount";
+    private String keyOfLoginId = "LoginId";
     private String TAG = "쉐어드";
 
     public static void LoginUserSave(Context context, String key, String Value){
         SharedPreferences pref = context.getSharedPreferences("LoginUser", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        Log.i("쉐어드", "LoginUserSave: " + Value);
         editor.putString(key, Value);
         editor.commit();
     }
@@ -44,14 +44,12 @@ public class LoginSharedPreferences {
         Gson gson = new GsonBuilder().create();
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         loginSessionItem.setAccountAutoLogin(false);
-
-
         // JSON 으로 변환
         String userClass = gson.toJson(loginSessionItem, LoginSessionItem.class);
-
         LoginSharedPreferences.LoginUserSave(context,"LoginAccount",userClass);
 
     }
+
 
     public static int getAccountNo(Context context,String key){
         int accountNo;
@@ -60,7 +58,6 @@ public class LoginSharedPreferences {
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNo = loginSessionItem.getAccountNo();
-
         return accountNo;
     }
 

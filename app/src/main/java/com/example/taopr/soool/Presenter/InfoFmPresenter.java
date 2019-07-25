@@ -75,15 +75,13 @@ public class InfoFmPresenter extends BasePresenter implements InfoFmInter {
                     }
                 }
         );
-
-
     }
 
     // 아이템 선택 시 선택한 아이템 상세 보기로 이동
     @Override
     public void sendItem(InfoItem infoItem, Activity activity, int infoPosition) {
         this.activity = activity;
-        Toast.makeText(activity, infoItem.getTitle(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity, infoItem.getTitle(), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(activity, InfoDetailActivity.class);
         intent.putExtra("infoItem",infoItem);
