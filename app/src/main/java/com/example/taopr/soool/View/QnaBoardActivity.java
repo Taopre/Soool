@@ -169,8 +169,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 qnaBoardTagAdapter = new QnaBoardTagAdapter(this, tagArray, 0, new QnaBoardTagAdapter.ClickListener() {
                     @Override
                     public void ListClick(int position, View view) {
+                        tag = "";
                         tagArray.remove(position);
                         qnaBoardTagAdapter.notifyDataSetChanged();
+
+                        for (int i=0; i<tagArray.size(); i++) {
+                            if (i == tagArray.size() - 1)
+                                tag += tagArray.get(i);
+                            else if (i < tagArray.size())
+                                tag += tagArray.get(i) + "@##@";
+                        }
                     }
                 });
                 rc_qnaboardTag.setAdapter(qnaBoardTagAdapter);
@@ -676,7 +684,14 @@ public class QnaBoardActivity extends AppCompatActivity implements
                             } else {
                                 tv_qnaboardBeforeTag.setVisibility(View.GONE);
                                 h_scrollView.setVisibility(View.VISIBLE);
-                                tagArray = arrayList;
+
+                                if (tagArray.size() > 0) {
+                                    tagArray.addAll(arrayList);
+                                    tag = "";
+                                }
+                                else {
+                                    tagArray = arrayList;
+                                }
                             }
 
                             qnaBoardTagAdapter = new QnaBoardTagAdapter(v.getContext(), tagArray, 0, new QnaBoardTagAdapter.ClickListener(){
