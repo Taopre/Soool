@@ -10,6 +10,9 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--신고하기-->
+    <string name="declaration_soool_email">sooolapplication@gmail.com</string>
+    <string name="declaration_email_title">신고합니다.</string>
 
     <!-- Home -->
     <string name="home_label_home_tab">홈</string>

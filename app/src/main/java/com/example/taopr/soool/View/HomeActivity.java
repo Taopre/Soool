@@ -260,6 +260,15 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
                         getString(R.string.all_button_cancel),logOutPositiveListener,negativeListener);
                 noticeDialog.show();
                 break;
+            //문의 및 신고
+            case R.id.myPageDrawerReport:
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.setType("plain/text");
+                String[] sooolEmail = {getString(R.string.declaration_soool_email)};
+                email.putExtra(Intent.EXTRA_EMAIL, sooolEmail);
+                email.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.declaration_email_title));
+                startActivity(email);
+                break;
         }
 
     }

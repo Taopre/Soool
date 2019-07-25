@@ -70,7 +70,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     RecyclerView rc_recycler, rc_qnaboardTagMany;
     GridView gv_gridview;
     HorizontalScrollView tagView;
-    RelativeLayout rl_qnadetailLayout, rl_qnaboardUnLikeLayout, rl_qnaboardLikeLayout, rl_voteFinishLayout, rl_drawupBackLayout, rl_drawupTextLayout;
+    RelativeLayout rl_qnadetailLayout, rl_qnaboardUnLikeLayout, rl_qnaboardLikeLayout, rl_voteFinishLayout, rl_drawupBackLayout;
     ProgressBar pb_qnaBoardDetailProgress;
     private TextView tv_inActSelected = null;
     private ImageView iv_inActSelected = null;
@@ -382,7 +382,6 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         tv_drawupModify = findViewById(R.id.drawupModify);
         pb_qnaBoardDetailProgress = findViewById(R.id.qnaBoardDetailProgress);
         rl_drawupBackLayout = findViewById(R.id.drawupBackLayout);
-        rl_drawupTextLayout = findViewById(R.id.drawupTextLayout);
 
         ll_voteLayout.setVisibility(View.GONE);
 
@@ -404,13 +403,14 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
         rl_voteFinishLayout.setOnClickListener(this);
         rl_drawupBackLayout.setOnClickListener(this);
         tv_drawupReport.setOnClickListener(this);
-        rl_drawupTextLayout.setOnClickListener(this);
+        tv_drawupModify.setOnClickListener(this);
     }
 
     public void showLoading() {
         pb_qnaBoardDetailProgress.setVisibility(View.VISIBLE);
         rl_drawupBackLayout.setClickable(false);
-        rl_drawupTextLayout.setClickable(false);
+        tv_drawupModify.setClickable(false);
+        tv_drawupReport.setClickable(false);
         rl_qnaboardLikeLayout.setClickable(false);
         rl_qnaboardUnLikeLayout.setClickable(false);
         btn_commentEnroll.setClickable(false);
@@ -420,7 +420,8 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
     public void hideLoading() {
         pb_qnaBoardDetailProgress.setVisibility(View.GONE);
         rl_drawupBackLayout.setClickable(true);
-        rl_drawupTextLayout.setClickable(true);
+        tv_drawupModify.setClickable(true);
+        tv_drawupReport.setClickable(true);
         rl_qnaboardLikeLayout.setClickable(true);
         rl_qnaboardUnLikeLayout.setClickable(true);
         btn_commentEnroll.setClickable(true);
@@ -593,20 +594,22 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                 }
 
                 break;
-            case R.id.drawupTextLayout:
-                if (isMyBoard) {
-                    Intent intent = new Intent(this, QnaBoardActivity.class);
-                    intent.putExtra("qnaBoardItem", qnaBoardItem);
-                    intent.putExtra("actionKind", actionKind);
-                    intent.putExtra("qnaListPosition", qnaListPosition);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                    startActivity(intent);
-                    finish();
-                }
-                else
-                {
-
-                }
+            case R.id.drawupModify:
+                Intent intent = new Intent(this, QnaBoardActivity.class);
+                intent.putExtra("qnaBoardItem", qnaBoardItem);
+                intent.putExtra("actionKind", actionKind);
+                intent.putExtra("qnaListPosition", qnaListPosition);
+                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.drawupReport:
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.setType("plain/text");
+                String[] sooolEmail = {getString(R.string.declaration_soool_email)};
+                email.putExtra(Intent.EXTRA_EMAIL, sooolEmail);
+                email.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.declaration_email_title));
+                startActivity(email);
                 break;
             case R.id.commentEnroll:
                 String commentContent = et_commentWrite.getText().toString();
