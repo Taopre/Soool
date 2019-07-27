@@ -61,6 +61,12 @@ public interface APIService {
                                    @Field("accountPW") String accountPW);
 
     @FormUrlEncoded
+    @POST("/Login/Login.php")
+    Call<ResponseBody> getPassUserItem(@Field("accountEmail") String accountEmail,
+                                   @Field("accountPW") String accountPW,
+                                   @Field("secureAccountPW") String secureAccountPW);
+
+    @FormUrlEncoded
     @POST("/test/postWrite.php")
     Call<ResponseBody> enrollQna(@Field("accountNick") String accountNick,
                                  @Field("qnaTag") String qnaTag,
