@@ -133,7 +133,7 @@ public class PassFindPresenter extends BasePresenter implements PassFindInter {
     }
 
     @Override
-    public void login(LoginItem userItem) {
+    public void login(LoginItem userItem, String secureAccountPW) {
         Observable.just(userItem.getId(), userItem.getPwd())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(Schedulers.io())
@@ -150,7 +150,8 @@ public class PassFindPresenter extends BasePresenter implements PassFindInter {
                             APIService service = APIClient.getClient().create(APIService.class);
 
                             //Call함수로 LoginActivity(view)로부터 받은 인자를 서버로 넘기는 부분.
-                            Call<ResponseBody> callServer = service.getUserItem(userItem.getId().toString(), userItem.getPwd().toString());
+                            Call<ResponseBody> callServer = service.getPassUserItem(userItem.getId().toString(),
+                                    userItem.getPwd().toString(),secureAccountPW);
 
                             //서버로 부터 응답을 받는 부분.
                             callServer.enqueue(new Callback<ResponseBody>() {

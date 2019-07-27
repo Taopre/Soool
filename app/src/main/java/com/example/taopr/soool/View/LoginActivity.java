@@ -202,17 +202,16 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 break;
             case R.id.accountFindPwd :
                 //비밀번호 찾기 텍뷰 리스너
-                Log.d(TAG, "onClick: 비밀번호 찾기 클릭");
                 Toast.makeText(LoginActivity.this, "비밀번호 찾기 화면으로 가기.", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this, PassFindActivity.class);
                 startActivity(intent);
                 break;
             case R.id.accountSignup :
                 //회원가입하기 텍뷰 리스터
-                Log.d(TAG, "onClick: 회원가입하기 클릭");
-                Toast.makeText(LoginActivity.this, "회원가입 화면으로 가기.", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, SignUpActivity.class);
+                Toast.makeText(LoginActivity.this, "이용약관 동의 후, 회원가입을 진행해주세요.", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, StartingActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.accountAutoLoginCheck :
 

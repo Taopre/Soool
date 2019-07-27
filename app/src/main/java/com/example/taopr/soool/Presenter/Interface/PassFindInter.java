@@ -8,7 +8,7 @@ public interface PassFindInter {
 
     void setView(PassFindPresenter.View view);
     void EmailCheckReq (String email);
-    void login(LoginItem loginItem);
+    void login(LoginItem loginItem, String secureAccountPW);
 
     public interface View {
         void EmailCheckResp(PassFIndResponse passFIndResponse);
