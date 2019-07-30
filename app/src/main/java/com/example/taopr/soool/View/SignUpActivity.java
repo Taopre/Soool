@@ -367,7 +367,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
             // 암호화 IV 바이너리 파일로 저장
             try {
                 FileOutputStream test = null;
-                test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountNo+".bin");
+                //test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountNo+".bin");
+                test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.lpky.taopr.soool/files/"+accountNo+".bin");
                 test.write(enCryptor.getIv());
                 test.close();
 

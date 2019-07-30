@@ -144,7 +144,9 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
             FileOutputStream test = null;
             String accountNo = String.valueOf(LoginSharedPreferences.getAccountNo(this,"LoginAccount"));
             try {
-                test = new FileOutputStream(Environment.getDataDirectory() + "/data/com.example.taopr.soool/files/" + accountNo + ".bin");
+                //test = new FileOutputStream(Environment.getDataDirectory() + "/data/com.example.taopr.soool/files/" + accountNo + ".bin");
+                test = new FileOutputStream(Environment.getDataDirectory() + "/data/com.lpky.taopr.soool/files/" + accountNo + ".bin");
+
                 test.write(enCryptor.getIv());
                 test.close();
 
