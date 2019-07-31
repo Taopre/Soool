@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.taopr.soool">
+    package="com.lpky.taopr.soool">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".Kakao.GlobalApplication"
+        android:name="com.lpky.taopr.soool.Kakao.GlobalApplication"
         android:allowBackup="false"
         android:icon="@drawable/soool_app"
         android:label="@string/app_name"
@@ -16,8 +16,8 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="false"
         android:usesCleartextTraffic="true">
-        <activity android:name=".View.HandlingPrivacyActivity"></activity>
-        <activity android:name=".View.TosActivity" />
+        <activity android:name="com.lpky.taopr.soool.View.HandlingPrivacyActivity"></activity>
+        <activity android:name="com.lpky.taopr.soool.View.TosActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -27,7 +27,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".View.GuideActivity"
+            android:name="com.lpky.taopr.soool.View.GuideActivity"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,41 +36,41 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".View.SignUpActivity"
+            android:name="com.lpky.taopr.soool.View.SignUpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.StartingActivity"
+            android:name="com.lpky.taopr.soool.View.StartingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.QnaBoardActivity"
+            android:name="com.lpky.taopr.soool.View.QnaBoardActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoTitle" />
         <activity
-            android:name=".View.LoginActivity"
+            android:name="com.lpky.taopr.soool.View.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.QnaBoardDetailActivity"
+            android:name="com.lpky.taopr.soool.View.QnaBoardDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoTitle" />
-        <activity android:name=".View.CalendarSchActivity" />
-        <activity android:name=".View.CalendarAddSchActivity" />
+        <activity android:name="com.lpky.taopr.soool.View.CalendarSchActivity" />
+        <activity android:name="com.lpky.taopr.soool.View.CalendarAddSchActivity" />
         <activity
-            android:name=".View.HomeActivity"
+            android:name="com.lpky.taopr.soool.View.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.VoteImageActivity"
+            android:name="com.lpky.taopr.soool.View.VoteImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoTitle" />
         <activity
-            android:name=".View.ProfileActivity"
+            android:name="com.lpky.taopr.soool.View.ProfileActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".View.InfoDetailActivity" />
+        <activity android:name="com.lpky.taopr.soool.View.InfoDetailActivity" />
         <activity
-            android:name=".View.PassFindActivity"
+            android:name="com.lpky.taopr.soool.View.PassFindActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoTitle" />
-        <activity android:name=".View.DeleteAccountActivity" />
-        <activity android:name=".View.NoticeActivity" />
+        <activity android:name="com.lpky.taopr.soool.View.DeleteAccountActivity" />
+        <activity android:name="com.lpky.taopr.soool.View.NoticeActivity" />
     </application>
 
 </manifest>
