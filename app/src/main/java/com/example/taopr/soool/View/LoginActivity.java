@@ -133,7 +133,9 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
             DeCryptor deCryptor = new DeCryptor();
 
             String accountNoSt = String.valueOf(LoginSharedPreferences.getAccountNo(LoginActivity.this,"LoginAccount"));
-            Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin");
+            //Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin");
+            Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.lpky.taopr.soool/files/"+ accountNoSt +".bin");
+            Log.d(TAG, "viewConfirmPw: " + String.valueOf(ttt));
             byte[] pwIv;
             pwIv = Files.readAllBytes(ttt);
 

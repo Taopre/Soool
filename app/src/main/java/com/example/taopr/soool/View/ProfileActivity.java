@@ -217,8 +217,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void getProfileInfoSuccess(ProfileInfo profileInfo) {
 
-        Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin");
-
+        //Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin");
+        Path ttt = Paths.get(Environment.getDataDirectory() +"/data/ com.lpky.taopr.soool/files/"+ accountNoSt +".bin");
         byte[] bytes;
         try {
             bytes = Files.readAllBytes(ttt);
@@ -424,10 +424,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         // 기존에 저장된 iv 삭제 후 저장
 
                         String enAccountPw = Base64.encodeToString(enCryptor.encryptText("soool_key",modifiedPW), Base64.DEFAULT);
-                        String filePath = Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin";
+                        //String filePath = Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin";
+                        String filePath = Environment.getDataDirectory() +"/data/com.lpky.taopr.soool/files/"+ accountNoSt +".bin";
                         File f = new File(filePath);
                         if (f.delete()){
-                            FileOutputStream test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountNoSt+".bin");
+                            //FileOutputStream test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+accountNoSt+".bin");
+                            FileOutputStream test = new FileOutputStream(Environment.getDataDirectory() +"/data/com.lpky.taopr.soool/files/"+accountNoSt+".bin");
 
                             test.write(enCryptor.getIv());
                             test.close();
