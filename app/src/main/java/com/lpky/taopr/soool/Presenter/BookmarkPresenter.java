@@ -74,7 +74,6 @@ public class BookmarkPresenter extends BasePresenter implements BookmarkInter {
 
                     @Override
                     public void onFinish() {
-                        Log.i(TAG, "onFinish: info");
                     }
                 }
         );

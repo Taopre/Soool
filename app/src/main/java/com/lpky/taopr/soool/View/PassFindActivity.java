@@ -6,7 +6,9 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.lpky.taopr.soool.SharedPreferences.LoginSharedPreferences;
@@ -42,6 +44,10 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
     EditText et_email;
     @BindView(R.id.password)
     EditText et_password;
+    @BindView(R.id.receiveMail)
+    Button receiveMail;
+    @BindView(R.id.passFindProgress)
+    ProgressBar passFindProgress;
 
     PassFindPresenter passFindPresenter;
     Keyboard keyboard;
@@ -73,6 +79,11 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
 
                 if (et_email.getText().length() > 0) {
                     passFindPresenter.EmailCheckReq(et_email.getText().toString());
+
+                    // 메일 받기 버튼을 클릭 후 임시 비밀번호 중복 전송을 방지하기 위해
+                    // 버튼 비활성화
+                    receiveMail.setClickable(false);
+                    passFindProgress.setVisibility(View.VISIBLE);
                     keyboard.hideKeyboard(et_email);
                 } else {
                     Toast.makeText(view.getContext(), "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -123,11 +134,14 @@ public class PassFindActivity extends AppCompatActivity implements PassFindPrese
 
     @Override
     public void EmailCheckResp(PassFIndResponse passFIndResponse) {
+        receiveMail.setClickable(true);
+        passFindProgress.setVisibility(View.GONE);
+
         switch (passFIndResponse.getEmailExist()) {
             case "true" :
                 if (passFIndResponse.getResult().equals("true")) {
                     //et_password.setText(passFIndResponse.getFakePwd());
-//                    Toast.makeText(this, "임시 비밀번호를 확인 후 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "임시 비밀번호 전송이 완료 되었습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "메일 확인 절차를 다시 한번 부탁드립니다.", Toast.LENGTH_SHORT).show();
                 }

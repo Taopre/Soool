@@ -44,7 +44,6 @@ public class VoteImageActivity  extends AppCompatActivity {
             imageItems = intent.getStringArrayListExtra("imageList");
             nowposition = intent.getIntExtra("nowPosition", 9999);
 
-            Log.d(TAG, "onCreate: "+nowposition+num);
             nowImagePosition.setText((nowposition+1)+"");
             totalImagePosition.setText(num+"");
         }

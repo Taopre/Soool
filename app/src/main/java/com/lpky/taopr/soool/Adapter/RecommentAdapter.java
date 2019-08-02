@@ -199,7 +199,6 @@ public class RecommentAdapter extends RecyclerView.Adapter<RecommentAdapter.View
         });
 
 
-        Log.d(TAG, String.valueOf(recommentitem.getRecommentNo()));
     }
 
     @Override

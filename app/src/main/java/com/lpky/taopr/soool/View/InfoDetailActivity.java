@@ -318,7 +318,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             int type = infoText.get(i).getType();
             switch (type) {
                 case 0:
-                    Log.d(TAG, "getText: 0 " + infoText.get(i).getText());
                     InflateSubtitle inflateSubtitle = new InflateSubtitle(getApplicationContext());
                     infoDetailContent.addView(inflateSubtitle);
                     texts[i] = inflateSubtitle.findViewById(R.id.subtitle_tv);
@@ -338,7 +337,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
                     texts[i].setText(infoText.get(i).getText());
                     break;
                 case 2:
-                    Log.d(TAG, "getText: 2 " + infoText.get(i).getText());
                     InflateImage inflateImage = new InflateImage(getApplicationContext());
                     infoDetailContent.addView(inflateImage);
                     ivs[i] = inflateImage.findViewById(R.id.image_iv);

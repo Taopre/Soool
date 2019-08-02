@@ -55,20 +55,17 @@ public class InfoFmPresenter extends BasePresenter implements InfoFmInter {
                             view.getDataSuccess(infoItems, loadingKind);
 
                         } else {
-                            Log.i(TAG, "onSuccess: infoList = null");
                         }
 
                     }
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure : info " + msg);
                         view.getDataFail(msg);
                     }
 
                     @Override
                     public void onFinish() {
-                        Log.i(TAG, "onFinish: info");
                         view.hideLoading();
 
                     }

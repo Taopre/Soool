@@ -94,7 +94,6 @@ public class LoginSharedPreferences {
 
         editor.putString(key, Base64.encodeToString(iv,Base64.DEFAULT));
 
-        Log.i(TAG, "savePWIv: " + Base64.encodeToString(iv,Base64.DEFAULT));
         editor.commit();
     }
 
@@ -102,7 +101,6 @@ public class LoginSharedPreferences {
         SharedPreferences pref = context.getSharedPreferences( nameOfPWIv, Context.MODE_PRIVATE);
         String data = pref.getString(key, "aaaaa");
 
-        Log.i(TAG, "getPWIv: " + data);
         byte[] Iv = Base64.decode(data,Base64.DEFAULT);
 
         return Iv;

@@ -52,7 +52,6 @@ public class BookmarkFragment extends Fragment implements BookmarkPresenter.View
 
     public BookmarkFragment() {
         // Required empty public constructor
-        Log.i(TAG, "BookmarkFragment: ");
     }
 
     public interface BookmarkView {
@@ -69,7 +68,6 @@ public class BookmarkFragment extends Fragment implements BookmarkPresenter.View
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: ");
 
     }
 
@@ -78,7 +76,6 @@ public class BookmarkFragment extends Fragment implements BookmarkPresenter.View
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.i(TAG, "onCreateView: ");
 
         View view = inflater.inflate(R.layout.fragment_bookmark, container, false);
         this.context = view.getContext();
@@ -238,7 +235,6 @@ public class BookmarkFragment extends Fragment implements BookmarkPresenter.View
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult: " + resultCode);
 
         if (resultCode == RESULT_OK) {
             // 북마크 리스트 삭제 시 아이템의 리스트 포지션 값을 받고, actionKind 로 구별
@@ -255,7 +251,6 @@ public class BookmarkFragment extends Fragment implements BookmarkPresenter.View
             int infoPosition = data.getIntExtra("infoPosition", 0);
             int actionKind = data.getIntExtra("actionKind", 88);
 
-            Log.i(TAG, "onActivityResult: actionKind : " + actionKind);
 
             if (actionKind == 1) {
                 infoItems = infoAdapter.removeItem(infoPosition);

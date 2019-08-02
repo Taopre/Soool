@@ -97,7 +97,6 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                             receiveQnaVoteItem.setMemberIsVoted(returnData.getInt("memberIsVoted"));
                                             receiveQnaVoteItem.setTotalVoteCount(returnData.getInt("totalVoteCount"));
 
-                                            Log.d(TAG, "onResponse: total "+receiveQnaVoteItem.getTotalVoteCount()+"");
 
                                             try {
                                                 for (int j=0; j<receiveQnaVoteItem.getCount(); j++) {
@@ -118,7 +117,6 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                                                     voteResult.add(returnData.getInt("voteResult"+(j+1)));
                                                 }
                                             }catch (NullPointerException e) {
-                                                Log.d(TAG, "exception null : "+e);
                                             }
 
                                             // 투표 참여상태 따른 투표결과 값 저장 구문
@@ -166,7 +164,6 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
                     @Override
                     public void onSubscribe(Disposable d)
                     {
-                        Log.d(TAG, "onSubscribe : "+d);
                     }
                     @Override
                     public void onNext(Boolean s)
@@ -187,7 +184,6 @@ public class QnaDetailPresenter extends BasePresenter implements QnaDetailInter 
 
     @Override
     public void updateVoteResult(int accountNo, int postNo, int selectNum) {
-        Log.d(TAG, "updateVoteResult: "+accountNo+"  "+postNo+"  "+selectNum);
 
         Observable.just("")
                 .subscribeOn(AndroidSchedulers.mainThread())

@@ -33,7 +33,6 @@ public class ProfileSpinnerAdapter<T> extends ArrayAdapter<T> {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent)
     {
-        Log.i(TAG, "getDropDownView: ");
         if (convertView == null) {
             convertView= super.getView(position, convertView, parent);
         }

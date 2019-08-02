@@ -44,7 +44,6 @@ public class CalendarAddSchActivity extends CalendarSchBaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_calendar_add_sch,1);
         ButterKnife.bind(this);
 
@@ -111,8 +110,6 @@ public class CalendarAddSchActivity extends CalendarSchBaseActivity
 
         if(addSchTextContent.getText().length()>0) {
             if (calendarItemMap.get(selectedDayDate) != null) { // 이전에 작성했던 내용이 있다면
-                Log.i(TAG, "activateSaveButton: 이전에 작성한 내용 : " +calendarItemMap.get(selectedDayDate) +
-                "//  현재 작성한 내용 : " + addSchTextContent.getText().toString());
                 if (addSchTextContent.getText().toString().equals(calendarItemMap.get(selectedDayDate).getEventContent())) {
                     // 수정한 내용과 이전에 작성한 내용이 일치
                     subActionBarRight.setClickable(false);
@@ -246,7 +243,6 @@ public class CalendarAddSchActivity extends CalendarSchBaseActivity
     public void getDataSuccess(HashMap<String, CalendarItem> calendarItemMap) {
         this.calendarItemMap = calendarItemMap;
         Intent intent = new Intent();
-        Log.i(TAG, "getDataSuccess: 작성한 날짜" + selectedDay.getTime());
         intent.putExtra(DATE_EXTRA,selectedDay.getTime());
         intent.putExtra(CALENDAR_LIST_EXTRA,(Serializable) calendarItemMap);
         setResult(RESULT_OK, intent);

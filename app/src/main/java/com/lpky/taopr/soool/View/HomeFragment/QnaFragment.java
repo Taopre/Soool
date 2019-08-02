@@ -56,7 +56,6 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
                                          // 서버로부터 리스폰스를 받았다면 qna 프래그먼트가 다시 부착했을 때 서버에 다시 요청하는 것을 방지하기 위한 변수
 
     public QnaFragment() {
-        Log.i(TAG, "QnaFragment: ");
     }
 
     public interface QnaFmView{
@@ -145,7 +144,6 @@ public class QnaFragment extends BaseFragment implements QnaFmPresenter.View,Swi
                 int listSize = qnaBoardItems.size()-1;
                 int visibleItemPosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-                Log.i(TAG, "onScrolled: 스크롤 " + dy + " "+dx);
 
                 if (listSize == visibleItemPosition){
                     if (!onPaging && qnaBoardItems.size()>0){

@@ -92,13 +92,11 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.ViewHolder> {
     // 재활용 되는 View가 호출, Adapter가 해당 position에 해당하는 데이터를 결합
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Log.i(TAG, "onBindViewHolder: ");
 
         InfoItem infoItem = infoItems.get(position);
 
         // 태그 받아서 배열에 담고 TagAdapter에 연결하기
         tagArray = new ArrayList<String>();
-        Log.e(TAG, "onBindViewHolder: infoItem.getPostTag().length"+tagArray);
         if(infoItem.getPostTag().length() > 0) {
 
             // 태그 여러개일 때 정규표현식으로 분리하기

@@ -113,17 +113,14 @@ public class PassFindPresenter extends BasePresenter implements PassFindInter {
                     @Override
                     public void onSubscribe(Disposable d)
                     {
-                        Log.d(TAG, "onSubscribe : "+d);
                     }
                     @Override
                     public void onNext(Boolean s)
                     {
-                        Log.d(TAG, "onNext: "+s);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError : ",e);
                     }
                     @Override
                     public void onComplete()
@@ -183,12 +180,6 @@ public class PassFindPresenter extends BasePresenter implements PassFindInter {
                                                 accountBc = returnData.getInt("accountBc");
                                                 accountCc = returnData.getInt("accountCc");
 
-                                                Log.d(TAG, "onResponse true : "+accountNo);
-                                                Log.d(TAG, "onResponse true : "+accountNick);
-                                                Log.d(TAG, "onResponse true : "+accountImage);
-                                                Log.d(TAG, "onResponse true : "+accountPoint);
-                                                Log.d(TAG, "onResponse true : "+accountBc);
-                                                Log.d(TAG, "onResponse true : "+accountCc);
 
                                                 item = new LoginSessionItem(accountNo, accountNick, accountImage, accountPoint, accountBc, accountCc, userItem.isAutologinStatus());
                                                 // Gson 인스턴스 생성
@@ -243,7 +234,6 @@ public class PassFindPresenter extends BasePresenter implements PassFindInter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError : "+e);
                     }
                     @Override
                     public void onComplete()

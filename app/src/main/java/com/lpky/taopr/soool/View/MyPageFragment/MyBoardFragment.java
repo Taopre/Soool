@@ -73,7 +73,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: ");
 
     }
 
@@ -110,14 +109,12 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
 
         if(isResponse == false) {
-            Log.i(TAG, "onCreateView: false");
             myBoardPresenter = new MyBoardPresenter(context);
             myBoardPresenter.setView(this);
             myPageView.startMyBoardLoading();
             myBoardPresenter.loadData(accountNo,0,-1);
         }
         else{
-            Log.i(TAG, "onCreateView: true");
             qnaAdapter = new QnaAdapter(this.qnaBoardItems,context);
             myBoardRecycler.setAdapter(qnaAdapter);
         }
@@ -251,23 +248,19 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind) {
         if (qnaBoardItems.size() == 0 && this.qnaBoardItems.size() > 0) {
 
-            Log.i(TAG, " 마지막 게시물 " );
             //Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
         }
         else {
             switch (loadingKind) {
                 case 0:
-                    Log.i(TAG, "getDataSuccess: loadingkind 0");
                     this.qnaBoardItems.addAll(qnaBoardItems);
                     break;
                 case 1:
-                    Log.i(TAG, "getDataSuccess: loadingkind 1");
                     this.qnaBoardItems = qnaBoardItems;
                     break;
             }
 
             if (qnaAdapter == null && qnaBoardItems.size()>0) {
-                Log.i(TAG, "getDataSuccess: qnaAdapter null");
                 qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
                 myBoardRecycler.setAdapter(qnaAdapter);
             }
@@ -275,7 +268,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
             }
             else {
-                Log.i(TAG, "getDataSuccess: qnaAdapter nullx");
                 qnaAdapter.addItemList(this.qnaBoardItems);
             }
 
@@ -293,8 +285,6 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
     // isResponse 값을 false 로 변경
     @Override
     public void getDataFail(String message) {
-
-        Log.d(TAG, "getDataFail: "+message);
         Toast.makeText(context, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
         myPageView.endMyBoardLoading(false);
         isResponse =false;
@@ -355,12 +345,10 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                 switch (actionKind) {
                     case 0:
                         if (qnaAdapter == null) {
-                            Log.i(TAG, "onActivityResult: null");
                             qnaBoardItems.add(qnaBoardItem);
                             qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
                             myBoardRecycler.setAdapter(qnaAdapter);
                         } else {
-                            Log.i(TAG, "onActivityResult: nullx" + qnaBoardItems.size());
                             qnaAdapter.addItem(qnaBoardItem);
                             qnaBoardItems.add(qnaBoardItem);
                             myBoardRecycler.smoothScrollToPosition(0);

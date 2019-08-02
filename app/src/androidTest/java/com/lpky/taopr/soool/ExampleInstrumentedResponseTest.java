@@ -21,6 +21,7 @@ public class ExampleInstrumentedResponseTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.taopr.soool", appContext.getPackageName());
+        //assertEquals("com.example.taopr.soool", appContext.getPackageName());
+        assertEquals("com.lpky.taopr.soool", appContext.getPackageName());
     }
 }

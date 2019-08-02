@@ -64,20 +64,17 @@ public class MyBoardPresenter extends BasePresenter implements MyBoardInter {
                     public void onSuccess(QnaBoardList qnaBoardList) {
 
                         ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
-                        Log.i(TAG, "onSuccess: " + qnaBoardItems.size());
                         view.getDataSuccess(qnaBoardItems,loadingKind);
 
                     }
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: qna" + msg);
                         view.getDataFail(msg);
                     }
 
                     @Override
                     public void onFinish() {
-                        Log.i(TAG, "onFinish: qna");
                        // view.hideLoading();
                     }
                 });

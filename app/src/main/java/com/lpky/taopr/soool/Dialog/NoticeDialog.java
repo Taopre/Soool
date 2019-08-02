@@ -53,7 +53,7 @@ public class NoticeDialog extends Dialog{
         // 다이얼로그에 제목이 있는 경우가 있고 없는 경우가 있기 때문에
         // null 값인지 아닌지로 구분하여 Title 에 text 값을 부여한다
 
-        if (noticeDialogTitle != null) {
+        if (dialogTitle != null) {
             noticeDialogTitle.setText(dialogTitle);
         }
         else noticeDialogTitle.setVisibility(View.GONE);
@@ -77,7 +77,6 @@ public class NoticeDialog extends Dialog{
     public NoticeDialog(@NonNull Context context, String dialogTitle, String dialogContent, boolean isExistCheck, String positiveText,
                         String negativeText, View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
         super(context);
-        Log.i(TAG, "NoticeDialog: ");
         this.mPositiveListener = positiveListener;
         this.mNegativeListener = negativeListener;
         this.dialogTitle = dialogTitle;
@@ -90,7 +89,6 @@ public class NoticeDialog extends Dialog{
     public NoticeDialog(@NonNull Context context,  String dialogContent, boolean isExistCheck, String positiveText,
                         String negativeText, View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
         super(context);
-        Log.i(TAG, "NoticeDialog: ");
         this.mPositiveListener = positiveListener;
         this.mNegativeListener = negativeListener;
         this.dialogContent = dialogContent;

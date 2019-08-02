@@ -142,7 +142,6 @@ public class QnaBoardModel {
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNo = loginSessionItem.getAccountNo();
-        Log.d(TAG, "enrollmentReqFromView: 닉네임"+accountNo);
 
         Log.d(TAG, "modifyBoardReqFromView:블라블라 "+qnaBoardItem.getTag());
 
@@ -325,7 +324,6 @@ public class QnaBoardModel {
         // JSON 으로 변환
         LoginSessionItem loginSessionItem = gson.fromJson(data, LoginSessionItem.class);
         accountNo = loginSessionItem.getAccountNo();
-        Log.d(TAG, "enrollmentReqFromView: 닉네임"+accountNo);
 
 
         // 이미지의 유무로 조건을 걸어놓고
@@ -473,7 +471,6 @@ public class QnaBoardModel {
                                     {
                                         try
                                         {
-                                            Log.d(TAG, "시작 바로 전");
 
                                             Log.d(TAG, "apply: "+qnaItem.voteImage.size());
 

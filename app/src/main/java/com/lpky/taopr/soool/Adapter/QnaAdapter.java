@@ -127,7 +127,6 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
     }
 
     public ArrayList<QnaBoardItem> addItem(QnaBoardItem qnaBoardItem){
-        Log.i(TAG, "addItem: ");
        // qnaBoardItems.add(qnaBoardItem); 에러코드 해당 소스코드로 실행 시 배열의 마지막 위치에 추가가 되면서 아이템 위치들이 꼬임
         qnaBoardItems.add(0,qnaBoardItem);
         notifyItemInserted(0);
@@ -136,14 +135,12 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
     }
 
     public void addItemList(ArrayList<QnaBoardItem> addQnaBoardItems){
-        Log.i(TAG, "addItemList: ");
         this.qnaBoardItems = addQnaBoardItems;
         notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_qna,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -153,7 +150,6 @@ public class QnaAdapter extends RecyclerView.Adapter<QnaAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         QnaBoardItem qnaBoardItem = qnaBoardItems.get(position);
-        Log.i(TAG, "onBindViewHolder: ");
         tagArray = new ArrayList<String>();
 
         // 투표 태그 추가 부분

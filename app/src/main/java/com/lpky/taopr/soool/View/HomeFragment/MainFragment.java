@@ -276,7 +276,6 @@ public class MainFragment extends BaseFragment  implements MainFmInter.View{
                 case MAIN_MOVE_TO_INFO:
                     // actionKind 가 1일때 업데이트된 정보가 있는 경우
 
-                    Log.i(TAG, "onActivityResult: 인포");
                     InfoItem infoItem;
                     if (data != null && data.getParcelableExtra("infoItem") != null) {
                         infoItem = data.getParcelableExtra("infoItem");

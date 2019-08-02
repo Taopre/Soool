@@ -68,7 +68,6 @@ public class CalendarDialogFragment extends DialogFragment
         if (getArguments() != null) {
             selectedDay = new Date(getArguments().getLong(DATE_EXTRA, 0));
             calendarItemMap = (HashMap<String,CalendarItem>)getArguments().getSerializable(CALENDAR_LIST_EXTRA);
-            Log.i(TAG, "onCreate: 캘린더 이벤트 수 " + calendarItemMap.size());
         }
     }
 

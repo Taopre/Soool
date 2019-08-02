@@ -45,10 +45,6 @@ public class KakaoRequest {
                 }
                 else {
 
-                    Log.i(TAG, "onSuccess: getId()" + response.getId() );
-                    Log.i(TAG, "onSuccess: email" + response.getKakaoAccount().getEmail());
-                    Log.i(TAG, "onSuccess: image" + response.getProfileImagePath());
-
                     Logger.d("user id : " + response.getId());
                     Logger.d("email: " + response.getKakaoAccount().getEmail());
 

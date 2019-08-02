@@ -145,8 +145,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
 
 
             if (userItem.getPwd().equals(decPw)){
-                Log.i(TAG, "viewConfirmPw: 작성한 값 " + userItem.getPwd() + " 디비 값 :" + decPw);
-                Log.i(TAG, "onResponse:  일치");
                 loginPresenter.login(userItem);
             }
 
@@ -194,7 +192,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
                 LoginItem loginItem = new LoginItem();
                 loginItem.setId(et_id.getText().toString());
                 loginItem.setPwd(et_pwd.getText().toString());
-                Log.i(TAG, "onClick: 아이디 " + loginItem.getId());
 
                 loginItem.setAutologinStatus(cb_autologin.isChecked());
                 loginPresenter.getPW(loginItem);

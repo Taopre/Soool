@@ -32,7 +32,6 @@ public class GlobalApplication extends Application {
 
     // Activity가 올라올때마다 Activity의 onCreate에서 호출해줘야한다.
     public static void setCurrentActivity(Activity currentActivity) {
-        Log.i(TAG, "setCurrentActivity: ");
         GlobalApplication.currentActivity = currentActivity;
     }
 

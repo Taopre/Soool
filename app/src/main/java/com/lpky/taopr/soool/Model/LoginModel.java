@@ -73,7 +73,6 @@ public class LoginModel {
                                     try {
                                         String msg = response.body().string();
 
-                                        Log.i(TAG, "onResponse: " + msg);
                                         // 복호화
 
                                         // 로그인 시 작성한 이메일이 가입된 이메일이 아닐경우
