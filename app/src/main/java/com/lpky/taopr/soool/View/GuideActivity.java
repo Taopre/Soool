@@ -106,19 +106,16 @@ public class GuideActivity extends AppCompatActivity {
                 startActivity(intent);
             }
             else{
-                Log.i(TAG, "checkAutoLogin: else");
                 checkHasSeeGuide();
             }
         }
         catch (NullPointerException ex){
             checkHasSeeGuide();
-            Log.i(TAG, "checkAutoLogin: 자동로그인 설정x");
         }
     }
 
     private void checkHasSeeGuide(){
 
-        Log.i(TAG, "checkHasSeeGuide: " + loginSharedPreferences.getHasSeeGuide(this));
         // 가이드는 앱 다운 후 한번 만 볼수 있도록
         if (loginSharedPreferences.getHasSeeGuide(this)){
            moveToStarting();

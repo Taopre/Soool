@@ -181,7 +181,6 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
 
     // 유저의 프로필 정보가 업데이트가 필요한 경우 서버에 request 를 보내 유저의 프로필 정보를 새로 받아와 업데이트 한다
     public void updateProfile(){
-        Log.i(TAG, "updateProfile: update");
         mypagePresenter.loadMypageData(accountNo);
     }
 
@@ -309,13 +308,11 @@ public class MypageFragment extends BaseFragment implements MypageFmPresenter.Vi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(TAG, "onAttach: ");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i(TAG, "onDetach: ");
         if (myBoardFragment != null) {
             myBoardFragment.onDetach();
         }

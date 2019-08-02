@@ -92,7 +92,6 @@ public class CalendarSchBaseActivity extends AppCompatActivity {
         // selectedDayDate 에 저장한다.
 
         selectedDayDate = sooolCalendar.getDateFormat(selectedDay);
-        Log.i(TAG, "daySetting: 선택한 날짜 string 타입 : " +selectedDayDate);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(monthYearPattern);
 
         String monthYear = simpleDateFormat.format(selectedDay);

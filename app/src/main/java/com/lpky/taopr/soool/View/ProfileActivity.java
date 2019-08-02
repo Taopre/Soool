@@ -218,7 +218,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void getProfileInfoSuccess(ProfileInfo profileInfo) {
 
         //Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.example.taopr.soool/files/"+ accountNoSt +".bin");
-        Path ttt = Paths.get(Environment.getDataDirectory() +"/data/ com.lpky.taopr.soool/files/"+ accountNoSt +".bin");
+        Path ttt = Paths.get(Environment.getDataDirectory() +"/data/com.lpky.taopr.soool/files/"+ accountNoSt +".bin");
         byte[] bytes;
         try {
             bytes = Files.readAllBytes(ttt);
@@ -588,14 +588,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @OnTextChanged(R.id.profileAccountEmail)
     void onEditEmail(CharSequence text){
         if (profileInfo != null) {
-            Log.i(TAG, "onEditEmail: " + text +" // " + profileInfo.getAccountEmail());
             if (profileAcEmail.getText().toString().equals(profileInfo.getAccountEmail())) {
                 activateSaveButton(0);
-                Log.i(TAG, "onEditEmail: same");
             }
             else {
                 activateSaveButton(1);
-                Log.i(TAG, "onEditEmail: diff");
             }
         }
     }
@@ -603,7 +600,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     void onEditNick(CharSequence text){
 
         if(profileInfo != null) {
-            Log.i(TAG, "onEditNick: " + text +" // " + profileInfo.getAccountNick());
             if (text.equals(profileInfo.getAccountEmail()))
                 activateSaveButton(0);
             else
@@ -613,7 +609,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @OnTextChanged(R.id.profileAccountPW)
     void onEditPW(CharSequence text){
         if(profileInfo != null) {
-            Log.i(TAG, "onEditPW: " + text + " // " + profileInfo.getAccountPw());
             if (text.equals(profileInfo.getAccountEmail()))
                 activateSaveButton(0);
             else

@@ -63,7 +63,6 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
         intent.putExtra("infoItem",infoItem);
         intent.putExtra("fromActivity", 0);
         intent.putExtra("actionKind", 1);
-        Log.i(TAG, "getIntentMoveInfo: 인포 값" + infoListPosition);
         intent.putExtra("infoPosition",infoListPosition);
         view.moveToPage(intent,MAIN_MOVE_TO_INFO);
     }
@@ -85,7 +84,6 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
                 new APICallback<QnaBoardList>() {
                     @Override
                     public void onSuccess(QnaBoardList qnaBoardList) {
-                        Log.i(TAG, "onSuccess: ");
                         ArrayList<QnaBoardItem> qnaBoardItems = new ArrayList(qnaBoardList.getQnaBoardItems());
                         view.getQnaBoardSuccess(qnaBoardItems);
                         qnaBoardResSuccess = true;
@@ -94,7 +92,6 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: qna");
                         qnaBoardResSuccess = false;
                         view.getDataFail(1); // dataType 값이 0 -> info / 1 -> qna
                     }
@@ -121,7 +118,6 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
                     @Override
                     public void onSuccess(InfoList infoList) {
 
-                        Log.i(TAG, "onSuccess: ");
                         ArrayList<InfoItem> infoItems = new ArrayList(infoList.getInfoItems());
                         view.getInfoSuccess(infoItems);
                         infoResSuccess = true;
@@ -130,7 +126,6 @@ public class MainFmPresenter extends BasePresenter implements MainFmInter{
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: qna");
                         qnaBoardResSuccess = false;
                         view.getDataFail(0); // dataType 값이 0 -> info / 1 -> qna
                     }

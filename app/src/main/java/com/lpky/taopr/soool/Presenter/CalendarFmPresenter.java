@@ -21,7 +21,6 @@ public class CalendarFmPresenter extends BasePresenter implements CalendarFmInte
 
     @Override
     public void getCalendarItem(Activity mActivity, String accountNo) {
-        Log.i(TAG, "getCalendarItem: ");
         CalendarDB calendarDB = new CalendarDB(mActivity);
         ArrayList<CalendarItem> calendarItems = new ArrayList<CalendarItem>(calendarDB.eventSelect(accountNo));
 

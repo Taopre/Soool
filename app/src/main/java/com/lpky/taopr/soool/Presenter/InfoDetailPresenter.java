@@ -34,7 +34,6 @@ public class InfoDetailPresenter extends BasePresenter implements InfoDetailInte
     public InfoDetailPresenter(Context context) {
         this.context = context;
         this.apiService = APIClient.getClient1().create(APIService.class);
-        Log.d(TAG, "infoDetail: 프레젠터(context)");
     }
 
     @Override
@@ -67,10 +66,7 @@ public class InfoDetailPresenter extends BasePresenter implements InfoDetailInte
                                 hasBookmarked = false;
                             }
                             view.getDataSuccess(infoTexts, bookmarkNo, hasBookmarked);
-                            Log.e(TAG, "onSuccess: BOOKMARK!!" + bookmarkNo +  " | " + hasBookmarked);
-                            Log.d(TAG, "onSuccess: " + infoTexts.get(0).getText() + bookmarkNo + " + " + hasBookmarked);
                         } else {
-                            Log.d(TAG, "onSuccess: infoTexts = null");
                         }
 
                     }
@@ -78,7 +74,6 @@ public class InfoDetailPresenter extends BasePresenter implements InfoDetailInte
                     @Override
                     public void onFailure(String msg) {
 
-                        Log.i(TAG, "onFailure : info " + msg);
                         view.getDataFail(msg);
 
                     }
@@ -87,7 +82,6 @@ public class InfoDetailPresenter extends BasePresenter implements InfoDetailInte
                     public void onFinish() {
 
                         view.hideLoading();
-                        Log.i(TAG, "onFinish: info");
 
                     }
                 }
@@ -146,7 +140,6 @@ public class InfoDetailPresenter extends BasePresenter implements InfoDetailInte
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure : updateBookmark " + msg);
                     }
 
                     @Override

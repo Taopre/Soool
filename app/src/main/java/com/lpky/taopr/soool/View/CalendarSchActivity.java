@@ -116,7 +116,6 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
                 break;
 
             case R.id.subActionBarRight2:
-                Log.i(TAG, "onClick: 삭제하기 버튼");
 
                 calendarSchPresenter.eventDelete(selectedDay,calendarItemMap);
                 break;
@@ -130,14 +129,12 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
     private void moveToPreviousPage() {
         Intent intent = new Intent();
         if(changedEvent){
-            Log.i(TAG, "moveToPreviousPage: 추가 o");
             setResult(RESULT_OK, intent);
 
             intent.putExtra(DATE_EXTRA,selectedDayDate);
             intent.putExtra(CALENDAR_LIST_EXTRA,(Serializable) calendarItemMap);
         }
         else{
-            Log.i(TAG, "moveToPreviousPage: 추가 x");
             setResult(RESULT_CANCELED,intent);
         }
         finish();
@@ -153,14 +150,12 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
                     selectedDay = new Date(data.getLongExtra(DATE_EXTRA, 0));
 
                     calendarItemMap = (HashMap<String,CalendarItem>) data.getSerializableExtra(CALENDAR_LIST_EXTRA);
-                    Log.i(TAG, "receiveSelectedDay: date :" + selectedDay.toString() + " +  이벤트 날짜 수 " + calendarItemMap.size());
                     changedEvent = true;
                     daySetting();
                   //  SetSelectedDayEventContent();
                     isExistEvent();
                     break;
                 case DIALOG_FRAGMENT:
-                    Log.i(TAG, "onActivityResult: 프래그먼트");
                     break;
             }
 
@@ -204,7 +199,6 @@ public class CalendarSchActivity extends CalendarSchBaseActivity implements View
     public boolean onCreateOptionsMenu(Menu menu) {
         ActionBar actionBar = getSupportActionBar();
 
-        Log.i(TAG, "onCreateOptionsMenu: 액션바");
         // Custom Actionbar를 사용하기 위해 CustomEnabled을 true 시키고 필요 없는 것은 false 시킨다
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);            //액션바 아이콘을 업 네비게이션 형태로 표시합니다.

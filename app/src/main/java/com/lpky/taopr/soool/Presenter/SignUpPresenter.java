@@ -31,7 +31,6 @@ public class SignUpPresenter implements AccountManager {
     // 전달 받는 함수 => clickDuplicityResponse
     @Override
     public void clickDuplicity(int separator,String emailorNick) {
-        Log.i(TAG, "clickDuplicity: 전달 받은 값  : " + separator +"  , " + emailorNick);
         view.showLoading();
         signUpModel.checkDuplicity(separator,emailorNick);
     }
@@ -39,7 +38,6 @@ public class SignUpPresenter implements AccountManager {
     //이메일, 닉네임 중복 체크의 결과를 View에게 전송하기 위해 사용한 함수.
     public void clickDuplicityResponse(int separator, String emailorNick, boolean response) {
         view.hideLoading();
-        Log.d(TAG, "clickDuplicityResponse: 모델로부터 넘어온 결과" + separator + " // " + emailorNick + " // " + response);
         view.clickDuplicityResponseGoToVIew(separator, emailorNick, response);
     }
 

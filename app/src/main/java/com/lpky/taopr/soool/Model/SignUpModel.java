@@ -99,17 +99,14 @@ public class SignUpModel {
                                         //}
                                     } catch (IOException e) {
                                         signUpPresenter.signUpReqResponse(false,"");
-                                        Log.i(TAG, "onResponse: IOException");
                                     } catch (JSONException e) {
                                         Toast.makeText(context, "페이지에 오류가 있습니다", Toast.LENGTH_SHORT).show();
-                                        Log.i(TAG, "onResponse: JSONException");
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                     signUpPresenter.signUpReqResponse(false,"");
-                                    Log.i(TAG, "onFailure: ");
                                 }
                             });
                         }
@@ -148,7 +145,6 @@ public class SignUpModel {
 
         //회원가입 버튼 눌렀을때 처리할 부분.
 
-        Log.i(TAG, "암호 signUpReq: 0");
 
         Observable.just("")
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -188,13 +184,10 @@ public class SignUpModel {
                                                 // JSON 으로 변환
                                                 String userClass = gson.toJson(item, LoginSessionItem.class);
                                                 //shared에 객체 저장
-                                                Log.i(TAG, "onResponse: 암호 " + accountNo);
                                                 LoginSharedPreferences.LoginUserSave(context, "LoginAccount", userClass);
-                                                Log.i(TAG, "onCreate: 비번" + LoginSharedPreferences.getAccountNo(context,"LoginAccount"));
                                                 //회원가입 성공을 View에게 전송.
                                                 signUpPresenter.signUpReqResponse(true,String.valueOf(accountNo));
                                             } else if (result.equals("false")) {
-                                                Log.d(TAG, "onResponse false : false");
                                                 //회원가입 실패를 View에게 전송.
                                                 signUpPresenter.signUpReqResponse(false,"");
                                             }
@@ -203,11 +196,9 @@ public class SignUpModel {
 
                                     catch (IOException e) {
                                         signUpPresenter.signUpReqResponse(false,"");
-                                        Log.i(TAG, "Sign Up onResponse: IOException");
                                     }
                                     catch (JSONException e) {
                                         Toast.makeText(context, context.getString(R.string.toast_notice_page_error), Toast.LENGTH_SHORT).show();
-                                        Log.i(TAG, "Sign Up onResponse: JSONException");
                                     }
                                 }
 
@@ -217,7 +208,6 @@ public class SignUpModel {
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                                     signUpPresenter.signUpReqResponse(false,"");
-                                    Log.i(TAG, "Sign Up onFailure: ");
                                     Toast.makeText(context, context.getString(R.string.toast_notice_page_error), Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -225,7 +215,6 @@ public class SignUpModel {
 
                         catch(Exception e) {
                             signUpPresenter.signUpReqResponse(false,"");
-                            Log.i(TAG, "Sign Up apply: Exception");
                         }
 
                         return true;

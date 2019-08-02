@@ -96,7 +96,6 @@ public class QnaBoardVoteAdapter extends RecyclerView.Adapter<QnaBoardVoteAdapte
             deleteText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("adpater", "onClick: 하위");
                     qnaBoardVoteListener.voteContentClickListner(getAdapterPosition(), v);
                 }
             });

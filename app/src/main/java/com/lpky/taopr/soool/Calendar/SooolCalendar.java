@@ -19,7 +19,6 @@ public class SooolCalendar {
         month = Integer.parseInt(eventDate.substring(4,6))-1;  // month는 값이 0일 때 1월
         date = Integer.parseInt(eventDate.substring(6,8));
 
-        Log.i(TAG, "getDate: " + year +"  " + month +"  " + date);
         Calendar cal = Calendar.getInstance();
 
         cal.set(year,month,date,0,0);

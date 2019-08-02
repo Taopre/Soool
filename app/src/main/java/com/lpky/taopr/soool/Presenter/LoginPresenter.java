@@ -23,12 +23,10 @@ public class LoginPresenter implements LoginInter {
     @Override
     public void setView(LoginPresenter.View view) {
         this.view = view;
-        Log.i("login presenter", "setView: ");
     }
     //LoginActvity(view)에서 LoginModel(model)로 id와 pw를 보내기 위해 사용한 함수.
     @Override
     public void login(LoginItem userItem) {
-        Log.d("in presenter.login()", userItem.getId() + "//" + userItem.getPwd());
         //view로부터 받은 값을 model로 보내기 위한 부분.
         loginModel.login(userItem);
     }

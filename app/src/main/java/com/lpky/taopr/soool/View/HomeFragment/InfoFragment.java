@@ -50,7 +50,6 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
 
     public InfoFragment() {
         // Required empty public constructor
-        Log.i(TAG, "InfoFragment: ");
     }
 
     // 액티비티에서 프래그먼트로 값 넘기는 거 확인 --> 원래 왜 파라미터를 스트링 2개로 보내려 했는건가.
@@ -67,7 +66,6 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: ");
         if (getArguments() != null) {
             //  mParam1 = getArguments().getString(ARG_PARAM1);
             // mParam2 = getArguments().getString(ARG_PARAM2);
@@ -78,7 +76,6 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.i(TAG, "onCreateView: ");
 
         View view = inflater.inflate(R.layout.fragment_home_info, container, false);
 
@@ -104,12 +101,10 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
 
         // 서버에서 정보 글 목록을 못받아올 때 예외처리
         if(hasResponded == false) {
-            Log.i(TAG, "onCreateView: server response" + hasResponded);
             infoFmPresenter = new InfoFmPresenter(context);
             infoFmPresenter.setView(this);
             infoFmPresenter.loadData(0, accountNo, -1);
         } else {
-            Log.i(TAG, "onCreateView: server response" + hasResponded);
             infoAdapter = new InfoAdapter(this.infoItems, context);
             infoRecyclerView.setAdapter(infoAdapter); //
         }
@@ -148,14 +143,12 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(TAG, "onAttach: ");
 
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i(TAG, "onDetach: ");
         // mListener = null;
     }
 
@@ -224,7 +217,6 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
     public void getDataFail(String message) {
         infoSwipeRefresh.setRefreshing(false);
 
-        Log.d(TAG, "getDataFail: " + message);
         Toast.makeText(context, "데이터를 불러오는 데 실패했습니다", Toast.LENGTH_SHORT).show();
         hasResponded = false;
         alreadyRequested = true;
@@ -253,25 +245,21 @@ public class InfoFragment extends BaseFragment implements InfoFmInter.View, Swip
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult: " + resultCode);
 
         if (resultCode == RESULT_OK) {
             // 북마크 리스트 삭제 시 아이템의 리스트 포지션 값을 받고, actionKind 로 구별
             // 여기서는 상태 변경밖에 없겠고, 북마크 프래그먼트에서는 삭제, 수정이 가능
 
 
-            Log.i(TAG, "onActivityResult: RESULT_OK");
             InfoItem infoItem = null;
 
             if (data!= null && data.getParcelableExtra("infoItem") != null) {
                 infoItem = data.getParcelableExtra("infoItem");
-                Log.i(TAG, "onActivityResult: ");
             }
 
             int infoPosition = data.getIntExtra("infoPosition", 0);
             int actionKind = data.getIntExtra("actionKind", 88);
 
-            Log.i(TAG, "onActivityResult: actionKind : " + actionKind);
 
             infoItems = infoAdapter.updateItem(infoItem, infoPosition);
 

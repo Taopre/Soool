@@ -34,14 +34,12 @@ public class CalendarDB {
         //테이블 존재하지 않으면 생성
         String query = "create table if not exists " + table_name + "(eventDate varchar(8) primary key , " +
                 "eventContent text)";
-        Log.i(TAG, "sqlite_save: 테이블 생성 쿼리 " + query);
 
         chat_db.execSQL(query);
 
         /// 메세지 sqlite에 저장
         query = "insert into " +table_name + " (eventDate , eventContent ) " +
                 " values ('"+eventDate  +"','" + eventContent +"')";
-        Log.i(TAG, "eventInsert: " + query);
 
         chat_db.execSQL(query);
         chat_db.close();
@@ -71,7 +69,6 @@ public class CalendarDB {
                     String eventDate = row.getString(row.getColumnIndex("eventDate"));
                     CalendarItem calendarItem = new CalendarItem(eventDate,eventContent);
                     calendarItems.add(calendarItem);
-                    Log.i(TAG, "캘린더 db select: event 내용 eventContent :" + eventContent + ", 시간 :" + eventDate );
 
                 } while(row.moveToNext());
             }
@@ -90,7 +87,6 @@ public class CalendarDB {
         // 내용 업데이트
         String query = "UPDATE " + table_name +" SET eventContent='" + eventContent + "' WHERE eventDate='" + eventDate + "';";
 
-        Log.i(TAG, "eventUpdate: " + query);
 
         chat_db.execSQL(query);
         chat_db.close();
@@ -105,7 +101,6 @@ public class CalendarDB {
         // 내용 업데이트
         String query = "DELETE FROM "+ table_name + " WHERE eventDate='" + eventDate + "'";
 
-        Log.i(TAG, "eventDelete: " + query);
 
         chat_db.execSQL(query);
         chat_db.close();

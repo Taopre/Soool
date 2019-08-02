@@ -291,7 +291,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             {
 
                 int commentORrecomment = 0;
-                Log.d(TAG, "GDGSDGSDG" + commentitem.getAccountNo());
                 if (commentitem.getAccountNo() == 1)
                 {
                     //좋아요 취소
@@ -567,7 +566,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 Gson gsonobject = new Gson();
 
                 recommentitem = gsonobject.fromJson(String.valueOf(jsonObject),RecommentItem.class);
-                Log.d(TAG,String.valueOf(jsonObject));
                 recommentitems.add(recommentitem);
             }
             catch (JSONException e)

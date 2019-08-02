@@ -27,15 +27,11 @@ public class LoginCallback implements FacebookCallback<LoginResult> {
     Context startingContext;
 
     public LoginCallback(Context context){
-        Log.i(TAG, "LoginCallback: ");
         this.startingContext = context;
     }
 
     @Override
     public void onSuccess(LoginResult loginResult) {
-
-        Log.i(TAG, "onSuccess");
-
         requestMe(loginResult.getAccessToken());
     }
 
@@ -43,7 +39,6 @@ public class LoginCallback implements FacebookCallback<LoginResult> {
     // 로그인 창을 닫을 경우, 호출됩니다.
     @Override
     public void onCancel() {
-        Log.i(TAG, "onCancel: ");
     }
 
 
@@ -66,7 +61,6 @@ public class LoginCallback implements FacebookCallback<LoginResult> {
 
                     public void onCompleted(JSONObject object, GraphResponse response) {
 
-                        Log.i(TAG,object.toString());
                         try {
 
                             // facebook 계정을 통해 이메일을 받아왔는지 확인

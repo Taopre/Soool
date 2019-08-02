@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:id="@+id/noticeDialogTitle"
         android:textColor="@color/black"
-        android:layout_marginTop="@dimen/all_space_between_20dp"
+        android:paddingTop="@dimen/all_space_between_20dp"
         android:textSize="@dimen/text_size_20dp"
         android:text="Title"
         android:textStyle="bold"

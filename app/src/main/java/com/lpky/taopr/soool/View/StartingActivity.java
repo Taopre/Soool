@@ -66,12 +66,10 @@ public class StartingActivity extends AppCompatActivity {
         actionBar.hide();
 
         ButterKnife.bind(this);
-
         doBinding();
 
         checkAutoLogin();
-        Log.i(TAG, "onCreate: keyhash" + getKeyHash(this));
-        getFaceKey();
+
        callback = new SessionCallback(this);
 
         mCallbackManager = CallbackManager.Factory.create();
@@ -147,41 +145,6 @@ public class StartingActivity extends AppCompatActivity {
         });
 
     }
-    public static String getKeyHash(final Context context) {
-        PackageInfo packageInfo = getPackageInfo(context, PackageManager.GET_SIGNATURES);
-        if (packageInfo == null)
-            return null;
-
-        for (Signature signature : packageInfo.signatures) {
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                return Base64.encodeToString(md.digest(), Base64.NO_WRAP);
-            } catch (NoSuchAlgorithmException e) {
-                Log.w("", "Unable to get MessageDigest. signature=" + signature, e);
-            }
-        }
-        return null;
-    }
-    public void getFaceKey(){
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.facebook.samples.hellofacebook",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-
-    }
-
-
 
     // 자동로그인 설정을 한 경우
     // Home 페이지로 이동
@@ -208,14 +171,10 @@ public class StartingActivity extends AppCompatActivity {
 
 
         if(Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)){
-            Log.i(TAG, "onActivityResult: requestCode : " + requestCode +", resultCode :" + resultCode +
-                    "");
             return ;
         }
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: " + resultCode);
-            Log.i(TAG, "onActivityResult: " + data.getStringExtra("id"));
         }
         super.onActivityResult(requestCode, resultCode, data);
 

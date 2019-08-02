@@ -50,13 +50,11 @@ public class QnaFmPresenter extends BasePresenter implements QnaFmInter {
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: qna" + msg);
                         view.getDataFail(msg);
                     }
 
                     @Override
                     public void onFinish() {
-                        Log.i(TAG, "onFinish: qna");
                         view.hideLoading();
                     }
                 });

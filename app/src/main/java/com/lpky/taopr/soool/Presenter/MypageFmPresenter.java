@@ -42,13 +42,11 @@ public class MypageFmPresenter extends BasePresenter implements MypageFmInter {
                             view.getUserProfileSuccess(userProfile);
                         }
                         else{
-                            Log.i(TAG, "onSuccess: list = null");
                         }
                     }
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: " );
                         view.getDataFail(true, 2);
                     }
 

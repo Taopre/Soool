@@ -20,7 +20,6 @@ public class TimeCalculator {
         long gap = now - dateM;
 
         String ret = "";
-        Log.i(TAG, "beforeTime: " + now + "  "+ "  "+dateM + "  " + gap );
 
 //        초       분   시
 //        1000    60  60

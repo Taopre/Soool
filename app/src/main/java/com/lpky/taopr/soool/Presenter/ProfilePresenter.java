@@ -76,13 +76,11 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
                 new APICallback<SooolResponseBody>() {
                     @Override
                     public void onSuccess(SooolResponseBody sooolResponseBody) {
-                        Log.i(TAG, "onSuccess: 이미지 "+ sooolResponseBody.getResult());
                         view.changeProfileImgSuccess(sooolResponseBody.getResult());
                     }
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: msg");
                         view.getDataFail(1);
 
                     }
@@ -106,13 +104,11 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
                 new APICallback<ProfileInfo>() {
                     @Override
                     public void onSuccess(ProfileInfo changedProfileInfo) {
-                        Log.i(TAG, "onSuccess: " + changedProfileInfo.getAccountEmail());
                         view.changeProfileInfoSuccess(changedProfileInfo);
                     }
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: msg");
                         view.getDataFail(2);
 
                     }
@@ -133,13 +129,11 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
                 new APICallback<SooolResponseBody>() {
                     @Override
                     public void onSuccess(SooolResponseBody sooolResponseBody) {
-                        Log.i(TAG, "onSuccess: " + sooolResponseBody.getResult());
                         view.deleteProfileImgSuccess();
                     }
 
                     @Override
                     public void onFailure(String msg) {
-                        Log.i(TAG, "onFailure: msg");
                         view.getDataFail(2);
 
                     }
@@ -163,7 +157,6 @@ public class ProfilePresenter extends BasePresenter implements ProfileInter{
                 new APICallback<SooolResponseBody>() {
                     @Override
                     public void onSuccess(SooolResponseBody sooolResponseBody) {
-                        Log.i(TAG, "onSuccess: " + sooolResponseBody.getResult());
                         view.deleteAccountSuccess();
                     }
 
