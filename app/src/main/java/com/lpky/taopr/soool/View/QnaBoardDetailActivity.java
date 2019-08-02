@@ -258,12 +258,10 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         if (qnaBoardItem.getImage() == null) {
                             iv_qnaboardImage.setVisibility(View.GONE);
                         } else {
-
                                 
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaBoardItem.getImage())
-                                    .override(100, 100)
-                                    .centerCrop()
+                                    .fitCenter()
                                     .into(iv_qnaboardImage);
                         }
                     } else if (qnaBoardItem.getQnaCate() == 1) {
@@ -295,8 +293,7 @@ public class QnaBoardDetailActivity extends AppCompatActivity implements View.On
                         } else {
                             Glide.with(this)
                                     .load(Whatisthis.serverIp+qnaBoardItem.getImage())
-                                    .override(100, 100)
-                                    .centerCrop()
+                                    .fitCenter()
                                     .into(iv_qnaboardImage);
                         }
 

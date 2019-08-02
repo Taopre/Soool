@@ -98,8 +98,8 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         if (item.get(position).isStringOrUri() == true) {
             Glide.with(convertView.getContext())
                     .load(Whatisthis.serverIp+item.get(position).getStrImage())
-                    .centerCrop()
-                    .override(309,309)
+                    .fitCenter()
+//                    .override(309,309)
                     .into(viewHolder.imageView);
 
             for (int i=0; i<getCount(); i++) {
