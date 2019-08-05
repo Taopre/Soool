@@ -23,7 +23,6 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
 
     public interface GridviewItemClickListner {
         void onListImageBtnClick(int position) ;
-        void onListLayoutClick(int position) ;
     }
 
 
@@ -62,70 +61,60 @@ public class VoteImageAdapter extends BaseAdapter implements View.OnClickListene
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.qna_vote_image, null);
 
-            TextView textView = convertView.findViewById(R.id.grid_text);
-            ImageView imageView = convertView.findViewById(R.id.grid_image);
-            ImageView button = convertView.findViewById(R.id.grid_btn);
-            FrameLayout layoutView = convertView.findViewById(R.id.layoutView);
+            TextView vote_text = convertView.findViewById(R.id.vote_text);
+            ImageView vote_image = convertView.findViewById(R.id.vote_image);
+            ImageView vote_delete_btn = convertView.findViewById(R.id.vote_delete_btn);
 
-            viewHolder = new ViewHolder(textView, imageView, button, layoutView);
+            viewHolder = new ViewHolder(vote_text, vote_image, vote_delete_btn);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.button.setTag(position);
-        viewHolder.textView.setTag(position);
-        viewHolder.imageView.setTag(R.id.imageView, position);
-        viewHolder.layoutView.setTag(position);
+        viewHolder.vote_delete_btn.setTag(position);
+        viewHolder.vote_text.setTag(position);
+        viewHolder.vote_image.setTag(R.id.imageView, position);
 
-        viewHolder.textView.setText(item.get(position).getStatus());
+        viewHolder.vote_text.setText(item.get(position).getStatus());
 
         if (item.get(position).isStringOrUri()){
             Glide.with(convertView.getContext())
                     .load(item.get(position).getStrImage())
                     .override(103, 103)
-                    .into(viewHolder.imageView);
+                    .into(viewHolder.vote_image);
         }
         else
-            viewHolder.imageView.setImageURI(item.get(position).getImage());
+            viewHolder.vote_image.setImageURI(item.get(position).getImage());
 
-        viewHolder.button.setOnClickListener(this);
-        viewHolder.textView.setOnClickListener(this);
-        viewHolder.layoutView.setOnClickListener(this);
+        viewHolder.vote_delete_btn.setOnClickListener(this);
+        viewHolder.vote_text.setOnClickListener(this);
 
         if (item.get(position).getStatus().equals("항목추가")) {
-            viewHolder.button.setVisibility(View.GONE);
+            viewHolder.vote_delete_btn.setVisibility(View.GONE);
         }
         else if (item.get(position).getStatus().equals(""))
-            viewHolder.button.setVisibility(View.VISIBLE);
+            viewHolder.vote_delete_btn.setVisibility(View.VISIBLE);
 
         return convertView;
     }
 
     private class ViewHolder {
-        private TextView textView;
-        private ImageView imageView;
-        private ImageView button;
-        private FrameLayout layoutView;
+        private TextView vote_text;
+        private ImageView vote_image;
+        private ImageView vote_delete_btn;
 
-        public ViewHolder(TextView textView, ImageView imageView, ImageView button, FrameLayout layoutView) {
-            this.textView = textView;
-            this.imageView = imageView;
-            this.button = button;
-            this.layoutView = layoutView;
+        public ViewHolder(TextView vote_text, ImageView vote_image, ImageView vote_delete_btn) {
+            this.vote_text = vote_text;
+            this.vote_image = vote_image;
+            this.vote_delete_btn = vote_delete_btn;
         }
     }
 
     public void onClick(View v) {
         // ListBtnClickListener(MainActivity)의 onListBtnClick() 함수 호출.
         switch (v.getId()) {
-            case R.id.grid_btn:
+            case R.id.vote_delete_btn:
                 if (this.gridviewItemClickListner != null) {
                     this.gridviewItemClickListner.onListImageBtnClick((int)v.getTag()) ;
-                }
-                break;
-            case R.id.layoutView:
-                if (this.gridviewItemClickListner != null) {
-                    this.gridviewItemClickListner.onListLayoutClick((int)v.getTag()) ;
                 }
                 break;
         }

@@ -66,7 +66,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class QnaBoardActivity extends AppCompatActivity implements
-        View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener, 
+        View.OnClickListener, QnaBoardPresenter.View, AdapterView.OnItemClickListener,
         VoteImageAdapter.GridviewItemClickListner, TextWatcher {
 
     private final String TAG = "QnaBoardActivity";
@@ -380,8 +380,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 } catch (NullPointerException e) {
                     Log.d(TAG, "Null pointer");
                 }
-
+                iv_qnaboardVoteBtn.setVisibility(View.VISIBLE);
                 iv_qnaboardVoteBtn.setClickable(true);
+
+                voteFlag = 1;
                 break;
             case R.id.qnaTextVoteRemove:
                 ll_qnaVoteTextLayout.setVisibility(View.GONE);
@@ -402,8 +404,10 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 } catch (NullPointerException e) {
                     Log.d(TAG, "Null pointer");
                 }
-
+                iv_qnaboardVoteBtn.setVisibility(View.VISIBLE);
                 iv_qnaboardVoteBtn.setClickable(true);
+
+                voteFlag = 1;
                  break;
             case R.id.qnaboardImageBtn:
                 imageLayout.setVisibility(View.VISIBLE);
@@ -635,16 +639,17 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                     @Override
                     public void noVotesoReturn(boolean flag) {
-                        if (flag == true) {
+                        if (flag) {
+                            Log.d(TAG, "noVotesoReturn: 투표 안함");
                             iv_qnaboardVoteBtn.setVisibility(View.VISIBLE);
+                            voteFlag = 1;
                         } else {
-
+                            Log.d(TAG, "noVotesoReturn: 투표 함");
+                            voteFlag = 0;
                         }
                     }
                 });
                 bottomSheetDialogVoteSelect.show(getSupportFragmentManager(), "bottomSheet");
-
-                voteFlag = 0;
                 break;
             case R.id.qnaboardAddBtn:
                 count++;
@@ -772,8 +777,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
 
-        if(resultCode != RESULT_OK)
+        if(resultCode != RESULT_OK) {
+            // 이미지 선택 안 했을 때 여기로 온다.
+            Uri uriTest = Uri.parse("");
+            gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
+            gridVoteItemArrayList.add(gridVoteItem);
+
+            voteImageAdapter.notifyDataSetChanged();
+            reSelectVoteImage = false;
             return;
+        }
 
         switch(requestCode)
         {
@@ -821,7 +834,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                         } else {
                             // 이미지 path + grid 합쳐서 6이면 항목추가 항목 삭제하기
                             // 6보다 작으면 먼저 항목추가 아이템 삭제 후, 이미지 추가작업 후에 마지막 아이템에 항목추가 추가하기
-
+                            
                             // 이미지가 최대인 6장일 경우
                             if (path.size() + gridVoteItemArrayList.size() == 6) {
 
@@ -1032,30 +1045,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void onListImageBtnClick(int position) {
-        if (!loading) {
-            // 그리드 뷰 버튼 클릭 리스너
-            // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
-            voteImage.remove(position);
-            gridVoteItemArrayList.remove(position);
-
-            if (gridVoteItemArrayList.size() < 6) {
-                Uri uriTest = Uri.parse("");
-                gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
-                gridVoteItemArrayList.add(gridVoteItem);
-            }
-            voteImageAdapter.notifyDataSetChanged();
-        }
-        else {
-        }
-    }
-
-    @Override
-    public void onListLayoutClick(int position) {
         if (!loading) {
             if (gridVoteItemArrayList.get(position).getImageIden() == 1) {
                 reSelectVoteImage = true;
@@ -1064,6 +1053,40 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
                 FishBun.with(this).setImageAdapter(new GlideAdapter()).setMaxCount(6 - voteImage.size()).startAlbum();
             }
+        }
+        else {
+        }
+    }
+
+    @Override
+    public void onListImageBtnClick(int position) {
+        if (!loading) {
+            // 그리드 뷰 버튼 클릭 리스너
+            // 그리드 뷰 아이템 (이미지 및 스트링) 삭제해야함.
+            if (voteImage.size() == 6) {
+                voteImage.remove(position);
+                gridVoteItemArrayList.remove(position);
+
+                Uri uriTest = Uri.parse("");
+                gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
+                gridVoteItemArrayList.add(gridVoteItem);
+            } else if (voteImage.size() < 6) {
+                for (int i=0; i<gridVoteItemArrayList.size(); i++) {
+                    if (gridVoteItemArrayList.get(i).getStatus().equals("항목추가")) {
+                        Log.d(TAG, "테스트: 이미 있다 항목추가");
+                        gridVoteItemArrayList.remove(i);
+
+                        voteImage.remove(position);
+                        gridVoteItemArrayList.remove(position);
+
+                        Uri uriTest = Uri.parse("");
+                        gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
+                        gridVoteItemArrayList.add(gridVoteItem);
+                    }
+                }
+            }
+
+            voteImageAdapter.notifyDataSetChanged();
         }
         else {
         }
@@ -1086,7 +1109,6 @@ public class QnaBoardActivity extends AppCompatActivity implements
     public void afterTextChanged(Editable s) {
 
     }
-
 
     @Override
     public void onBackPressed()

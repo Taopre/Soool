@@ -90,7 +90,6 @@ public class BottomSheetDialogVoteSelect extends BottomSheetDialogFragment imple
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        bottomSheetDialogVoteSelectDialoggListener.noVotesoReturn(true);
     }
 }
 

@@ -9,7 +9,7 @@
         android:id="@+id/layoutView">
 
         <ImageView
-            android:id="@+id/grid_image"
+            android:id="@+id/vote_image"
             android:src="@drawable/ic_launcher_background"
             android:layout_width="103dp"
             android:layout_height="103dp"
@@ -18,15 +18,17 @@
             android:paddingVertical="6dp" />
 
         <TextView
-            android:id="@+id/grid_text"
+            android:id="@+id/vote_text"
             android:text=""
+            android:paddingVertical="@dimen/all_space_between_10dp"
+            android:paddingHorizontal="3dp"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp" />
+            android:textSize="@dimen/text_size_14dp" />
 
         <ImageView
-            android:id="@+id/grid_btn"
+            android:id="@+id/vote_delete_btn"
             android:layout_gravity="right"
             android:layout_width="20dp"
             android:layout_height="20dp"

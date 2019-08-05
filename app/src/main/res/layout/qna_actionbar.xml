@@ -27,7 +27,7 @@
         android:id="@+id/drawupDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:paddingBottom="17dp"
         android:paddingTop="21dp"
         android:paddingEnd="8dp"
