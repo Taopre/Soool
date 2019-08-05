@@ -75,68 +75,69 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
             convertView = inflater.inflate(R.layout.qnadetail_image_vote_item, null);
 
             viewHolder = new ViewHolder();
-            viewHolder.textView = convertView.findViewById(R.id.grid_text);
-            viewHolder.imageView = convertView.findViewById(R.id.grid_image);
-            viewHolder.progressBar = convertView.findViewById(R.id.progressbar);
-            viewHolder.radioButton = convertView.findViewById(R.id.radio);
-            viewHolder.num = convertView.findViewById(R.id.num);
+            viewHolder.vote_image_text = convertView.findViewById(R.id.vote_image_text);
+            viewHolder.vote_image = convertView.findViewById(R.id.vote_image);
+            viewHolder.vote_image_show_num = convertView.findViewById(R.id.vote_image_show_num);
+            viewHolder.vote_image_select = convertView.findViewById(R.id.vote_image_select);
+            viewHolder.vote_image_num = convertView.findViewById(R.id.vote_image_num);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        viewHolder.progressBar.setTag(position);
-        viewHolder.radioButton.setTag(position);
-        viewHolder.textView.setTag(position);
-        viewHolder.num.setTag(position);
-        viewHolder.num.setVisibility(View.INVISIBLE);
-        viewHolder.imageView.setTag(R.id.grid_image, position);
+        viewHolder.vote_image_show_num.setTag(position);
+        viewHolder.vote_image_select.setTag(position);
+        viewHolder.vote_image_text.setTag(position);
+        viewHolder.vote_image_num.setTag(position);
+        viewHolder.vote_image_num.setVisibility(View.INVISIBLE);
+        viewHolder.vote_image.setTag(R.id.vote_image, position);
 
-        viewHolder.num.setText(item.get(position).getVote()+"");
-        viewHolder.textView.setText(item.get(position).getStatus());
+        viewHolder.vote_image_num.setText(item.get(position).getVote()+"");
+        viewHolder.vote_image_text.setText(item.get(position).getStatus());
         if (item.get(position).isStringOrUri() == true) {
             Glide.with(convertView.getContext())
                     .load(Whatisthis.serverIp+item.get(position).getStrImage())
-                    .fitCenter()
-//                    .override(309,309)
-                    .into(viewHolder.imageView);
+                    .centerCrop()
+                    .override(309,309)
+                    .centerCrop()
+                    .into(viewHolder.vote_image);
 
             for (int i=0; i<getCount(); i++) {
                 images.add(item.get(i).getStrImage());
             }
 
         } else {
-            viewHolder.imageView.setImageURI(item.get(position).getImage());
+            viewHolder.vote_image.setImageURI(item.get(position).getImage());
         }
-        viewHolder.progressBar.post(new Runnable() {
+        viewHolder.vote_image_show_num.post(new Runnable() {
             @Override
             public void run() {
-                viewHolder.progressBar.setProgress(item.get(position).getVote());
+                viewHolder.vote_image_show_num.setProgress(item.get(position).getVote());
             }
         });
-        viewHolder.progressBar.setMax(voteTotalNum);
+        viewHolder.vote_image_show_num.setMax(voteTotalNum);
 
         if (voteFlag == true) {
-            viewHolder.radioButton.setVisibility(View.GONE);
-            viewHolder.num.setVisibility(View.VISIBLE);
-            viewHolder.progressBar.setVisibility(View.VISIBLE);
-            viewHolder.imageView.setAlpha(50);
+            viewHolder.vote_image_select.setVisibility(View.GONE);
+            viewHolder.vote_image_num.setVisibility(View.VISIBLE);
+            viewHolder.vote_image_show_num.setVisibility(View.VISIBLE);
+            viewHolder.vote_image.setAlpha(50);
 
             if (position != (userSelectPos - 1)) {
-                viewHolder.num.setTextColor(Color.parseColor("#9d9d97"));
+                viewHolder.vote_image_num.setTextColor(Color.parseColor("#9d9d97"));
             } else {
-                viewHolder.num.setTextColor(Color.parseColor("#08883e"));
+                viewHolder.vote_image_num.setTextColor(Color.parseColor("#08883e"));
             }
 
         }
 
         if (alreadyVote == true) {
-            viewHolder.progressBar.setClickable(true);
-            viewHolder.imageView.setClickable(true);
+            viewHolder.vote_image_show_num.setClickable(true);
+            viewHolder.vote_image.setClickable(true);
         }
 
-        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.vote_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), VoteImageActivity.class);
@@ -146,17 +147,17 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
                 v.getContext().startActivity(intent);
             }
         });
-        viewHolder.radioButton.setOnClickListener(this);
+        viewHolder.vote_image_select.setOnClickListener(this);
 
         return convertView;
     }
 
     private class ViewHolder {
-        private TextView textView;
-        private TextView num;
-        private ImageView imageView;
-        private ProgressBar progressBar;
-        private RadioButton radioButton;
+        private TextView vote_image_text;
+        private TextView vote_image_num;
+        private ImageView vote_image;
+        private ProgressBar vote_image_show_num;
+        private RadioButton vote_image_select;
 
     }
 
@@ -164,7 +165,7 @@ public class QnaBoardDetailImageAdapter extends BaseAdapter implements View.OnCl
         // ListBtnClickListener(MainActivity)의 onListBtnClick() 함수 호출.
         switch (v.getId()) {
 
-            case R.id.radio:
+            case R.id.vote_image_select:
                 if (this.gridviewItemClickListner != null) {
                     this.gridviewItemClickListner.onListRadioClick((int)v.getTag(), v) ;
                 }
