@@ -21,7 +21,6 @@ public class InfoBookmark implements Parcelable {
     // https://stackoverflow.com/questions/6201311/how-to-read-write-a-boolean-when-implementing-the-parcelable-interface
 
     public InfoBookmark(){
-        Log.e(TAG, "InfoBookmark 소환되는거니");
     }
 
     public InfoBookmark(int postNo, int bookmarkNo, String hasBookmarked) {

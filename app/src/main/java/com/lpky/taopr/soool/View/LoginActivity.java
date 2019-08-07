@@ -149,7 +149,6 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.V
             }
 
             else{
-                Log.i(TAG, "onResponse: 불일치");
                 Toast.makeText(this, "존재하지 않는 이메일 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
             }
 

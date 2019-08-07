@@ -22,7 +22,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_text_vote">
+            >
 
             <TextView
                 android:id="@+id/textViewssss"
@@ -58,6 +58,24 @@
                 android:layout_marginBottom="12dp"
                 android:textColor="@color/greenMain"
                 android:text="9999"/>
+
+            <View
+                android:layout_width="@dimen/all_line_1dp"
+                android:layout_height="45dp"
+                android:background="@color/grayLight_a50"
+                android:layout_alignParentStart="true"/>
+
+            <View
+                android:layout_width="@dimen/all_line_1dp"
+                android:layout_height="45dp"
+                android:background="@color/grayLight_a50"
+                android:layout_alignParentEnd="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/all_line_1dp"
+                android:background="@color/grayLight_a50"
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
 
     </FrameLayout>

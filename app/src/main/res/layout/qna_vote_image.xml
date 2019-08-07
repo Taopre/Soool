@@ -6,16 +6,17 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="3dp"
         android:id="@+id/layoutView">
 
         <ImageView
             android:id="@+id/vote_image"
             android:src="@drawable/ic_launcher_background"
-            android:layout_width="103dp"
-            android:layout_height="103dp"
-            android:scaleType="fitXY"
-            android:paddingBottom="6dp"
-            android:paddingVertical="6dp" />
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            />
 
         <TextView
             android:id="@+id/vote_text"

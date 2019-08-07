@@ -84,6 +84,7 @@
                     android:id="@+id/qnaboardTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:layout_marginStart="@dimen/all_space_between_18dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
@@ -189,31 +190,48 @@
                             android:id="@+id/recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp" />
+                       />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="45dp"
                             android:id="@+id/qnaTextAddLayout">
 
                             <ImageView
                                 android:id="@+id/qnaboardAddBtn"
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
-                                android:layout_marginTop="@dimen/all_space_between_12dp"
-                                android:layout_marginBottom="@dimen/text_size_14dp"
+                                android:layout_marginLeft="9dp"
+                                android:layout_centerVertical="true"
                                 android:src="@drawable/vote_add_opt" />
 
                             <TextView
                                 android:layout_toRightOf="@+id/qnaboardAddBtn"
-                                android:layout_alignTop="@+id/qnaboardAddBtn"
+                                android:layout_centerVertical="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="26dp"
-                                android:layout_marginStart="@dimen/all_space_between_8dp"
+                                android:layout_marginStart="4dp"
                                 android:textSize="@dimen/text_size_14dp"
                                 android:gravity="center"
                                 android:textColor="@color/grayMain"
                                 android:text="항목 추가"/>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="52dp"
+                                android:layout_alignParentStart="true"
+                                android:background="@color/grayLight_a50"/>
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="52dp"
+                                android:layout_alignParentEnd="true"
+                                android:background="@color/grayLight_a50"/>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignParentBottom="true"
+                                android:background="@color/grayLight_a50"/>
+
                         </RelativeLayout>
                     </LinearLayout>
 

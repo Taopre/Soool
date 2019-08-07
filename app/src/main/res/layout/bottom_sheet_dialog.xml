@@ -4,16 +4,17 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="41dp"
+        android:layout_gravity="center">
 
         <LinearLayout
             android:id="@+id/tagBottlesLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="41dp"
+
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
             android:orientation="horizontal">
@@ -28,7 +29,7 @@
                 android:paddingVertical="7dp"
                 android:text="주량"
                 android:textColor="@color/grayMain"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -52,7 +53,7 @@
                 android:paddingVertical="7dp"
                 android:text="레시피"
                 android:textColor="@color/grayMain"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,16 +77,20 @@
                 android:paddingVertical="7dp"
                 android:text="숙취"
                 android:textColor="@color/grayMain"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
         </LinearLayout>
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/tagDrinkPersLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:layout_marginStart="50dp"
-            android:layout_below="@+id/tagHangoverLayout"
             android:layout_marginTop="@dimen/text_size_14dp"
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
@@ -101,17 +106,15 @@
                 android:paddingVertical="7dp"
                 android:text="주사"
                 android:textColor="@color/grayMain"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/tagHoneytipLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
             android:layout_toRightOf="@+id/tagDrinkPersLayout"
             android:layout_marginStart="15dp"
-            android:layout_below="@+id/tagHangoverLayout"
             android:layout_marginTop="@dimen/text_size_14dp"
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
@@ -127,17 +130,15 @@
                 android:paddingVertical="7dp"
                 android:text="꿀팁"
                 android:textColor="@color/grayMain"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/tagHeronLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
             android:layout_toRightOf="@+id/tagHoneytipLayout"
             android:layout_marginStart="15dp"
-            android:layout_below="@+id/tagHangoverLayout"
             android:layout_marginTop="@dimen/text_size_14dp"
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
@@ -153,7 +154,7 @@
                 android:paddingVertical="7dp"
                 android:text="해장"
                 android:textColor="@color/grayMain"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
         </LinearLayout>
 
 
@@ -161,10 +162,8 @@
             android:id="@+id/tagEtcLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
             android:layout_toRightOf="@+id/tagHeronLayout"
             android:layout_marginStart="15dp"
-            android:layout_below="@+id/tagHangoverLayout"
             android:layout_marginTop="@dimen/text_size_14dp"
             android:background="@drawable/dialog_tag_frame_gray"
             android:gravity="center"
@@ -180,7 +179,7 @@
                 android:paddingVertical="7dp"
                 android:text="기타"
                 android:textColor="@color/grayMain"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
         </LinearLayout>
 
 
@@ -204,7 +203,7 @@
             android:layout_marginBottom="@dimen/all_space_between_18dp"
             android:layout_weight="1"
             android:gravity="center|start"
-            android:textSize="@dimen/text_size_18dp"
+            android:textSize="@dimen/text_size_15dp"
             android:text="@string/all_button_cancel"/>
 
         <TextView
@@ -216,7 +215,7 @@
             android:layout_marginBottom="@dimen/all_space_between_18dp"
             android:layout_weight="1"
             android:gravity="center|end"
-            android:textSize="@dimen/text_size_18dp"
+            android:textSize="@dimen/text_size_15dp"
             android:textColor="@color/greenDark"
             android:text="@string/all_button_complete"/>
     </LinearLayout>

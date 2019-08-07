@@ -14,7 +14,6 @@ public class InfoList {
     private ArrayList<InfoItem> infoItem;
 
     public ArrayList<InfoItem> getInfoItems() {
-        Log.e(TAG, "getInfoItems: infoList 소환되는거니"+infoItem);
         return infoItem;
     }
 

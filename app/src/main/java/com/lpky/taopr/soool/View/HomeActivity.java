@@ -295,6 +295,7 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
         if(resultCode == RESULT_OK){
             switch (requestCode){
                 case CHANGE_PROFILE:
+                    try{
                     ProfileInfo profileInfo = data.getParcelableExtra("profileInfo");
 
                     // drawer 레이아웃에 바뀐 프로필 정보 보여주기
@@ -304,6 +305,10 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
                     // 마이페이지 프래그먼트에 변경된 프로필 내용으로 보여주기
                     mypageFragment.showProfileImgNick(profileInfo.getAccountImage(),profileInfo.getAccountNick());
+                    }
+                    catch (NullPointerException e){
+
+                    }
                     break;
             }
         }
@@ -373,13 +378,23 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
     @Override
     public void startMyBoardLoading() {
         // 내 게시물에서 서버에 요청을 보냄
-        mypageFragment.waitChildFragmentRes();
+        try {
+            mypageFragment.waitChildFragmentRes();
+        }
+        catch (NullPointerException e){
+
+        }
     }
 
     @Override
     public void endMyBoardLoading(Boolean isMyBoardRes) {
         // 내 게시물에서 서버로부터 응답을 받음
-        mypageFragment.getChildFragmentRes(0,isMyBoardRes);
+        try {
+            mypageFragment.getChildFragmentRes(0, isMyBoardRes);
+        }
+        catch (NullPointerException e){
+
+        }
     }
 
     // MyBoard 프래그먼트에서 마이페이지 프래그먼트 view 에서 '내 게시글' ,'내 포인트' 값의 갱신이 필요하다는 알림을 보내는 메서드
@@ -397,7 +412,12 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
         // to inform myPageFragment that its childFragment, bookmarkFragment
         // has sent a request to server and waiting for the response
-        mypageFragment.waitChildFragmentRes();
+        try {
+            mypageFragment.waitChildFragmentRes();
+        }
+        catch (NullPointerException e){
+
+        }
 
     }
 
@@ -406,7 +426,12 @@ public class HomeActivity extends AppCompatActivity implements HomePresenter.Vie
 
         // to inform myPageFragment that its childFragment, bookmarkFragment
         // has received the response from server
-        mypageFragment.getChildFragmentRes(1,serverResponded);
+        try{
+            mypageFragment.getChildFragmentRes(1,serverResponded);
+        }
+        catch (NullPointerException e){
+
+        }
 
     }
 

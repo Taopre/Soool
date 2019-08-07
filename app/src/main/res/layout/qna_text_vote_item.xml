@@ -8,6 +8,7 @@
         android:layout_marginTop="@dimen/text_size_13dp"
         android:layout_marginBottom="@dimen/all_text_12dp_space_6dp"
         android:layout_width="269dp"
+        android:singleLine="true"
         android:layout_height="wrap_content"
         android:id="@+id/editid"
         android:textSize="@dimen/text_size_14dp"
@@ -16,13 +17,35 @@
     
     <ImageView
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="7dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginBottom="9dp"
-        android:layout_marginEnd="10dp"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:paddingTop="7dp"
+        android:paddingStart="9dp"
+        android:paddingBottom="9dp"
+        android:paddingEnd="10dp"
+        android:layout_width="45dp"
+        android:layout_height="44dp"
         android:id="@+id/deleteText"
         android:src="@drawable/vote_remove_opt_txt"/>
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/deleteText"
+        android:layout_alignBottom="@id/deleteText"
+        android:background="@color/grayLight_a50"
+        android:layout_alignParentStart="true"
+        />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/deleteText"
+        android:layout_alignBottom="@id/deleteText"
+        android:background="@color/grayLight_a50"
+        android:layout_alignParentEnd="true"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grayLight_a50"
+        android:layout_alignParentBottom="true"
+        />
 </RelativeLayout>

@@ -44,13 +44,11 @@ public class InfoItem implements Parcelable {
     public int views;
 
     public InfoItem(){
-        Log.e(TAG, "InfoItem 소환되는거니 empty"+postNo+postTag);
     }
 
     public InfoItem(int postNo, String postTag, int accountNo, String writer, String date,
                     String title, String cover, int comments, int views) {
 
-        Log.e(TAG, "InfoItem 소환되는거니"+postNo+postTag); // 소환안됨;;ㅋㅋ
         this.postNo = postNo;
         this.postTag = postTag;
         this.accountNo = accountNo;
