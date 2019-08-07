@@ -109,12 +109,14 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
 
         if(isResponse == false) {
+            Log.i(TAG, "onCreateView: false");
             myBoardPresenter = new MyBoardPresenter(context);
             myBoardPresenter.setView(this);
             myPageView.startMyBoardLoading();
             myBoardPresenter.loadData(accountNo,0,-1);
         }
         else{
+            Log.i(TAG, "onCreateView: true");
             qnaAdapter = new QnaAdapter(this.qnaBoardItems,context);
             myBoardRecycler.setAdapter(qnaAdapter);
         }
@@ -246,6 +248,7 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
 
     @Override
     public void getDataSuccess(ArrayList<QnaBoardItem> qnaBoardItems,int loadingKind) {
+        Log.i(TAG, "getDataSuccess: ");
         if (qnaBoardItems.size() == 0 && this.qnaBoardItems.size() > 0) {
 
             //Toast.makeText(getContext(), getString(R.string.toast_notice_no_exist_post), Toast.LENGTH_SHORT).show();
@@ -345,13 +348,22 @@ public class MyBoardFragment extends Fragment implements MyBoardPresenter.View,V
                 switch (actionKind) {
                     case 0:
                         if (qnaAdapter == null) {
+                            Log.i(TAG, "onActivityResult: null");
                             qnaBoardItems.add(qnaBoardItem);
                             qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
                             myBoardRecycler.setAdapter(qnaAdapter);
                         } else {
-                            qnaAdapter.addItem(qnaBoardItem);
-                            qnaBoardItems.add(qnaBoardItem);
-                            myBoardRecycler.smoothScrollToPosition(0);
+                            if (qnaBoardItems.size() == 0){
+                                Log.i(TAG, "onActivityResult: nullx 0");
+                                qnaBoardItems.add(qnaBoardItem);
+                                qnaAdapter = new QnaAdapter(this.qnaBoardItems, context);
+                                myBoardRecycler.setAdapter(qnaAdapter);
+                            }else {
+                                Log.i(TAG, "onActivityResult: nullx 0x");
+                                qnaAdapter.addItem(qnaBoardItem);
+                                qnaBoardItems.add(qnaBoardItem);
+                                myBoardRecycler.smoothScrollToPosition(0);
+                            }
                         }
 
                     case 1:

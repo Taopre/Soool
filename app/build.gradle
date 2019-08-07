@@ -6,13 +6,13 @@ android {
         applicationId "com.lpky.taopr.soool"
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.0.2"
+        versionCode 10
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug{
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {

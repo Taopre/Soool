@@ -195,7 +195,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
 
         // loadAdditionalData
         infoDetailPresenter.getAdditionalData(accountNo, postNo);
-        Log.e(TAG, "onCreate: send accnoutNo: " + accountNo + " , postNo: " + postNo);
 
 
         //댓글 관련부분
@@ -386,7 +385,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             서버에 postNo랑 accountNo 담아서 update 요청 보내기,
             북마크변수(bool) 변경 */
 
-            Log.e(TAG, "getDataSuccess: bookmarkStatus 1 " + hasBookmarked + " bookmarkNo " + bookmarkNo);
             bookmarkNo--;
             infoDetailBookmarkCount.setText(String.valueOf(bookmarkNo));
             infoDetailBookmarkCount.setTextColor(ContextCompat.getColor(InfoDetailActivity.this,R.color.grayMain));
@@ -403,7 +401,6 @@ public class InfoDetailActivity extends AppCompatActivity implements View.OnClic
             hasBookmarked = true;
         }
 
-        Log.e(TAG, "getDataSuccess: bookmarkStatus submit" + hasBookmarked + " bookmarkNo " + bookmarkNo);
         infoDetailPresenter.updateBookmarkStatus();
 
         bookmarkChanged = true;

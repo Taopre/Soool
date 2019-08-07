@@ -149,6 +149,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                 tv_qnaboardBeforeTag.setVisibility(View.GONE);
                 h_scrollView.setVisibility(View.VISIBLE);
                 if (receiveQnaBoardItem.getTag().contains("@##@")) {
+
                     tagData = receiveQnaBoardItem.getTag().split("@##@");
                     for (int i = 0; i < tagData.length; i++) {
                         tagArray.add(tagData[i]);
@@ -494,9 +495,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     // 텍스트 투표 예외처리 부분.
 
                                     if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
-                                        Toast.makeText(v.getContext(),i+1+"번째 내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
+
+                                        //Toast.makeText(v.getContext(),"투표 내용을 모두 입력해주세요.",Toast.LENGTH_SHORT).show();
                                     }
-                                    voteText.add(editModelArrayList.get(i).getEditTextValue());
+                                    else {
+                                        voteText.add(editModelArrayList.get(i).getEditTextValue());
+                                    }
                                 }
 
                                 qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
@@ -547,9 +551,12 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                     // 텍스트 투표 예외처리 부분.
 
                                     if (editModelArrayList.get(i).getEditTextValue().length() == 0) {
-                                        Toast.makeText(v.getContext(),i+1+"번째 내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
+
+                                        Toast.makeText(v.getContext(),"투표 항목을 모두 입력해주세요.",Toast.LENGTH_SHORT).show();
                                     }
+
                                     voteText.add(editModelArrayList.get(i).getEditTextValue());
+
                                 }
 
                                 qnaItem = new QnaItem(accountNo, voteFlag, tag, et_qnaboardTitle.getText().toString(),
@@ -684,6 +691,7 @@ public class QnaBoardActivity extends AppCompatActivity implements
                                 h_scrollView.setVisibility(View.VISIBLE);
 
                                 if (tagArray.size() > 0) {
+                                    tagArray.clear();
                                     tagArray.addAll(arrayList);
                                     tag = "";
                                 }
@@ -779,11 +787,16 @@ public class QnaBoardActivity extends AppCompatActivity implements
 
         if(resultCode != RESULT_OK) {
             // 이미지 선택 안 했을 때 여기로 온다.
+
             Uri uriTest = Uri.parse("");
             gridVoteItem = new GridVoteItem(false, "항목추가", uriTest, 1);
             gridVoteItemArrayList.add(gridVoteItem);
+            try {
+                voteImageAdapter.notifyDataSetChanged();
+            }
+            catch (NullPointerException e){
 
-            voteImageAdapter.notifyDataSetChanged();
+            }
             reSelectVoteImage = false;
             return;
         }
