@@ -4,8 +4,26 @@
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
+
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 
+
+###############
+
+#key
+/-keystore
+/sooolKey/
+
+#release
+/release/
+
+#util
+Util/
+SharedPreferences/
+Whatisthis.java
+
+#String value
+strings.xml
