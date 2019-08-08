@@ -23,6 +23,7 @@
 #util
 Util/
 SharedPreferences/
+Whatisthis.java
 
 #String value
 strings.xml
