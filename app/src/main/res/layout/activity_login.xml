@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingRight="10dp"
+        android:src="@drawable/logo"
+        />
+
+    <EditText
+        android:id="@+id/accountId"
+        android:layout_width="286dp"
+        android:layout_height="50dp"
+        android:background="@drawable/sign_up_ed_frame"
+        android:layout_above="@id/accountPass"
+        android:textSize="@dimen/text_size_13dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/all_space_between_10dp"
+        android:paddingLeft="@dimen/all_space_between_12dp"
+        android:hint="@string/login_email"
+        />
+
+    <EditText
+        android:id="@+id/accountPass"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:textSize="@dimen/text_size_13dp"
+        android:textColor="@color/black"
+        android:background="@drawable/sign_up_ed_frame"
+        android:layout_alignLeft="@id/accountId"
+        android:layout_alignRight="@id/accountId"
+        android:hint="@string/login_password"
+        android:textColorHint="@color/black"
+        android:paddingLeft="@dimen/all_space_between_12dp"
+        android:layout_above="@id/accountAutoLoginCheck"
+        android:layout_marginBottom="17dp"
+        android:inputType="textPassword"
+        />
+
+    <Button
+        android:id="@+id/accountLoginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sign_up_green_button"
+        android:textColor="@color/background_white"
+        android:layout_above="@id/loginBottomLay"
+        android:layout_marginBottom="113dp"
+        android:layout_alignLeft="@id/accountId"
+        android:layout_alignRight="@id/accountId"
+        android:text="@string/login_button_login"
+        android:stateListAnimator="@null"
+         />
+
+    <CheckBox
+        android:id="@+id/accountAutoLoginCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/grayLight"
+        android:text="@string/login_check_auto_login"
+        android:textSize="@dimen/text_size_13dp"
+        android:textColor="@color/black"
+        android:layout_alignLeft="@id/accountId"
+        android:layout_above="@id/accountLoginBtn"
+        android:layout_marginBottom="37dp"
+        />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/loginBottomLay"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp"
+        >
+
+        <TextView
+            android:id="@+id/accountFindPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textSize="@dimen/text_size_13dp"
+            android:textColor="@color/greenDark"
+
+             />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:id="@+id/loginSpaceLine"
+            android:background="@color/greenDark"
+            android:layout_marginLeft="33dp"
+            />
+
+        <TextView
+            android:id="@+id/accountSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="33dp"
+            android:textSize="@dimen/text_size_13dp"
+            android:textColor="@color/greenDark"
+            />
+    </LinearLayout>
+</RelativeLayout>

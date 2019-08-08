@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutView">
+
+        <ImageView
+            android:id="@+id/grid_image"
+            android:src="@drawable/ic_launcher_background"
+            android:layout_width="103dp"
+            android:layout_height="103dp"
+            android:scaleType="fitXY"
+            android:paddingBottom="6dp"
+            android:paddingVertical="6dp" />
+
+        <TextView
+            android:id="@+id/grid_text"
+            android:text=""
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/grid_btn"
+            android:layout_gravity="right"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="center"
+            android:background="@drawable/vote_remove_opt_img"/>
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.taopr.soool">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
+    <application
+        android:name=".Kakao.GlobalApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/soool_app"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".View.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.StartingActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".View.QnaBoardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".View.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.QnaBoardDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" />
+        <activity android:name=".View.CalendarSchActivity" />
+        <activity android:name=".View.CalendarAddSchActivity" />
+        <activity
+            android:name=".View.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".View.VoteImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" />
+        <activity
+            android:name=".View.ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".View.InfoDetailActivity" />
+        <activity
+            android:name=".View.PassFindActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitle" />
+        <activity android:name=".View.DeleteAccountActivity" />
+        <activity android:name=".View.NoticeActivity"></activity>
+    </application>
+
+</manifest>

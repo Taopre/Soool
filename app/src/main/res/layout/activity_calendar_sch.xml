@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".View.CalendarSchActivity">
+
+
+    <include layout="@layout/calendar_sch_date_lay">
+
+    </include>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:id="@+id/calendar_sch_content_icon"
+            android:src="@drawable/cal_bullet"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="28dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/calendar_sch_content"
+            android:layout_toRightOf="@id/calendar_sch_content_icon"
+            android:layout_alignTop="@id/calendar_sch_content_icon"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_15dp"
+            android:id="@+id/calendar_sch_content_label"
+            android:layout_marginLeft="16dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/calendar_notice_no_write_sch"
+            android:id="@+id/calendarSchTextContent"
+            android:textColor="@color/grayMid"
+            android:textSize="@dimen/text_size_14dp"
+            android:layout_below="@id/calendar_sch_content_icon"
+            android:layout_alignLeft="@id/calendar_sch_content_label"
+            android:layout_marginTop="@dimen/all_space_between_12dp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

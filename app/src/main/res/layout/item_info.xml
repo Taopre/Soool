@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="18dp">
+    
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="@dimen/all_space_between_18dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/itemInfoCover"
+        android:src="@drawable/starting_soool"
+        android:scaleType="fitXY"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemInfoTitle"
+        android:layout_below="@id/itemInfoCover"
+        android:textSize="@dimen/text_size_15dp"
+        android:textColor="@color/black"
+        tools:text="글의 제목입니다"
+        android:layout_alignLeft="@id/itemInfoCover"
+        android:layout_marginTop="13dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemInfoWriter"
+        tools:text="작성자"
+        android:textColor="@color/grayMain"
+        android:layout_below="@id/itemInfoTitle"
+        android:layout_alignLeft="@id/itemInfoTitle"
+        android:textSize="@dimen/text_size_12dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemInfoDate"
+        tools:text="1시간 전"
+        android:textColor="@color/grayMain"
+        android:textSize="@dimen/text_size_12dp"
+        android:layout_alignTop="@id/itemInfoWriter"
+        android:layout_toRightOf="@id/itemInfoWriter"
+        android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemInfoViewsText"
+        android:text="조회수"
+        android:textColor="@color/grayMain"
+        android:textSize="@dimen/text_size_12dp"
+        android:layout_alignTop="@id/itemInfoWriter"
+        android:layout_toRightOf="@id/itemInfoDate"
+        android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemInfoViews"
+        tools:text="6"
+        android:textColor="@color/grayMain"
+        android:textSize="@dimen/text_size_12dp"
+        android:layout_alignTop="@id/itemInfoWriter"
+        android:layout_toRightOf="@id/itemInfoViewsText"
+        android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemInfoCommentsText"
+        android:text="댓글수"
+        android:textColor="@color/grayMain"
+        android:textSize="@dimen/text_size_12dp"
+        android:layout_alignTop="@id/itemInfoWriter"
+        android:layout_toRightOf="@id/itemInfoViews"
+        android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemInfoComments"
+        tools:text="6"
+        android:textColor="@color/grayMain"
+        android:textSize="@dimen/text_size_12dp"
+        android:layout_alignTop="@id/itemInfoWriter"
+        android:layout_toRightOf="@id/itemInfoCommentsText"
+        android:layout_marginLeft="@dimen/all_text_12dp_space_6dp"
+        />
+
+    <HorizontalScrollView
+        android:id="@+id/itemInfoTagSV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/itemInfoCover"
+        android:layout_alignRight="@id/itemInfoCover"
+        android:layout_below="@id/itemInfoWriter"
+        android:layout_marginTop="@dimen/all_space_between_10dp"
+        android:scrollbars="none"
+        android:layout_marginBottom="@dimen/all_space_between_16dp"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/itemInfoTagList"/>
+
+    </HorizontalScrollView>
+
+
+</RelativeLayout>

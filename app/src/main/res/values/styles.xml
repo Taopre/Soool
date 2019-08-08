@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/background_white</item>
+    </style>
+
+    <style name="Transparent" parent="@style/Theme.AppCompat">
+        <!--Titlebar 없애는 옵션
+            true : Titlebar x
+            false : Titlebar o
+        -->
+        <item name="windowNoTitle">false</item>
+        <!-- 투명정도를 나타내는 색-->
+
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <!--
+        android:backgroundDimEnabled
+        true - 반투명 검정 /  false - 완전 투명
+        -->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="NoTitle" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/background_white</item>
+        <!-- No Title Bar-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="EditTextTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@drawable/edit_text_theme</item>
+        <item name="android:includeFontPadding">true</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:paddingBottom">@dimen/all_space_between_20dp</item>
+    </style>
+
+    <style name="grayMainSize12TextView"  parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/grayMain</item>
+        <item name="android:textSize">@dimen/text_size_12dp</item>
+
+    </style>
+
+    <style name="grayLightSize12TextView"  parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/grayLight</item>
+        <item name="android:textSize">@dimen/text_size_12dp</item>
+
+    </style>
+
+</resources>

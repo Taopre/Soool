@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/all_text_12dp_space_6dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:paddingTop="11dp"
+                android:paddingBottom="6dp">
+
+                <RadioButton
+                    android:id="@+id/radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/num"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/text_size_14dp"
+                    android:textColor="@color/grayMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/progressbar"
+                    android:visibility="gone"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="103dp"
+                    android:layout_height="103dp"
+                    android:scaleY="28"
+                    android:progressTint="@color/greenLightImg"
+                    android:progressBackgroundTint="@color/background_white"/>
+
+                <ImageView
+                    android:id="@+id/grid_image"
+                    android:layout_width="103dp"
+                    android:visibility="visible"
+                    android:layout_height="103dp" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/grid_text"
+            android:padding="@dimen/all_space_between_10dp"
+            android:text=""
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="9sp" />
+
+    </FrameLayout>
+
+</LinearLayout>
